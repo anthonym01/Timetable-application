@@ -1,0 +1,17 @@
+Changelog
+
+a2.0.5 - Consistency fixes
+a2.0.6 - Fixed color errors
+a2.1.0 - bug fixed
+a2.2.0 - Dynamic notifications replaced with toasts
+a2.2.1 - Table became slightly less annoying to use
+a2.3.0 - Added ability to have multiple separate tables
+a2.3.1 - Self integrity check
+a2.3.2 - used switch trees to improve performance
+a2.3.3 - switched to passive event listeners
+a2.3.4 - fixed bug, added new bugs to fix later
+a2.4.0 - Made doots and noots easier to read
+a2.4.5 - several performance and continuity improvements
+a2.4.6 - Laid the ground work for tables to be renamed
+a2.5.0 - Fixed Critical bug
+a2.6.0 - laid groudwork for task view

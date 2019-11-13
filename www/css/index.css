@@ -1,0 +1,576 @@
+/*  Portrait and Common Layout  */
+@media screen{
+    * {-webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */}
+    @keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
+
+    body{/*     the body    */
+        top:0;
+        left:0;
+        position: fixed;
+        -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+        -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+        -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+        font-family: Serif,Arial, Helvetica, sans-serif;
+        height:100vh;
+        margin:0px;
+        padding:0px;                                /* Padding to avoid the "unsafe" areas behind notches in the screen */
+        padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-right, 0px);
+        width:100vw;
+    }
+    
+    tr{transition:background-color 250ms;}
+
+    /*  Loading Screen  */
+    #Loading{
+        position: fixed;
+        top:0;
+        right:0;
+        height:100vh;
+        width: 100vw;
+        z-index: 999;
+        display: block;
+    }
+    #title{
+        position: relative;
+        margin-top:30vh;
+        height:15vw;
+        font-size:15vw;
+        width:100%;
+        text-align: center;
+        border-radius: 10vh;
+        animation: pulse 2s ease infinite;
+    }
+    #loader{
+        position: relative;
+        margin-top:3vh;
+        margin-left:auto;
+        margin-right: auto;
+        height:7vh;
+        width:7vh;
+        border-radius: 10vh;
+        animation: rotate 1s linear infinite;
+    }
+
+    #page_shade{/*  page darkener   */
+        position: fixed;
+        top:0;
+        right: 0;
+        background-color: rgb(0, 0, 0);/*  Always black    */
+        opacity: 0.5;
+        transition: opacity 500ms; 
+        z-index: 50;
+        display:none;
+        height:100%;
+        width: 100%;
+    }
+
+    /*Scrollbar custom*/
+    ::-webkit-scrollbar {width: 0.2vh;}/*scrollbar body*/
+
+    /*  Header */
+    .headbar{   /* The body of the header   */
+        position:fixed;
+        top:0;
+        height:7vh;
+        left:0;
+        width:100vw;
+        font-size: 6vh;
+        border-collapse: collapse;
+        text-align:center;
+        text-shadow:0vh 0vh 1vh;
+        border:none;
+        z-index: 50;
+    }
+    #headertxt{
+        position:absolute;
+        width:auto;
+        text-align: left;
+        height:7vh;
+        top:0;
+        left:10%;
+    }
+    .menuholder{    /*  The Menu in the header  */
+        position: absolute;
+        top:0;
+        right:0;
+        height:7vh;
+        width:auto;
+    }
+    .menubtn{   /*  Buttons for the menu in the header  */
+        position: relative;
+        float: right;
+        height:7vh;
+        width:7vh;
+        background-size: contain;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        /*margin-right:0.5vw;*/
+    }
+    #sub_menu{
+        position: absolute;
+        top:7vh;
+        right: 0;
+        height: auto;
+        width:100%;
+        z-index: 50;
+        border-radius: 0vh 0vh 1vh 1vh;
+        display: none;
+    }
+    .sub_pannel_btn{
+        height: 6vh;
+        width: 100%;
+        font-size: 5.5vh;
+        padding-bottom:0.6vh;
+        text-align: center;
+        cursor: pointer;
+    }
+    .sub_pannel_btn_inactive{
+        height: 6vh;
+        width: 100%;
+        font-size: 5.5vh;
+        margin-bottom:0.6vh;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    /*  Views   */
+    view{
+        position: absolute;
+        top:7vh;
+        left:0;
+        width: 100vw;
+        height:93vh;
+        display:none;
+        z-index: 25;
+        overflow: scroll;
+    }
+
+    /*Timetable tags*/
+    #timetable{/*   The body of the timetable   */
+        position: relative;
+        margin-top:0vh;
+        height:92.7vh;
+        min-height:90vh;
+        max-height: 92.7vh;
+        min-width:100vw;
+        left:0vw;
+        white-space: nowrap;
+        font-size: 3vh;
+        overflow: auto;
+        border-collapse: collapse;
+        cursor: default;
+        table-layout: fixed;
+    }
+    td{vertical-align: top;}
+    .maincell{/*    Cells of the table  */
+        position: static;
+        text-align: center;
+        /*max-height: 6.66%;  /*  Fixed height required for table space rendering, technically breaks the web engine but its a usefull glitch  */
+        /*height: 6%;
+        width: 12.5%;*/
+        margin: 0px;
+        padding-top:0px;
+        padding-bottom: 0px;
+        padding-left: 0.5vh;
+        padding-right: 0.5vh;
+        transition:border,background-color,color;
+        transition-duration: 500ms;
+        overflow: visible;
+        background: none;
+        width:auto;
+        height: auto;
+    }
+
+    /*  Table body pseudo render    */
+    .data_block{/*  The blocks containing the classes   */
+        position: relative;
+        width:100%;
+        top:0%;
+        height:auto;
+        font-size:100%;
+        text-align: center;
+        cursor: pointer;
+        overflow: visible;
+        transition: box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms;
+        border:none;
+        box-shadow: 0vh 0vh 0vh 0vh;
+        z-index: 50;
+        transform: translate(-0.5vh,0vh)!important;
+        padding-left:0.5vh;
+        padding-right:0.5vh;
+    }
+    .data_block:hover{
+        transform: translate(-0.5vh,-1vh)!important;
+        box-shadow: 0vh 1vh 3vh 1vh;
+        color: rgba(255, 255, 255, 0);
+        z-index: 1000;
+    }
+    .infodoot{
+        background-color: inherit;
+        transition:box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms,opacity 500ms;
+        position: absolute;
+        bottom: 0;
+        right:0;
+        width:100%;
+        display: block;
+        opacity: 0;
+        transform: rotate3d(1,0,0,90deg) translate(1vh,0);
+        white-space: normal;
+        /*transform: ;*/
+        padding:1vh;
+        border-radius: 1vh 1vh 1vh 1vh;
+    }
+    .data_block:hover .infodoot{
+        display: block;
+        opacity: 1;
+        z-index: 1000;
+        transform: rotate3d(1,0,0,0deg) translate(1vh,0);
+    }
+    .infodoot table{width: 100%;border-collapse: collapse;text-align: center;table-layout: fixed;}
+    .infodoot th{padding: 3px;}
+    .infodoot td{padding: 3px;vertical-align: middle;align-content: center;}
+    .infodoot .lefter{text-align: right}
+    .infodoot .righter{text-align: left}
+
+
+    /*  manage_view   */
+    #table_selector{
+        position: relative;
+        top:0;
+        margin-top:1vh;
+        margin-bottom: 2vh;
+        margin-left:6vw;
+        width:88vw;
+        font-size: 3vh;
+        padding:0.5vh;
+        border-radius: 2vh;
+        text-align: center;
+    }
+    #dataspace{/*   Block Containing the data_bar(s)   */
+        position: relative;
+        top:0;
+        margin-left:5vw;
+        width:90vw;
+        height:auto;
+    }
+    .data_bar{/*    Detailed representaion of the data to be managed    */
+        position: relative;
+        display: block;
+        float: left;
+        height: auto;
+        width:90%;
+        min-width: 40%;
+        font-size:3.5vh;
+        padding:1.2vh;
+        margin-bottom: 2vh;
+        border-radius: 3vh;
+        cursor: pointer;
+        box-shadow: 0vh 0vh 0vh 0vh;
+        margin-top:1vh;
+        margin-left:2vw;
+        text-align: center;
+    }
+    .data_bar table{width: 100%;border-collapse: collapse;text-align: center;table-layout: fixed;}
+    .data_bar th{padding: 2px;}
+    .data_bar td{padding: 2px;vertical-align: middle;align-content: center}
+    .data_bar .lefter{text-align: right}
+    .data_bar .righter{text-align: left}
+    .data_noot{
+        position: absolute;
+        top:0;
+        right:0;
+        font-size:3.5vh;
+        height:4vh;
+        width: 4vh;
+        border-radius: 4vh;
+        transform: translate(1vh,-1.5vh);
+    }
+    .plusimg{/* Little icon in the add new button */
+        position: relative;
+        float: right;
+        height:3.8vh;
+        width:3.8vh;
+        background-size: contain;
+    }
+    #dataentry_screen{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
+        position: fixed;
+        top:5vh;
+        height:96%;
+        width:100%;
+        display: none;
+        overflow: scroll;
+    }
+    #dataentry_screen table{/*  TEMPORARY   */
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        width:95%;
+        font-size: 4vh;
+        margin-bottom: 15vh;
+    }
+    #dataentry_screen label{
+        font-size: 3vh;
+        transform: translate(0,9vh);
+    }
+    #dataentry_screen input{
+        width:100%;
+        height:100%;
+        font-size: 4vh;
+        border-radius: 1vh;
+    }
+    #dataentry_screen td,th{
+    }
+    #dataentry_screen select{
+        width: 100%;
+        height:100%;
+        font-size: 4vh;
+        border-radius: 1vh;
+    }
+    #view_put{
+        position: relative;
+        padding:0;
+        border-radius: 0;
+        height: 3vh;
+        width: 3vh;
+    }
+
+    .btn_bar{
+        position:fixed;
+        bottom:10vh;
+        width: 100vw;
+    }
+    .databtns{/*    Buttons at the bottom of #dataentry_screen  */
+        position: absolute;
+        top:0;
+        font-size:4vh;
+        height:5vh;
+        padding:1vh;
+        text-align: center;
+        width:25vw;
+        border-radius:3vh;
+        box-shadow: 0vh 0vh 0vh 0vh;
+        cursor: pointer;
+        transition:background-color 500ms;
+        overflow: hidden;
+        border-radius:2vh;
+        -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    }
+    .databtns:active{transition:background-color 0ms;}
+    #cancel_btn{/*cancel button*/
+        left:4vw;
+    }
+    #save_btn{/*Save button*/
+        left:35vw;
+        z-index: 1;
+    }
+    #savepluss_btn{/*Save and add new entry button*/
+        right:4vw;
+    }
+    #delete_btn{/*Save and add new entry button*/
+        right:4vw;
+    }
+    .dataimg{/* icons for buttons   */
+        float:right;
+        background-size: contain;
+        height:5vh;
+        width:5vh;
+    }
+
+    #delete_confirm_pannel{/*   Delete confirmation pannel  */
+        position: absolute;
+        border-radius: 3vh;
+        top:40%;
+        width: 50%;
+        left:25%;
+        z-index: 30;
+        display: none;
+        box-shadow: 0vh 0vh 2vh 0vh;
+    }
+    #delete_confirm_pannel .title{
+        width:100%;
+        text-align:center;
+        font-size:6vh;
+    }
+    #yes_btn{
+        width: 45%;
+        font-size: 5vh;
+        border-radius: 2vh;
+        margin-bottom: 2%;
+        cursor:pointer;
+        transition: background-color 500ms,border 500ms;
+    }#yes_btn:active{
+        box-shadow: 0vh 0vh 1vh 0vh;
+    }
+    #no_btn{
+        width: 45%;
+        font-size:5vh;
+        border-radius: 2vh;
+        margin-left: 5%;
+        margin-bottom: 2%;
+        cursor:pointer;
+        transition: background-color 500ms,border 500ms;
+    }#no_btn:active{
+        box-shadow: 0vh 0vh 1vh 0vh;
+    }
+    @keyframes wobble { 0%{transform: translate(0vh,0)} 25%{transform: translate(1vh,-0.5vh)} 50%{transform: translate(0vh,0)} 75%{transform: translate(-1vh,0.5vh)} 100%{transform: translate(0vh,0)}}
+    #erraser{/* Clear inputs    */
+        position: absolute;
+        top:2vh;
+        right:2vh;
+        height:9vh;
+        width: 9vh;
+        background-size: contain;
+        cursor: pointer;
+        transition:transform 500ms;
+    }#erraser:active{animation: wobble 500ms linear infinite;}
+
+/*  Setting view  */
+    #setting_btn{
+        transition: transform 500ms;
+        transform: rotate(0deg);
+    }
+    .sub_btn{/* Buttons in the sub meny pannels */
+        transition:box-shadow 500ms, transform 500ms,text-shadow 500ms;
+        height:8vh;
+        width: 100%;
+        font-size:7vh;
+        text-align: center;
+        transform: translate(0,0vh);
+        cursor: pointer;
+    }.sub_title{left:0;width:75%;}
+    /* Switches */
+    .switch_container_active{
+        position: absolute;
+        top:1vh;
+        right:1vh;
+        width:12vh;
+        height:5vh;
+        border:0.5vh solid;
+        border-radius: 5vh;
+        cursor:pointer;
+        box-shadow:0px 0px 0px 0px;
+        transition: box-shadow;
+        transition: 300ms;
+    }
+    .switch_container_active .switchbdy{
+        position: absolute;
+        width:12vh;
+        height:5vh;
+        border-radius: 5vh;
+        cursor:pointer;
+        transition: background-color;
+        transition-duration: 300ms;
+    }
+    .switch_container_active .switch{
+        top:0.2vh;
+        right:0.2vh;
+        position: absolute;
+        height:4.6vh;
+        width:4.6vh;
+        border-radius: 50%;
+        z-index:1;
+        transform: translate(0px/*-39px*/,0);
+        transition: transform,background-color;
+        transition-duration: 300ms;
+    }
+    .switch_container_dissabled{
+        position: absolute;
+        top:1vh;
+        right:1vh;
+        width:12vh;
+        height:5vh;
+        border-radius: 5vh;
+        cursor:pointer;
+        transition: box-shadow;
+        transition: 300ms;
+    }
+    .switch_container_dissabled .switchbdy{
+        position: absolute;
+        width:12vh;
+        height:5vh;
+        border-radius: 5vh;
+        cursor:pointer;
+        transition: background-color;
+        transition-duration: 300ms;
+    }
+    .switch_container_dissabled .switch{
+        top:0.2vh;
+        right:0.2vh;
+        position: absolute;
+        height:4.6vh;
+        width:4.6vh;
+        border-radius: 50%;
+        z-index:1;
+        transform: translate(-7vh,0);
+        transition: transform,background-color;
+        transition-duration: 300ms;
+    }
+        /*  Notifications   */
+    @keyframes stretch {from{width:0%}to{width:100%}}
+
+    /*   Type 3 notification   */
+    .notification_style3{
+        position: fixed;
+        bottom:2vh;
+        right:1vw;
+        height:20vh;
+        width:98%;
+        transform: translate(0vw,25vh);
+        overflow: hidden;
+        box-shadow: 0vh 0vh 0.5vh 0vh;
+        cursor: pointer;
+        transition:transform 500ms,box-shadow 200ms;
+        z-index: 30;
+    }
+    .notification_style3:hover{box-shadow: 0vh 0vh 2vh 0vh;}
+    .notification_style3 .title{
+        position: absolute;
+        top:0;
+        right:0;
+        width:100%;
+        height:5.5vh;
+        font-size:4.5vh;
+        padding-right: 1vw;
+        text-align:right;
+        white-space: nowrap;
+        cursor: inherit;
+    }
+    .notification_style3 .title::after{
+        position:absolute;
+        top:0;
+        left:1.2vw;
+        height:5.5vh;
+        width:5.5vh;
+        background-size: contain;
+        background-repeat: no-repeat;
+        content:"";
+        cursor: inherit;
+    }
+    .notification_style3 .title::before{
+        position:absolute;
+        transform:translate(0,100%);
+        bottom:0;
+        left:0;
+        z-index: 99;
+        height:0.5vh;
+        animation: stretch 11000ms;
+        content:"";
+        cursor: inherit;
+    }
+    .notification_style3 .notifbody{
+        position: absolute;
+        bottom:0;
+        left:0;
+        width:95%;
+        padding:0.5vh 0.5vw;
+        height:13.5vh;
+        font-size:4vh;
+        overflow: hidden;
+        cursor: inherit;
+    }
+}
+
+/*  Landscape layout (with min-width)   */
+@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
+
+}

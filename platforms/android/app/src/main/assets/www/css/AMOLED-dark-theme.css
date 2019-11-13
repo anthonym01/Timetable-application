@@ -1,0 +1,373 @@
+@keyframes pulse {0%{text-shadow: 0vh 0vh 0vh #ffffff} 50% {text-shadow: 0vh 0vh 5vh #ffffff} 100%{text-shadow: 0vh 0vh 0vh #ffffff}}
+
+@keyframes glowrow { 0%{background-color: rgb(43, 255, 0)} 50%{background-color: rgb(24, 145, 0)} 100%{background-color: rgb(43, 255, 0)}}
+@keyframes proto{
+    0%{color: hsl(0,100%,40%)}
+    11%{color: hsl(30,100%,40%)}
+    22%{color: hsl(60,100%,40%)}
+    33%{color: hsl(90,100%,40%)}
+    44%{color: hsl(120,100%,40%)}
+    55%{color: hsl(150,100%,40%)}
+    66%{color: hsl(180,100%,40%)}
+    77%{color: hsl(210,100%,40%)}
+    88%{color: hsl(286,100%,40%)}
+    100%{color: hsl(328,100%,40%)}
+}
+
+.glowrow {animation:glowrow 2s infinite;}
+
+body{/*     the body    */
+    background-color: rgb(0, 0, 0);
+    color:rgb(255, 255, 255);
+    box-shadow: #ffffff;
+    border-color: #ffffff;
+}
+/*  Loading Screen  */
+#Loading{
+    box-shadow: #ffffff;
+    background-color: inherit;
+}
+#loader{
+    border: 3vh solid #ffffff;
+    border-top: 3vh solid #2bff00;
+}
+#sub_menu{background-color: rgb(0, 0, 0);border-bottom:0.2vh solid #ffffff}
+.sub_pannel_btn{
+    background-image: linear-gradient(0deg,#000000,#000000,#000000);
+    background-color: inherit;
+    background-size: 1000%;
+    background-position: 0% 0% 0% 100%;
+    transition: background-position ease 500ms;
+}
+.sub_pannel_btn:active{
+    background-image: linear-gradient(120deg,#000000,#AAAAAA,#000000);
+    background-position: 100% 0% 0% 0%;
+}
+.sub_pannel_btn:active{
+    transition: background-position ease 500ms,background-image 0ms;
+    background-image: linear-gradient(120deg,#ffffff,#AAAAAA,#FFFFFF);
+    color:black;
+}
+/*Scrollbar custom*/
+::-webkit-scrollbar-track {background: black;}/*Scrollbar background*/
+::-webkit-scrollbar-thumb {background: rgb(170, 170, 170);}/*scrollbar thumb*/
+::-webkit-scrollbar-thumb:active {background: rgb(255, 255, 255);}/*activeing on scrollbar thumb*/
+
+/*  Header && Menu   */
+.headbar{   /* The body of the header   */
+    text-shadow:0vh 0vh 0.5vh #ffffff;
+    background-color: inherit;
+    border-bottom:none;
+}
+.menu_panel{
+    background-color:inherit;
+    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
+}
+.menu_panel_active{
+    background-color:inherit;
+    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
+}
+#sub_menu{background-color: rgb(0, 0, 0);border-bottom:0.2vh solid #ffffff}
+.sub_pannel_btn{
+    background-image: linear-gradient(90deg,#000000,#AAAAAA,#000000);
+    background-size: 1000%;
+    background-position: 100% 0%;
+    transition: background-position ease 500ms;
+}
+.sub_pannel_btn:active{
+    background-position: 0% 100%;
+}
+.sub_btn{/* Buttons in the sub meny pannels */
+    /*box-shadow: 0vh 0vh 0vh 0vh #ffffff;*/
+    text-shadow: 0vh 0vh 0vh #ffffff;
+}
+.sub_btn:active{
+    /*box-shadow: 0vh 0.5vh 20vh 0vh #ffffff;*/
+    text-shadow: 0vh 0vh 2vh #ffffff;
+}
+
+#setting_btn{   /*  Setting button    */
+    background-image: url('../img/setting-light.webp');
+}
+#manage_btn{    /*  Manager button  (the little book) */
+    background-image: url('../img/manage-dark.webp');
+}
+#table_btn{     /* The button with the logo, that switches back to the main table   */
+    background-image: url('../img/icon-inverse.webp');
+}
+#task_btn{
+    background-image: url('../img/Clip-dark-closes.webp');
+}
+/* Switches */
+.switch_container_active .switchbdy{
+    background-color: inherit;
+}
+
+.switch_container_active .switch{
+    background-color: white;
+}
+.switch_container_dissabled{
+    border:0.5vh solid rgb(122,122,122);
+}
+.switch_container_dissabled .switch{
+    background-color: rgb(122,122,122);
+}
+
+/*Timetable tags*/
+.maincell{/*    Cells of the table  */
+    border:0.2vh solid #d4d4d4;
+}
+
+/*  Table body pseudo render    */
+.data_block{/*  The blocks containing the classes   */
+    background-color: inherit;
+    color:inherit;
+    text-shadow: 0vh 0vh 1vh #000000;
+}
+.data_block:active{
+    color: rgba(255, 255, 255, 0);
+}
+.infodoot{
+    color: rgb(255, 255, 255);
+    background-color: inherit;
+    text-shadow: 0vh 0vh 2vh #000000;
+}
+
+/*  Colors are class based because im lazy  */
+.hue0{
+    background-color: rgb(100, 100, 100);
+    box-shadow: 0vh 0vh 0vh 0vh rgb(100, 100, 100);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue0:hover{ box-shadow: 0vh 0.5vh 2vh 1vh rgb(100, 100, 100);}
+.hue0:active{
+    transition: background-color 0ms;
+    background-color: rgb(185, 185, 185);
+}
+
+.hue1{/* color:1 Red */
+    background-color: hsl(0,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(0,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue1:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(0,100%,40%)}
+.hue1:active{
+    transition: background-color 0ms;
+    background-color: hsl(0,100%,60%);
+}
+
+.hue2{
+    background-color: hsl(30,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(30,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue2:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(30,100%,40%)}
+.hue2:active{
+    transition: background-color 0ms;
+    background-color: hsl(30,100%,60%);
+}
+
+.hue3{
+    background-color: hsl(60,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(60,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue3:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(60,100%,40%)}
+.hue3:active{
+    transition: background-color 0ms;
+    background-color: hsl(60,100%,60%);
+}
+
+.hue4{
+    background-color: hsl(90,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(90,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue4:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(90,100%,40%)}
+.hue4:active{
+    transition: background-color 0ms;
+    background-color: hsl(90,100%,60%);
+}
+
+.hue5{
+    background-color: hsl(120,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(120,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue5:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(120,100%,40%)}
+.hue5:active{
+    transition: background-color 0ms;
+    background-color: hsl(120,100%,60%);
+}
+
+.hue6{
+    background-color: hsl(150,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(150,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue6:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(150,100%,40%)}
+.hue6:active{
+    transition: background-color 0ms;
+    background-color: hsl(150,100%,60%);
+}
+
+.hue7{
+    background-color: hsl(180,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(180,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue7:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(180,100%,40%)}
+.hue7:active{
+    transition: background-color 0ms;
+    background-color: hsl(180,100%,60%);
+}
+
+.hue8{
+    background-color: hsl(210,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(210,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue8:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(210,100%,40%)}
+.hue8:active{
+    transition: background-color 0ms;
+    background-color: hsl(210,100%,60%);
+}
+
+.hue9{
+    background-color: hsl(240,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(240,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue9:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(240,100%,40%)}
+.hue9:active{
+    transition: background-color 0ms;
+    background-color: hsl(240,100%,60%);
+}
+
+.hue10{
+    background-color: hsl(270,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(270,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue10:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(270,100%,40%)}
+.hue10:active{
+    transition: background-color 0ms;
+    background-color: hsl(270,100%,60%);
+}
+
+.hue11{
+    background-color: hsl(328,100%,60%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(328,100%,60%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue11:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(328,100%,60%)}
+.hue11:active{
+    transition: background-color 0ms;
+    background-color: hsl(328,100%,70%);
+}
+
+/*  manage_view   */
+.data_bar{/*    Detailed representaion of the data to be managed    */
+    text-shadow: 0vh 0vh 1vh #000000;
+}
+.data_noot{
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    text-shadow: none;
+}
+.plusimg{/* Little icon in the add new button */
+    background-image: url('../img/plus-light.webp');
+}
+#dataentry_screen{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
+    background-color: rgb(0, 0, 0);
+}
+#dataentry_screen input{
+    border:none;
+    border-bottom:0.3vh solid #ffffff;
+    background-color: inherit;
+    color: inherit;
+}
+#cancel_btn{/*cancel button*/
+    background-color: #000000;
+    border:0.3vh solid #ffffff;
+}#cancel_btn:active{
+    background-color: #ff5656;
+    border:0.3vh solid #912e2e;
+}
+#save_btn{/*Save button*/
+    background-color: #000000;
+    border:0.3vh solid #ffffff;
+}#save_btn:active{
+    background-color: #00c3ff;
+    border:0.3vh solid #178caf;
+}
+#savepluss_btn{/*Save and add new entry button*/
+    background-color: #000000;
+    border:0.3vh solid #ffffff;
+}#savepluss_btn:active{
+    background-color: #44ff1e;
+    border:0.3vh solid #30b914;
+}
+#delete_btn{/*Save and add new entry button*/
+    background-color: #000000;
+    border:0.3vh solid #ffffff;
+}#delete_btn:active{
+    background-color: #ff5656;
+    border:0.3vh solid #912e2e;
+}
+#cancelimg{background-image: url('../img/cancel-dark.webp');}/* (X) icon in the cancel button */
+#saveimg{background-image: url('../img/save-dark.webp');}
+#save_addmorelimg{background-image: url('../img/plus-dark.webp');}
+#deleteimg{background-image: url('../img/trash-dark.webp');}
+
+#delete_confirm_pannel{/*   Delete confirmation pannel  */
+    background-color: inherit;
+}
+#yes_btn{
+    background-color: #3ad61a;
+    border:0.3vh solid #248d0f;
+}#yes_btn:active{
+    background-color: #44ff1e;
+    border:0.3vh solid #3ad61a;
+}
+#no_btn{
+    background-color: #ff5656;
+    border:0.3vh solid #912e2e;
+}#no_btn:active{
+    background-color: #ff3434;
+    border:0.3vh solid #b33e3e;
+}
+
+#erraser{/* Clear inputs    */
+    background-image: url('../img/Eraser-dark.webp');
+}
+
+        /*  Notifications   */
+@keyframes stretch {from{width:0%}to{width:100%}}
+
+/*   Type 3 notification   */
+.notification_style3{
+    border-top:0.5vw solid #2bff00;
+    background-color: rgb(0, 0, 0);
+    color:rgb(255, 255, 255);
+    box-shadow: #ffffff;
+}
+.notification_style3:active{box-shadow: #ffffff;}
+.notification_style3 .title::after{
+    background-image: url('../img/icon-inverse.webp');
+}
+.notification_style3 .title::before{
+    background-color:rgb(255, 255, 255);
+}
