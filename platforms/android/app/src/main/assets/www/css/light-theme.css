@@ -108,6 +108,9 @@ body{/*     the body    */
 }
 
 /*Timetable tags*/
+#timetable{
+    background-image: url('../img/whiteground.webp');
+}
 .maincell{/*    Cells of the table  */
     border:0.2vh solid #434343;
 }

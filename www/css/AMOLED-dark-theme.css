@@ -114,6 +114,9 @@ body{/*     the body    */
 }
 
 /*Timetable tags*/
+#timetable{
+    background-image: url('../img/blyatground.webp');
+}
 .maincell{/*    Cells of the table  */
     border:0.2vh solid #d4d4d4;
 }
