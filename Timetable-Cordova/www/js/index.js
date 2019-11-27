@@ -50,7 +50,10 @@ window.addEventListener('load',function(){//window loads
     manage.initalize();
     table.initialize();
     config.properties.startup=false;
-    setTimeout(()=>{console.log('Closing loading screen...');document.getElementById('Loading').style.display='none'},50);
+    setTimeout(()=>{
+        console.log('Closing loading screen...');
+        document.getElementById('Loading').style.display='none';
+    },50);
 });
 
 /*  Config file handler    */
@@ -61,10 +64,10 @@ var config={
         hilight_engine:false,
         table_selected:1,
         table_details:[//   This needs a setting pannel in the setting menu
-            {purpose:"My classes"},
-            {purpose:"Andranique"},
-            {purpose:"Tianna"},
-            {purpose:"Antonia"}
+            {purpose:"table 1"},
+            {purpose:"table 2"},
+            {purpose:"table 3"},
+            {purpose:"table 4"}
         ],
         table1_db:[
             /*          KEY
@@ -78,7 +81,7 @@ var config={
                 end:            End time of the class represented in 24hr
                     (minutes represented as percentage of hr "x/60")
             */
-            
+            /*
             {show:1,day:1,name:"Analysis of Algorithms",Lecturer:"David W. White",room:"1A-66",course_code:"CIT3003",type:"Lecture",color:1,start:10.00,end:11.833},
             {show:1,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Tutorial",color:2,start:17.00,end:18.00},
             {show:1,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Practical",color:2,start:18.00,end:21},
@@ -110,7 +113,7 @@ var config={
             {show:2,day:2,name:"Information Technology",room:"1B-C2",course_code:"",type:"Lecture",color:6,start:11.00,end:12.00},
             {show:2,day:2,name:"Information Technology",room:"47B-3",course_code:"",type:"Practical",color:6,start:14.00,end:17.00},
             {show:2,day:2,name:"General Chemistry 1",room:"1B-C2",course_code:"",type:"Tutorial",color:1,start:12.00,end:13.00},
-            
+            */
         ],
         task_db:[
 
@@ -278,9 +281,11 @@ let table = {
             if(config.data.table1_db[i]==null||undefined){
                 //show first time setup screen
                 console.log('The table database is empty');
-                notify.new('U new here?','To start off lets add something to display',3);
+                utility.toast('To start off lets add something to display');
                 document.getElementById('data_title').innerHTML='First Time?';
+
                 setTimeout(()=>{manage.dialogue.open();UI.navigate.MANAGE();},100);
+
                 document.getElementById('Loading').style.display='none';
                 console.log('Closing loading screen...');
     
@@ -1434,12 +1439,12 @@ let table = {
                 if(config.data.theme=="light"){
                     if(event.target.name!="sub_element"){
                         event.target.style.color='white';
-                        event.target.style.backgroundColor='hsl('+ rand.number(360,0) +',100%,40%)';//color the target
+                        event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,40%)';//color the target
                     }
                 }else if(config.data.theme=="dark"){
                     if(event.target.name!="sub_element"){
                         event.target.style.color='black';
-                        event.target.style.backgroundColor='hsl('+ rand.number(360,0) +',100%,60%)';//color the target
+                        event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,60%)';//color the target
                     }
                 }
                 setTimeout(()=>{event.target.style.backgroundColor='';event.target.style.color='';},1000);//un-color the target
@@ -1858,7 +1863,7 @@ let manage = {
             config.properties.called_from_plus=true;
             var entryisvalid = manage.dialogue.save();
             if(entryisvalid){
-                notify.new('Saved','"'+document.getElementById('name_put').value+'" was saved, U may now add another',3);
+                utility.toast(document.getElementById('name_put').value+' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
                 manage.dialogue.open();
             }
@@ -1875,7 +1880,13 @@ let manage = {
 let UI={
     initalize:function(){
         console.log('UI Initalize');
-        this.setting.theme.setpostition();
+        switch(config.data.theme){
+            case 'dark':this.setting.theme.set_dark() ;break;
+            case 'light':this.setting.theme.set_light() ;break;
+            default: 
+                console.error('Theme error :', config.data.theme);
+                this.setting.theme.set_dark();
+        }
         this.setting.hilight.setpostition();
         if(typeof(device)!="undefined"){//sometimes plugins break
             if(device.platform=='Android'||'iOS'){//mobile
@@ -1883,14 +1894,12 @@ let UI={
                 document.getElementById('manage_btn').addEventListener('touchstart',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.MANAGE();});
                 document.getElementById('setting_btn').addEventListener('touchstart',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.SETTING();});
                 document.getElementById('task_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TASK();});
-                document.getElementById('theme_btn').addEventListener('touchstart',UI.setting.theme.flip);
                 document.getElementById('hilight_btn').addEventListener('touchstart',UI.setting.hilight.flip);    
             }else{//Desktop
                 document.getElementById('table_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TABLE();});
                 document.getElementById('manage_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.MANAGE();});
                 document.getElementById('setting_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.SETTING();});
                 document.getElementById('task_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TASK();});
-                document.getElementById('theme_btn').addEventListener('click',UI.setting.theme.flip);
                 document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip);
             }
         }
@@ -1900,18 +1909,19 @@ let UI={
             document.getElementById('manage_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.MANAGE();});
             document.getElementById('setting_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.SETTING();});
             document.getElementById('task_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TASK();});
-            document.getElementById('theme_btn').addEventListener('click',UI.setting.theme.flip);
             document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip);
         }
         
         document.getElementById('about_btn').addEventListener('click',function(){
             /*
-            utility.copy_clipboard('Phone: 876-5744-801, Email: samuelmatheson15@gmail.com');
+            utility.clipboard('Phone: 876-5744-801, Email: samuelmatheson15@gmail.com');
             utility.toast('Contact info coppied to clipboard');*/
-            utility.copy_clipboard(JSON.stringify(config.data));
+            utility.clipboard(JSON.stringify(config.data));
             utility.toast('Debug info coppied to clipboard');
         });
 
+        document.getElementById('dark_theme_selection').addEventListener('click',this.setting.theme.set_dark)
+        document.getElementById('light_theme_selection').addEventListener('click',this.setting.theme.set_light)
     },
     navigate:{
         BACK:function(){//Back button handle
@@ -1951,30 +1961,23 @@ let UI={
         },
         TABLE:function(){
             console.log('Table navigation started');
-            if(config.properties.view=="table" && config.properties.startup!=true){
-                UI.submenu();
-            }
-            config.properties.view="table";
-            document.getElementById('headertxt').innerHTML=config.data.table_details[config.data.table_selected-1].purpose;
-            document.getElementById('table1').style.display='block';
-            document.getElementById('manage_view').style.display='none';
-            document.getElementById('setting_view').style.display='none';
-            document.getElementById('task_view').style.display='none';
-            document.getElementById('setting_btn').style.transform='rotate(0deg)';//Rotate the button
             if(config.properties.changed){
                 window.location.reload();
             }else{
-                table.clock.start_clock();
-                //Flip flop menu icons cauze am lazy bastard
-                if(config.data.theme=="light"){
-                    document.getElementById('manage_btn').style.backgroundImage= "url('img/manage-light.webp')";
-                    document.getElementById('table_btn').style.backgroundImage="url('img/icon-inverse.webp')";
-                    document.getElementById('task_btn').style.backgroundImage="url('img/Clip-light-closes.webp')";
-                }else if(config.data.theme=="dark"){
-                    document.getElementById('manage_btn').style.backgroundImage="url('img/manage-dark.webp')";
-                    document.getElementById('table_btn').style.backgroundImage="url('img/icon.webp')";
-                    document.getElementById('task_btn').style.backgroundImage="url('img/Clip-dark-closes.webp')";
+                if(config.properties.view=="table" && config.properties.startup!=true){
+                    UI.submenu();
                 }
+                config.properties.view="table";
+                document.getElementById('table1').style.display='block';
+                document.getElementById('manage_view').style.display='none';
+                document.getElementById('setting_view').style.display='none';
+                document.getElementById('task_view').style.display='none';
+                document.getElementById('setting_btn_icon').style.transform='rotate(0deg)';//Rotate the button
+                table.clock.start_clock();
+                document.getElementById('setting_btn').className="menubtn";
+                document.getElementById('task_btn').className="menubtn";
+                document.getElementById('manage_btn').className="menubtn";
+                document.getElementById('table_btn').className="menubtn_active";
             }
             
         },
@@ -1987,18 +1990,10 @@ let UI={
             document.getElementById('manage_view').style.display='block';
             document.getElementById('setting_view').style.display='none';
             document.getElementById('task_view').style.display='none';
-            document.getElementById('headertxt').innerHTML='Manage';//header text
-            document.getElementById('setting_btn').style.transform='rotate(0deg)';//Rotate the button
-            //Flip flop menu icons cauze am lazy bastard
-            if(config.data.theme=="light"){
-                document.getElementById('manage_btn').style.backgroundImage="url('img/manage-open-light.webp')";
-                document.getElementById('table_btn').style.backgroundImage="url('img/icon.webp')";
-                document.getElementById('task_btn').style.backgroundImage="url('img/Clip-light-closes.webp')";
-            }else if(config.data.theme=="dark"){
-                document.getElementById('manage_btn').style.backgroundImage="url('img/manage-open-dark.webp')";
-                document.getElementById('table_btn').style.backgroundImage="url('img/icon-inverse.webp')";
-                document.getElementById('task_btn').style.backgroundImage="url('img/Clip-dark-closes.webp')";
-            }
+            document.getElementById('setting_btn').className="menubtn";
+            document.getElementById('task_btn').className="menubtn";
+            document.getElementById('manage_btn').className="menubtn_active";
+            document.getElementById('table_btn').className="menubtn";
         },
         SETTING:function(){
             UI.submenuclose();
@@ -2009,18 +2004,11 @@ let UI={
             document.getElementById('manage_view').style.display='none';
             document.getElementById('setting_view').style.display='block';
             document.getElementById('task_view').style.display='none';
-            document.getElementById('headertxt').innerHTML='Setting';//header text
-            document.getElementById('setting_btn').style.transform='rotate(90deg)';//Rotate the button
-            //Flip flop menu icons cauze am lazy bastard
-            if(config.data.theme=="light"){
-                document.getElementById('manage_btn').style.backgroundImage="url('img/manage-light.webp')";
-                document.getElementById('table_btn').style.backgroundImage="url('img/icon.webp')";
-                document.getElementById('task_btn').style.backgroundImage="url('img/Clip-light-closes.webp')";
-            }else if(config.data.theme=="dark"){
-                document.getElementById('manage_btn').style.backgroundImage="url('img/manage-dark.webp')";
-                document.getElementById('table_btn').style.backgroundImage="url('img/icon-inverse.webp')";
-                document.getElementById('task_btn').style.backgroundImage="url('img/Clip-dark-closes.webp')";
-            }
+            document.getElementById('setting_btn_icon').style.transform='rotate(90deg)';//Rotate the button
+            document.getElementById('setting_btn').className="menubtn_active";
+            document.getElementById('task_btn').className="menubtn";
+            document.getElementById('manage_btn').className="menubtn";
+            document.getElementById('table_btn').className="menubtn";
         },
         TASK:function(){
             UI.submenuclose();
@@ -2031,55 +2019,30 @@ let UI={
             document.getElementById('manage_view').style.display='none';
             document.getElementById('setting_view').style.display='none';
             document.getElementById('task_view').style.display='block';
-            document.getElementById('headertxt').innerHTML='Tasks';//header text
-            document.getElementById('setting_btn').style.transform='rotate(0deg)';//Rotate the button
-            if(config.data.theme=="light"){//Flip flop menu icons cauze am lazy bastard
-                document.getElementById('manage_btn').style.backgroundImage="url('img/manage-light.webp')";
-                document.getElementById('table_btn').style.backgroundImage="url('img/icon.webp')";
-                document.getElementById('task_btn').style.backgroundImage="url('img/Clip-light.webp')";
-            }else if(config.data.theme=="dark"){
-                document.getElementById('manage_btn').style.backgroundImage="url('img/manage-dark.webp')";
-                document.getElementById('table_btn').style.backgroundImage="url('img/icon-inverse.webp')";
-                document.getElementById('task_btn').style.backgroundImage="url('img/Clip-dark.webp')";
-            }
+            document.getElementById('setting_btn_icon').style.transform='rotate(0deg)';//Rotate the button
+            document.getElementById('setting_btn').className="menubtn";
+            document.getElementById('task_btn').className="menubtn_active";
+            document.getElementById('manage_btn').className="menubtn";
+            document.getElementById('table_btn').className="menubtn";
         }
     },
     setting:{
         theme:{
-            flip:function(){
-                console.log('switch triggered');
-                if(config.data.theme=="light"){
-                    //turn off the switch
-                    config.data.theme="dark";
-                    utility.toast('Theme set to dark');
-                    console.log('Theme set to dark');
-                }else if(config.data.theme=="dark"){
-                    //turn on the witch
-                    config.data.theme="light";
-                    utility.toast('Theme set to light.');
-                    console.log('Theme set to light');
-                }
+            set_dark:function(){
+                console.warn('Theme set Dark');
+                config.data.theme='dark'
+                document.getElementById('theme').href="css/dark-theme.css"
+                document.getElementById('light_selection_put').checked=false;
+                document.getElementById('dark_selection_put').checked=true;
                 config.save();
-                UI.setting.theme.setpostition();
             },
-            setpostition:function(){
-                //sets the switches position depending on the theme, and changes the theme accordingly
-                console.log('Theme Position set to: ',config.data.theme);
-                if(config.data.theme=="dark"){
-                    document.getElementById('theme').href="css/AMOLED-dark-theme.css";
-                    document.getElementById('favico').href="img/icon-inverse.webp";
-                    document.getElementById('theme_switch_container').className='switch_container_dissabled';
-                    document.getElementById('manage_btn').style.backgroundImage="url('img/manage-dark.webp')";
-                    document.getElementById('table_btn').style.backgroundImage="url('img/icon-inverse.webp')";    
-                    document.getElementById('task_btn').style.backgroundImage="url('img/Clip-dark-closes.webp')";
-                }else if(config.data.theme=="light"){
-                    document.getElementById('theme').href="css/light-theme.css";
-                    document.getElementById('favico').href="img/icon.webp";
-                    document.getElementById('theme_switch_container').className='switch_container_active';
-                    document.getElementById('manage_btn').style.backgroundImage="url('img/manage-light.webp')";
-                    document.getElementById('table_btn').style.backgroundImage="url('img/icon.webp')";
-                    document.getElementById('task_btn').style.backgroundImage="url('img/Clip-light-closes.webp')";
-                }
+            set_light:function(){
+                console.warn('Theme set Light');
+                config.data.theme='light'
+                document.getElementById('theme').href="css/light-theme.css"
+                document.getElementById('light_selection_put').checked=true;
+                document.getElementById('dark_selection_put').checked=false;
+                config.save();
             },
         },
         hilight:{
@@ -2131,208 +2094,29 @@ let UI={
     },
 }
 
-/*  Random stuff generator  */
-let rand={
-	HEX:function(){// I recomend using Random HEX values, as there is only one value to work with, but it is harder to control the outcome
-		var randhex ='#'+Math.floor(Math.random()*16777215).toString(16);
-		console.log('Random color generated :',randhex);
-		return randhex;
-	},
-	RGB:function(){//RGB colors returned in an object
-	//Because of the was pseudo random numbers and RGB work, darker colors will be produced more often
-		var RGB_obj = { RED:this.number(255,0), GREEN:this.number(255,0), BLUE:this.number(255,0) } 
-		console.log('RGB index generated: rgb('+ RGB_obj.RED +','+ RGB_obj.GREEN +','+ RGB_obj.BLUE +')');
-		return RGB_obj;
-	},
-	HSL:function(){//HSL colors returned in an object
-        //Because of the was pseudo random numbers and HSL colors work, darker colors will be produced more often
-        var HSL_obj = { HUE:this.number(360,0), SATURATION:this.number(100,0)+'%', LIGHTENESS:this.number(100,1)+'%', }
-        console.log('HSL index generated: hsl('+ HSL_obj.HUE +','+ HSL_obj.SATURATION +','+ HSL_obj.LIGHTENESS +')');
-        return HSL_obj;
-	},
-	number(max,min){
-	    return Math.floor(Math.random() * (max - min + 1) ) + min;
-	}
-}
-
-/*  Fake notification generator */
-let notify = {
-    preset_height:22,//2 more than the height in the css
-    previous_type:1,
-    animate_old:false,//turn on and off old notification Animation
-    current:0,
-    resizecheck:window.addEventListener('resize',()=>{notify.clearall()}),
-    new:function(title,body,style){
-        console.log('new internal notification called');
-        this.current++;//Inciment the current pisition
-        if(this.previous_type!=style){
-            this.clearall();
-        }
-        this.previous_type=style;
-        
-        //create the notification holder
-        var tempnotif = document.createElement("div");      //create a div
-        document.body.appendChild(tempnotif);               //Put the div into the body of the page
-        tempnotif.setAttribute("id", "notif"+this.current); //set an id to the div
-        tempnotif.title="Click to dissmiss"; //Title
-        //create the title
-        var tmptitle = document.createElement("div");       //create a div
-        tmptitle.setAttribute("class","title");             //set the class of the div to 'title'
-        tmptitle.setAttribute("id","title"+this.current);   //set an id to the 'title' div
-        document.getElementById("notif"+this.current).appendChild(tmptitle);    //Put the 'title' div into the 'notification' div from before
-        document.getElementById("title"+this.current).innerHTML=title;  //Puts the title text into the 'title' div
-        
-        //create the body
-        var tmpbdy = document.createElement("div"); //create a div
-        tmpbdy.setAttribute("class","notifbody");   //set the class of the div to 'notifbody'
-        tmpbdy.setAttribute("id","body"+this.current);  //set an id to the 'notifbody' div
-        document.getElementById("notif"+this.current).appendChild(tmpbdy);  //put the 'notifbody' div into the 'notification' div from before
-        document.getElementById("body"+this.current).innerHTML=body;    //puts body text into the 'notifbody' div
-
-        tempnotif.addEventListener('click',function(){notify.clearall()});//click to close notifications
-
-        switch(style){
-            case 1:
-                    tempnotif.setAttribute("class", "notification_style1");    //set the class of the div to 'notification_style1'
-                    this.preset_height=22;
-            break;
-            case 2:
-                    tempnotif.setAttribute("class", "notification_style2");    //set the class of the div to 'notification_style2'
-                    this.preset_height=16;
-            break;
-            case 3:
-                    tempnotif.setAttribute("class", "notification_style3");    //set the class of the div to 'notification_style2'
-                    this.preset_height=16;
-            break;
-            case 4:
-                    tempnotif.setAttribute("class", "notification_style4");    //set the class of the div to 'notification_style2'
-                    this.preset_height=22;
-            break;
-            default:
-                tempnotif.setAttribute("class", "notification_style3");
-                console.warn('Notifier takes style value selectors 1-4, you have selected',style);
-                this.preset_height=22;
-        }
-
-        this.timing_effects(this.current,tempnotif);//Timing in seperate function to avoid using 'new' object calls or extra variables
-
-        //manuver old notifications out of the way
-        if(window.innerHeight>=window.innerWidth){
-            if(this.animate_old){
-                if(document.getElementById('notif'+Number(this.current-1))){//stars at -1 because 1 less than the latest notification
-                    document.getElementById('notif'+Number(this.current-1)).style.transform='translate(-100vw,0vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-2))){
-                    document.getElementById('notif'+Number(this.current-2)).style.transform='translate(-100vw,0vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-3))){
-                    document.getElementById('notif'+Number(this.current-3)).style.transform='translate(-100vw,0vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-4))){
-                    document.getElementById('notif'+Number(this.current-4)).style.transform='translate(-100vw,0vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-5))){
-                    document.getElementById('notif'+Number(this.current-5)).style.transform='translate(-100vw,0vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-6))){
-                    document.getElementById('notif'+Number(this.current-6)).style.transform='translate(-100vw,0vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-7))){
-                    document.getElementById('notif'+Number(this.current-7)).style.transform='translate(-100vw,0vh)';
-                }
-            }
-        }else{
-            if(this.animate_old){
-                if(document.getElementById('notif'+Number(this.current-1))){//stars at -1 because 1 less than the latest notification
-                    document.getElementById('notif'+Number(this.current-1)).style.transform='translate(0vw,-'+this.preset_height+'vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-2))){
-                    document.getElementById('notif'+Number(this.current-2)).style.transform='translate(0vw,-'+this.preset_height*2+'vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-3))){
-                    document.getElementById('notif'+Number(this.current-3)).style.transform='translate(0vw,-'+this.preset_height*3+'vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-4))){
-                    document.getElementById('notif'+Number(this.current-4)).style.transform='translate(0vw,-'+this.preset_height*4+'vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-5))){
-                    document.getElementById('notif'+Number(this.current-5)).style.transform='translate(0vw,-'+this.preset_height*5+'vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-6))){
-                    document.getElementById('notif'+Number(this.current-6)).style.transform='translate(0vw,-'+this.preset_height*6+'vh)';
-                }
-                if(document.getElementById('notif'+Number(this.current-7))){
-                    document.getElementById('notif'+Number(this.current-7)).style.transform='translate(0vw,-'+this.preset_height*7+'vh)';
-                }
-            }
-        }
-        console.table(notify);
-    },
-    timing_effects:function(notificationindex,tempnotif){
-        setTimeout(()=>{document.getElementById('notif'+notificationindex).style.transform='translate(0vw,0vh)'},50);
-        setTimeout(()=>{document.getElementById('notif'+notificationindex).style.opacity='0.0'},10000);
-        setTimeout(()=>{document.body.removeChild(tempnotif);},11000);
-    },
-    clearall:function(){
-        //This could be replaced with a "querySelectorAll", but this runs faster, so ill stick with it
-
-        if(document.getElementById('notif'+Number(this.current))){//nep them from latest going up
-            document.getElementById('notif'+Number(this.current)).style.opacity='0.0';
-            document.getElementById('notif'+Number(this.current)).style.zIndex='-999';
-        }
-        if(document.getElementById('notif'+Number(this.current-1))){
-            document.getElementById('notif'+Number(this.current-1)).style.opacity='0.0';
-            document.getElementById('notif'+Number(this.current-1)).style.zIndex='-999';
-        }
-        if(document.getElementById('notif'+Number(this.current-2))){
-            document.getElementById('notif'+Number(this.current-2)).style.opacity='0.0';
-            document.getElementById('notif'+Number(this.current-2)).style.zIndex='-999';
-        }
-        if(document.getElementById('notif'+Number(this.current-3))){
-            document.getElementById('notif'+Number(this.current-3)).style.opacity='0.0';
-            document.getElementById('notif'+Number(this.current-3)).style.zIndex='-999';
-        }
-        if(document.getElementById('notif'+Number(this.current-4))){
-            document.getElementById('notif'+Number(this.current-4)).style.opacity='0.0';
-            document.getElementById('notif'+Number(this.current-4)).style.zIndex='-999';
-        }
-        if(document.getElementById('notif'+Number(this.current-5))){
-            document.getElementById('notif'+Number(this.current-5)).style.opacity='0.0';
-            document.getElementById('notif'+Number(this.current-5)).style.zIndex='-999';
-        }
-        if(document.getElementById('notif'+Number(this.current-6))){
-            document.getElementById('notif'+Number(this.current-6)).style.opacity='0.0';
-            document.getElementById('notif'+Number(this.current-6)).style.zIndex='-999';
-        }
-        if(document.getElementById('notif'+Number(this.current-7))){
-            document.getElementById('notif'+Number(this.current-7)).style.opacity='0.0';
-            document.getElementById('notif'+Number(this.current-7)).style.zIndex='-999';
-        }
-    }
-}
-
-/*  Utility Manager */
-let utility = {
-    closeapp:function(){//Close the app
+let utility = {//Some usefull things
+    /*  Close the app   */
+    close:function(){
         config.save();
-        if (navigator.app) { navigator.app.exitApp() }
-        else if (navigator.device) { navigator.device.exitApp() }
-        else{ window.close() }
+        if (navigator.app) {
+            navigator.app.exitApp();
+        } else if (navigator.device) {
+            navigator.device.exitApp();
+        } else {
+            window.close();
+        }
     },
-    toast:function(text,durr,pos,offset){
-        if(pos==undefined){pos='bottom'}
-        if(durr==undefined){durr=4000}
-        if(offset==undefined){offset=-180}
-        window.plugins.toast.showWithOptions(
-        {
-            message: text, //text to be toasted
-            duration: durr, // which is 2000 ms. "long" is 4000. Or specify the # of ms yourself.
-            position: pos,   //bottom,top,center
-            addPixelsY: offset  // offset
-        },
-        );
+    /*  Produce toast messages    */
+    toast:function(text,durration_in_ms,position_top_right_left_bottom,offset_in_px){
+        if(typeof(device)!='undefined'){
+            if(position_top_right_left_bottom==undefined){position_top_right_left_bottom='bottom'}//default the position
+            if(durration_in_ms==undefined){durration_in_ms=4000}//default the duration
+            if(offset_in_px==undefined){offset_in_px=-160}//default the offset
+            window.plugins.toast.showWithOptions({message: text, duration: durration_in_ms, position: position_top_right_left_bottom, addPixelsY: offset_in_px},);    
+        }else{console.error('Device plugin broke cannot push toast')}
     },
-    copy_clipboard:function(copyText) {
+    /*  Push text to the keyboard   */
+    clipboard:function(textpush) {
         copyText.toString(); //Makes it a string so the clipboard will accept it
         var temptxtbox = document.createElement("input"); //creates an 'input' element and assigns it to 'temptxtbox'
         document.body.appendChild(temptxtbox); //Puts the input element into the document
@@ -2340,6 +2124,13 @@ let utility = {
         document.getElementById("temp_copy").value = copyText; //Puts the txt u want to copy into the input element
         temptxtbox.select(); //Makes the curser select the text that's in the input element
         document.execCommand("copy"); //Commands the document to copy the selected text
-        document.body.removeChild(temptxtbox); //Removes the input element from the documen
+        document.body.removeChild(temptxtbox); //Removes the input element from the document
+    },
+    /*  Produce Random numbers  */
+    rand:{
+        HEX:function(){return '#'+Math.floor(Math.random()*16777215).toString(16) /* hex color code */ },
+        RGB:function(){return { RED:this.number(255,0), GREEN:this.number(255,0), BLUE:this.number(255,0)} /* object with RGB color code */ },
+        HSL:function(){return  { HUE:this.number(360,0), SATURATION:this.number(100,0)+'%', LIGHTENESS:this.number(100,1)+'%' }/* HSL color code */},
+        number(max,min){return Math.floor(Math.random() * (max - min + 1) ) + min /* Random number*/}
     },
 }

@@ -20,13 +20,20 @@
 
     <div id="page_shade"></div><!--Page shader-->
 
-    <div class="headbar"><!--Header  & menus -->
-        <span id="headertxt">Timetable</span>
+    <div class="footbar"><!--Header  & menus -->
         <div class="menuholder">
-            <div class="menubtn" id="setting_btn" title="Settings"></div>
-            <div class="menubtn" id="task_btn" title="Task view"></div>
-            <div class="menubtn" id="manage_btn" title="Manage classes"></div>
-            <div class="menubtn" id="table_btn" title="Time table"></div>
+            <div class="menubtn" id="setting_btn" title="Settings">
+                <div class="menubtn_icon" id="setting_btn_icon"></div>
+            </div>
+            <div class="menubtn" id="task_btn" title="Task view">
+                <div class="menubtn_icon" id="task_btn_icon"></div>
+            </div>
+            <div class="menubtn" id="manage_btn" title="Manage classes">
+                <div class="menubtn_icon" id="manage_btn_icon"></div>
+            </div>
+            <div class="menubtn" id="table_btn" title="Time table">
+                <div class="menubtn_icon" id="table_btn_icon"></div>
+            </div>
         </div>
     </div>
     <div id="sub_menu">
@@ -413,23 +420,57 @@
     </view>
 
     <view id="setting_view">    <!--Setting View-->
-        <div class="sub_btn" id="theme_btn" title="toggle theme">
-            <div class="sub_title">Theme</div>
-            <div class="switch_container_active" id="theme_switch_container">
-                <div class="switchbdy" id="theme_switchbdy">
-                    <div class="switch"></div>
+        <div class="Setting_title">Theme</div>
+        <div class="selection_container">
+            <div class="selectionbox" id="light_theme_selection">
+                <div class="mincropallet" id="light_pallet">
+                    <table>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                    </table>
+                    <div class="palletfoot">
+                        <div class="icon lightcon"></div>
+                        <div class="icon lightbook"></div>
+                        <div class="icon lightclip"></div>
+                        <div class="icon darkgear"></div>
+                    </div>
+                    <input type="checkbox" class="selcetion_put" id="light_selection_put"></input>
                 </div>
+                <div class="selection_title">LIGHT</div>
+            </div>
+            
+            <div class="selectionbox" id="dark_theme_selection">
+                <div class="mincropallet" id="amoled_pallet">
+                    <table>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                    </table>
+                    <div class="palletfoot">
+                        <div class="icon darcon"></div>
+                        <div class="icon darkbook"></div>
+                        <div class="icon darkclip"></div>
+                        <div class="icon lightgear"></div>
+                    </div>
+                    <input type="checkbox" class="selcetion_put"  id="dark_selection_put"></input>
+                </div>
+                <div class="selection_title">DARK</div>
             </div>
         </div>
-        <div class="sub_btn" id="hilight_btn" title="toggle hilights">
-            <div class="sub_title">Hilights</div>
+
+        <div class="setting_bar" id="hilight_btn" title="toggle hilights">
+            <div class="Bar_title">Hilights</div>
             <div class="hilight_container_active" id="hilight_switch_container">
-                <div class="switchbdy" id="hilight_switchbdy">
-                    <div class="switch"></div>
-                </div>
+                <div class="switchbdy" id="hilight_switchbdy"><div class="switch"></div></div>
             </div>
         </div>
-        <div class="sub_btn" id="about_btn" title="Copies contact info to clipboard">About</div>
+
+        <div class="Setting_title" id="about_btn" title="Copies contact info to clipboard">About</div>
     </view>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>

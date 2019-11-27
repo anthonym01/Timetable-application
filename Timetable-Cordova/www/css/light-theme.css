@@ -1,18 +1,5 @@
 @keyframes pulse {0%{text-shadow: 0vh 0vh 0vh #000000} 50% {text-shadow: 0vh 0vh 5vh #000000} 100%{text-shadow: 0vh 0vh 0vh #000000}}
 @keyframes glowrow { 0%{background-color: rgb(0, 180, 255)} 50%{background-color: rgb(0, 113, 161)} 100%{background-color: rgb(0, 180, 255)}}
-@keyframes proto{
-    0%{color: hsl(0,100%,60%)}
-    11%{color: hsl(30,100%,60%)}
-    22%{color: hsl(60,100%,60%)}
-    33%{color: hsl(90,100%,60%)}
-    44%{color: hsl(120,100%,60%)}
-    55%{color: hsl(150,100%,60%)}
-    66%{color: hsl(180,100%,60%)}
-    77%{color: hsl(210,100%,60%)}
-    88%{color: hsl(286,100%,60%)}
-    100%{color: hsl(328,100%,60%)}
-}
-
 
 .glowrow {animation:glowrow 2s infinite;}
 
@@ -23,6 +10,7 @@ body{/*     the body    */
     border-color: #000000;
     text-shadow: none;
 }
+#light_pallet{box-shadow: 0vh 0vh 2vh 0vh #00aaff;}
 
 /*  Loading Screen  */
 #Loading{
@@ -33,6 +21,8 @@ body{/*     the body    */
     border: 3vh solid #ffffff;
     border-top: 3vh solid #00aaff;
 }
+
+/*  table changing sub menu */
 #sub_menu{background-color: rgb(255, 255, 255)}
 .sub_pannel_btn{
     background-image: linear-gradient(120deg,#ffffff,#AAAAAA,#FFFFFF);
@@ -49,13 +39,14 @@ body{/*     the body    */
     background-image: linear-gradient(120deg,#000000,#AAAAAA,#000000);
     color:white;
 }
+
 /*Scrollbar custom*/
 ::-webkit-scrollbar-track {background: rgb(255, 255, 255);}/*Scrollbar background*/
 ::-webkit-scrollbar-thumb {background: rgb(85, 85, 85);}/*scrollbar thumb*/
 ::-webkit-scrollbar-thumb:active {background: rgb(0, 0, 0);}/*activeing on scrollbar thumb*/
 
-/*  Header && Menu   */
-.headbar{   /* The body of the header   */
+/*  Foooter && Menu   */
+.footbar{   /* The body of the footer   */
     text-shadow:none;
     background-color: inherit;
     border-bottom:none;
@@ -79,18 +70,43 @@ body{/*     the body    */
     background-position: 90% 20%;
 }
 
-#setting_btn{   /*  Setting button    */
+
+/* Main navigation buttons */
+.menubtn_active{
+    background-color: rgb(98, 208, 255);
+}
+.menubtn_icon{
+    transition: background-image 500ms;
+}
+.menubtn #setting_btn_icon{   /*  Setting button    */
+    transition: transform 500ms;
+    transform: rotate(0deg);
     background-image: url('../img/setting-dark.webp');
 }
-#manage_btn{    /*  Manager button  (the little book) */
+.menubtn_active #setting_btn_icon{   
+    transition: transform 500ms;
+    transform: rotate(90deg);
+    background-image: url('../img/setting-dark.webp');
+}
+.menubtn #manage_btn_icon{    /*  Manager button  (the little book) */
     background-image: url('../img/manage-light.webp');
 }
-#table_btn{     /* The button with the logo, that switches back to the main table   */
+.menubtn_active #manage_btn_icon{
+    background-image: url('../img/manage-open-light.webp');
+}
+.menubtn #table_btn_icon{     /* The button with the logo, that switches back to the main table   */
     background-image: url('../img/icon.webp');
 }
-#task_btn{
+.menubtn_active #table_btn_icon{
+    background-image: url('../img/icon-inverse.webp');
+}
+.menubtn #task_btn_icon{    /*  task button    */
     background-image: url('../img/Clip-light-closes.webp');
 }
+.menubtn_active #task_btn_icon{
+    background-image: url('../img/Clip-light.webp');
+}
+
 
 /* Switches */
 .switch_container_active .switchbdy{
@@ -132,15 +148,15 @@ body{/*     the body    */
 
 /*  Colors are class based because im lazy  */
 .hue0{
-    background-color: rgb(228, 228, 228);
-    box-shadow: 0vh 0vh 0vh 0vh rgb(228, 228, 228);
+    background-color: hsl(0, 0%, 89%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(0, 0%, 89%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue0:hover{ box-shadow: 0vh 0.5vh 2vh 1vh rgb(228, 228, 228);}
+.hue0:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(0, 0%, 89%);}
 .hue0:active{
     transition: background-color 0ms;
-    background-color: rgb(196, 196, 196);
+    background-color: hsl(0, 0%, 77%);
 }
 
 .hue1{/* color:1 Red */
@@ -323,10 +339,6 @@ body{/*     the body    */
     background-color: #ff5656;
     border:0.4vh solid #912e2e;
 }
-#cancelimg{background-image: url('../img/cancel-dark.webp');}/* (X) icon in the cancel button */
-#saveimg{background-image: url('../img/save-dark.webp');}
-#save_addmorelimg{background-image: url('../img/plus-dark.webp');}
-#deleteimg{background-image: url('../img/trash-dark.webp');}
 
 #delete_confirm_pannel{/*   Delete confirmation pannel  */
     background-color: inherit;
@@ -334,37 +346,36 @@ body{/*     the body    */
 #yes_btn{
     background-color: #2bff00;
     border:0.3vh solid #20ae03;
+    transition:background-color 500ms;
 }#yes_btn:active{
     background-color: #2bff00;
     border:0.3vh solid #20ae03;
+    transition:background-color 0ms;
 }
 #no_btn{
     background-color: #ff5656;
     border:0.3vh solid #912e2e;
+    transition:background-color 500ms;
 }#no_btn:active{
     background-color: #ff3434;
     border:0.3vh solid #b33e3e;
+    transition:background-color 0ms;
 }
 
 #erraser{/* Clear inputs    */
     background-image: url('../img/Eraser-light.webp');
 }
 
-
-        /*  Notifications   */
-@keyframes stretch {from{width:0%}to{width:100%}}
-
-/*   Type 3 notification   */
-.notification_style3{
-    border-top:0.5vw solid #00aaff;
-    background-color: rgb(255, 255, 255);
-    color:rgb(0, 0, 0);
-    box-shadow: #000000;
+/*  Settinng things */
+#dark_selection_put{
+    border:1px solid #000000;
 }
-.notification_style3:active{box-shadow: #000000;}
-.notification_style3 .title::after{
-    background-image: url('../img/icon.webp');
+#light_selection_put{
+    border:1px solid #00aaff;
 }
-.notification_style3 .title::before{
-    background-color:rgb(0, 0, 0);
+.selcetion_put:checked{
+    background-color: #00aaff;
+}
+.selcetion_put:checked::after{
+    border-color: #000000;
 }

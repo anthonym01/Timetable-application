@@ -1,6 +1,14 @@
 /*  Portrait and Common Layout  */
 @media screen{
     * {-webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */}
+    @font-face{src:url(../fonts/handwriting-black-draft_DEMO.otf); font-family: handwriting;}/* Handwriting font */
+    @font-face{src:url(../fonts/Minecrafter.Reg.ttf); font-family: minecraft;}/* Minecraft clean font */
+    @font-face{src:url(../fonts/Minecrafter.Alt.ttf); font-family: minecraft_cracked;}/* Minecraft cracked font */
+    @import url('https://fonts.googleapis.com/css?family=Lexend+Deca|Roboto&display=swap');
+    /*
+        font-family: 'Roboto', sans-serif;
+        font-family: 'Lexend Deca', sans-serif;
+    */
     @keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
 
     body{/*     the body    */
@@ -68,9 +76,9 @@
     ::-webkit-scrollbar {width: 0.2vh;}/*scrollbar body*/
 
     /*  Header */
-    .headbar{   /* The body of the header   */
+    .footbar{   /* The body of the header   */
         position:fixed;
-        top:0;
+        bottom:0;
         height:7vh;
         left:0;
         width:100vw;
@@ -79,42 +87,45 @@
         text-align:center;
         text-shadow:0vh 0vh 1vh;
         border:none;
-        z-index: 50;
-    }
-    #headertxt{
-        position:absolute;
-        width:auto;
-        text-align: left;
-        height:7vh;
-        top:0;
-        left:10%;
     }
     .menuholder{    /*  The Menu in the header  */
         position: absolute;
         top:0;
         right:0;
         height:7vh;
-        width:auto;
+        width:100%;
     }
-    .menubtn{   /*  Buttons for the menu in the header  */
+    .menubtn,.menubtn_active{   /*  Buttons for the menu in the header  */
         position: relative;
         float: right;
         height:7vh;
-        width:7vh;
+        width:25%;
         background-size: contain;
         background-repeat: no-repeat;
         cursor: pointer;
         /*margin-right:0.5vw;*/
+        transition:background-color 500ms;
+        border-radius: 2vh;
+    }
+    .menubtn_icon{
+        position: relative;
+        margin-right:auto;
+        margin-left:auto;
+        height:7vh;
+        width: 7vh;
+        background-size: contain;
+        background-position:center;
+        background-image: url('../img/icon.webp');
     }
     #sub_menu{
         position: absolute;
-        top:7vh;
+        bottom: 7vh;
         right: 0;
         height: auto;
         width:100%;
-        z-index: 50;
         border-radius: 0vh 0vh 1vh 1vh;
         display: none;
+        z-index: 100;
     }
     .sub_pannel_btn{
         height: 6vh;
@@ -136,12 +147,11 @@
     /*  Views   */
     view{
         position: absolute;
-        top:7vh;
+        bottom:7vh;
         left:0;
         width: 100vw;
-        height:93vh;
+        height:93.5vh;
         display:none;
-        z-index: 25;
         overflow: scroll;
     }
 
@@ -296,8 +306,8 @@
     }
     #dataentry_screen{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
         position: fixed;
-        top:5vh;
-        height:96%;
+        bottom: 0;
+        height:100%;
         width:100%;
         display: none;
         overflow: scroll;
@@ -320,8 +330,6 @@
         font-size: 4vh;
         border-radius: 1vh;
     }
-    #dataentry_screen td,th{
-    }
     #dataentry_screen select{
         width: 100%;
         height:100%;
@@ -338,8 +346,9 @@
 
     .btn_bar{
         position:fixed;
-        bottom:10vh;
+        bottom:0vh;
         width: 100vw;
+        height:9vh;
     }
     .databtns{/*    Buttons at the bottom of #dataentry_screen  */
         position: absolute;
@@ -349,7 +358,6 @@
         padding:1vh;
         text-align: center;
         width:25vw;
-        border-radius:3vh;
         box-shadow: 0vh 0vh 0vh 0vh;
         cursor: pointer;
         transition:background-color 500ms;
@@ -363,7 +371,6 @@
     }
     #save_btn{/*Save button*/
         left:35vw;
-        z-index: 1;
     }
     #savepluss_btn{/*Save and add new entry button*/
         right:4vw;
@@ -427,23 +434,130 @@
     }#erraser:active{animation: wobble 500ms linear infinite;}
 
 /*  Setting view  */
-    #setting_btn{
-        transition: transform 500ms;
-        transform: rotate(0deg);
+    #setting_view{
+        overflow: scroll;
     }
-    .sub_btn{/* Buttons in the sub meny pannels */
-        transition:box-shadow 500ms, transform 500ms,text-shadow 500ms;
-        height:8vh;
-        width: 100%;
-        font-size:7vh;
+    .Setting_title{
+        margin-top:1vh;
+        font-size: 6vh;
+        position: relative;
         text-align: center;
-        transform: translate(0,0vh);
+    }
+    .selection_container{
+        margin-top:1vh;
+        position: relative;
+        height:40vh;
+        width: 100%;
+    }
+    .selectionbox{
+        height:100%;
+        width:50%;
+        float: left;
         cursor: pointer;
-    }.sub_title{left:0;width:75%;}
+    }
+    .selection_title{
+        width: calc(100% - 2.3vh);
+        text-align: center;
+        font-size: 3.9vh;
+        height: 3.9vh;
+    }
+    .selcetion_put{
+        -webkit-appearance: none;
+        padding:0;
+        height: 3.5vh;
+        width: 3.5vh;
+        float: right;
+        cursor: pointer;
+        border-radius: 0.5vh;
+    }
+    .selcetion_put:checked::after{/*    The tick in the box */
+        position: absolute;
+        transform: rotate(40deg) translate(0.55vh,-0.6vh);
+        height: 2.7vh;
+        width: 0.8vh;
+        content: "";
+        padding:0;
+        border-width: 0.4vh;
+        border-style: solid;
+        border-top: none;
+        border-left: none;
+
+    }
+    .mincropallet{
+        position: relative;
+        height: 85%;
+        width: 90%;
+        margin-right: auto;
+        margin-left:auto;
+        transition:box-shadow 500ms;
+    }
+    .mincropallet table{
+        height: 85%;
+        width:100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        background-size: cover;
+    }.mincropallet td{
+        border-collapse: collapse;
+    }
+    #amoled_pallet{background-color: rgb(0, 0, 0);}
+    #amoled_pallet table{
+        background-image: url('../img/blyatground.webp');
+    }#amoled_pallet td{
+        border:1px solid #ffffff;
+    }
+    #dark_pallet{background-color: rgb(49, 49, 49)}
+    #dark_pallet table{
+        background-image: url('../img/blyatground.webp');
+    }#dark_pallet td{
+        border:1px solid #c9c9c9;
+    }
+    #light_pallet{background-color: rgb(255, 255, 255);}
+    #light_pallet table{
+        background-image: url('../img/whiteground.webp');
+    }#light_pallet td{
+        border:1px solid #000000;
+    }
+    .mincropallet .palletfoot{
+        height:15%;
+        width: 100%;
+    }
+    .palletfoot .icon{
+        height:100%;
+        width:25%;
+        float:left;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .lightcon{background-image: url('../img/icon.webp');}
+    .lightbook{background-image: url('../img/manage-light.webp');}
+    .lightclip{background-image: url('../img/Clip-light.webp');}
+    .lightgear{background-image: url('../img/setting-light.webp');}
+    .darkgear{background-image: url('../img/setting-dark.webp');}
+    .darcon{background-image: url('../img/icon-inverse.webp');}
+    .darkbook{background-image: url('../img/manage-dark.webp');}
+    .darkclip{background-image: url('../img/Clip-dark.webp');}
+    
+    .setting_bar{
+        position: relative;
+        height:6vh;
+        width: calc(100% - 12vh);
+        text-align: center;
+        margin-top:1vh;
+    }
+    .Bar_title{
+        height: 6vh;
+        font-size:  5.5vh;
+        text-align: center;
+        cursor: pointer;
+    }
+
     /* Switches */
     .switch_container_active{
         position: absolute;
-        top:1vh;
+        transform: translate(12vh,0);
+        top:0vh;
         right:1vh;
         width:12vh;
         height:5vh;
@@ -477,12 +591,15 @@
     }
     .switch_container_dissabled{
         position: absolute;
-        top:1vh;
+        transform: translate(12vh,0);
+        top:0vh;
         right:1vh;
         width:12vh;
         height:5vh;
+        border:0.5vh solid;
         border-radius: 5vh;
         cursor:pointer;
+        box-shadow:0px 0px 0px 0px;
         transition: box-shadow;
         transition: 300ms;
     }
@@ -507,72 +624,10 @@
         transition: transform,background-color;
         transition-duration: 300ms;
     }
-        /*  Notifications   */
-    @keyframes stretch {from{width:0%}to{width:100%}}
 
-    /*   Type 3 notification   */
-    .notification_style3{
-        position: fixed;
-        bottom:2vh;
-        right:1vw;
-        height:20vh;
-        width:98%;
-        transform: translate(0vw,25vh);
-        overflow: hidden;
-        box-shadow: 0vh 0vh 0.5vh 0vh;
-        cursor: pointer;
-        transition:transform 500ms,box-shadow 200ms;
-        z-index: 30;
-    }
-    .notification_style3:hover{box-shadow: 0vh 0vh 2vh 0vh;}
-    .notification_style3 .title{
-        position: absolute;
-        top:0;
-        right:0;
-        width:100%;
-        height:5.5vh;
-        font-size:4.5vh;
-        padding-right: 1vw;
-        text-align:right;
-        white-space: nowrap;
-        cursor: inherit;
-    }
-    .notification_style3 .title::after{
-        position:absolute;
-        top:0;
-        left:1.2vw;
-        height:5.5vh;
-        width:5.5vh;
-        background-size: contain;
-        background-repeat: no-repeat;
-        content:"";
-        cursor: inherit;
-    }
-    .notification_style3 .title::before{
-        position:absolute;
-        transform:translate(0,100%);
-        bottom:0;
-        left:0;
-        z-index: 99;
-        height:0.5vh;
-        animation: stretch 11000ms;
-        content:"";
-        cursor: inherit;
-    }
-    .notification_style3 .notifbody{
-        position: absolute;
-        bottom:0;
-        left:0;
-        width:95%;
-        padding:0.5vh 0.5vw;
-        height:13.5vh;
-        font-size:4vh;
-        overflow: hidden;
-        cursor: inherit;
-    }
 }
 
 /*  Landscape layout (with min-width)   */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
-
+    
 }

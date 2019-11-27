@@ -1,0 +1,381 @@
+@keyframes pulse {0%{text-shadow: 0vh 0vh 0vh #ffffff} 50% {text-shadow: 0vh 0vh 5vh #ffffff} 100%{text-shadow: 0vh 0vh 0vh #ffffff}}
+
+@keyframes glowrow { 0%{background-color: rgb(43, 255, 0)} 50%{background-color: rgb(24, 145, 0)} 100%{background-color: rgb(43, 255, 0)}}
+.glowrow {animation:glowrow 2s infinite;}
+
+body{
+    background-color: rgb(0, 0, 0);
+    color:rgb(255, 255, 255);
+    box-shadow: #ffffff;
+    border-color: #ffffff;
+}
+#amoled_pallet{box-shadow: 0vh 0vh 2vh 0vh #2bff00;}
+
+/*  Loading Screen  */
+#Loading{
+    box-shadow: #ffffff;
+    background-color: inherit;
+}
+#loader{
+    border: 3vh solid #ffffff;
+    border-top: 3vh solid #2bff00;
+}
+
+/*  table changing sub menu */
+#sub_menu{background-color: rgb(0, 0, 0);border-top:0.2vh solid #ffffff}
+.sub_pannel_btn{
+    background-image: linear-gradient(0deg,#000000,#000000,#000000);
+    background-color: inherit;
+    background-size: 1000%;
+    background-position: 0% 0% 0% 100%;
+    transition: background-position ease 500ms;
+}
+.sub_pannel_btn:active{
+    background-image: linear-gradient(120deg,#000000,#AAAAAA,#000000);
+    background-position: 100% 0% 0% 0%;
+}
+.sub_pannel_btn:active{
+    transition: background-position ease 500ms,background-image 0ms;
+    background-image: linear-gradient(120deg,#ffffff,#AAAAAA,#FFFFFF);
+    color:rgb(0, 0, 0);
+}
+
+/*Scrollbar custom*/
+::-webkit-scrollbar-track {background: rgb(0, 0, 0);}/*Scrollbar background*/
+::-webkit-scrollbar-thumb {background: rgb(170, 170, 170);}/*scrollbar thumb*/
+::-webkit-scrollbar-thumb:active {background: rgb(255, 255, 255);}/*activeing on scrollbar thumb*/
+
+/*  Foooter && Menu   */
+.footbar{   /* The body of the footer   */
+    background-color: inherit;
+    border-bottom:none;
+}
+.menu_panel{
+    background-color:inherit;
+    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
+}
+.menu_panel_active{
+    background-color:inherit;
+    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
+}
+#sub_menu{background-color: rgb(0, 0, 0);border-bottom:0.2vh solid #ffffff}
+.sub_pannel_btn{
+    background-image: linear-gradient(90deg,#000000,#AAAAAA,#000000);
+    background-size: 1000%;
+    background-position: 100% 0%;
+    transition: background-position ease 500ms;
+}
+.sub_pannel_btn:active{
+    background-position: 0% 100%;
+}
+.sub_btn{/* Buttons in the sub meny pannels */
+    /*box-shadow: 0vh 0vh 0vh 0vh #ffffff;*/
+    text-shadow: 0vh 0vh 0vh #ffffff;
+}
+.sub_btn:active{
+    /*box-shadow: 0vh 0.5vh 20vh 0vh #ffffff;*/
+    text-shadow: 0vh 0vh 2vh #ffffff;
+}
+
+/* Main navigation buttons */
+.menubtn_active{
+    background-color: #199401;
+}
+.menubtn_icon{
+    transition: background-image 500ms;
+}
+.menubtn #setting_btn_icon{   /*  Setting button    */
+    transition: transform 500ms;
+    transform: rotate(0deg);
+    background-image: url('../img/setting-light.webp');
+}
+.menubtn_active #setting_btn_icon{   
+    transition: transform 500ms;
+    transform: rotate(90deg);
+    background-image: url('../img/setting-light.webp');
+}
+.menubtn #manage_btn_icon{    /*  Manager button  (the little book) */
+    background-image: url('../img/manage-dark.webp');
+}
+.menubtn_active #manage_btn_icon{
+    background-image: url('../img/manage-open-dark.webp');
+}
+.menubtn #table_btn_icon{     /* The button with the logo, that switches back to the main table   */
+    background-image: url('../img/icon-inverse.webp');
+}
+.menubtn_active #table_btn_icon{
+    background-image: url('../img/icon.webp');
+}
+.menubtn #task_btn_icon{    /*  task button    */
+    background-image: url('../img/Clip-dark-closes.webp');
+}
+.menubtn_active #task_btn_icon{
+    background-image: url('../img/Clip-dark.webp');
+}
+
+/* Switches */
+.switch_container_active .switchbdy{
+    background-color: inherit;
+}
+
+.switch_container_active .switch{
+    background-color: rgb(255, 255, 255);
+}
+.switch_container_dissabled{
+    border:0.5vh solid rgb(122,122,122);
+}
+.switch_container_dissabled .switch{
+    background-color: rgb(122,122,122);
+}
+
+/*Timetable tags*/
+#timetable{
+    background-image: url('../img/blyatground.webp');
+}
+.maincell{/*    Cells of the table  */
+    border:0.2vh solid #d4d4d4;
+}
+
+.data_block{/*  The blocks containing the classes   */
+    background-color: inherit;
+    color:inherit;
+    text-shadow: 0vh 0vh 1vh #000000;
+}
+.data_block:active{
+    color: rgba(255, 255, 255, 0);
+}
+.infodoot{
+    color: rgb(255, 255, 255);
+    background-color: inherit;
+    text-shadow: 0vh 0vh 2vh #000000;
+}
+
+/*  Colors are class based because im lazy  */
+.hue0{
+    background-color: hsl(0, 0%, 39%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(0, 0%, 39%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue0:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(0, 0%, 39%);}
+.hue0:active{
+    transition: background-color 0ms;
+    background-color: rgb(185, 185, 185);
+}
+
+.hue1{/* color:1 Red */
+    background-color: hsl(0,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(0,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue1:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(0,100%,40%)}
+.hue1:active{
+    transition: background-color 0ms;
+    background-color: hsl(0,100%,60%);
+}
+
+.hue2{
+    background-color: hsl(30,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(30,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue2:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(30,100%,40%)}
+.hue2:active{
+    transition: background-color 0ms;
+    background-color: hsl(30,100%,60%);
+}
+
+.hue3{
+    background-color: hsl(60,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(60,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue3:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(60,100%,40%)}
+.hue3:active{
+    transition: background-color 0ms;
+    background-color: hsl(60,100%,60%);
+}
+
+.hue4{
+    background-color: hsl(90,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(90,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue4:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(90,100%,40%)}
+.hue4:active{
+    transition: background-color 0ms;
+    background-color: hsl(90,100%,60%);
+}
+
+.hue5{
+    background-color: hsl(120,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(120,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue5:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(120,100%,40%)}
+.hue5:active{
+    transition: background-color 0ms;
+    background-color: hsl(120,100%,60%);
+}
+
+.hue6{
+    background-color: hsl(150,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(150,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue6:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(150,100%,40%)}
+.hue6:active{
+    transition: background-color 0ms;
+    background-color: hsl(150,100%,60%);
+}
+
+.hue7{
+    background-color: hsl(180,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(180,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue7:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(180,100%,40%)}
+.hue7:active{
+    transition: background-color 0ms;
+    background-color: hsl(180,100%,60%);
+}
+
+.hue8{
+    background-color: hsl(210,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(210,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue8:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(210,100%,40%)}
+.hue8:active{
+    transition: background-color 0ms;
+    background-color: hsl(210,100%,60%);
+}
+
+.hue9{
+    background-color: hsl(240,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(240,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue9:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(240,100%,40%)}
+.hue9:active{
+    transition: background-color 0ms;
+    background-color: hsl(240,100%,60%);
+}
+
+.hue10{
+    background-color: hsl(270,100%,40%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(270,100%,40%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue10:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(270,100%,40%)}
+.hue10:active{
+    transition: background-color 0ms;
+    background-color: hsl(270,100%,60%);
+}
+
+.hue11{
+    background-color: hsl(328,100%,60%);
+    box-shadow: 0vh 0vh 0vh 0vh hsl(328,100%,60%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue11:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(328,100%,60%)}
+.hue11:active{
+    transition: background-color 0ms;
+    background-color: hsl(328,100%,70%);
+}
+
+/*  manage_view   */
+.data_bar{/*    Detailed representaion of the data to be managed    */
+    text-shadow: 0vh 0vh 1vh #000000;
+}
+.data_noot{
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    text-shadow: none;
+}
+.plusimg{/* Little icon in the add new button */
+    background-image: url('../img/plus-light.webp');
+}
+#dataentry_screen{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
+    background-color: rgb(0, 0, 0);
+}
+#dataentry_screen input{
+    border:none;
+    border-bottom:0.3vh solid #ffffff;
+    background-color: inherit;
+    color: inherit;
+}
+.btn_bar{
+    background-color: #000000;
+}
+.databtns{
+    background-color: #000000;
+    border:0.3vh solid #ffffff;
+}
+#cancel_btn:active{ /*cancel button*/
+    background-color: #ff5656;
+    border:0.3vh solid #912e2e;
+}
+#save_btn:active{ /*Save button*/
+    background-color: #00c3ff;
+    border:0.3vh solid #178caf;
+}
+#savepluss_btn:active{/*Save and add new entry button*/
+    background-color: #44ff1e;
+    border:0.3vh solid #30b914;
+}
+#delete_btn:active{/*Save and add new entry button*/
+    background-color: #ff5656;
+    border:0.3vh solid #912e2e;
+}
+
+#delete_confirm_pannel{/*   Delete confirmation pannel  */
+    background-color: inherit;
+}
+#yes_btn{
+    background-color: #3ad61a;
+    border:0.3vh solid #248d0f;
+    transition:background-color 500ms;
+}#yes_btn:active{
+    background-color: #44ff1e;
+    border:0.3vh solid #3ad61a;
+    transition:background-color 0ms;
+}
+#no_btn{
+    background-color: #ff5656;
+    border:0.3vh solid #912e2e;
+    transition:background-color 500ms;
+}#no_btn:active{
+    background-color: #ff3434;
+    border:0.3vh solid #b33e3e;
+    transition:background-color 0ms;
+}
+
+#erraser{/* Clear inputs    */
+    background-image: url('../img/Eraser-dark.webp');
+}
+
+/*  Settinng things */
+#dark_selection_put{
+    border:1px solid #00ff0d;
+}
+#light_selection_put{
+    border:1px solid #ffffff;
+}
+.selcetion_put:checked{
+    background-color: #00ff0d;
+}
+.selcetion_put:checked::after{
+    border-color: #000000;
+}
