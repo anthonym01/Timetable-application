@@ -132,7 +132,6 @@ var config={
         overwrite:null,
         called_from_plus:false,
         view:"table",//defaults to table
-        navigate_history:['table'],
         exit:false,
         startup:true,
     },
@@ -1890,26 +1889,26 @@ let UI={
         this.setting.hilight.setpostition();
         if(typeof(device)!="undefined"){//sometimes plugins break
             if(device.platform=='Android'||'iOS'){//mobile
-                document.getElementById('table_btn').addEventListener('touchstart',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TABLE();});
-                document.getElementById('manage_btn').addEventListener('touchstart',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.MANAGE();});
-                document.getElementById('setting_btn').addEventListener('touchstart',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.SETTING();});
-                document.getElementById('task_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TASK();});
-                document.getElementById('hilight_btn').addEventListener('touchstart',UI.setting.hilight.flip);    
+                document.getElementById('table_btn').addEventListener('touchstart',UI.navigate.TABLE)
+                document.getElementById('manage_btn').addEventListener('touchstart',UI.navigate.MANAGE)
+                document.getElementById('setting_btn').addEventListener('touchstart',UI.navigate.SETTING)
+                document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
+                document.getElementById('hilight_btn').addEventListener('touchstart',UI.setting.hilight.flip)
             }else{//Desktop
-                document.getElementById('table_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TABLE();});
-                document.getElementById('manage_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.MANAGE();});
-                document.getElementById('setting_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.SETTING();});
-                document.getElementById('task_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TASK();});
-                document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip);
+                document.getElementById('table_btn').addEventListener('click',UI.navigate.TABLE)
+                document.getElementById('manage_btn').addEventListener('click',UI.navigate.MANAGE)
+                document.getElementById('setting_btn').addEventListener('click',UI.navigate.SETTING)
+                document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
+                document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
             }
         }
         else{
             console.error('"device" plugin broke!');
-            document.getElementById('table_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TABLE();});
-            document.getElementById('manage_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.MANAGE();});
-            document.getElementById('setting_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.SETTING();});
-            document.getElementById('task_btn').addEventListener('click',function(){config.properties.navigate_history.push(config.properties.view);UI.navigate.TASK();});
-            document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip);
+            document.getElementById('table_btn').addEventListener('click',UI.navigate.TABLE)
+            document.getElementById('manage_btn').addEventListener('click',UI.navigate.MANAGE)
+            document.getElementById('setting_btn').addEventListener('click',UI.navigate.SETTING)
+            document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
+            document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
         }
         
         document.getElementById('about_btn').addEventListener('click',function(){
@@ -1926,33 +1925,15 @@ let UI={
     navigate:{
         BACK:function(){//Back button handle
             console.log('Back navigation started');
-            var lastpannel = config.properties.navigate_history.pop();
-            console.log('Last pannel was forund to be :',lastpannel);
-            switch(lastpannel){
-                case config.properties.view:console.log('Same retrying...'); this.BACK(); break; //Same as current
-                case "setting":
-                    console.log('Setting selected');
-                    this.SETTING();
-                break;
-                case "manage":
-                    console.log('manage selected');
-                    this.MANAGE();
-                break;
-                case "table":
-                    console.log('table selected');
-                    this.TABLE();
-                break;
-                case "task":
-                    console.log('table selected');
-                    this.TASK();
-                break;
-                default:
-                    console.log('Navigational array is empty...');
-                    this.exitstrategy();
+            if(config.properties.view=="table"){
+                this.exitstrategy();
+            }else{
+                this.TABLE();
             }
+            
         },
         exitstrategy:function(){
-            if(config.properties.exit){utility.closeapp()}
+            if(config.properties.exit){utility.close()}
             else{
                 config.properties.exit=true;
                 setTimeout(()=>{config.properties.exit=false;},2000);
