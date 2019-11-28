@@ -191,6 +191,7 @@
         background: none;
         width:auto;
         height: auto;
+        font-family: 'Roboto', sans-serif;
     }
 
     /*  Table body pseudo render    */
