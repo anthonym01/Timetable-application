@@ -81,7 +81,7 @@ var config={
                 end:            End time of the class represented in 24hr
                     (minutes represented as percentage of hr "x/60")
             */
-            /*
+            
             {show:1,day:1,name:"Analysis of Algorithms",Lecturer:"David W. White",room:"1A-66",course_code:"CIT3003",type:"Lecture",color:1,start:10.00,end:11.833},
             {show:1,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Tutorial",color:2,start:17.00,end:18.00},
             {show:1,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Practical",color:2,start:18.00,end:21},
@@ -113,7 +113,7 @@ var config={
             {show:2,day:2,name:"Information Technology",room:"1B-C2",course_code:"",type:"Lecture",color:6,start:11.00,end:12.00},
             {show:2,day:2,name:"Information Technology",room:"47B-3",course_code:"",type:"Practical",color:6,start:14.00,end:17.00},
             {show:2,day:2,name:"General Chemistry 1",room:"1B-C2",course_code:"",type:"Tutorial",color:1,start:12.00,end:13.00},
-            */
+            
         ],
         task_db:[
 

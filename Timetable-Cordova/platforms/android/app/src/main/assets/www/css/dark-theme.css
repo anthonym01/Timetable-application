@@ -132,8 +132,9 @@ body{
 #timetable{
     background-image: url('../img/blyatground.webp');
 }
-.maincell{/*    Cells of the table  */
-    border:0.2vh solid #d4d4d4;
+#table1::-webkit-scrollbar-thumb {background: rgb(0, 0, 0);}/*scrollbar thumb*/
+.maincell{/*  Cells of the table  */
+    border:0.2vh solid #ffffff;
 }
 
 .data_block{/*  The blocks containing the classes   */

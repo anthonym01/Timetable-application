@@ -8,7 +8,7 @@
     <link rel="icon" href="./img/icon.webp" id="favico" type="image/png" sizes="32x32">
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
     <link rel="stylesheet" type="text/css" href="css/index.css">
-    <link rel="stylesheet" type="text/css" id="theme" href="css/AMOLED-dark-theme.css">
+    <link rel="stylesheet" type="text/css" id="theme" href="css/dark-theme.css">
     <title>Timetable</title>
 </head>
 <body>
@@ -303,13 +303,15 @@
     </view>
 
     <view id="manage_view">     <!--management view-->
-        <select id="table_selector">
-            <option value="1" id='1_selectormain'>Table 1 items</option>
-            <option value="2" id='2_selectormain'>Table 2 items</option>
-            <option value="3" id='3_selectormain'>Table 3 items</option>
-            <option value="4" id='4_selectormain'>Table 4 items</option>
-            <option value="0">Hidden items</option>
-        </select>
+        <div class="select_container">
+            <select id="table_selector">
+                <option value="1" id='1_selectormain'>Table 1 items</option>
+                <option value="2" id='2_selectormain'>Table 2 items</option>
+                <option value="3" id='3_selectormain'>Table 3 items</option>
+                <option value="4" id='4_selectormain'>Table 4 items</option>
+                <option value="0">Hidden items</option>
+            </select>
+        </div>
         <div id="dataspace">
             
         </div>
@@ -425,14 +427,14 @@
             <div class="selectionbox" id="light_theme_selection">
                 <div class="mincropallet" id="light_pallet">
                     <table>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
                     </table>
                     <div class="palletfoot">
                         <div class="icon lightcon"></div>
@@ -448,14 +450,14 @@
             <div class="selectionbox" id="dark_theme_selection">
                 <div class="mincropallet" id="amoled_pallet">
                     <table>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
                     </table>
                     <div class="palletfoot">
                         <div class="icon darcon"></div>

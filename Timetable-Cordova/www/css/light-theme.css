@@ -128,7 +128,7 @@ body{/*     the body    */
     background-image: url('../img/whiteground.webp');
 }
 .maincell{/*    Cells of the table  */
-    border:0.2vh solid #434343;
+    border:0.2vh solid #000000;
 }
 
 /*  Table body pseudo render    */

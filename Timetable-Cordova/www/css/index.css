@@ -4,11 +4,7 @@
     @font-face{src:url(../fonts/handwriting-black-draft_DEMO.otf); font-family: handwriting;}/* Handwriting font */
     @font-face{src:url(../fonts/Minecrafter.Reg.ttf); font-family: minecraft;}/* Minecraft clean font */
     @font-face{src:url(../fonts/Minecrafter.Alt.ttf); font-family: minecraft_cracked;}/* Minecraft cracked font */
-    @import url('https://fonts.googleapis.com/css?family=Lexend+Deca|Roboto&display=swap');
-    /*
-        font-family: 'Roboto', sans-serif;
-        font-family: 'Lexend Deca', sans-serif;
-    */
+    @font-face {font-family: Lexend_Deca; src: url(../fonts/LexendDeca-Regular.ttf);}
     @keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
 
     body{/*     the body    */
@@ -18,12 +14,13 @@
         -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
         -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
         -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-        font-family: Serif,Arial, Helvetica, sans-serif;
+        font-family: Lexend_Deca,Serif,Arial, Helvetica, sans-serif;
         height:100vh;
         margin:0px;
         padding:0px;                                /* Padding to avoid the "unsafe" areas behind notches in the screen */
         padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-right, 0px);
         width:100vw;
+        
     }
     
     tr{transition:background-color 250ms;}
@@ -73,7 +70,7 @@
     }
 
     /*Scrollbar custom*/
-    ::-webkit-scrollbar {width: 0.2vh;}/*scrollbar body*/
+    ::-webkit-scrollbar {width: 1px;z-index: 100;}/*scrollbar body*/
 
     /*  Header */
     .footbar{   /* The body of the header   */
@@ -150,7 +147,7 @@
         bottom:7vh;
         left:0;
         width: 100vw;
-        height:93.5vh;
+        height:93vh;
         display:none;
         overflow: scroll;
     }
@@ -159,13 +156,11 @@
     #timetable{/*   The body of the timetable   */
         position: relative;
         margin-top:0vh;
-        height:92.7vh;
-        min-height:90vh;
-        max-height: 92.7vh;
-        min-width:100vw;
+        height:92.8vh;
+        max-height: 93vh;
         left:0vw;
         white-space: nowrap;
-        font-size: 3vh;
+        font-size: 2.7vh;
         overflow: auto;
         border-collapse: collapse;
         cursor: default;
@@ -191,7 +186,8 @@
         background: none;
         width:auto;
         height: auto;
-        font-family: 'Roboto', sans-serif;
+        font-family: Lexend_Deca;
+        font-size: 2.8vh;
     }
 
     /*  Table body pseudo render    */
@@ -250,7 +246,7 @@
     #table_selector{
         position: relative;
         top:0;
-        margin-top:1vh;
+        margin-top: 2vh;
         margin-bottom: 2vh;
         margin-left:6vw;
         width:88vw;
@@ -258,6 +254,7 @@
         padding:0.5vh;
         border-radius: 2vh;
         text-align: center;
+        -webkit-appearance: none;
     }
     #dataspace{/*   Block Containing the data_bar(s)   */
         position: relative;
@@ -336,6 +333,8 @@
         height:100%;
         font-size: 4vh;
         border-radius: 1vh;
+        -webkit-appearance: none;
+        
     }
     #view_put{
         position: relative;
