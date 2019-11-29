@@ -243,19 +243,6 @@
 
 
     /*  manage_view   */
-    #table_selector{
-        position: relative;
-        top:0;
-        margin-top: 2vh;
-        margin-bottom: 2vh;
-        margin-left:6vw;
-        width:88vw;
-        font-size: 3vh;
-        padding:0.5vh;
-        border-radius: 2vh;
-        text-align: center;
-        -webkit-appearance: none;
-    }
     #dataspace{/*   Block Containing the data_bar(s)   */
         position: relative;
         top:0;
@@ -302,6 +289,7 @@
         width:3.8vh;
         background-size: contain;
     }
+
     #dataentry_screen{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
         position: fixed;
         bottom: 0;
@@ -328,20 +316,16 @@
         font-size: 4vh;
         border-radius: 1vh;
     }
-    #dataentry_screen select{
-        width: 100%;
-        height:100%;
-        font-size: 4vh;
-        border-radius: 1vh;
-        -webkit-appearance: none;
-        
-    }
-    #view_put{
+    .select_container{/*  Select boxes made to be more effective on mobile  */
         position: relative;
-        padding:0;
-        border-radius: 0;
-        height: 3vh;
-        width: 3vh;
+        height: 4vh;
+        width:100%;
+    }
+    .select_container select{
+        font-size: 4vh;
+        height: 0;
+        width: 0;
+        -webkit-appearance: none;
     }
 
     .btn_bar{
