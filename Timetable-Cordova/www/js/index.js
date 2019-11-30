@@ -322,24 +322,7 @@ let table = {
                 var tempblock = document.createElement('div');
                 
                 //assign a color
-                switch(config.data.table1_db[index].color){
-                    case 0: tempblock.setAttribute("class", "data_block hue0"); break;
-                    case 1: tempblock.setAttribute("class", "hue1 data_block"); break;
-                    case 2: tempblock.setAttribute("class", "hue2 data_block"); break;
-                    case 3: tempblock.setAttribute("class", "hue3 data_block"); break;
-                    case 4: tempblock.setAttribute("class", "hue4 data_block"); break;
-                    case 5: tempblock.setAttribute("class", "hue5 data_block"); break;
-                    case 6: tempblock.setAttribute("class", "hue6 data_block"); break;
-                    case 7: tempblock.setAttribute("class", "hue7 data_block"); break;
-                    case 8: tempblock.setAttribute("class", "hue8 data_block"); break;
-                    case 9: tempblock.setAttribute("class", "hue9 data_block"); break;
-                    case 10: tempblock.setAttribute("class", "hue10 data_block"); break;
-                    case 11: tempblock.setAttribute("class", "hue11 data_block"); break;
-                    default:
-                    tempblock.setAttribute("class", "data_block");
-                    console.log('Color was defaulted :');
-                    console.table(config.data.table1_db[index]);
-                }
+                tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
 
                 //time processing
                 var startmeridian = 'a.m.';
@@ -383,18 +366,17 @@ let table = {
                 //Put doot into the Data Bar
                 if(true){//Slap a customization setting here
                     //make table in doot to keep things even
-                    var name_sub_tab = document.createElement("table");
+                    var sub_tab = document.createElement("table");
                     var name_tab_row = document.createElement("tr");
                     var name_tab_content = document.createElement("th");
                     name_tab_content.innerHTML=config.data.table1_db[index].name;
-                    name_tab_content.setAttribute("colspan",1);
+                    name_tab_content.setAttribute("colspan",2);
                     name_tab_content.setAttribute("name","sub_element");
                     name_tab_row.appendChild(name_tab_content);
-                    name_sub_tab.appendChild(name_tab_row);
-                    doot.appendChild(name_sub_tab);
+                    sub_tab.appendChild(name_tab_row);
+                    doot.appendChild(sub_tab);
                 
                     if(config.data.table1_db[index].room!="" && config.data.table1_db[index].room!=undefined){
-                        var room_sub_tab = document.createElement("table");
                         var room_tab_row = document.createElement("tr");
                         var room_tab_head = document.createElement("td");
                         var room_tab_content = document.createElement("td");
@@ -406,11 +388,10 @@ let table = {
                         room_tab_content.innerHTML=config.data.table1_db[index].room;
                         room_tab_row.appendChild(room_tab_head);
                         room_tab_row.appendChild(room_tab_content);
-                        room_sub_tab.appendChild(room_tab_row);
-                        doot.appendChild(room_sub_tab);
+                        sub_tab.appendChild(room_tab_row);
+                        doot.appendChild(sub_tab);
                     }
                     if(config.data.table1_db[index].course_code!="" && config.data.table1_db[index].course_code!=undefined){
-                        var course_code_sub_tab = document.createElement("table");
                         var course_code_tab_row = document.createElement("tr");
                         var course_code_tab_head = document.createElement("td");
                         var course_code_tab_content = document.createElement("td");
@@ -422,11 +403,10 @@ let table = {
                         course_code_tab_content.innerHTML=config.data.table1_db[index].course_code;
                         course_code_tab_row.appendChild(course_code_tab_head);
                         course_code_tab_row.appendChild(course_code_tab_content);
-                        course_code_sub_tab.appendChild(course_code_tab_row);
-                        doot.appendChild(course_code_sub_tab);
+                        sub_tab.appendChild(course_code_tab_row);
+                        doot.appendChild(sub_tab);
                     }
                     if(config.data.table1_db[index].Lecturer!="" && config.data.table1_db[index].Lecturer!=undefined){
-                        var Lecturer_sub_tab = document.createElement("table");
                         var Lecturer_tab_row = document.createElement("tr");
                         var Lecturer_tab_head = document.createElement("td");
                         var Lecturer_tab_content = document.createElement("td");
@@ -436,11 +416,10 @@ let table = {
                         Lecturer_tab_content.innerHTML=config.data.table1_db[index].Lecturer;
                         Lecturer_tab_row.appendChild(Lecturer_tab_head);
                         Lecturer_tab_row.appendChild(Lecturer_tab_content);
-                        Lecturer_sub_tab.appendChild(Lecturer_tab_row);
-                        doot.appendChild(Lecturer_sub_tab);
+                        sub_tab.appendChild(Lecturer_tab_row);
+                        doot.appendChild(sub_tab);
                     }
                     if(config.data.table1_db[index].type!="" && config.data.table1_db[index].type!=undefined){
-                        var type_sub_tab = document.createElement("table");
                         var type_tab_row = document.createElement("tr");
                         var type_tab_head = document.createElement("td");
                         var type_tab_content = document.createElement("td");
@@ -450,10 +429,9 @@ let table = {
                         type_tab_content.innerHTML=config.data.table1_db[index].type;
                         type_tab_row.appendChild(type_tab_head);
                         type_tab_row.appendChild(type_tab_content);
-                        type_sub_tab.appendChild(type_tab_row);
-                        doot.appendChild(type_sub_tab);
+                        sub_tab.appendChild(type_tab_row);
+                        doot.appendChild(sub_tab);
                     }
-                    var time_sub_tab = document.createElement("table");
                     var time_tab_row = document.createElement("tr");
                     var start_time_tab = document.createElement("td");
                     var end_time_tab = document.createElement("td");
@@ -464,8 +442,8 @@ let table = {
                     start_time_tab.style.paddingRight='0px';
                     time_tab_row.appendChild(start_time_tab);
                     time_tab_row.appendChild(end_time_tab);
-                    time_sub_tab.appendChild(time_tab_row);
-                    doot.appendChild(time_sub_tab);
+                    sub_tab.appendChild(time_tab_row);
+                    doot.appendChild(sub_tab);
                 //doot.innerHTML+='<br> '+starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;*/
                 }else{
                     doot.innerHTML = config.data.table1_db[index].name;
@@ -538,49 +516,11 @@ let table = {
                 tempblock.addEventListener('click',()=>{
                     console.log('Triggered data cell: ',tempblock);
                     if(tempblock.name=="on"){
-                        //tempblock.className="data_block";
                         tempblock.name="off";
-                        //Re-assign a color
-                        switch(config.data.table1_db[index].color){
-                            case 0: tempblock.setAttribute("class", "data_block hue0"); break;
-                            case 1: tempblock.setAttribute("class", "hue1 data_block"); break;
-                            case 2: tempblock.setAttribute("class", "hue2 data_block"); break;
-                            case 3: tempblock.setAttribute("class", "hue3 data_block"); break;
-                            case 4: tempblock.setAttribute("class", "hue4 data_block"); break;
-                            case 5: tempblock.setAttribute("class", "hue5 data_block"); break;
-                            case 6: tempblock.setAttribute("class", "hue6 data_block"); break;
-                            case 7: tempblock.setAttribute("class", "hue7 data_block"); break;
-                            case 8: tempblock.setAttribute("class", "hue8 data_block"); break;
-                            case 9: tempblock.setAttribute("class", "hue9 data_block"); break;
-                            case 10: tempblock.setAttribute("class", "hue10 data_block"); break;
-                            case 11: tempblock.setAttribute("class", "hue11 data_block"); break;
-                            default:
-                            tempblock.setAttribute("class", "data_block");
-                            console.log('Color was defaulted :');
-                            console.table(config.data.table1_db[index]);
-                        }
+                        tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
                     }else{
-                        //Re-assign a color
-                        //tempblock.className="data_block_active";
                         tempblock.name="on";
-                        switch(config.data.table1_db[index].color){
-                            case 0: tempblock.setAttribute("class", "data_block_active hue0"); break;
-                            case 1: tempblock.setAttribute("class", "hue1 data_block_active"); break;
-                            case 2: tempblock.setAttribute("class", "hue2 data_block_active"); break;
-                            case 3: tempblock.setAttribute("class", "hue3 data_block_active"); break;
-                            case 4: tempblock.setAttribute("class", "hue4 data_block_active"); break;
-                            case 5: tempblock.setAttribute("class", "hue5 data_block_active"); break;
-                            case 6: tempblock.setAttribute("class", "hue6 data_block_active"); break;
-                            case 7: tempblock.setAttribute("class", "hue7 data_block_active"); break;
-                            case 8: tempblock.setAttribute("class", "hue8 data_block_active"); break;
-                            case 9: tempblock.setAttribute("class", "hue9 data_block_active"); break;
-                            case 10: tempblock.setAttribute("class", "hue10 data_block_active"); break;
-                            case 11: tempblock.setAttribute("class", "hue11 data_block_active"); break;
-                            default:
-                            tempblock.setAttribute("class", "data_block_active");
-                            console.log('Color was defaulted :');
-                            console.table(config.data.table1_db[index]);
-                        } 
+                        tempblock.setAttribute("class", "data_block_active hue"+config.data.table1_db[index].color);
                     }
                 });
             console.log('Block :',index,' Check complete');
@@ -704,7 +644,7 @@ let table = {
             if(days==0 || rows==0){
                 //Table is empty
                 this.clear();
-                notify.new('Table '+config.data.table_selected,' This table is empty...',3);
+                utility.toast(' This table is empty...');
             }
             console.log('Table validated');
         }
@@ -1508,6 +1448,8 @@ let manage = {
     initalize:function(){
         console.log('Manager initializes');
         document.getElementById('table_selector').value=config.data.table_selected; //Set the table selectors value
+        document.getElementById('tableselector_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
+        document.getElementById('view_put_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
         document.getElementById('1_selectorsub').innerHTML = config.data.table_details[0].purpose;
         document.getElementById('1_selectormain').innerHTML = config.data.table_details[0].purpose;
         document.getElementById('2_selectorsub').innerHTML= config.data.table_details[1].purpose;
@@ -1556,16 +1498,51 @@ let manage = {
         });
         document.getElementById('color_put').addEventListener('change',function(){      // Change color put color on change
             console.log('Color selection changed to :',document.getElementById('color_put').value);
-            document.getElementById('color_put').className='hue'+document.getElementById('color_put').value;
+            document.getElementById('color_put_container').className='select_container hue'+document.getElementById('color_put').value;
+            switch(document.getElementById('color_put').value){
+                case "0":document.getElementById('color_put_text').innerText="Grey";break;
+                case "1":document.getElementById('color_put_text').innerText="Red";break;
+                case "2":document.getElementById('color_put_text').innerText="Orange";break;
+                case "3":document.getElementById('color_put_text').innerText="Yellow";break;
+                case "4":document.getElementById('color_put_text').innerText="Lime";break;
+                case "5":document.getElementById('color_put_text').innerText="Green";break;
+                case "6":document.getElementById('color_put_text').innerText="Aqua";break;
+                case "7":document.getElementById('color_put_text').innerText="Sky-Blue";break;
+                case "8":document.getElementById('color_put_text').innerText="Blue";break;
+                case "9":document.getElementById('color_put_text').innerText="Purple";break;
+                case "10":document.getElementById('color_put_text').innerText="Royal-blue";break;
+                case "11":document.getElementById('color_put_text').innerText="Cherry";break;
+                default:console.warn('Colors went blyat');
+            }
         });
         document.getElementById('erraser').addEventListener('click',manage.dialogue.clear);
+
         document.getElementById('table_selector').addEventListener('change',function(){
+            console.log('table_selector changed');
             config.data.table_selected=document.getElementById('table_selector').value;
+            document.getElementById('tableselector_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
             config.properties.changed=true;
             manage.data.render();
             config.save();
         });
-        
+        document.getElementById('day_put').addEventListener('change',function(){/* Switches dates on change */
+            console.log('Day put changed');
+            var tmp = document.getElementById('day_put').value;
+            switch(tmp){
+                case "1":document.getElementById('day_put_text').innerText="Monday";break;
+                case "2":document.getElementById('day_put_text').innerText="Tuesday" ;break;
+                case "3":document.getElementById('day_put_text').innerText="Wednsday" ;break;
+                case "4":document.getElementById('day_put_text').innerText="Thursday" ;break;
+                case "5":document.getElementById('day_put_text').innerText="Friday" ;break;
+                case "6":document.getElementById('day_put_text').innerText="Saturday" ;break;
+                case "7":document.getElementById('day_put_text').innerText="Sunday";break;
+                default:console.error('Blyat');
+            }
+        });
+        document.getElementById('view_put').addEventListener('change',function(){/* Switches dates on change */
+            console.log('View put changed');
+            document.getElementById('view_put_text').innerText=config.data.table_details[document.getElementById('view_put').value-1].purpose;
+        });
         document.getElementById('menu_button1').addEventListener('click',function(){
             manage.action.table_menu(1);
         });
@@ -1765,8 +1742,32 @@ let manage = {
             console.log('Dialogue Edit called on index: ',index);
             config.properties.overwrite=index;  //Set overwrtite so save function knows to do
             document.getElementById('day_put').value = config.data.table1_db[index].day;    //set day feild
+            switch(config.data.table1_db[index].day){
+                case 0:document.getElementById('day_put_text').innerText="Sunday";break;
+                case 1:document.getElementById('day_put_text').innerText="Monday" ;break;
+                case 2:document.getElementById('day_put_text').innerText="Tuesday" ;break;
+                case 3:document.getElementById('day_put_text').innerText="Wednsday" ;break;
+                case 4:document.getElementById('day_put_text').innerText="Thursday" ;break;
+                case 5:document.getElementById('day_put_text').innerText="Friday" ;break;
+                case 6:document.getElementById('day_put_text').innerText="Saturday" ;break;
+            }
             document.getElementById('color_put').value = config.data.table1_db[index].color;    //set color feild
-            document.getElementById('color_put').className='hue'+config.data.table1_db[index].color;    //set color class to make the feild glow
+            document.getElementById('color_put_container').className='select_container hue'+config.data.table1_db[index].color;    //set color class to make the feild glow
+            switch(document.getElementById('color_put').value){//set name of color
+                case "0":document.getElementById('color_put_text').innerText="Grey";break;
+                case "1":document.getElementById('color_put_text').innerText="Red";break;
+                case "2":document.getElementById('color_put_text').innerText="Orange";break;
+                case "3":document.getElementById('color_put_text').innerText="Yellow";break;
+                case "4":document.getElementById('color_put_text').innerText="Lime";break;
+                case "5":document.getElementById('color_put_text').innerText="Green";break;
+                case "6":document.getElementById('color_put_text').innerText="Aqua";break;
+                case "7":document.getElementById('color_put_text').innerText="Sky-Blue";break;
+                case "8":document.getElementById('color_put_text').innerText="Blue";break;
+                case "9":document.getElementById('color_put_text').innerText="Purple";break;
+                case "10":document.getElementById('color_put_text').innerText="Royal-blue";break;
+                case "11":document.getElementById('color_put_text').innerText="Cherry";break;
+                default:console.warn('Colors went blyat');
+            }
             document.getElementById('course_code_put').value = config.data.table1_db[index].course_code;    //set course code
             document.getElementById('type_put').value = config.data.table1_db[index].type;  //set room type
             document.getElementById('room_put').value = config.data.table1_db[index].room;  //set room feild

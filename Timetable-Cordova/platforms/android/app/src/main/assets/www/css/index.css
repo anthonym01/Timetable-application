@@ -7,7 +7,7 @@
     @font-face {font-family: Lexend_Deca; src: url(../fonts/LexendDeca-Regular.ttf);}
     @keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
 
-    body{/*     the body    */
+    body{
         -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
         -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
         -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
@@ -298,18 +298,33 @@
     }
     .select_container{/*  Select boxes made to be more effective on mobile  */
         position: relative;
-        height: 4vh;
-        width:100%;
+        height: 5.5vh;
+        width:calc(100% - 0.8vh);
+        overflow: hidden;
+        border-radius:2vh;
+        -webkit-touch-callout: none;    
+        margin-top:1vh;
     }
     .select_container select{
+        position: absolute;
+        top:0;
+        right:0;
         font-size: 4vh;
-        height: 0;
-        width: 0;
+        width: 100%;
+        height: 100%;
         -webkit-appearance: none;
         text-align: center;
+        opacity: 0;
     }
     .select_container .select_text{
-        
+        position: absolute;
+        top:0;
+        right:0;
+        opacity: 1;
+        font-size: 4vh;
+        width: 100%;
+        text-align: center;
+        background:none;
     }
 
     .btn_bar{

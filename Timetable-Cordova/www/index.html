@@ -304,6 +304,7 @@
 
     <view id="manage_view">     <!--management view-->
         <div class="select_container">
+            <div class="select_text" id="tableselector_text">Table_selector</div>
             <select id="table_selector">
                 <option value="1" id='1_selectormain'>Table 1 items</option>
                 <option value="2" id='2_selectormain'>Table 2 items</option>
@@ -330,6 +331,7 @@
                     <td colspan="2">
                         <label for="day_put">Day:</label>
                         <div class="select_container">
+                            <div class="select_text" id="day_put_text">day_put</div>
                             <select id="day_put">
                                 <option value="1">Monday</option>
                                 <option value="2">Tuesday</option>
@@ -369,7 +371,8 @@
                 <tr>
                     <td colspan="2">
                         <label for="color_put">Color:</label>
-                        <div class="select_container">
+                        <div class="select_container" id="color_put_container">
+                            <div class="select_text" id="color_put_text">color_put</div>
                             <select id="color_put">
                                 <option value="0" class="hue0">no color</option>
                                 <option value="1" class="hue1">Red</option>
@@ -401,6 +404,7 @@
                     <td colspan="2">
                         <label for="view_put">Show in:</label>
                         <div class="select_container">
+                            <div class="select_text" id="view_put_text">view_put</div>
                             <select id="view_put">
                                 <option value="1" id='1_selectorsub'>Table 1 items</option>
                                 <option value="2" id='2_selectorsub'>Table 2 items</option>
