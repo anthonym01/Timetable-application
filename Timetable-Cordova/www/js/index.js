@@ -300,7 +300,7 @@ let table = {
                 console.warn('Table minimum found to be: ',config.properties.min);
                 console.warn('Table maximum found to be: ',config.properties.max);
                 i=0;
-                while(config.data.table1_db[i]!=null){
+                while(config.data.table1_db[i]!=null){//construct table
                     console.log('Data run on index :',i);
                     if(config.data.table1_db[i].deleted!=true && config.data.table1_db[i].show==config.data.table_selected){
                         this.build_block_db1(i);
@@ -533,7 +533,56 @@ let table = {
                     var blocktop = document.getElementById('live_clock').offsetHeight*startminute/60;//gets the height of a cell in pixels and the multiples by minute percentage
                     tempblock.style.transform="translate(-0.5vh,"+blocktop+'px'+")";
                 },5);
-                
+
+                //click action
+                tempblock.addEventListener('click',()=>{
+                    console.log('Triggered data cell: ',tempblock);
+                    if(tempblock.name=="on"){
+                        //tempblock.className="data_block";
+                        tempblock.name="off";
+                        //Re-assign a color
+                        switch(config.data.table1_db[index].color){
+                            case 0: tempblock.setAttribute("class", "data_block hue0"); break;
+                            case 1: tempblock.setAttribute("class", "hue1 data_block"); break;
+                            case 2: tempblock.setAttribute("class", "hue2 data_block"); break;
+                            case 3: tempblock.setAttribute("class", "hue3 data_block"); break;
+                            case 4: tempblock.setAttribute("class", "hue4 data_block"); break;
+                            case 5: tempblock.setAttribute("class", "hue5 data_block"); break;
+                            case 6: tempblock.setAttribute("class", "hue6 data_block"); break;
+                            case 7: tempblock.setAttribute("class", "hue7 data_block"); break;
+                            case 8: tempblock.setAttribute("class", "hue8 data_block"); break;
+                            case 9: tempblock.setAttribute("class", "hue9 data_block"); break;
+                            case 10: tempblock.setAttribute("class", "hue10 data_block"); break;
+                            case 11: tempblock.setAttribute("class", "hue11 data_block"); break;
+                            default:
+                            tempblock.setAttribute("class", "data_block");
+                            console.log('Color was defaulted :');
+                            console.table(config.data.table1_db[index]);
+                        }
+                    }else{
+                        //Re-assign a color
+                        //tempblock.className="data_block_active";
+                        tempblock.name="on";
+                        switch(config.data.table1_db[index].color){
+                            case 0: tempblock.setAttribute("class", "data_block_active hue0"); break;
+                            case 1: tempblock.setAttribute("class", "hue1 data_block_active"); break;
+                            case 2: tempblock.setAttribute("class", "hue2 data_block_active"); break;
+                            case 3: tempblock.setAttribute("class", "hue3 data_block_active"); break;
+                            case 4: tempblock.setAttribute("class", "hue4 data_block_active"); break;
+                            case 5: tempblock.setAttribute("class", "hue5 data_block_active"); break;
+                            case 6: tempblock.setAttribute("class", "hue6 data_block_active"); break;
+                            case 7: tempblock.setAttribute("class", "hue7 data_block_active"); break;
+                            case 8: tempblock.setAttribute("class", "hue8 data_block_active"); break;
+                            case 9: tempblock.setAttribute("class", "hue9 data_block_active"); break;
+                            case 10: tempblock.setAttribute("class", "hue10 data_block_active"); break;
+                            case 11: tempblock.setAttribute("class", "hue11 data_block_active"); break;
+                            default:
+                            tempblock.setAttribute("class", "data_block_active");
+                            console.log('Color was defaulted :');
+                            console.table(config.data.table1_db[index]);
+                        } 
+                    }
+                });
             console.log('Block :',index,' Check complete');
         },
         validate:function(){
