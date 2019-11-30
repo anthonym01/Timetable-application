@@ -370,13 +370,6 @@ let table = {
                 //populate the block with relivant data
                 tempblock.innerHTML=config.data.table1_db[index].name/* + '<br>' + starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian*/;
 
-                //time to height calculations
-                var blockheight=Number(config.data.table1_db[index].end-config.data.table1_db[index].start)*100;
-                console.log(config.data.table1_db[index].name,' As assigned height of :',blockheight,'%');
-                tempblock.style.height=blockheight+'%';
-                /*var blocktop=Number(startminute/60)*100;
-                tempblock.style.marginTop=blocktop+'%';/* Removed untill brain gets bigger */
-
                 //info doots
                 var doot = document.createElement('div');
                 doot.setAttribute('class','infodoot');
@@ -532,6 +525,15 @@ let table = {
                     break;
                     default:console.log('Date positioning error on index: ',index,' Day code: ',config.data.table1_db[index].day);
                 }
+                //time to height calculations must be done after render
+                setTimeout(()=>{
+                    var blockheight=Number(config.data.table1_db[index].end-config.data.table1_db[index].start)*100;
+                    console.log(config.data.table1_db[index].name,' As assigned height of :',blockheight,'%');
+                    tempblock.style.height=blockheight+'%';
+                    var blocktop = document.getElementById('live_clock').offsetHeight*startminute/60;//gets the height of a cell in pixels and the multiples by minute percentage
+                    tempblock.style.transform="translate(-0.5vh,"+blocktop+'px'+")";
+                },5);
+                
             console.log('Block :',index,' Check complete');
         },
         validate:function(){

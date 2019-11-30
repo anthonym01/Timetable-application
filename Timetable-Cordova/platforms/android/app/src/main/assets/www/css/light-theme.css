@@ -310,6 +310,12 @@ body{/*     the body    */
     border-bottom:0.3vh solid #000000;
     background-color: inherit;
     color: inherit;
+}#dataentry_screen input:focus{
+    border:none;
+    border-bottom:0.3vh solid #00aaff;
+    background-color: inherit;
+    color: inherit;
+    outline: none;
 }
 #cancel_btn{/*cancel button*/
     background-color: #ffffff;

@@ -8,22 +8,16 @@
     @keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
 
     body{/*     the body    */
-        top:0;
-        left:0;
-        position: fixed;
         -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
         -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
         -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
         font-family: Lexend_Deca,Serif,Arial, Helvetica, sans-serif;
         height:100vh;
         margin:0px;
-        padding:0px;                                /* Padding to avoid the "unsafe" areas behind notches in the screen */
+        /* Padding to avoid the "unsafe" areas behind notches in the screen */
         padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-right, 0px);
         width:100vw;
-        
     }
-    
-    tr{transition:background-color 250ms;}
 
     /*  Loading Screen  */
     #Loading{
@@ -56,7 +50,8 @@
         animation: rotate 1s linear infinite;
     }
 
-    #page_shade{/*  page darkener   */
+    /*  page darkener   */
+    #page_shade{
         position: fixed;
         top:0;
         right: 0;
@@ -72,27 +67,26 @@
     /*Scrollbar custom*/
     ::-webkit-scrollbar {width: 1px;z-index: 100;}/*scrollbar body*/
 
-    /*  Header */
-    .footbar{   /* The body of the header   */
+    /*  Footer */
+    .footbar{   /* The body of the Footer   */
         position:fixed;
         bottom:0;
         height:7vh;
         left:0;
         width:100vw;
-        font-size: 6vh;
         border-collapse: collapse;
         text-align:center;
         text-shadow:0vh 0vh 1vh;
         border:none;
     }
-    .menuholder{    /*  The Menu in the header  */
+    .menuholder{    /*  The Menu in the Footer  */
         position: absolute;
         top:0;
         right:0;
         height:7vh;
         width:100%;
     }
-    .menubtn,.menubtn_active{   /*  Buttons for the menu in the header  */
+    .menubtn,.menubtn_active{   /*  menu buttons  */
         position: relative;
         float: right;
         height:7vh;
@@ -114,32 +108,6 @@
         background-position:center;
         background-image: url('../img/icon.webp');
     }
-    #sub_menu{
-        position: absolute;
-        bottom: 7vh;
-        right: 0;
-        height: auto;
-        width:100%;
-        border-radius: 0vh 0vh 1vh 1vh;
-        display: none;
-        z-index: 100;
-    }
-    .sub_pannel_btn{
-        height: 6vh;
-        width: 100%;
-        font-size: 5.5vh;
-        padding-bottom:0.6vh;
-        text-align: center;
-        cursor: pointer;
-    }
-    .sub_pannel_btn_inactive{
-        height: 6vh;
-        width: 100%;
-        font-size: 5.5vh;
-        margin-bottom:0.6vh;
-        text-align: center;
-        cursor: pointer;
-    }
 
     /*  Views   */
     view{
@@ -152,7 +120,7 @@
         overflow: scroll;
     }
 
-    /*Timetable tags*/
+    /*Timetable view*/
     #timetable{/*   The body of the timetable   */
         position: relative;
         margin-top:0vh;
@@ -163,14 +131,14 @@
         font-size: 2.7vh;
         overflow: auto;
         border-collapse: collapse;
-        cursor: default;
         table-layout: fixed;
         background-size: cover;
         background-repeat: no-repeat;
     }
     td{vertical-align: top;}
+    tr{transition:background-color 250ms;}
     .maincell{/*    Cells of the table  */
-        position: static;
+        position: relative;
         text-align: center;
         /*max-height: 6.66%;  /*  Fixed height required for table space rendering, technically breaks the web engine but its a usefull glitch  */
         /*height: 6%;
@@ -189,8 +157,6 @@
         font-family: Lexend_Deca;
         font-size: 2.8vh;
     }
-
-    /*  Table body pseudo render    */
     .data_block{/*  The blocks containing the classes   */
         position: relative;
         width:100%;
@@ -204,7 +170,7 @@
         border:none;
         box-shadow: 0vh 0vh 0vh 0vh;
         z-index: 50;
-        transform: translate(-0.5vh,0vh)!important;
+        transform: translate(-0.5vh,0vh);
         padding-left:0.5vh;
         padding-right:0.5vh;
     }
@@ -214,7 +180,7 @@
         color: rgba(255, 255, 255, 0);
         z-index: 1000;
     }
-    .infodoot{
+    .infodoot{/*  Facilitates flip out effect  */
         background-color: inherit;
         transition:box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms,opacity 500ms;
         position: absolute;
@@ -240,7 +206,21 @@
     .infodoot td{padding: 3px;vertical-align: middle;align-content: center;}
     .infodoot .lefter{text-align: right}
     .infodoot .righter{text-align: left}
+    #sub_menu{/*    Sub menu to switch tables quickly   */
+        position: absolute;
+        bottom: 7vh;
+        right: 0;
+        height: auto;
+        width:100%;
+        display: none;
+        z-index: 100;
+    }
+    .sub_pannel_btn{
 
+    }
+    .sub_pannel_btn_inactive{
+
+    }
 
     /*  manage_view   */
     #dataspace{/*   Block Containing the data_bar(s)   */
@@ -257,7 +237,7 @@
         height: auto;
         width:90%;
         min-width: 40%;
-        font-size:3.5vh;
+        font-size:3.2vh;
         padding:1.2vh;
         margin-bottom: 2vh;
         border-radius: 3vh;
@@ -326,6 +306,10 @@
         height: 0;
         width: 0;
         -webkit-appearance: none;
+        text-align: center;
+    }
+    .select_container .select_text{
+        
     }
 
     .btn_bar{

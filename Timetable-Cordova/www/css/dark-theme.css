@@ -316,6 +316,13 @@ body{
     border-bottom:0.3vh solid #ffffff;
     background-color: inherit;
     color: inherit;
+    transition: border 300ms;
+}#dataentry_screen input:focus{
+    border:none;
+    border-bottom:0.3vh solid #2bff00;
+    background-color: inherit;
+    color: inherit;
+    outline: none;
 }
 .btn_bar{
     background-color: #000000;
