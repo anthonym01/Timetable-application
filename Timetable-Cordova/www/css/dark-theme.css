@@ -133,7 +133,7 @@ body{
 }
 #table1::-webkit-scrollbar-thumb {background: rgb(0, 0, 0);}/*scrollbar thumb*/
 tr{transition:background-color 250ms;}
-.glowrow {animation:glowrow 2s infinite;}
+.glowrow {background-color:rgb(43, 255, 0); animation:glowrow 2s infinite;}
 .maincell{/*  Cells of the table  */
     border:0.2vh solid #ffffff;
     transition:border,background-color,color;

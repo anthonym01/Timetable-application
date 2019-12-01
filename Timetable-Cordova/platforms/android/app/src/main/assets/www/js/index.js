@@ -1939,15 +1939,15 @@ let manage = {
 let UI={
     initalize:function(){
         console.log('UI Initalize');
-        /*switch(config.data.theme){
+        switch(config.data.theme){
             case 'dark':this.setting.theme.set_dark() ;break;
             case 'light':this.setting.theme.set_light() ;break;
             default: 
                 console.error('Theme error :', config.data.theme);
                 this.setting.theme.set_light();
-        }*/
+        }
         this.setting.hilight.setpostition();
-        this.setting.animation.setpostition();//animation sets the theme at startup
+        this.setting.animation.setpostition();
         if(typeof(device)!="undefined"){//sometimes plugins break
             if(device.platform=='Android'||'iOS'){//mobile
                 document.getElementById('table_btn').addEventListener('touchstart',UI.navigate.TABLE)
@@ -2145,13 +2145,10 @@ let UI={
             setpostition:function(){
                 if(config.data.animation){
                     document.getElementById('Animations_switch_container').className='switch_container_active';
+                    document.getElementById('nomation').href="";
                 }else{
                     document.getElementById('Animations_switch_container').className='switch_container_dissabled';
-                }
-                if(config.data.theme=='dark'){
-                    UI.setting.theme.set_dark();
-                }else{
-                    UI.setting.theme.set_light();
+                    document.getElementById('nomation').href="css/nomation.css";//nomation sheet removes animations
                 }
             },
         },
