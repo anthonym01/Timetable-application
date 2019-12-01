@@ -5,7 +5,6 @@
     @font-face{src:url(../fonts/Minecrafter.Reg.ttf); font-family: minecraft;}/* Minecraft clean font */
     @font-face{src:url(../fonts/Minecrafter.Alt.ttf); font-family: minecraft_cracked;}/* Minecraft cracked font */
     @font-face {font-family: Lexend_Deca; src: url(../fonts/LexendDeca-Regular.ttf);}
-    @keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
 
     body{
         -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
@@ -37,7 +36,6 @@
         width:100%;
         text-align: center;
         border-radius: 10vh;
-        animation: pulse 2s ease infinite;
     }
     #loader{
         position: relative;
@@ -47,7 +45,6 @@
         height:7vh;
         width:7vh;
         border-radius: 10vh;
-        animation: rotate 1s linear infinite;
     }
 
     /*  page darkener   */
@@ -55,9 +52,7 @@
         position: fixed;
         top:0;
         right: 0;
-        background-color: rgb(0, 0, 0);/*  Always black    */
         opacity: 0.5;
-        transition: opacity 500ms; 
         z-index: 50;
         display:none;
         height:100%;
@@ -95,7 +90,6 @@
         background-repeat: no-repeat;
         cursor: pointer;
         /*margin-right:0.5vw;*/
-        transition:background-color 500ms;
         border-radius: 2vh;
     }
     .menubtn_icon{
@@ -136,7 +130,6 @@
         background-repeat: no-repeat;
     }
     td{vertical-align: top;}
-    tr{transition:background-color 250ms;}
     .maincell{/*    Cells of the table  */
         position: relative;
         text-align: center;
@@ -148,8 +141,6 @@
         padding-bottom: 0px;
         padding-left: 0.5vh;
         padding-right: 0.5vh;
-        transition:border,background-color,color;
-        transition-duration: 500ms;
         overflow: visible;
         background: none;
         width:auto;
@@ -166,23 +157,17 @@
         text-align: center;
         cursor: pointer;
         overflow: visible;
-        transition: box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms;
         border:none;
-        box-shadow: 0vh 0vh 0vh 0vh;
         z-index: 50;
         transform: translate(-0.5vh,0vh);
         padding-left:0.5vh;
         padding-right:0.5vh;
     }
     .data_block_active{
-        transform: translate(-0.5vh,-1vh)!important;
-        box-shadow: 0vh 1vh 3vh 1vh;
-        color: rgba(255, 255, 255, 0);
         z-index: 1000;
     }
     .infodoot{/*  Facilitates flip out effect  */
         background-color: inherit;
-        transition:box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms,opacity 500ms;
         position: absolute;
         bottom: 0;
         right:0;
@@ -201,11 +186,11 @@
         z-index: 1000;
         transform: rotate3d(1,0,0,0deg) translate(1vh,0);
     }
-    .infodoot table{width: 100%;border-collapse: collapse;text-align: center;table-layout: fixed;}
-    .infodoot th{padding: 3px;}
-    .infodoot td{padding: 3px;vertical-align: middle;align-content: center;}
-    .infodoot .lefter{text-align: right}
-    .infodoot .righter{text-align: left}
+    .infodoot table{width: 100%;border-collapse: collapse;text-align: center;table-layout: fixed;background:none!important;}
+    .infodoot th{padding: 3px;background:none!important;}
+    .infodoot td{padding: 3px;vertical-align: middle;align-content: center;background:none!important;}
+    .infodoot .lefter{text-align: right;background:none!important;}
+    .infodoot .righter{text-align: left;background:none!important;}
     #sub_menu{/*    Sub menu to switch tables quickly   */
         position: absolute;
         bottom: 7vh;
@@ -341,14 +326,11 @@
         padding:1vh;
         text-align: center;
         width:25vw;
-        box-shadow: 0vh 0vh 0vh 0vh;
         cursor: pointer;
-        transition:background-color 500ms;
         overflow: hidden;
         border-radius:2vh;
         -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     }
-    .databtns:active{transition:background-color 0ms;}
     #cancel_btn{/*cancel button*/
         left:4vw;
     }
@@ -389,9 +371,6 @@
         border-radius: 2vh;
         margin-bottom: 2%;
         cursor:pointer;
-        transition: background-color 500ms,border 500ms;
-    }#yes_btn:active{
-        box-shadow: 0vh 0vh 1vh 0vh;
     }
     #no_btn{
         width: 45%;
@@ -400,9 +379,6 @@
         margin-left: 5%;
         margin-bottom: 2%;
         cursor:pointer;
-        transition: background-color 500ms,border 500ms;
-    }#no_btn:active{
-        box-shadow: 0vh 0vh 1vh 0vh;
     }
     @keyframes wobble { 0%{transform: translate(0vh,0)} 25%{transform: translate(1vh,-0.5vh)} 50%{transform: translate(0vh,0)} 75%{transform: translate(-1vh,0.5vh)} 100%{transform: translate(0vh,0)}}
     #erraser{/* Clear inputs    */
@@ -413,8 +389,7 @@
         width: 9vh;
         background-size: contain;
         cursor: pointer;
-        transition:transform 500ms;
-    }#erraser:active{animation: wobble 500ms linear infinite;}
+    }
 
 /*  Setting view  */
     #setting_view{
@@ -472,7 +447,6 @@
         width: 90%;
         margin-right: auto;
         margin-left:auto;
-        transition:box-shadow 500ms;
     }
     .mincropallet table{
         height: 85%;
@@ -547,9 +521,6 @@
         border:0.5vh solid;
         border-radius: 5vh;
         cursor:pointer;
-        box-shadow:0px 0px 0px 0px;
-        transition: box-shadow;
-        transition: 300ms;
     }
     .switch_container_active .switchbdy{
         position: absolute;
@@ -557,8 +528,6 @@
         height:5vh;
         border-radius: 5vh;
         cursor:pointer;
-        transition: background-color;
-        transition-duration: 300ms;
     }
     .switch_container_active .switch{
         top:0.2vh;
@@ -569,8 +538,6 @@
         border-radius: 50%;
         z-index:1;
         transform: translate(0px/*-39px*/,0);
-        transition: transform,background-color;
-        transition-duration: 300ms;
     }
     .switch_container_dissabled{
         position: absolute;
@@ -582,9 +549,6 @@
         border:0.5vh solid;
         border-radius: 5vh;
         cursor:pointer;
-        box-shadow:0px 0px 0px 0px;
-        transition: box-shadow;
-        transition: 300ms;
     }
     .switch_container_dissabled .switchbdy{
         position: absolute;
@@ -592,8 +556,6 @@
         height:5vh;
         border-radius: 5vh;
         cursor:pointer;
-        transition: background-color;
-        transition-duration: 300ms;
     }
     .switch_container_dissabled .switch{
         top:0.2vh;
@@ -604,8 +566,6 @@
         border-radius: 50%;
         z-index:1;
         transform: translate(-7vh,0);
-        transition: transform,background-color;
-        transition-duration: 300ms;
     }
 
 }

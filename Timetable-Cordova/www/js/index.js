@@ -62,6 +62,7 @@ var config={
         usecount:0,
         theme:"dark",
         hilight_engine:false,
+        animation:true,
         table_selected:1,
         table_details:[//   This needs a setting pannel in the setting menu
             {purpose:"table 1"},
@@ -225,18 +226,29 @@ var config={
             console.log('"theme" was found to not exist and was set to default');
         }
 
-        if(this.data.hilight_engine){
-            if(this.data.hilight_engine!=true && this.data.hilight_engine!=false){
-                this.data.hilight_engine=true;
-                configisvalid=false;
-                console.log('"hilight_engine" was found to be invalid and was set to default');
-            }
+        if(typeof(this.data.hilight_engine)=='undefined'){
+            this.data.hilight_engine=true;
+            configisvalid=false;
+            console.log('"hilight_engine" was found to be invalid and was set to default');
         }
         else{
             if(this.data.hilight_engine!=true && this.data.hilight_engine!=false){
                 this.data.hilight_engine=true;
                 configisvalid=false;
                 console.log('"hilight_engine" was found to not exist and was set to default');
+            }
+        }
+
+        if(typeof(this.data.animation)=='undefined'){
+            this.data.animation=true;
+            configisvalid=false;
+            console.log('"animation" was found to be invalid and was set to default');
+        }
+        else{
+            if(this.data.animation!=true && this.data.animation!=false){
+                this.data.animation=true;
+                configisvalid=false;
+                console.log('"animation" was found to not exist and was set to default');
             }
         }
         
@@ -1427,15 +1439,11 @@ let table = {
             if(config.data.hilight_engine){
                 console.log('Hilight Engine trigger fired on :',event);
                 if(config.data.theme=="light"){
-                    if(event.target.name!="sub_element"){
-                        event.target.style.color='white';
-                        event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,40%)';//color the target
-                    }
+                    event.target.style.color='black';
+                    event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,70%)';//color the target
                 }else if(config.data.theme=="dark"){
-                    if(event.target.name!="sub_element"){
-                        event.target.style.color='black';
-                        event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,60%)';//color the target
-                    }
+                    event.target.style.color='black';
+                    event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,60%)';//color the target
                 }
                 setTimeout(()=>{event.target.style.backgroundColor='';event.target.style.color='';},1000);//un-color the target
             }
@@ -1931,14 +1939,15 @@ let manage = {
 let UI={
     initalize:function(){
         console.log('UI Initalize');
-        switch(config.data.theme){
+        /*switch(config.data.theme){
             case 'dark':this.setting.theme.set_dark() ;break;
             case 'light':this.setting.theme.set_light() ;break;
             default: 
                 console.error('Theme error :', config.data.theme);
-                this.setting.theme.set_dark();
-        }
+                this.setting.theme.set_light();
+        }*/
         this.setting.hilight.setpostition();
+        this.setting.animation.setpostition();//animation sets the theme at startup
         if(typeof(device)!="undefined"){//sometimes plugins break
             if(device.platform=='Android'||'iOS'){//mobile
                 document.getElementById('table_btn').addEventListener('touchstart',UI.navigate.TABLE)
@@ -1946,12 +1955,14 @@ let UI={
                 document.getElementById('setting_btn').addEventListener('touchstart',UI.navigate.SETTING)
                 document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
                 document.getElementById('hilight_btn').addEventListener('touchstart',UI.setting.hilight.flip)
+                document.getElementById('Animations_btn').addEventListener('touchstart',UI.setting.animation.flip)
             }else{//Desktop
                 document.getElementById('table_btn').addEventListener('click',UI.navigate.TABLE)
                 document.getElementById('manage_btn').addEventListener('click',UI.navigate.MANAGE)
                 document.getElementById('setting_btn').addEventListener('click',UI.navigate.SETTING)
                 document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
                 document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
+                document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
             }
         }
         else{
@@ -1961,6 +1972,7 @@ let UI={
             document.getElementById('setting_btn').addEventListener('click',UI.navigate.SETTING)
             document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
             document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
+            document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
         }
         
         document.getElementById('about_btn').addEventListener('click',function(){
@@ -2063,16 +2075,24 @@ let UI={
         theme:{
             set_dark:function(){
                 console.warn('Theme set Dark');
+                if(config.data.animation){
+                    document.getElementById('theme').href="css/dark-theme.css"
+                }else{
+                    document.getElementById('theme').href="css/dark-noanim-theme.css"
+                }
                 config.data.theme='dark'
-                document.getElementById('theme').href="css/dark-theme.css"
                 document.getElementById('light_selection_put').checked=false;
                 document.getElementById('dark_selection_put').checked=true;
                 config.save();
             },
             set_light:function(){
                 console.warn('Theme set Light');
+                if(config.data.animation){
+                    document.getElementById('theme').href="css/light-theme.css"
+                }else{
+                    document.getElementById('theme').href="css/light-noanim-theme.css"
+                }
                 config.data.theme='light'
-                document.getElementById('theme').href="css/light-theme.css"
                 document.getElementById('light_selection_put').checked=true;
                 document.getElementById('dark_selection_put').checked=false;
                 config.save();
@@ -2104,6 +2124,34 @@ let UI={
                     document.getElementById('hilight_switch_container').className='switch_container_active';
                 }else{
                     document.getElementById('hilight_switch_container').className='switch_container_dissabled';
+                }
+            },
+        },
+        animation:{
+            flip:function(){
+                console.log('animation switch triggered');
+                if(config.data.animation){
+                    //turn off the switch
+                    config.data.animation=false;
+                    utility.toast('animations dissabled');console.warn('animations dissabled');
+                }else{
+                    //turn on the witch
+                    config.data.animation=true;
+                    utility.toast('animations enabled');console.warn('animations enabled');
+                }
+                config.save();
+                UI.setting.animation.setpostition();
+            },
+            setpostition:function(){
+                if(config.data.animation){
+                    document.getElementById('Animations_switch_container').className='switch_container_active';
+                }else{
+                    document.getElementById('Animations_switch_container').className='switch_container_dissabled';
+                }
+                if(config.data.theme=='dark'){
+                    UI.setting.theme.set_dark();
+                }else{
+                    UI.setting.theme.set_light();
                 }
             },
         },

@@ -1,79 +1,97 @@
 @keyframes pulse {0%{text-shadow: 0vh 0vh 0vh #000000} 50% {text-shadow: 0vh 0vh 5vh #000000} 100%{text-shadow: 0vh 0vh 0vh #000000}}
+@keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
 @keyframes glowrow { 0%{background-color: rgb(0, 180, 255)} 50%{background-color: rgb(0, 113, 161)} 100%{background-color: rgb(0, 180, 255)}}
 
-.glowrow {animation:glowrow 2s infinite;}
-
-body{/*     the body    */
+body{
     background-color: rgb(255, 255, 255);
     color:rgb(0, 0, 0);
-    box-shadow: #000000;
-    border-color: #000000;
-    text-shadow: none;
 }
-#light_pallet{box-shadow: 0vh 0vh 2vh 0vh #00aaff;}
+
+#light_pallet{box-shadow: 0vh 0vh 2vh 0vh rgb(0, 180, 255);}
+
+#title{
+    animation: pulse 2s ease infinite;
+}
+#loader{
+    animation: rotate 1s linear infinite;
+}
+
+/*  page darkener  */
+#page_shade{
+    background-color: rgb(0, 0, 0);/*  Always black    */
+    transition: opacity 500ms;
+}
 
 /*  Loading Screen  */
 #Loading{
-    box-shadow: #000000;
+    box-shadow: #ffffff;
     background-color: inherit;
 }
 #loader{
     border: 3vh solid #ffffff;
-    border-top: 3vh solid #00aaff;
+    border-top: 3vh solid rgb(0, 180, 255);
 }
 
 /*  table changing sub menu */
-#sub_menu{background-color: rgb(255, 255, 255)}
+#sub_menu{background-color: rgb(255, 255, 255);border-top:0.2vh solid #ffffff}
 .sub_pannel_btn{
-    background-image: linear-gradient(120deg,#ffffff,#AAAAAA,#FFFFFF);
+    background-image: linear-gradient(0deg,#000000,#000000,#000000);
     background-color: inherit;
     background-size: 1000%;
-    background-position: 50% 100%;
-    transition: background-position ease 500ms,background-image 300ms;
+    background-position: 0% 0% 0% 100%;
+    transition: background-position ease 500ms;
 }
 .sub_pannel_btn:active{
-    background-position: 100% 50%;
+    background-image: linear-gradient(120deg,#000000,#AAAAAA,#000000);
+    background-position: 100% 0% 0% 0%;
 }
 .sub_pannel_btn:active{
     transition: background-position ease 500ms,background-image 0ms;
-    background-image: linear-gradient(120deg,#000000,#AAAAAA,#000000);
-    color:white;
+    background-image: linear-gradient(120deg,#ffffff,#AAAAAA,#FFFFFF);
+    color:rgb(0, 0, 0);
 }
 
 /*Scrollbar custom*/
 ::-webkit-scrollbar-track {background: rgb(255, 255, 255);}/*Scrollbar background*/
-::-webkit-scrollbar-thumb {background: rgb(85, 85, 85);}/*scrollbar thumb*/
+::-webkit-scrollbar-thumb {background: rgb(170, 170, 170);}/*scrollbar thumb*/
 ::-webkit-scrollbar-thumb:active {background: rgb(0, 0, 0);}/*activeing on scrollbar thumb*/
 
 /*  Foooter && Menu   */
 .footbar{   /* The body of the footer   */
-    text-shadow:none;
     background-color: inherit;
     border-bottom:none;
 }
 .menu_panel{
     background-color:inherit;
-    box-shadow:none;
+    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
 }
 .menu_panel_active{
     background-color:inherit;
-    box-shadow: none;
+    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
 }
-#sub_menu{background-color: rgb(255, 255, 255);border-bottom:0.2vh solid #000000}
+#sub_menu{background-color: rgb(255, 255, 255);border-bottom:0.2vh solid #ffffff}
 .sub_pannel_btn{
-    background-image: linear-gradient(120deg,#ffffff,#AAAAAA,#ffffff);
+    background-image: linear-gradient(90deg,#000000,#AAAAAA,#000000);
     background-size: 1000%;
-    background-position: 0% 100%;
+    background-position: 100% 0%;
     transition: background-position ease 500ms;
 }
 .sub_pannel_btn:active{
-    background-position: 90% 20%;
+    background-position: 0% 100%;
+}
+.sub_btn{/* Buttons in the sub meny pannels */
+    /*box-shadow: 0vh 0vh 0vh 0vh #ffffff;*/
+}
+.sub_btn:active{
+    /*box-shadow: 0vh 0.5vh 20vh 0vh #ffffff;*/
 }
 
-
 /* Main navigation buttons */
+.menubtn,.menubtn_active{
+    transition:background-color 500ms;
+}
 .menubtn_active{
-    background-color: rgb(98, 208, 255);
+    background-color: rgb(45, 192, 255);
 }
 .menubtn_icon{
     transition: background-image 500ms;
@@ -107,113 +125,84 @@ body{/*     the body    */
     background-image: url('../img/Clip-light.webp');
 }
 
-
-/* Switches */
-.switch_container_active .switchbdy{
-    background-color: inherit;
-}
-
-.switch_container_active .switch{
-    background-color: rgb(0, 0, 0);
-}
-.switch_container_dissabled{
-    border:0.5vh solid rgb(122,122,122);
-}
-.switch_container_dissabled .switch{
-    background-color: rgb(122,122,122);
-}
-
 /*Timetable tags*/
 #timetable{
     background-image: url('../img/whiteground.webp');
 }
-.maincell{/*    Cells of the table  */
+#table1::-webkit-scrollbar-thumb {background: rgb(0, 0, 0);}/*scrollbar thumb*/
+tr{transition:background-color 250ms;}
+.glowrow {animation:glowrow 2s infinite;}
+.maincell{/*  Cells of the table  */
     border:0.2vh solid #000000;
+    transition:border,background-color,color;
+    transition-duration: 500ms;
 }
-
-/*  Table body pseudo render    */
-.data_block{/*  The blocks containing the classes   */
+.data_block,.data_block_active{/*  The blocks containing the classes   */
     background-color: inherit;
     color:inherit;
-    text-shadow: 0vh 0vh 1vh #ffffff;
+    transition: box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms;
 }
-.data_block:active{
-    color: rgba(255, 255, 255, 0);
-}
+
 .infodoot{
     color: rgb(0, 0, 0);
     background-color: inherit;
-    text-shadow: inherit;
+    transition:box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms,opacity 500ms;
 }
 
 /*  Colors are class based because im lazy  */
 .hue0{
-    background-color: hsl(0, 0%, 89%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(0, 0%, 89%);
+    background-color: hsl(0, 0%, 75%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue0:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(0, 0%, 89%);}
 .hue0:active{
     transition: background-color 0ms;
-    background-color: hsl(0, 0%, 77%);
+    background-color: hsl(0, 0%, 92%);
 }
-
 .hue1{/* color:1 Red */
     background-color: hsl(0,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(0,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue1:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(0,100%,60%)}
 .hue1:active{
     transition: background-color 0ms;
     background-color: hsl(0,100%,40%);
 }
-
 .hue2{
     background-color: hsl(30,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(30,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue2:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(30,100%,60%)}
 .hue2:active{
     transition: background-color 0ms;
     background-color: hsl(30,100%,40%);
 }
 
 .hue3{
-    background-color: hsl(60,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(60,100%,60%);
+    background-color: hsl(40,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue3:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(60,100%,60%)}
 .hue3:active{
+    transition: background-color 0ms;
+    background-color: hsl(40,100%,40%);
+}
+
+.hue4{
+    background-color: hsl(60,100%,60%);
+    background-position: center;
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+}
+.hue4:active{
     transition: background-color 0ms;
     background-color: hsl(60,100%,40%);
 }
 
-.hue4{
-    background-color: hsl(90,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(90,100%,60%);
-    background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
-}
-.hue4:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(90,100%,60%)}
-.hue4:active{
-    transition: background-color 0ms;
-    background-color: hsl(90,100%,40%);
-}
-
 .hue5{
     background-color: hsl(120,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(120,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue5:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(120,100%,60%)}
 .hue5:active{
     transition: background-color 0ms;
     background-color: hsl(120,100%,40%);
@@ -221,23 +210,18 @@ body{/*     the body    */
 
 .hue6{
     background-color: hsl(150,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(150,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue6:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(150,100%,60%)}
 .hue6:active{
     transition: background-color 0ms;
     background-color: hsl(150,100%,40%);
 }
-
 .hue7{
     background-color: hsl(180,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(180,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue7:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(180,100%,60%)}
 .hue7:active{
     transition: background-color 0ms;
     background-color: hsl(180,100%,40%);
@@ -245,35 +229,29 @@ body{/*     the body    */
 
 .hue8{
     background-color: hsl(210,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(210,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue8:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(210,100%,60%)}
 .hue8:active{
     transition: background-color 0ms;
     background-color: hsl(210,100%,40%);
 }
 
 .hue9{
-    background-color: hsl(240,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(240,100%,60%);
+    background-color: hsl(260,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue9:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(240,100%,60%)}
 .hue9:active{
     transition: background-color 0ms;
-    background-color: hsl(240,100%,40%);
+    background-color: hsl(260,100%,40%);
 }
 
 .hue10{
     background-color: hsl(270,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(270,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue10:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(270,100%,60%)}
 .hue10:active{
     transition: background-color 0ms;
     background-color: hsl(270,100%,40%);
@@ -281,18 +259,16 @@ body{/*     the body    */
 
 .hue11{
     background-color: hsl(328,100%,60%);
-    box-shadow: 0vh 0vh 0vh 0vh hsl(328,100%,60%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
-.hue11:hover{ box-shadow: 0vh 0.5vh 2vh 1vh hsl(328,100%,60%)}
 .hue11:active{
     transition: background-color 0ms;
     background-color: hsl(328,100%,70%);
 }
+
 /*  manage_view   */
 .data_bar{/*    Detailed representaion of the data to be managed    */
-    text-shadow: 0vh 0vh 1vh #ffffff;
 }
 .data_noot{
     color: rgb(255, 255, 255);
@@ -310,58 +286,58 @@ body{/*     the body    */
     border-bottom:0.3vh solid #000000;
     background-color: inherit;
     color: inherit;
+    transition: border 300ms;
 }#dataentry_screen input:focus{
     border:none;
-    border-bottom:0.3vh solid #00aaff;
+    border-bottom:0.3vh solid rgb(0, 180, 255);
     background-color: inherit;
     color: inherit;
     outline: none;
 }
-#cancel_btn{/*cancel button*/
-    background-color: #ffffff;
-    border:0.4vh solid #000000;
-}#cancel_btn:active{
-    background-color: #ff5656;
-    border:0.4vh solid #912e2e;
+.select_container{/*  Select boxes made to be more effective on mobile  */
+    border:0.3vh solid #000000;
 }
-#save_btn{/*Save button*/
+.btn_bar{
     background-color: #ffffff;
-    border:0.4vh solid #000000;
-}#save_btn:active{
+}
+.databtns{
+    background-color: rgb(255, 255, 255);
+    border:0.3vh solid #000000;
+    transition:background-color 500ms;
+}.databtns:active{transition:background-color 0ms;}
+#cancel_btn:active{ /*cancel button*/
+    background-color: #ff5656;
+    border:0.3vh solid #912e2e;
+}
+#save_btn:active{ /*Save button*/
     background-color: #00c3ff;
-    border:0.4vh solid #178caf;
+    border:0.3vh solid #178caf;
 }
-#savepluss_btn{/*Save and add new entry button*/
-    background-color: #ffffff;
-    border:0.4vh solid #000000;
-}#savepluss_btn:active{
+#savepluss_btn:active{/*Save and add new entry button*/
     background-color: #44ff1e;
-    border:0.4vh solid #30b914;
+    border:0.3vh solid #30b914;
 }
-#delete_btn{/*Save and add new entry button*/
-    background-color: #ffffff;
-    border:0.4vh solid #000000;
-}#delete_btn:active{
+#delete_btn:active{/*Save and add new entry button*/
     background-color: #ff5656;
-    border:0.4vh solid #912e2e;
+    border:0.3vh solid #912e2e;
 }
 
 #delete_confirm_pannel{/*   Delete confirmation pannel  */
     background-color: inherit;
 }
 #yes_btn{
-    background-color: #2bff00;
-    border:0.3vh solid #20ae03;
-    transition:background-color 500ms;
+    background-color: #3ad61a;
+    border:0.3vh solid #248d0f;
+    transition: background-color 500ms,border 500ms;
 }#yes_btn:active{
-    background-color: #2bff00;
-    border:0.3vh solid #20ae03;
+    background-color: #44ff1e;
+    border:0.3vh solid #3ad61a;
     transition:background-color 0ms;
 }
 #no_btn{
     background-color: #ff5656;
     border:0.3vh solid #912e2e;
-    transition:background-color 500ms;
+    transition: background-color 500ms,border 500ms;
 }#no_btn:active{
     background-color: #ff3434;
     border:0.3vh solid #b33e3e;
@@ -370,18 +346,53 @@ body{/*     the body    */
 
 #erraser{/* Clear inputs    */
     background-image: url('../img/Eraser-light.webp');
+    transition:transform 500ms;
 }
 
 /*  Settinng things */
+.mincropallet{
+    transition:box-shadow 500ms;
+}
 #dark_selection_put{
-    border:1px solid #000000;
+    border:1px solid rgb(0, 0, 0);
 }
 #light_selection_put{
-    border:1px solid #00aaff;
+    border:1px solid rgb(0, 180, 255);
 }
 .selcetion_put:checked{
-    background-color: #00aaff;
+    background-color: rgb(0, 180, 255);
 }
 .selcetion_put:checked::after{
     border-color: #000000;
+}
+
+/* Switches */
+.switch_container_active{
+    background-color: rgb(255, 255, 255);
+}
+.switch_container_active .switchbdy{
+    background-color: rgb(255, 255, 255);
+    transition: transform,background-color;
+    transition-duration: 300ms;
+}
+.switch_container_active .switch{
+    background-color: rgb(0, 0, 0);
+    transition: transform,background-color;
+    transition-duration: 300ms;
+}
+.switch_container_dissabled{
+    background-color: rgb(255, 255, 255);
+    border:0.5vh solid rgb(122,122,122);
+    transition: transform,background-color;
+    transition-duration: 300ms;
+}
+.switch_container_dissabled .switchbdy{
+    background-color: rgb(255, 255, 255);
+    transition: background-color;
+    transition-duration: 300ms;
+}
+.switch_container_dissabled .switch{
+    background-color: rgb(122,122,122);
+    transition: transform,background-color;
+    transition-duration: 300ms;
 }

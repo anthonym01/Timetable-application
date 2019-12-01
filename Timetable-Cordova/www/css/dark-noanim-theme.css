@@ -5,27 +5,29 @@
 body{
     background-color: rgb(0, 0, 0);
     color:rgb(255, 255, 255);
+    box-shadow: #ffffff;
+    border-color: #ffffff;
 }
 
 #amoled_pallet{box-shadow: 0vh 0vh 2vh 0vh #2bff00;}
 
 #title{
-    animation: pulse 2s ease infinite;
+    animation: none;
 }
 #loader{
-    animation: rotate 1s linear infinite;
+    animation: none;
 }
 
 /*  page darkener  */
 #page_shade{
     background-color: rgb(0, 0, 0);/*  Always black    */
-    transition: opacity 500ms;
+    transition: none;
 }
 
 /*  Loading Screen  */
 #Loading{
-    box-shadow: rgb(255, 255, 255);
-    background-color: rgb(0, 0, 0);
+    box-shadow: #ffffff;
+    background-color: inherit;
 }
 #loader{
     border: 3vh solid #ffffff;
@@ -39,14 +41,14 @@ body{
     background-color: inherit;
     background-size: 1000%;
     background-position: 0% 0% 0% 100%;
-    transition: background-position ease 500ms;
+    transition: none;
 }
 .sub_pannel_btn:active{
     background-image: linear-gradient(120deg,#000000,#AAAAAA,#000000);
     background-position: 100% 0% 0% 0%;
 }
 .sub_pannel_btn:active{
-    transition: background-position ease 500ms,background-image 0ms;
+    transition: none;
     background-image: linear-gradient(120deg,#ffffff,#AAAAAA,#FFFFFF);
     color:rgb(0, 0, 0);
 }
@@ -74,7 +76,7 @@ body{
     background-image: linear-gradient(90deg,#000000,#AAAAAA,#000000);
     background-size: 1000%;
     background-position: 100% 0%;
-    transition: background-position ease 500ms;
+    transition: none;
 }
 .sub_pannel_btn:active{
     background-position: 0% 100%;
@@ -90,21 +92,21 @@ body{
 
 /* Main navigation buttons */
 .menubtn,.menubtn_active{
-    transition:background-color 500ms;
+    transition: none;
 }
 .menubtn_active{
     background-color: #199401;
 }
 .menubtn_icon{
-    transition: background-image 500ms;
+    transition: none;
 }
 .menubtn #setting_btn_icon{   /*  Setting button    */
-    transition: transform 500ms;
+    transition: none;
     transform: rotate(0deg);
     background-image: url('../img/setting-light.webp');
 }
 .menubtn_active #setting_btn_icon{   
-    transition: transform 500ms;
+    transition: none;
     transform: rotate(90deg);
     background-image: url('../img/setting-light.webp');
 }
@@ -132,144 +134,143 @@ body{
     background-image: url('../img/blyatground.webp');
 }
 #table1::-webkit-scrollbar-thumb {background: rgb(0, 0, 0);}/*scrollbar thumb*/
-tr{transition:background-color 250ms;}
-.glowrow {animation:glowrow 2s infinite;}
+tr{transition: none;}
+.glowrow {animation:none;}
 .maincell{/*  Cells of the table  */
     border:0.2vh solid #ffffff;
-    transition:border,background-color,color;
-    transition-duration: 500ms;
+    transition: none;
 }
 .data_block,.data_block_active{/*  The blocks containing the classes   */
     background-color: inherit;
     color:inherit;
     text-shadow: 0vh 0vh 1vh #000000;
-    transition: box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms;
+    transition: none;
 }
 
 .infodoot{
     color: rgb(255, 255, 255);
     background-color: inherit;
     text-shadow: 0vh 0vh 2vh #000000;
-    transition:box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms,opacity 500ms;
+    transition: none;
 }
 
 /*  Colors are class based because im lazy  */
 .hue0{
     background-color: hsl(0, 0%, 39%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue0:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: rgb(185, 185, 185);
 }
 
 .hue1{/* color:1 Red */
     background-color: hsl(0,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue1:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(0,100%,60%);
 }
 
 .hue2{
     background-color: hsl(30,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue2:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(30,100%,60%);
 }
 
 .hue3{
     background-color: hsl(60,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue3:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(60,100%,60%);
 }
 
 .hue4{
     background-color: hsl(90,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue4:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(90,100%,60%);
 }
 
 .hue5{
     background-color: hsl(120,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue5:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(120,100%,60%);
 }
 
 .hue6{
     background-color: hsl(150,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue6:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(150,100%,60%);
 }
 .hue7{
     background-color: hsl(180,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue7:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(180,100%,60%);
 }
 
 .hue8{
     background-color: hsl(210,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue8:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(210,100%,60%);
 }
 
 .hue9{
     background-color: hsl(240,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue9:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(240,100%,60%);
 }
 
 .hue10{
     background-color: hsl(270,100%,40%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue10:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(270,100%,60%);
 }
 
 .hue11{
     background-color: hsl(328,100%,60%);
     background-position: center;
-    transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
+    transition: none;
 }
 .hue11:active{
-    transition: background-color 0ms;
+    transition: none;
     background-color: hsl(328,100%,70%);
 }
 
@@ -293,7 +294,7 @@ tr{transition:background-color 250ms;}
     border-bottom:0.3vh solid #ffffff;
     background-color: inherit;
     color: inherit;
-    transition: border 300ms;
+    transition: none;
 }#dataentry_screen input:focus{
     border:none;
     border-bottom:0.3vh solid #2bff00;
@@ -310,8 +311,8 @@ tr{transition:background-color 250ms;}
 .databtns{
     background-color: #000000;
     border:0.3vh solid #ffffff;
-    transition:background-color 500ms;
-}.databtns:active{transition:background-color 0ms;}
+    transition: none;
+}.databtns:active{transition: none;}
 #cancel_btn:active{ /*cancel button*/
     background-color: #ff5656;
     border:0.3vh solid #912e2e;
@@ -335,30 +336,30 @@ tr{transition:background-color 250ms;}
 #yes_btn{
     background-color: #3ad61a;
     border:0.3vh solid #248d0f;
-    transition: background-color 500ms,border 500ms;
+    transition: none;
 }#yes_btn:active{
     background-color: #44ff1e;
     border:0.3vh solid #3ad61a;
-    transition:background-color 0ms;
+    transition: none;
 }
 #no_btn{
     background-color: #ff5656;
     border:0.3vh solid #912e2e;
-    transition: background-color 500ms,border 500ms;
+    transition: none;
 }#no_btn:active{
     background-color: #ff3434;
     border:0.3vh solid #b33e3e;
-    transition:background-color 0ms;
+    transition: none;
 }
 
 #erraser{/* Clear inputs    */
     background-image: url('../img/Eraser-dark.webp');
-    transition:transform 500ms;
+    transition: none;
 }
 
 /*  Settinng things */
 .mincropallet{
-    transition:box-shadow 500ms;
+    transition: none;
 }
 #dark_selection_put{
     border:1px solid #00ff0d;
@@ -374,32 +375,22 @@ tr{transition:background-color 250ms;}
 }
 
 /* Switches */
-.switch_container_active{
-    background-color: rgb(0, 0, 0);
-}
 .switch_container_active .switchbdy{
-    background-color: rgb(0, 0, 0);
-    transition: transform,background-color;
-    transition-duration: 300ms;
+    background-color: #000000;
+    transition: none;
 }
 .switch_container_active .switch{
     background-color: rgb(255, 255, 255);
-    transition: transform,background-color;
-    transition-duration: 300ms;
+    transition: none;
 }
 .switch_container_dissabled{
-    background-color: rgb(0, 0, 0);
     border:0.5vh solid rgb(122,122,122);
-    transition: transform,background-color;
-    transition-duration: 300ms;
+    transition: none;
 }
 .switch_container_dissabled .switchbdy{
-    background-color: rgb(0, 0, 0);
-    transition: background-color;
-    transition-duration: 300ms;
+    transition: none;
 }
 .switch_container_dissabled .switch{
     background-color: rgb(122,122,122);
-    transition: transform,background-color;
-    transition-duration: 300ms;
+    transition: none;
 }
