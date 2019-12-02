@@ -120,7 +120,7 @@
         bottom:7vh;
         left:0;
         width: 100vw;
-        height:0;
+        height:93vh;
         z-index: 500;
         display: none;
         transition: opacity 200ms,height 200ms;
