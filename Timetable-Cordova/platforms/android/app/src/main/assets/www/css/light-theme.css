@@ -9,17 +9,9 @@ body{
 
 #light_pallet{box-shadow: 0vh 0vh 2vh 0vh rgb(0, 180, 255);}
 
-#title{
-    animation: pulse 2s ease infinite;
-}
-#loader{
-    animation: rotate 1s linear infinite;
-}
-
 /*  page darkener  */
 #page_shade{
     background-color: rgb(0, 0, 0);/*  Always black    */
-    transition: opacity 500ms;
 }
 
 /*  Loading Screen  */
@@ -32,25 +24,6 @@ body{
     border-top: 3vh solid rgb(0, 180, 255);
 }
 
-/*  table changing sub menu */
-#sub_menu{background-color: rgb(255, 255, 255);border-top:0.2vh solid #ffffff}
-.sub_pannel_btn{
-    background-image: linear-gradient(0deg,#000000,#000000,#000000);
-    background-color: inherit;
-    background-size: 1000%;
-    background-position: 0% 0% 0% 100%;
-    transition: background-position ease 500ms;
-}
-.sub_pannel_btn:active{
-    background-image: linear-gradient(120deg,#000000,#AAAAAA,#000000);
-    background-position: 100% 0% 0% 0%;
-}
-.sub_pannel_btn:active{
-    transition: background-position ease 500ms,background-image 0ms;
-    background-image: linear-gradient(120deg,#ffffff,#AAAAAA,#FFFFFF);
-    color:rgb(0, 0, 0);
-}
-
 /*Scrollbar custom*/
 ::-webkit-scrollbar-track {background: rgb(255, 255, 255);}/*Scrollbar background*/
 ::-webkit-scrollbar-thumb {background: rgb(170, 170, 170);}/*scrollbar thumb*/
@@ -61,48 +34,20 @@ body{
     background-color: inherit;
     border-bottom:none;
 }
-.menu_panel{
-    background-color:inherit;
-    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
-}
-.menu_panel_active{
-    background-color:inherit;
-    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
-}
-#sub_menu{background-color: rgb(255, 255, 255);border-bottom:0.2vh solid #ffffff}
-.sub_pannel_btn{
-    background-image: linear-gradient(90deg,#000000,#AAAAAA,#000000);
-    background-size: 1000%;
-    background-position: 100% 0%;
-    transition: background-position ease 500ms;
-}
-.sub_pannel_btn:active{
-    background-position: 0% 100%;
-}
-.sub_btn{/* Buttons in the sub meny pannels */
-    /*box-shadow: 0vh 0vh 0vh 0vh #ffffff;*/
-}
-.sub_btn:active{
-    /*box-shadow: 0vh 0.5vh 20vh 0vh #ffffff;*/
-}
 
 /* Main navigation buttons */
 .menubtn,.menubtn_active{
-    transition:background-color 500ms;
+    background-color:inherit;
+    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
 }
 .menubtn_active{
     background-color: rgb(45, 192, 255);
 }
-.menubtn_icon{
-    transition: background-image 500ms;
-}
 .menubtn #setting_btn_icon{   /*  Setting button    */
-    transition: transform 500ms;
     transform: rotate(0deg);
     background-image: url('../img/setting-dark.webp');
 }
 .menubtn_active #setting_btn_icon{   
-    transition: transform 500ms;
     transform: rotate(90deg);
     background-image: url('../img/setting-dark.webp');
 }
@@ -134,24 +79,18 @@ body{
     border:0.3vh solid rgb(0, 0, 0);
     color: rgb(0, 0, 0);
     background-color: rgb(255, 255, 255);
-    transition:background-color 500ms,color 500ms;
 }#close_btn:active{
     background-color: rgb(255, 0, 0);
     color: rgb(255, 255, 255);
-    transition:background-color 0ms,color 0ms;
 }
 #table1::-webkit-scrollbar-thumb {background: rgb(0, 0, 0);}/*scrollbar thumb*/
-tr{transition:background-color 250ms;}
-.glowrow {background-color: rgb(0, 180, 255);animation:glowrow 2s infinite;}
+.glowrow {background-color: rgb(0, 180, 255);}
 .maincell{/*  Cells of the table  */
     border:0.2vh solid #000000;
-    transition:border,background-color,color;
-    transition-duration: 500ms;
 }
 .data_block,.data_block_active{/*  The blocks containing the classes   */
     background-color: inherit;
     color:inherit;
-    transition: box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms;
 }
 .data_block_active{
     color: rgba(0, 0, 0, 0);
@@ -159,7 +98,6 @@ tr{transition:background-color 250ms;}
 .infodoot{
     color: rgb(0, 0, 0);
     background-color: inherit;
-    transition:box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms,opacity 500ms;
 }
 
 /*  Colors are class based because im lazy  */
@@ -281,8 +219,6 @@ tr{transition:background-color 250ms;}
 }
 
 /*  manage_view   */
-.data_bar{/*    Detailed representaion of the data to be managed    */
-}
 .data_noot{
     color: rgb(255, 255, 255);
     background-color: rgb(0, 0, 0);
@@ -299,7 +235,6 @@ tr{transition:background-color 250ms;}
     border-bottom:0.3vh solid #000000;
     background-color: inherit;
     color: inherit;
-    transition: border 300ms;
 }#dataentry_screen input:focus{
     border:none;
     border-bottom:0.3vh solid rgb(0, 180, 255);
@@ -310,11 +245,9 @@ tr{transition:background-color 250ms;}
 .select_container{/*  Select boxes made to be more effective on mobile  */
     border:0.3vh solid #000000;
     color: rgb(0, 0, 0);
-    transition:background-color 500ms,color 500ms;
 }.select_container:active{
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
-    transition:background-color 0ms,color 0ms;
 }
 .btn_bar{
     background:none;
@@ -322,8 +255,7 @@ tr{transition:background-color 250ms;}
 .databtns{
     background-color: rgb(255, 255, 255);
     border:0.3vh solid #000000;
-    transition:background-color 500ms;
-}.databtns:active{transition:background-color 0ms;}
+}
 #cancel_btn:active{ /*cancel button*/
     background-color: #ff5656;
     border:0.3vh solid #912e2e;
@@ -347,31 +279,23 @@ tr{transition:background-color 250ms;}
 #yes_btn{
     background-color: #3ad61a;
     border:0.3vh solid #248d0f;
-    transition: background-color 500ms,border 500ms;
 }#yes_btn:active{
     background-color: #44ff1e;
     border:0.3vh solid #3ad61a;
-    transition:background-color 0ms;
 }
 #no_btn{
     background-color: #ff5656;
     border:0.3vh solid #912e2e;
-    transition: background-color 500ms,border 500ms;
 }#no_btn:active{
     background-color: #ff3434;
     border:0.3vh solid #b33e3e;
-    transition:background-color 0ms;
 }
 
 #erraser{/* Clear inputs    */
     background-image: url('../img/Eraser-light.webp');
-    transition:transform 500ms;
 }
 
 /*  Settinng things */
-.mincropallet{
-    transition:box-shadow 500ms;
-}
 #dark_selection_put{
     border:1px solid rgb(0, 0, 0);
 }
@@ -391,27 +315,17 @@ tr{transition:background-color 250ms;}
 }
 .switch_container_active .switchbdy{
     background-color: rgb(255, 255, 255);
-    transition: transform,background-color;
-    transition-duration: 300ms;
 }
 .switch_container_active .switch{
     background-color: rgb(0, 0, 0);
-    transition: transform,background-color;
-    transition-duration: 300ms;
 }
 .switch_container_dissabled{
     background-color: rgb(255, 255, 255);
     border:0.5vh solid rgb(122,122,122);
-    transition: transform,background-color;
-    transition-duration: 300ms;
 }
 .switch_container_dissabled .switchbdy{
     background-color: rgb(255, 255, 255);
-    transition: background-color;
-    transition-duration: 300ms;
 }
 .switch_container_dissabled .switch{
     background-color: rgb(122,122,122);
-    transition: transform,background-color;
-    transition-duration: 300ms;
 }

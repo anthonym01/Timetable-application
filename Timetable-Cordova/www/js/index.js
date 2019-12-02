@@ -1803,12 +1803,17 @@ let manage = {
             document.getElementById('start_time_put').style.border="";
             document.getElementById('end_time_put').style.border="";
             if(config.data.animation){
-                document.getElementById('dataentry_screen').style.transform="translate(100%,0)"; 
+                document.getElementById('dataentry_screen').style.transform="translate(0,100%)";//strange bug, setting this in css causes the buttons to glitch out
                 document.getElementById('dataentry_screen').style.display="block";
                 setTimeout(()=>{
                     document.getElementById('dataentry_screen').style.transform="initial";
-                },500);
+                    setTimeout(()=>{
+                        document.getElementById('btn_bar').style.display="block";
+                    },210);
+                },0);
             }else{
+                document.getElementById('dataentry_screen').style.transform="initial";
+                document.getElementById('btn_bar').style.display="block";    
                 document.getElementById('dataentry_screen').style.display="block";    
             }
         },
@@ -1827,7 +1832,15 @@ let manage = {
         },
         close:function(){//remove the input screen
             console.log('Dialogue close called');
-            document.getElementById('dataentry_screen').style.display="none";
+            if(config.data.animation){
+                document.getElementById('dataentry_screen').style.transform="translate(0,100%)";//strange bug, setting this in css causes the buttons to glitch out
+                setTimeout(()=>{
+                    document.getElementById('dataentry_screen').style.display="none";
+                },205);
+            }else{
+                document.getElementById('dataentry_screen').style.display="none";
+                document.getElementById('btn_bar').style.display="none";    
+            }
         },
         save:function(){
             console.log('Dialogue save called');

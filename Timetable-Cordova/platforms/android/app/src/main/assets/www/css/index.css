@@ -36,6 +36,7 @@
         width:100%;
         text-align: center;
         border-radius: 10vh;
+        animation: pulse 2s ease infinite;
     }
     #loader{
         position: relative;
@@ -45,6 +46,7 @@
         height:7vh;
         width:7vh;
         border-radius: 10vh;
+        animation: rotate 1s linear infinite;
     }
 
     /*  page darkener   */
@@ -57,6 +59,7 @@
         display:none;
         height:100%;
         width: 100%;
+        transition: opacity 500ms;
     }
 
     /*Scrollbar custom*/
@@ -91,6 +94,7 @@
         cursor: pointer;
         /*margin-right:0.5vw;*/
         border-radius: 2vh;
+        transition:background-color 500ms;
     }
     .menubtn_icon{
         position: relative;
@@ -101,7 +105,9 @@
         background-size: contain;
         background-position:center;
         background-image: url('../img/icon.webp');
+        transition: background-image 500ms;
     }
+    #setting_btn_icon{transition: transform 500ms;}
 
     /*  Views   */
     view{
@@ -141,8 +147,9 @@
         font-size: 5.5vh;
         text-align: center;
         border-radius:2vh;
-        -webkit-touch-callout: none;    
-    }
+        -webkit-touch-callout: none;
+        transition:background-color 0ms,color 0ms;    
+    }#close_btn:active{transition:background-color 200ms,color 200ms;}
     #timetable{/*   The body of the timetable   */
         position: relative;
         margin-top:0vh;
@@ -157,6 +164,8 @@
         background-size: cover;
         background-repeat: no-repeat;
     }
+    tr{transition:background-color 250ms;}
+    .glowrow {animation:glowrow 2s infinite;}
     td{vertical-align: top;}
     .maincell{/*    Cells of the table  */
         position: relative;
@@ -176,6 +185,8 @@
         height: auto;
         font-family: Lexend_Deca;
         font-size: 2.8vh;
+        transition:border,background-color,color;
+        transition-duration: 500ms;
     }
     .data_block,.data_block_active{/*  The blocks containing the classes   */
         position: relative;
@@ -191,6 +202,10 @@
         transform: translate(-0.5vh,0vh);
         padding-left:0.5vh;
         padding-right:0.5vh;
+        transition: box-shadow 0ms,transform 0ms,background-color 0ms,color 0ms;
+    }
+    .data_block,.data_block_active:active{
+        transition: box-shadow 300ms,transform 300ms,background-color 300ms,color 300ms;
     }
     .data_block_active{
         z-index: 400;
@@ -209,6 +224,7 @@
         /*transform: ;*/
         padding:1vh;
         border-radius: 1vh 1vh 1vh 1vh;
+        transition:box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms,opacity 500ms;
     }
     .data_block_active .infodoot{
         display: block;
@@ -229,12 +245,6 @@
         width:100%;
         display: none;
         z-index: 100;
-    }
-    .sub_pannel_btn{
-
-    }
-    .sub_pannel_btn_inactive{
-
     }
 
     /*  manage_view   */
@@ -293,7 +303,7 @@
         width:100%;
         display: none;
         overflow: scroll;
-        transition: transfrom 200ms;
+        transition: transform 200ms;
     }
     #dataentry_screen table{/*  TEMPORARY   */
         position: relative;
@@ -315,6 +325,7 @@
         font-size: 8vw;
         border-radius: 1vh;
         text-align: center;
+        transition: border 300ms;
     }
     .select_container{/*  Select boxes made to be more effective on mobile  */
         position: relative;
@@ -324,6 +335,11 @@
         border-radius:2vh;
         -webkit-touch-callout: none;    
         margin-top:2vh;
+        transition:background-color 0ms,color 0ms;
+    }.select_container:active{
+        background-color: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        transition:background-color 500ms,color 500ms;
     }
     .select_container select{
         position: absolute;
@@ -347,11 +363,13 @@
         background:none;
     }
 
-    .btn_bar{
+    #btn_bar{
         position:fixed;
         bottom:0vh;
         width: 100vw;
         height:9vh;
+        display: none;
+        background: none;
     }
     .databtns{/*    Buttons at the bottom of #dataentry_screen  */
         position: absolute;
@@ -365,7 +383,8 @@
         overflow: hidden;
         border-radius:2vh;
         -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
-    }
+        transition:background-color 0ms;
+    }.databtns:active{transition:background-color 500ms;}
     #cancel_btn{/*cancel button*/
         left:4vw;
     }
@@ -406,6 +425,9 @@
         border-radius: 2vh;
         margin-bottom: 2%;
         cursor:pointer;
+        transition: background-color 0ms,border 500ms;
+    }#yes_btn:active{
+        transition:background-color 500ms;
     }
     #no_btn{
         width: 45%;
@@ -414,6 +436,9 @@
         margin-left: 5%;
         margin-bottom: 2%;
         cursor:pointer;
+        transition: background-color 0ms,border 500ms;
+    }#no_btn:active{
+        transition:background-color 500ms;
     }
     @keyframes wobble { 0%{transform: translate(0vh,0)} 25%{transform: translate(1vh,-0.5vh)} 50%{transform: translate(0vh,0)} 75%{transform: translate(-1vh,0.5vh)} 100%{transform: translate(0vh,0)}}
     #erraser{/* Clear inputs    */
@@ -424,6 +449,7 @@
         width: 9vh;
         background-size: contain;
         cursor: pointer;
+        transition:transform 500ms;
     }
 
 /*  Setting view  */
@@ -482,6 +508,7 @@
         width: 90%;
         margin-right: auto;
         margin-left:auto;
+        transition:box-shadow 500ms;
     }
     .mincropallet table{
         height: 85%;
@@ -544,8 +571,7 @@
         text-align: center;
         cursor: pointer;
     }
-
-    /* Switches */
+        /* Switches */
     .switch_container_active{
         position: absolute;
         transform: translate(12vh,0);
@@ -563,6 +589,8 @@
         height:5vh;
         border-radius: 5vh;
         cursor:pointer;
+        transition: transform,background-color;
+        transition-duration: 300ms;
     }
     .switch_container_active .switch{
         top:0.2vh;
@@ -573,6 +601,8 @@
         border-radius: 50%;
         z-index:1;
         transform: translate(0px/*-39px*/,0);
+        transition: transform,background-color;
+        transition-duration: 300ms;
     }
     .switch_container_dissabled{
         position: absolute;
@@ -584,6 +614,8 @@
         border:0.5vh solid;
         border-radius: 5vh;
         cursor:pointer;
+        transition: transform,background-color;
+        transition-duration: 300ms;
     }
     .switch_container_dissabled .switchbdy{
         position: absolute;
@@ -591,6 +623,8 @@
         height:5vh;
         border-radius: 5vh;
         cursor:pointer;
+        transition: background-color;
+        transition-duration: 300ms;
     }
     .switch_container_dissabled .switch{
         top:0.2vh;
@@ -601,8 +635,9 @@
         border-radius: 50%;
         z-index:1;
         transform: translate(-7vh,0);
+        transition: transform,background-color;
+        transition-duration: 300ms;
     }
-
 }
 
 /*  Landscape layout (with min-width)   */
