@@ -507,7 +507,11 @@ let table = {
                     if(config.data.tiles){//show full tile view
                         tempblock.name="off";
                         tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
-                        document.getElementById('fullscreen_tile').style.display='block';
+                        if(config.data.animation){
+                            document.getElementById('fullscreen_tile').style.display='block';
+                        }else{
+                            document.getElementById('fullscreen_tile').style.display='block';
+                        }
                         document.getElementById('title_cell').innerText=config.data.table1_db[index].name;
                         switch (config.data.table1_db[index].day) {
                             case 1: document.getElementById('day_cell').innerText="Monday"; break;
@@ -1950,10 +1954,7 @@ let UI={
                 document.getElementById('hilight_btn').addEventListener('touchstart',UI.setting.hilight.flip)
                 document.getElementById('Animations_btn').addEventListener('touchstart',UI.setting.animation.flip)
                 document.getElementById('tiles_btn').addEventListener('touchstart',UI.setting.tiles.flip)
-                document.getElementById('close_btn').addEventListener('touchstart',()=>{
-                    console.log('closed full tile screen');
-                    document.getElementById('fullscreen_tile').style.display="none";
-                });
+                document.getElementById('close_btn').addEventListener('click',UI.navigate.close_tile);
             }else{//Desktop
                 document.getElementById('table_btn').addEventListener('click',UI.navigate.TABLE)
                 document.getElementById('manage_btn').addEventListener('click',UI.navigate.MANAGE)
@@ -1962,10 +1963,7 @@ let UI={
                 document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
                 document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
                 document.getElementById('tiles_btn').addEventListener('click',UI.setting.tiles.flip)
-                document.getElementById('close_btn').addEventListener('click',()=>{
-                    console.log('closed full tile screen');
-                    document.getElementById('fullscreen_tile').style.display="none";
-                });
+                document.getElementById('close_btn').addEventListener('click',UI.navigate.close_tile);
             }
         }
         else{
@@ -1977,10 +1975,7 @@ let UI={
             document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
             document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
             document.getElementById('tiles_btn').addEventListener('click',UI.setting.tiles.flip)
-            document.getElementById('close_btn').addEventListener('click',()=>{
-                console.log('closed full tile screen');
-                document.getElementById('fullscreen_tile').style.display="none";
-            });
+            document.getElementById('close_btn').addEventListener('click',UI.navigate.close_tile);
         }
         
         document.getElementById('about_btn').addEventListener('click',function(){
@@ -2012,6 +2007,17 @@ let UI={
                 this.TABLE();
             }
             
+        },
+        close_tile:function(){
+            console.log('closed full tile function');
+            if(config.data.animation){
+                document.getElementById('fullscreen_tile').style.opacity="0.0";
+                setTimeout(()=>{
+                    document.getElementById('fullscreen_tile').style.display="none";
+                },200);
+            }else{
+                document.getElementById('fullscreen_tile').style.display="none";    
+            }
         },
         exitstrategy:function(){
             if(config.properties.exit){utility.close()}
