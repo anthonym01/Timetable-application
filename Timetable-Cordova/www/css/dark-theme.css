@@ -145,7 +145,9 @@ tr{transition:background-color 250ms;}
     text-shadow: 0vh 0vh 1vh #000000;
     transition: box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms;
 }
-
+.data_block_active{
+    color: rgba(0, 0, 0, 0);
+}
 .infodoot{
     color: rgb(255, 255, 255);
     background-color: inherit;
@@ -303,9 +305,15 @@ tr{transition:background-color 250ms;}
 }
 .select_container{/*  Select boxes made to be more effective on mobile  */
     border:0.3vh solid #ffffff;
+    color: rgb(255, 255, 255);
+    transition:background-color 500ms,color 500ms;
+}.select_container:active{
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    transition:background-color 0ms,color 0ms;
 }
 .btn_bar{
-    background-color: #000000;
+    background:none;
 }
 .databtns{
     background-color: #000000;

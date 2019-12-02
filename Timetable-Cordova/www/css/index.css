@@ -115,6 +115,15 @@
     }
 
     /*Timetable view*/
+    #fullscreen_tile{
+        position: absolute;
+        top:0;
+        right:0;
+        height:100%;
+        width:100%;
+        background-color: rgba(0,0,0,0.6);
+        z-index: 500;
+    }
     #timetable{/*   The body of the timetable   */
         position: relative;
         margin-top:0vh;
@@ -144,6 +153,7 @@
         overflow: visible;
         background: none;
         width:auto;
+        min-width: 33vw;
         height: auto;
         font-family: Lexend_Deca;
         font-size: 2.8vh;
@@ -164,7 +174,8 @@
         padding-right:0.5vh;
     }
     .data_block_active{
-        z-index: 1000;
+        z-index: 400;
+        
     }
     .infodoot{/*  Facilitates flip out effect  */
         background-color: inherit;
@@ -183,7 +194,7 @@
     .data_block_active .infodoot{
         display: block;
         opacity: 1;
-        z-index: 1000;
+        z-index: 400;
         transform: rotate3d(1,0,0,0deg) translate(1vh,0);
     }
     .infodoot table{width: 100%;border-collapse: collapse;text-align: center;table-layout: fixed;background:none!important;}
@@ -224,11 +235,11 @@
         min-width: 40%;
         font-size:3.2vh;
         padding:1.2vh;
-        margin-bottom: 2vh;
         border-radius: 3vh;
         cursor: pointer;
         box-shadow: 0vh 0vh 0vh 0vh;
-        margin-top:1vh;
+        margin-top:2vh;
+        margin-bottom: 1vh;
         margin-left:2vw;
         text-align: center;
     }
@@ -255,7 +266,8 @@
         background-size: contain;
     }
 
-    #dataentry_screen{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
+    /* Dataentry screen */
+    #dataentry_screen{
         position: fixed;
         bottom: 0;
         height:100%;
@@ -268,33 +280,36 @@
         margin-left: auto;
         margin-right: auto;
         width:95%;
-        font-size: 4vh;
+        font-size: 8vw;
         margin-bottom: 15vh;
     }
     #dataentry_screen label{
-        font-size: 3vh;
+        font-size: 6vw;
+        width: 100%;
+        text-align: center;
         transform: translate(0,9vh);
     }
     #dataentry_screen input{
         width:100%;
         height:100%;
-        font-size: 4vh;
+        font-size: 8vw;
         border-radius: 1vh;
+        text-align: center;
     }
     .select_container{/*  Select boxes made to be more effective on mobile  */
         position: relative;
-        height: 5.5vh;
+        height: 10vw;
         width:calc(100% - 0.8vh);
         overflow: hidden;
         border-radius:2vh;
         -webkit-touch-callout: none;    
-        margin-top:1vh;
+        margin-top:2vh;
     }
     .select_container select{
         position: absolute;
         top:0;
         right:0;
-        font-size: 4vh;
+        font-size: 8vw;
         width: 100%;
         height: 100%;
         -webkit-appearance: none;
@@ -306,7 +321,7 @@
         top:0;
         right:0;
         opacity: 1;
-        font-size: 4vh;
+        font-size: 8vw;
         width: 100%;
         text-align: center;
         background:none;
@@ -501,7 +516,7 @@
         height:6vh;
         width: calc(100% - 12vh);
         text-align: center;
-        margin-top:1vh;
+        margin-top:2vh;
     }
     .Bar_title{
         height: 6vh;

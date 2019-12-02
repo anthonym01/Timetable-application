@@ -41,10 +41,9 @@ var app = {// Application Constructor
 window.addEventListener('load',function(){//window loads
     console.log('javascript Starts');
     if(localStorage.getItem(config.configlocation)){
-        config.load();
-        config.data.usecount++;
+        config.load()
     }else{
-        config.validate();
+        config.validate()
     }
     UI.initalize();
     manage.initalize();
@@ -59,18 +58,18 @@ window.addEventListener('load',function(){//window loads
 /*  Config file handler    */
 var config={
     data:{
-        usecount:0,
         theme:"dark",
         hilight_engine:false,
         animation:true,
+        tiles:false,
         table_selected:1,
-        table_details:[//   This needs a setting pannel in the setting menu
+        table_details:[// Details about different tables
             {purpose:"table 1"},
             {purpose:"table 2"},
             {purpose:"table 3"},
             {purpose:"table 4"}
         ],
-        table1_db:[
+        table1_db:[// Table database
             /*          KEY
                 name:           Name of the class
                 day:            1-7, represent monday to friday
@@ -80,9 +79,8 @@ var config={
                 color:          Color of the block
                 start:          The starting time of the class represented in 24hr
                 end:            End time of the class represented in 24hr
-                    (minutes represented as percentage of hr "x/60")
+                    (minutes represented as percentage of hr "30/60 = 0.5")
             */
-            
             {show:1,day:1,name:"Analysis of Algorithms",Lecturer:"David W. White",room:"1A-66",course_code:"CIT3003",type:"Lecture",color:1,start:10.00,end:11.833},
             {show:1,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Tutorial",color:2,start:17.00,end:18.00},
             {show:1,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Practical",color:2,start:18.00,end:21},
@@ -116,8 +114,10 @@ var config={
             {show:2,day:2,name:"General Chemistry 1",room:"1B-C2",course_code:"",type:"Tutorial",color:1,start:12.00,end:13.00},
             
         ],
-        task_db:[
-
+        task_db:[// task database
+            {name:"test",date:null,description:""},
+            {name:"test 2",date:null,description:""},
+            {name:"test 3",date:null,description:""},
         ],
     },
     properties:{
@@ -200,30 +200,17 @@ var config={
             console.log('"Table1_database" was found to not exist and was set to default');
         }
 
-        if(this.data.view){
-            if(this.data.view==undefined||null){
-                this.data.view="table";
-                configisvalid=false;
-                console.log('"view" was found to be invalid and was set to default');
-            }
+        if(typeof(this.data.theme)=='undefined'){
+            this.data.theme="light";
+            configisvalid=false;
+            console.log('"theme" was found to not exist and was set to default');
         }
         else{
-            this.data.view="table";
-            configisvalid=false;
-            console.log('"view" was found to not exist and was set to default');
-        }
-
-        if(this.data.theme){
             if(this.data.theme==undefined||null){
                 this.data.theme="light";
                 configisvalid=false;
                 console.log('"theme" was found to not exist and was set to default');
             }
-        }
-        else{
-            this.data.theme="light";
-            configisvalid=false;
-            console.log('"theme" was found to not exist and was set to default');
         }
 
         if(typeof(this.data.hilight_engine)=='undefined'){
@@ -249,6 +236,19 @@ var config={
                 this.data.animation=true;
                 configisvalid=false;
                 console.log('"animation" was found to not exist and was set to default');
+            }
+        }
+
+        if(typeof(this.data.tiles)=='undefined'){
+            this.data.tiles=false;
+            configisvalid=false;
+            console.log('"tiles" was found to be invalid and was set to default');
+        }
+        else{
+            if(this.data.tiles!=true && this.data.tiles!=false){
+                this.data.tiles=false;
+                configisvalid=false;
+                console.log('"tiles" was found to not exist and was set to default');
             }
         }
         
@@ -371,100 +371,77 @@ let table = {
                 if(config.data.table1_db[index].start<config.properties.min+3){//Set the doot to flip up or down depending on the pannels position
                     doot.style.top='0vh';
                     doot.style.bottom='unset';
-                    //doot.style.paddingBottom='0';
-                    //doot.style.paddingTop='5%';
                 }
 
                 //Put doot into the Data Bar
-                if(true){//Slap a customization setting here
-                    //make table in doot to keep things even
-                    var sub_tab = document.createElement("table");
-                    var name_tab_row = document.createElement("tr");
-                    var name_tab_content = document.createElement("th");
-                    name_tab_content.innerHTML=config.data.table1_db[index].name;
-                    name_tab_content.setAttribute("colspan",2);
-                    name_tab_content.setAttribute("name","sub_element");
-                    name_tab_row.appendChild(name_tab_content);
-                    sub_tab.appendChild(name_tab_row);
+                //make table in doot to keep things even
+                var sub_tab = document.createElement("table");
+                var name_tab_row = document.createElement("tr");
+                var name_tab_content = document.createElement("th");
+                name_tab_content.innerHTML=config.data.table1_db[index].name;
+                name_tab_content.setAttribute("colspan",2);
+                name_tab_row.appendChild(name_tab_content);
+                sub_tab.appendChild(name_tab_row);
+                doot.appendChild(sub_tab);
+                if(config.data.table1_db[index].room!="" && config.data.table1_db[index].room!=undefined){
+                    var room_tab_row = document.createElement("tr");
+                    var room_tab_head = document.createElement("td");
+                    var room_tab_content = document.createElement("td");
+                    room_tab_head.setAttribute("class","lefter");
+                    room_tab_content.setAttribute("class","righter");
+                    room_tab_head.innerHTML='Room : ';
+                    room_tab_content.innerHTML=config.data.table1_db[index].room;
+                    room_tab_row.appendChild(room_tab_head);
+                    room_tab_row.appendChild(room_tab_content);
+                    sub_tab.appendChild(room_tab_row);
                     doot.appendChild(sub_tab);
-                
-                    if(config.data.table1_db[index].room!="" && config.data.table1_db[index].room!=undefined){
-                        var room_tab_row = document.createElement("tr");
-                        var room_tab_head = document.createElement("td");
-                        var room_tab_content = document.createElement("td");
-                        room_tab_head.setAttribute("class","lefter");
-                        room_tab_content.setAttribute("class","righter");
-                        room_tab_head.setAttribute("name","sub_element");
-                        room_tab_content.setAttribute("name","sub_element");
-                        room_tab_head.innerHTML='Room : ';
-                        room_tab_content.innerHTML=config.data.table1_db[index].room;
-                        room_tab_row.appendChild(room_tab_head);
-                        room_tab_row.appendChild(room_tab_content);
-                        sub_tab.appendChild(room_tab_row);
-                        doot.appendChild(sub_tab);
-                    }
-                    if(config.data.table1_db[index].course_code!="" && config.data.table1_db[index].course_code!=undefined){
-                        var course_code_tab_row = document.createElement("tr");
-                        var course_code_tab_head = document.createElement("td");
-                        var course_code_tab_content = document.createElement("td");
-                        course_code_tab_head.setAttribute("class","lefter");
-                        course_code_tab_content.setAttribute("class","righter");
-                        course_code_tab_head.setAttribute("name","sub_element");
-                        course_code_tab_content.setAttribute("name","sub_element");
-                        course_code_tab_head.innerHTML='Code : ';
-                        course_code_tab_content.innerHTML=config.data.table1_db[index].course_code;
-                        course_code_tab_row.appendChild(course_code_tab_head);
-                        course_code_tab_row.appendChild(course_code_tab_content);
-                        sub_tab.appendChild(course_code_tab_row);
-                        doot.appendChild(sub_tab);
-                    }
-                    if(config.data.table1_db[index].Lecturer!="" && config.data.table1_db[index].Lecturer!=undefined){
-                        var Lecturer_tab_row = document.createElement("tr");
-                        var Lecturer_tab_head = document.createElement("td");
-                        var Lecturer_tab_content = document.createElement("td");
-                        Lecturer_tab_head.setAttribute("class","lefter");
-                        Lecturer_tab_content.setAttribute("class","righter");
-                        Lecturer_tab_head.innerHTML='Lecturer : ';
-                        Lecturer_tab_content.innerHTML=config.data.table1_db[index].Lecturer;
-                        Lecturer_tab_row.appendChild(Lecturer_tab_head);
-                        Lecturer_tab_row.appendChild(Lecturer_tab_content);
-                        sub_tab.appendChild(Lecturer_tab_row);
-                        doot.appendChild(sub_tab);
-                    }
-                    if(config.data.table1_db[index].type!="" && config.data.table1_db[index].type!=undefined){
-                        var type_tab_row = document.createElement("tr");
-                        var type_tab_head = document.createElement("td");
-                        var type_tab_content = document.createElement("td");
-                        type_tab_head.setAttribute("class","lefter");
-                        type_tab_content.setAttribute("class","righter");
-                        type_tab_head.innerHTML='Type : ';
-                        type_tab_content.innerHTML=config.data.table1_db[index].type;
-                        type_tab_row.appendChild(type_tab_head);
-                        type_tab_row.appendChild(type_tab_content);
-                        sub_tab.appendChild(type_tab_row);
-                        doot.appendChild(sub_tab);
-                    }
-                    var time_tab_row = document.createElement("tr");
-                    var start_time_tab = document.createElement("td");
-                    var end_time_tab = document.createElement("td");
-                    start_time_tab.setAttribute("class","lefter");
-                    end_time_tab.setAttribute("class","righter");
-                    start_time_tab.innerHTML = starthr+':'+startminute+' '+startmeridian;
-                    end_time_tab.innerHTML = endhr+':'+endminute+' '+endmeridian;
-                    start_time_tab.style.paddingRight='0px';
-                    time_tab_row.appendChild(start_time_tab);
-                    time_tab_row.appendChild(end_time_tab);
-                    sub_tab.appendChild(time_tab_row);
-                    doot.appendChild(sub_tab);
-                //doot.innerHTML+='<br> '+starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;*/
-                }else{
-                    doot.innerHTML = config.data.table1_db[index].name;
-                    if(config.data.table1_db[index].room!="" && config.data.table1_db[index].room!=undefined){doot.innerHTML+='<br> Room: '+config.data.table1_db[index].room}
-                    if(config.data.table1_db[index].course_code!="" && config.data.table1_db[index].course_code!=undefined){doot.innerHTML+='<br> Code: '+config.data.table1_db[index].course_code}
-                    if(config.data.table1_db[index].Lecturer!="" && config.data.table1_db[index].Lecturer!=undefined){doot.innerHTML+='<br> Lecturer: '+config.data.table1_db[index].Lecturer}
-                    if(config.data.table1_db[index].type!="" && config.data.table1_db[index].type!=undefined){doot.innerHTML+='<br> Type: '+config.data.table1_db[index].type}
-                    doot.innerHTML+='<br> '+starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
                 }
+                if(config.data.table1_db[index].course_code!="" && config.data.table1_db[index].course_code!=undefined){
+                    var course_code_tab_row = document.createElement("tr");
+                    var course_code_tab_head = document.createElement("td");
+                    var course_code_tab_content = document.createElement("td");
+                    course_code_tab_head.setAttribute("class","lefter");
+                    course_code_tab_content.setAttribute("class","righter");
+                    course_code_tab_head.innerHTML='Code : ';
+                    course_code_tab_content.innerHTML=config.data.table1_db[index].course_code;
+                    course_code_tab_row.appendChild(course_code_tab_head);
+                    course_code_tab_row.appendChild(course_code_tab_content);
+                    sub_tab.appendChild(course_code_tab_row);
+                    doot.appendChild(sub_tab);
+                }
+                if(config.data.table1_db[index].Lecturer!="" && config.data.table1_db[index].Lecturer!=undefined){
+                    var Lecturer_tab_row = document.createElement("tr");
+                    var Lecturer_tab_head = document.createElement("td");
+                    var Lecturer_tab_content = document.createElement("td");
+                    Lecturer_tab_head.setAttribute("class","lefter");
+                    Lecturer_tab_content.setAttribute("class","righter");
+                    Lecturer_tab_head.innerHTML='Lecturer : ';
+                    Lecturer_tab_content.innerHTML=config.data.table1_db[index].Lecturer;
+                    Lecturer_tab_row.appendChild(Lecturer_tab_head);
+                    Lecturer_tab_row.appendChild(Lecturer_tab_content);
+                    sub_tab.appendChild(Lecturer_tab_row);
+                    doot.appendChild(sub_tab);
+                }
+                if(config.data.table1_db[index].type!="" && config.data.table1_db[index].type!=undefined){
+                    var type_tab_row = document.createElement("tr");
+                    var type_tab_head = document.createElement("td");
+                    var type_tab_content = document.createElement("td");
+                    type_tab_head.setAttribute("class","lefter");
+                    type_tab_content.setAttribute("class","righter");
+                    type_tab_head.innerHTML='Type : ';
+                    type_tab_content.innerHTML=config.data.table1_db[index].type;
+                    type_tab_row.appendChild(type_tab_head);
+                    type_tab_row.appendChild(type_tab_content);
+                    sub_tab.appendChild(type_tab_row);
+                    doot.appendChild(sub_tab);
+                }
+                var time_tab_row = document.createElement("tr");
+                var time_tab = document.createElement("td");
+                time_tab.setAttribute("colspan",2);
+                time_tab.innerHTML = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
+                time_tab_row.appendChild(time_tab);
+                sub_tab.appendChild(time_tab_row);
+                doot.appendChild(sub_tab);
                 tempblock.appendChild(doot);
 
                 //Decide where it does
@@ -1689,45 +1666,34 @@ let manage = {
                 tempblock.addEventListener('click',function(){config.data.table1_db[index].deleted=false;config.save();manage.data.render();});//un-"delete"
             }else{
                 //populate the block with relivant data
-                if(true){//Slap a customization setting here
-                    //make table in tempblock to keep things even
-                    var name_sub_tab = document.createElement("table");
-                    var name_tab_row = document.createElement("tr");
-                    var name_tab_content = document.createElement("th");
-                    name_tab_content.innerHTML=config.data.table1_db[index].name;
-                    name_tab_content.setAttribute("colspan",2);
-                    name_tab_row.appendChild(name_tab_content);
-                    name_sub_tab.appendChild(name_tab_row);
-                    tempblock.appendChild(name_sub_tab);
-                    var day_sub_tab = document.createElement("table");
-                    var day_tab_row = document.createElement("tr");
-                    //var day_tab_head = document.createElement("td");
-                    var day_tab_content = document.createElement("td");
-                    /*day_tab_head.setAttribute("class","lefter");
-                    day_tab_content.setAttribute("class","righter");
-                    day_tab_head.innerHTML='Day : ';*/
-                    day_tab_content.innerHTML=day;
-                    day_tab_content.setAttribute("colspan",2);
-                    //day_tab_row.appendChild(day_tab_head);
-                    day_tab_row.appendChild(day_tab_content);
-                    day_sub_tab.appendChild(day_tab_row);
-                    tempblock.appendChild(day_sub_tab);
-                    var time_sub_tab = document.createElement("table");
-                    var time_tab_row = document.createElement("tr");
-                    var start_time_tab = document.createElement("td");
-                    var end_time_tab = document.createElement("td");
-                    start_time_tab.setAttribute("class","lefter");
-                    end_time_tab.setAttribute("class","righter");
-                    start_time_tab.innerHTML = starthr+':'+startminute+' '+startmeridian+' -';
-                    end_time_tab.innerHTML = '  '+endhr+':'+endminute+' '+endmeridian;
-                    start_time_tab.style.paddingRight='0px';
-                    time_tab_row.appendChild(start_time_tab);
-                    time_tab_row.appendChild(end_time_tab);
-                    time_sub_tab.appendChild(time_tab_row);
-                    tempblock.appendChild(time_sub_tab);
-                }else{
-                    tempblock.innerHTML=config.data.table1_db[index].name+'<br>'+day+' '+config.data.table1_db[index].type+' '+config.data.table1_db[index].room+' '+starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;    
-                }
+                //make table in tempblock to keep things even
+                var sub_tab = document.createElement("table");
+                var name_tab_row = document.createElement("tr");
+                var name_tab_content = document.createElement("th");
+                name_tab_content.innerHTML=config.data.table1_db[index].name;
+                name_tab_content.setAttribute("colspan",2);
+                name_tab_row.appendChild(name_tab_content);
+                sub_tab.appendChild(name_tab_row);
+                tempblock.appendChild(sub_tab);
+                var day_tab_row = document.createElement("tr");
+                //var day_tab_head = document.createElement("td");
+                var day_tab_content = document.createElement("td");
+                /*day_tab_head.setAttribute("class","lefter");
+                day_tab_content.setAttribute("class","righter");
+                day_tab_head.innerHTML='Day : ';*/
+                day_tab_content.innerHTML=day;
+                day_tab_content.setAttribute("colspan",2);
+                //day_tab_row.appendChild(day_tab_head);
+                day_tab_row.appendChild(day_tab_content);
+                sub_tab.appendChild(day_tab_row);
+                tempblock.appendChild(sub_tab);
+                var time_tab_row = document.createElement("tr");
+                var time_tab = document.createElement("td");
+                time_tab.setAttribute("colspan",2);
+                time_tab.innerHTML = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
+                time_tab_row.appendChild(time_tab);
+                sub_tab.appendChild(time_tab_row);
+                tempblock.appendChild(sub_tab);
                 //alow editing function
                 tempblock.setAttribute('id','bar_'+index);
                 tempblock.addEventListener('click',function(){manage.dialogue.edit(index)});//Edit btn
@@ -1948,6 +1914,7 @@ let UI={
         }
         this.setting.hilight.setpostition();
         this.setting.animation.setpostition();
+        this.setting.tiles.setpostition();
         if(typeof(device)!="undefined"){//sometimes plugins break
             if(device.platform=='Android'||'iOS'){//mobile
                 document.getElementById('table_btn').addEventListener('touchstart',UI.navigate.TABLE)
@@ -1956,6 +1923,7 @@ let UI={
                 document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
                 document.getElementById('hilight_btn').addEventListener('touchstart',UI.setting.hilight.flip)
                 document.getElementById('Animations_btn').addEventListener('touchstart',UI.setting.animation.flip)
+                document.getElementById('tiles_btn').addEventListener('touchstart',UI.setting.tiles.flip)
             }else{//Desktop
                 document.getElementById('table_btn').addEventListener('click',UI.navigate.TABLE)
                 document.getElementById('manage_btn').addEventListener('click',UI.navigate.MANAGE)
@@ -1963,6 +1931,7 @@ let UI={
                 document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
                 document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
                 document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
+                document.getElementById('tiles_btn').addEventListener('click',UI.setting.tiles.flip)
             }
         }
         else{
@@ -1973,6 +1942,7 @@ let UI={
             document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
             document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
             document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
+            document.getElementById('tiles_btn').addEventListener('click',UI.setting.tiles.flip)
         }
         
         document.getElementById('about_btn').addEventListener('click',function(){
@@ -1990,8 +1960,14 @@ let UI={
         BACK:function(){//Back button handle
             console.log('Back navigation started');
             if(config.properties.view=="table"){
+                console.warn('Backbutton triggered exit strategy')
                 this.exitstrategy();
+            }else if(document.getElementById('dataentry_screen').style.display=="block"){
+                console.warn('Backbutton closed dataentry screen');
+                manage.dialogue.close();
+                manage.dialogue.clear();
             }else{
+                console.warn('Backbutton Navigated to table view');
                 this.TABLE();
             }
             
@@ -2075,11 +2051,7 @@ let UI={
         theme:{
             set_dark:function(){
                 console.warn('Theme set Dark');
-                if(config.data.animation){
-                    document.getElementById('theme').href="css/dark-theme.css"
-                }else{
-                    document.getElementById('theme').href="css/dark-noanim-theme.css"
-                }
+                document.getElementById('theme').href="css/dark-theme.css"
                 config.data.theme='dark'
                 document.getElementById('light_selection_put').checked=false;
                 document.getElementById('dark_selection_put').checked=true;
@@ -2087,11 +2059,7 @@ let UI={
             },
             set_light:function(){
                 console.warn('Theme set Light');
-                if(config.data.animation){
-                    document.getElementById('theme').href="css/light-theme.css"
-                }else{
-                    document.getElementById('theme').href="css/light-noanim-theme.css"
-                }
+                document.getElementById('theme').href="css/light-theme.css"
                 config.data.theme='light'
                 document.getElementById('light_selection_put').checked=true;
                 document.getElementById('dark_selection_put').checked=false;
@@ -2152,8 +2120,31 @@ let UI={
                 }
             },
         },
+        tiles:{
+            flip:function(){
+                console.log('tiles switch triggered');
+                if(config.data.tiles){
+                    //turn off the switch
+                    config.data.tiles=false;
+                    utility.toast('tiles dissabled');console.warn('tiles dissabled');
+                }else{
+                    //turn on the witch
+                    config.data.tiles=true;
+                    utility.toast('tiles enabled');console.warn('tiles enabled');
+                }
+                config.save();
+                UI.setting.tiles.setpostition();
+            },
+            setpostition:function(){
+                if(config.data.tiles){
+                    document.getElementById('tiles_switch_container').className='switch_container_active';
+                }else{
+                    document.getElementById('tiles_switch_container').className='switch_container_dissabled';
+                }
+            },
+        },
     },
-    submenu:function(){//renders and displays sub menus
+    submenu:function(){
         if(document.getElementById('sub_menu').style.display=='block'){
             this.submenuclose();
         }else{

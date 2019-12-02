@@ -7,9 +7,9 @@
     <meta name="msapplication-tap-highlight" content="no">
     <link rel="icon" href="./img/icon.webp" id="favico" type="image/png" sizes="32x32">
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-    <link rel="stylesheet" type="text/css" id="theme" href="css/dark-theme.css">
-    <link rel="stylesheet" type="text/css" id="nomation" href="css/nomation.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" id="theme" href="css/dark-theme.css">
+    <link rel="stylesheet" id="nomation" href="">
     <title>Timetable</title>
 </head>
 <body>
@@ -49,6 +49,9 @@
     </view>
 
     <view id="table1">          <!--Table view-->
+        <div id="fullscreen_tile">
+
+        </div>
         <table id="timetable">
             <tr><!--Head row-->
                 <th class="maincell" id="live_clock">live_clock</th>
@@ -324,15 +327,15 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <label for="Lecture_put">Name:</label>
+                        <label for="Lecture_put">Name</label>
                         <input id="name_put" name="class_name" type="text">
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <label for="day_put">Day:</label>
+                        <label for="day_put">Day</label>
                         <div class="select_container">
-                            <div class="select_text" id="day_put_text">day_put</div>
+                            <div class="select_text" id="day_put_text">Select a day</div>
                             <select id="day_put">
                                 <option value="1">Monday</option>
                                 <option value="2">Tuesday</option>
@@ -347,33 +350,33 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <label for="room_put">Room:</label>
+                        <label for="room_put">Room</label>
                         <input id="room_put" name="room_name" type="text">
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <label for="type_put">Type:</label>
+                        <label for="type_put">Type</label>
                         <input id="type_put" name="type_name" type="text">
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <label for="course_code_put">Course Code:</label>
+                        <label for="course_code_put">Course Code</label>
                         <input id="course_code_put" name="course_code_name" type="text">
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <label for="Lecture_put">Lecturer:</label>
+                        <label for="Lecture_put">Lecturer</label>
                         <input id="Lecture_put" name="Lecture_name" type="text">
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <label for="color_put">Color:</label>
+                        <label for="color_put">Color</label>
                         <div class="select_container" id="color_put_container">
-                            <div class="select_text" id="color_put_text">color_put</div>
+                            <div class="select_text" id="color_put_text">Select a color</div>
                             <select id="color_put">
                                 <option value="0" class="hue0">no color</option>
                                 <option value="1" class="hue1">Red</option>
@@ -393,17 +396,17 @@
                 </tr>
                 <tr>
                     <td colspan="1">
-                        <label for="start_time_put">Start:</label>
+                        <label for="start_time_put">Start</label>
                         <input id="start_time_put" value="12:00" name="start_time" type="time">
                     </td>
                     <td colspan="1">
-                        <label for="end_time_put">End:</label>
+                        <label for="end_time_put">End</label>
                         <input id="end_time_put" value="13:00" name="end_time" type="time">
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <label for="view_put">Show in:</label>
+                        <label for="view_put">Show in</label>
                         <div class="select_container">
                             <div class="select_text" id="view_put_text">view_put</div>
                             <select id="view_put">
@@ -496,9 +499,22 @@
             </div>
         </div>
 
+        <div class="setting_bar" id="tiles_btn" title="toggle fullscreen tiles">
+            <div class="Bar_title">Full tiles</div>
+            <div class="switch_container_active" id="tiles_switch_container">
+                <div class="switchbdy" id="tiles_switchbdy"><div class="switch"></div></div>
+            </div>
+        </div>
+
         <div class="Setting_title" id="about_btn" title="Copies contact info to clipboard">About</div>
+        <div class="Setting_title">Placeholder btn 1</div>
+        <div class="Setting_title">Placeholder btn 2</div>
+        <div class="Setting_title">Placeholder btn 3</div>
+        <div class="Setting_title">Placeholder btn 4</div>
+        <div class="Setting_title">Placeholder btn 5</div>
     </view>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>

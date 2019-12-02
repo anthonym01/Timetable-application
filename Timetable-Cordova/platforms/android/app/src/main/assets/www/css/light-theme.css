@@ -142,7 +142,9 @@ tr{transition:background-color 250ms;}
     color:inherit;
     transition: box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms;
 }
-
+.data_block_active{
+    color: rgba(0, 0, 0, 0);
+}
 .infodoot{
     color: rgb(0, 0, 0);
     background-color: inherit;
@@ -160,7 +162,7 @@ tr{transition:background-color 250ms;}
     background-color: hsl(0, 0%, 92%);
 }
 .hue1{/* color:1 Red */
-    background-color: hsl(0,100%,60%);
+    background-color: hsl(0,100%,70%);
     background-position: center;
     transition: background-color 300ms, box-shadow 300ms, transform 300ms, color 300ms;
 }
@@ -296,9 +298,15 @@ tr{transition:background-color 250ms;}
 }
 .select_container{/*  Select boxes made to be more effective on mobile  */
     border:0.3vh solid #000000;
+    color: rgb(0, 0, 0);
+    transition:background-color 500ms,color 500ms;
+}.select_container:active{
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    transition:background-color 0ms,color 0ms;
 }
 .btn_bar{
-    background-color: #ffffff;
+    background:none;
 }
 .databtns{
     background-color: rgb(255, 255, 255);
