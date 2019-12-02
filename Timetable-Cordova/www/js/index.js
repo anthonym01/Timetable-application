@@ -47,6 +47,7 @@ window.addEventListener('load',function(){//window loads
     }
     UI.initalize();
     manage.initalize();
+    task.initalize();
     table.initialize();
     config.properties.startup=false;
     setTimeout(()=>{
@@ -285,8 +286,7 @@ let table = {
     },
     construct:{
         render:function(){//initalizes, and feeds the build function
-            console.log('Table render started');
-            this.clear();
+            console.log('Table render started')
             var i=0;
             if(config.data.table_selected==0){config.data.table_selected=1}//Fix oversight
             if(config.data.table1_db[i]==null||undefined){
@@ -323,10 +323,6 @@ let table = {
             }
             console.log('Table render Completed');
             UI.navigate.TABLE();//Starts the ticking of the clock
-        },
-        clear:function(){
-            console.warn('Clear function still needs to be re-worked');
-            //document.getElementById('timetable').innerHTML='';
         },
         build_block_db1:function(index){//Builds timetable from database
             console.log('Building Block :',index);
@@ -1362,42 +1358,6 @@ let table = {
                 break;
                 default:console.error('THEY CHANGED THE RULES FOR DATES NIBBA!!!');
             }
-            /**
-                //Old method, less efficient
-
-            document.getElementById('day0').style.backgroundColor='';
-            document.getElementById('day1').style.backgroundColor='';
-            document.getElementById('day2').style.backgroundColor='';
-            document.getElementById('day3').style.backgroundColor='';
-            document.getElementById('day4').style.backgroundColor='';
-            document.getElementById('day5').style.backgroundColor='';
-            document.getElementById('day6').style.backgroundColor='';*/
-            /*document.getElementById('timerow_0').className='';
-            document.getElementById('timerow_1').className='';
-            document.getElementById('timerow_2').className='';
-            document.getElementById('timerow_3').className='';
-            document.getElementById('timerow_4').className='';
-            document.getElementById('timerow_5').className='';
-            document.getElementById('timerow_6').className='';
-            document.getElementById('timerow_7').className='';
-            document.getElementById('timerow_8').className='';
-            document.getElementById('timerow_9').className='';
-            document.getElementById('timerow_10').className='';
-            document.getElementById('timerow_11').className='';
-            document.getElementById('timerow_12').className='';
-            document.getElementById('timerow_13').className='';
-            document.getElementById('timerow_14').className='';
-            document.getElementById('timerow_15').className='';
-            document.getElementById('timerow_16').className='';
-            document.getElementById('timerow_17').className='';
-            document.getElementById('timerow_18').className='';
-            document.getElementById('timerow_19').className='';
-            document.getElementById('timerow_20').className='';
-            document.getElementById('timerow_21').className='';
-            document.getElementById('timerow_22').className='';
-            document.getElementById('timerow_23').className='';*/
-            //document.getElementById('day'+date.getDay()).style.backgroundColor='red';//Set the appropriate title background to red
-            //document.getElementById('timerow_'+date.getHours()).className='glowrow';//set the appropriate row to glow
         },
         stop_clock:function(){
             console.log('Clock was stopped');
@@ -1469,23 +1429,13 @@ let manage = {
         document.getElementById('3_selectormain').innerHTML= config.data.table_details[2].purpose;
         document.getElementById('4_selectorsub').innerHTML= config.data.table_details[3].purpose;
         document.getElementById('4_selectormain').innerHTML= config.data.table_details[3].purpose;
-        document.getElementById('menu_button1').innerHTML= config.data.table_details[0].purpose;
-        document.getElementById('menu_button2').innerHTML= config.data.table_details[1].purpose;
-        document.getElementById('menu_button3').innerHTML= config.data.table_details[2].purpose;
-        document.getElementById('menu_button4').innerHTML= config.data.table_details[3].purpose;
-        document.getElementById('menu_button'+config.data.table_selected).style.display='none';
         this.data.render();
-        if(typeof(device)!="undefined"){
-            if(device.platform=='Android'||'iOS'){//mobile
-                
-            }else{//Desktop
-                
-            }
-        }else{
-            console.error('"device" plugin broke!');
-            
-        }
-        document.getElementById('cancel_btn').addEventListener('click',this.action.cancel_btn);//Click because touch start gay
+        document.getElementById('cancel_btn').addEventListener('click',()=>{//Click because touch start gay
+            console.log('Cancel button clicked');
+            manage.dialogue.clear();
+            manage.dialogue.close();
+            config.properties.overwrite=null;
+        });
         document.getElementById('save_btn').addEventListener('click',this.dialogue.save); //Save button
         document.getElementById('savepluss_btn').addEventListener('click',this.dialogue.saveplus);
         document.getElementById('delete_btn').addEventListener('click',function(){      // save button
@@ -1550,39 +1500,10 @@ let manage = {
                 default:console.error('Blyat');
             }
         });
-        document.getElementById('view_put').addEventListener('change',function(){/* Switches dates on change */
+        document.getElementById('view_put').addEventListener('change',function(){/* Switches text displayed on change */
             console.log('View put changed');
             document.getElementById('view_put_text').innerText=config.data.table_details[document.getElementById('view_put').value-1].purpose;
         });
-        document.getElementById('menu_button1').addEventListener('click',function(){
-            manage.action.table_menu(1);
-        });
-        document.getElementById('menu_button2').addEventListener('click',function(){
-            manage.action.table_menu(2);
-        });
-        document.getElementById('menu_button3').addEventListener('click',function(){
-            manage.action.table_menu(3);
-        });
-        document.getElementById('menu_button4').addEventListener('click',function(){
-            manage.action.table_menu(4);
-        });
-    },
-    action:{
-        table_menu:function(doot){
-            config.data.table_selected=doot;
-            config.properties.changed=true;
-            config.save();
-            setTimeout(()=> {
-                document.getElementById('Loading').style.display='block';
-                location.reload();
-            },500 );
-        },
-        cancel_btn:function(){
-            console.log('Cancel button clicked');
-            manage.dialogue.clear();
-            manage.dialogue.close();
-            config.properties.overwrite=null;
-        },
     },
     data:{
         render:function(){//initalizes, and feeds the build function
@@ -1948,6 +1869,13 @@ let manage = {
     }
 }
 
+/*  Task manager    */
+let task = {
+    initalize:function(){
+
+    },
+}
+
 /*  UI trickery */
 let UI={
     initalize:function(){
@@ -2054,8 +1982,8 @@ let UI={
             if(config.properties.changed){
                 window.location.reload();
             }else{
-                if(config.properties.view=="table" && config.properties.startup!=true){
-                    UI.submenu();
+                if(config.properties.view!="table"){
+                    table.clock.start_clock();
                 }
                 config.properties.view="table";
                 document.getElementById('table1').style.display='block';
@@ -2063,7 +1991,6 @@ let UI={
                 document.getElementById('setting_view').style.display='none';
                 document.getElementById('task_view').style.display='none';
                 document.getElementById('setting_btn_icon').style.transform='rotate(0deg)';//Rotate the button
-                table.clock.start_clock();
                 document.getElementById('setting_btn').className="menubtn";
                 document.getElementById('task_btn').className="menubtn";
                 document.getElementById('manage_btn').className="menubtn";
@@ -2072,7 +1999,7 @@ let UI={
             
         },
         MANAGE:function(){
-            UI.submenuclose();
+            
             console.log('MANAGE navigation started');
             config.properties.view="manage";
             table.clock.stop_clock();
@@ -2086,7 +2013,7 @@ let UI={
             document.getElementById('table_btn').className="menubtn";
         },
         SETTING:function(){
-            UI.submenuclose();
+            
             console.log('SETTING navigation started');
             config.properties.view="setting";
             table.clock.stop_clock();
@@ -2101,7 +2028,7 @@ let UI={
             document.getElementById('table_btn').className="menubtn";
         },
         TASK:function(){
-            UI.submenuclose();
+            
             console.log('TASK navigation started');
             config.properties.view="task";
             table.clock.stop_clock();
@@ -2212,23 +2139,6 @@ let UI={
                 }
             },
         },
-    },
-    submenu:function(){
-        if(document.getElementById('sub_menu').style.display=='block'){
-            this.submenuclose();
-        }else{
-            this.submenuopen();
-        }
-    },
-    submenuclose:function(){
-        console.log('Closing sub menu...');
-        document.getElementById('sub_menu').style.display='none';
-        document.getElementById('table1').removeEventListener('touchstart',UI.submenuclose);
-    },
-    submenuopen:function(){
-        console.log('Displaying sub menu...');
-        document.getElementById('sub_menu').style.display='block';
-        document.getElementById('table1').addEventListener('touchstart',UI.submenuclose);
     },
 }
 

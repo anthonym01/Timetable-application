@@ -202,10 +202,10 @@
         transform: translate(-0.5vh,0vh);
         padding-left:0.5vh;
         padding-right:0.5vh;
-        transition: box-shadow 0ms,transform 0ms,background-color 0ms,color 0ms;
+        transition: box-shadow 500ms,transform 300ms,background-color 500ms,color 500ms;
     }
     .data_block,.data_block_active:active{
-        transition: box-shadow 300ms,transform 300ms,background-color 300ms,color 300ms;
+        transition: box-shadow 0ms,background-color 0ms,color 0ms;
     }
     .data_block_active{
         z-index: 400;
@@ -224,7 +224,7 @@
         /*transform: ;*/
         padding:1vh;
         border-radius: 1vh 1vh 1vh 1vh;
-        transition:box-shadow 500ms,transform 500ms,background-color 500ms,color 500ms,opacity 500ms;
+        transition:box-shadow 500ms,transform 300ms,background-color 500ms,color 500ms,opacity 500ms;
     }
     .data_block_active .infodoot{
         display: block;
@@ -451,6 +451,9 @@
         cursor: pointer;
         transition:transform 500ms;
     }
+
+/*  task view  */
+
 
 /*  Setting view  */
     #setting_view{
