@@ -129,6 +129,17 @@ body{
 #timetable{
     background-image: url('../img/whiteground.webp');
 }
+#fullscreen_tile{background-color: rgba(255, 255, 255, 0.7);}
+#close_btn{ 
+    border:0.3vh solid rgb(0, 0, 0);
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    transition:background-color 500ms,color 500ms;
+}#close_btn:active{
+    background-color: rgb(255, 0, 0);
+    color: rgb(255, 255, 255);
+    transition:background-color 0ms,color 0ms;
+}
 #table1::-webkit-scrollbar-thumb {background: rgb(0, 0, 0);}/*scrollbar thumb*/
 tr{transition:background-color 250ms;}
 .glowrow {background-color: rgb(0, 180, 255);animation:glowrow 2s infinite;}

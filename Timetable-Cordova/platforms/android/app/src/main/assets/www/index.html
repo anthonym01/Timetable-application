@@ -50,18 +50,46 @@
 
     <view id="table1">          <!--Table view-->
         <div id="fullscreen_tile">
-
+            <div id="close_btn">Close</div>
+            <table>
+                <tr>
+                    <th id="title_cell" colspan="2"></th>
+                </tr>
+                <tr>
+                    <td class="lefter">Day :</td>
+                    <td class="righter" id="day_cell"></td>
+                </tr>
+                <tr>
+                    <td class="lefter">Room :</td>
+                    <td class="righter" id="room_cell"></td>
+                </tr>
+                <tr>
+                    <td class="lefter">Lecturer :</td>
+                    <td class="righter" id="Lecturer_cell"></td>
+                </tr>
+                <tr>
+                    <td class="lefter">Type :</td>
+                    <td class="righter" id="type_cell"></td>
+                </tr>
+                <tr>
+                    <td class="lefter">C. Code :</td>
+                    <td class="righter" id="coursecode_cell"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="time_cell"></td>
+                </tr>
+            </table>
         </div>
         <table id="timetable">
             <tr><!--Head row-->
                 <th class="maincell" id="live_clock">live_clock</th>
-                <th class="maincell" id="day1">Monday</th>
-                <th class="maincell" id="day2">Tuesday</th>
-                <th class="maincell" id="day3">Wednsday</th>
-                <th class="maincell" id="day4">Thursday</th>
-                <th class="maincell" id="day5">Friday</th>
-                <th class="maincell" id="day6">Saturday</th>
-                <th class="maincell" id="day0">Sunday</th>
+                <th class="maincell" id="day1">&nbsp;&nbsp;&nbsp;Monday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day2">&nbsp;&nbsp;&nbsp;Tuesday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day3">&nbsp;&nbsp;&nbsp;Wednsday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day4">&nbsp;&nbsp;&nbsp;Thursday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day5">&nbsp;&nbsp;&nbsp;Friday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day6">&nbsp;&nbsp;&nbsp;Saturday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day0">&nbsp;&nbsp;&nbsp;Sunday&nbsp;&nbsp;&nbsp;</th>
             </tr>
             <tr id="timerow_0"><!--0:00 - 1:00 row-->
                 <th class="maincell">12:00 - 1:00 a.m.</th>

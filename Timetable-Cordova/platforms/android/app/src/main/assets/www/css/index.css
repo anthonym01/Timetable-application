@@ -116,13 +116,30 @@
 
     /*Timetable view*/
     #fullscreen_tile{
-        position: absolute;
-        top:0;
-        right:0;
-        height:100%;
-        width:100%;
-        background-color: rgba(0,0,0,0.6);
+        position: fixed;
+        bottom:7vh;
+        left:0;
+        width: 100vw;
+        height:93vh;
         z-index: 500;
+        display: none;
+    }
+    #fullscreen_tile table{margin-top:12vh;margin-bottom:auto;width: 100%;font-size: 4vh;border-collapse: collapse;text-align: center;table-layout: fixed;}
+    #fullscreen_tile th{padding: 3px;padding-bottom: 1vh;}
+    #fullscreen_tile .puff{padding-bottom: 1vh;}
+    #fullscreen_tile td{padding: 3px;padding-bottom: 1vh;vertical-align: middle;align-content: center;}
+    #fullscreen_tile .lefter{text-align: right;}
+    #fullscreen_tile .righter{text-align: left;}
+    #close_btn{
+        position: absolute;
+        bottom: 1vh;
+        right:5vw;
+        width: 90vw;
+        height: 7vh;
+        font-size: 5.5vh;
+        text-align: center;
+        border-radius:2vh;
+        -webkit-touch-callout: none;    
     }
     #timetable{/*   The body of the timetable   */
         position: relative;

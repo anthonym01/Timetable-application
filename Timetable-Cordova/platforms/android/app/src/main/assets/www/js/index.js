@@ -325,8 +325,8 @@ let table = {
             UI.navigate.TABLE();//Starts the ticking of the clock
         },
         clear:function(){
-            console.log('Table Flushed');
-            document.getElementById('table1').innerHTML='<table id="timetable">            <tr><!--Head row-->                <th class="maincell" id="live_clock">live_clock</th>                <th class="maincell" id="day1">Monday</th>                <th class="maincell" id="day2">Tuesday</th>                <th class="maincell" id="day3">Wednsday</th>                <th class="maincell" id="day4">Thursday</th>                <th class="maincell" id="day5">Friday</th>                <th class="maincell" id="day6">Saturday</th>                <th class="maincell" id="day0">Sunday</th>            </tr>            <tr id="timerow_0"><!--0:00 - 1:00 row-->                <th class="maincell">12:00 - 1:00 a.m.</th>                <td class="maincell" id="1_0"></td>                <td class="maincell" id="2_0"></td>                <td class="maincell" id="3_0"></td>                <td class="maincell" id="4_0"></td>                <td class="maincell" id="5_0"></td>                <td class="maincell" id="6_0"></td>                <td class="maincell" id="7_0"></td>            </tr>            <tr id="timerow_1"><!--1:00 - 2:00 row-->                <th class="maincell">1:00 - 2:00 a.m.</th>                <td class="maincell" id="1_1"></td>                <td class="maincell" id="2_1"></td>                <td class="maincell" id="3_1"></td>                <td class="maincell" id="4_1"></td>                <td class="maincell" id="5_1"></td>                <td class="maincell" id="6_1"></td>                <td class="maincell" id="7_1"></td>            </tr>            <tr id="timerow_2"><!--2:00 - 3:00 row-->                <th class="maincell">2:00 - 3:00 a.m.</th>                <td class="maincell" id="1_2"></td>                <td class="maincell" id="2_2"></td>                <td class="maincell" id="3_2"></td>                <td class="maincell" id="4_2"></td>                <td class="maincell" id="5_2"></td>                <td class="maincell" id="6_2"></td>                <td class="maincell" id="7_2"></td>            </tr>            <tr id="timerow_3"><!--3:00 - 4:00 row-->                <th class="maincell">3:00 - 4:00 a.m.</th>                <td class="maincell" id="1_3"></td>                <td class="maincell" id="2_3"></td>                <td class="maincell" id="3_3"></td>                <td class="maincell" id="4_3"></td>                <td class="maincell" id="5_3"></td>                <td class="maincell" id="6_3"></td>                <td class="maincell" id="7_3"></td>            </tr>            <tr id="timerow_4"><!--4:00 - 5:00 row-->                <th class="maincell">4:00 - 5:00 a.m.</th>                <td class="maincell" id="1_4"></td>                <td class="maincell" id="2_4"></td>                <td class="maincell" id="3_4"></td>                <td class="maincell" id="4_4"></td>                <td class="maincell" id="5_4"></td>                <td class="maincell" id="6_4"></td>                <td class="maincell" id="7_4"></td>            </tr>            <tr id="timerow_5"><!--5:00 - 6:00 row-->                <th class="maincell">5:00 - 6:00 a.m.</th>                <td class="maincell" id="1_5"></td>                <td class="maincell" id="2_5"></td>                <td class="maincell" id="3_5"></td>                <td class="maincell" id="4_5"></td>                <td class="maincell" id="5_5"></td>                <td class="maincell" id="6_5"></td>                <td class="maincell" id="7_5"></td>            </tr>            <tr id="timerow_6"><!--6:00 - 7:00 row-->                <th class="maincell">6:00 - 7:00 a.m.</th>                <td class="maincell" id="1_6"></td>                <td class="maincell" id="2_6"></td>                <td class="maincell" id="3_6"></td>                <td class="maincell" id="4_6"></td>                <td class="maincell" id="5_6"></td>                <td class="maincell" id="6_6"></td>                <td class="maincell" id="7_6"></td>            </tr>            <tr id="timerow_7"><!--7:00 - 8:00 row-->                <th class="maincell">7:00 - 8:00 a.m.</th>                <td class="maincell" id="1_7"></td>                <td class="maincell" id="2_7"></td>                <td class="maincell" id="3_7"></td>                <td class="maincell" id="4_7"></td>                <td class="maincell" id="5_7"></td>                <td class="maincell" id="6_7"></td>                <td class="maincell" id="7_7"></td>            </tr>            <tr id="timerow_8"><!--8:00 - 9:00 row-->                <th class="maincell">8:00 - 9:00 a.m.</th>                <td class="maincell" id="1_8"></td>                <td class="maincell" id="2_8"></td>                <td class="maincell" id="3_8"></td>                <td class="maincell" id="4_8"></td>                <td class="maincell" id="5_8"></td>                <td class="maincell" id="6_8"></td>                <td class="maincell" id="7_8"></td>            </tr>            <tr id="timerow_9"><!--9:00 - 10:00 row-->                <th class="maincell">9:00 - 10:00 a.m.</th>                <td class="maincell" id="1_9"></td>                <td class="maincell" id="2_9"></td>                <td class="maincell" id="3_9"></td>                <td class="maincell" id="4_9"></td>                <td class="maincell" id="5_9"></td>                <td class="maincell" id="6_9"></td>                <td class="maincell" id="7_9"></td>            </tr>            <tr  id="timerow_10"><!--10:00 - 11:00 row-->                <th class="maincell">10:00 - 11:00 a.m.</th>                <td class="maincell" id="1_10"></td>                <td class="maincell" id="2_10"></td>                <td class="maincell" id="3_10"></td>                <td class="maincell" id="4_10"></td>                <td class="maincell" id="5_10"></td>                <td class="maincell" id="6_10"></td>                <td class="maincell" id="7_10"></td>            </tr>            <tr id="timerow_11"><!--11:00 - 12:00 row-->                <th class="maincell">11:00 - 12:00 p.m.</th>                <td class="maincell" id="1_11"></td>                <td class="maincell" id="2_11"></td>                <td class="maincell" id="3_11"></td>                <td class="maincell" id="4_11"></td>                <td class="maincell" id="5_11"></td>                <td class="maincell" id="6_11"></td>                <td class="maincell" id="7_11"></td>            </tr>            <tr id="timerow_12"><!--12:00 - 13:00 row-->                <th class="maincell">12:00 - 1:00 p.m.</th>                <td class="maincell" id="1_12"></td>                <td class="maincell" id="2_12"></td>                <td class="maincell" id="3_12"></td>                <td class="maincell" id="4_12"></td>                <td class="maincell" id="5_12"></td>                <td class="maincell" id="6_12"></td>                <td class="maincell" id="7_12"></td>            </tr>            <tr id="timerow_13"><!--13:00 - 14:00 row-->                <th class="maincell">1:00 - 2:00 p.m.</th>                <td class="maincell" id="1_13"></td>                <td class="maincell" id="2_13"></td>                <td class="maincell" id="3_13"></td>                <td class="maincell" id="4_13"></td>                <td class="maincell" id="5_13"></td>                <td class="maincell" id="6_13"></td>                <td class="maincell" id="7_13"></td>            </tr>            <tr id="timerow_14"><!--14:00 - 15:00 row-->                <th class="maincell">2:00 - 3:00 p.m.</th>                <td class="maincell" id="1_14"></td>                <td class="maincell" id="2_14"></td>                <td class="maincell" id="3_14"></td>                <td class="maincell" id="4_14"></td>                <td class="maincell" id="5_14"></td>                <td class="maincell" id="6_14"></td>                <td class="maincell" id="7_14"></td>           </tr>            <tr id="timerow_15"><!--15:00 - 16:00 row-->                <th class="maincell">3:00 - 4:00 p.m.</th>                <td class="maincell" id="1_15"></td>                <td class="maincell" id="2_15"></td>                <td class="maincell" id="3_15"></td>                <td class="maincell" id="4_15"></td>                <td class="maincell" id="5_15"></td>                <td class="maincell" id="6_15"></td>                <td class="maincell" id="7_15"></td>            </tr>            <tr id="timerow_16"><!--16:00 - 17:00 row-->                <th class="maincell">4:00 - 5:00 p.m.</th>                <td class="maincell" id="1_16"></td>                <td class="maincell" id="2_16"></td>                <td class="maincell" id="3_16"></td>                <td class="maincell" id="4_16"></td>                <td class="maincell" id="5_16"></td>                <td class="maincell" id="6_16"></td>                <td class="maincell" id="7_16"></td>            </tr>            <tr id="timerow_17"><!--17:00 - 18:00 row-->                <th class="maincell">5:00 - 6:00 p.m.</th>                <td class="maincell" id="1_17"></td>                <td class="maincell" id="2_17"></td>                <td class="maincell" id="3_17"></td>                <td class="maincell" id="4_17"></td>                <td class="maincell" id="5_17"></td>                <td class="maincell" id="6_17"></td>                <td class="maincell" id="7_17"></td>           </tr>            <tr id="timerow_18"><!--18:00 - 19:00 row-->                <th class="maincell">6:00 - 7:00 p.m.</th>                <td class="maincell" id="1_18"></td>                <td class="maincell" id="2_18"></td>                <td class="maincell" id="3_18"></td>               <td class="maincell" id="4_18"></td>                <td class="maincell" id="5_18"></td>                <td class="maincell" id="6_18"></td>                <td class="maincell" id="7_18"></td>            </tr>            <tr id="timerow_19"><!--19:00 - 20:00 row-->                <th class="maincell">7:00 - 8:00 p.m.</th>                <td class="maincell" id="1_19"></td>                <td class="maincell" id="2_19"></td>                <td class="maincell" id="3_19"></td>                <td class="maincell" id="4_19"></td>                <td class="maincell" id="5_19"></td>                <td class="maincell" id="6_19"></td>                <td class="maincell" id="7_19"></td>            </tr>            <tr id="timerow_20"><!--20:00 - 21:00 row-->                <th class="maincell">8:00 - 9:00 p.m.</th>                <td class="maincell" id="1_20"></td>                <td class="maincell" id="2_20"></td>                <td class="maincell" id="3_20"></td>                <td class="maincell" id="4_20"></td>                <td class="maincell" id="5_20"></td>                <td class="maincell" id="6_20"></td>                <td class="maincell" id="7_20"></td>            </tr>            <tr id="timerow_21"><!--21:00 - 22:00 row-->                <th class="maincell">9:00 - 10:00 p.m.</th>                <td class="maincell" id="1_21"></td>                <td class="maincell" id="2_21"></td>                <td class="maincell" id="3_21"></td>                <td class="maincell" id="4_21"></td>                <td class="maincell" id="5_21"></td>                <td class="maincell" id="6_21"></td>                <td class="maincell" id="7_21"></td>            </tr>            <tr id="timerow_22"><!--22:00 - 23:00 row-->                <th class="maincell">10:00 - 11:00 p.m.</th>                <td class="maincell" id="1_22"></td>                <td class="maincell" id="2_22"></td>               <td class="maincell" id="3_22"></td>                <td class="maincell" id="4_22"></td>                <td class="maincell" id="5_22"></td>                <td class="maincell" id="6_22"></td>                <td class="maincell" id="7_22"></td>            </tr>            <tr id="timerow_23"><!--23:00 - 24:00 row-->                <th class="maincell">11:00 - 11:59 p.m.</th>                <td class="maincell" id="1_23"></td>                <td class="maincell" id="2_23"></td>                <td class="maincell" id="3_23"></td>                <td class="maincell" id="4_23"></td>                <td class="maincell" id="5_23"></td>                <td class="maincell" id="6_23"></td>                <td class="maincell" id="7_23"></td>            </tr></table>';
+            console.warn('Clear function still needs to be re-worked');
+            //document.getElementById('timetable').innerHTML='';
         },
         build_block_db1:function(index){//Builds timetable from database
             console.log('Building Block :',index);
@@ -504,12 +504,38 @@ let table = {
                 //click action
                 tempblock.addEventListener('click',()=>{
                     console.log('Triggered data cell: ',tempblock);
-                    if(tempblock.name=="on"){
+                    if(config.data.tiles){//show full tile view
                         tempblock.name="off";
                         tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
-                    }else{
-                        tempblock.name="on";
-                        tempblock.setAttribute("class", "data_block_active hue"+config.data.table1_db[index].color);
+                        document.getElementById('fullscreen_tile').style.display='block';
+                        document.getElementById('title_cell').innerText=config.data.table1_db[index].name;
+                        switch (config.data.table1_db[index].day) {
+                            case 1: document.getElementById('day_cell').innerText="Monday"; break;
+                            case 2: document.getElementById('day_cell').innerText="Tuesday"; break;
+                            case 3: document.getElementById('day_cell').innerText="Wednesday"; break;
+                            case 4: document.getElementById('day_cell').innerText="Thursday"; break;
+                            case 5: document.getElementById('day_cell').innerText="Friday"; break;
+                            case 6: document.getElementById('day_cell').innerText="Saturday"; break;
+                            case 7: document.getElementById('day_cell').innerText="Sunday"; break;
+                            default: console.log('Date error on index: ',index,' Returned value: ',config.data.table1_db[index].day);
+                        }
+                        if(config.data.table1_db[index].room!=undefined){document.getElementById('room_cell').innerText=config.data.table1_db[index].room}
+                        else{document.getElementById('room_cell').innerText="unknown"}
+                        if(config.data.table1_db[index].Lecturer!=undefined){document.getElementById('Lecturer_cell').innerText=config.data.table1_db[index].Lecturer}
+                        else{document.getElementById('Lecturer_cell').innerText="unknown"}
+                        if(config.data.table1_db[index].type!=undefined){document.getElementById('type_cell').innerText=config.data.table1_db[index].type}
+                        else{document.getElementById('type_cell').innerText="unknown"}
+                        if(config.data.table1_db[index].course_code!=undefined){document.getElementById('coursecode_cell').innerText=config.data.table1_db[index].course_code}
+                        else{document.getElementById('coursecode_cell').innerText="unknown"}
+                        document.getElementById('time_cell').innerText = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
+                    }else{//show the normal card flip out view
+                        if(tempblock.name=="on"){
+                            tempblock.name="off";
+                            tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
+                        }else{
+                            tempblock.name="on";
+                            tempblock.setAttribute("class", "data_block_active hue"+config.data.table1_db[index].color);
+                        }
                     }
                 });
             console.log('Block :',index,' Check complete');
@@ -1924,6 +1950,10 @@ let UI={
                 document.getElementById('hilight_btn').addEventListener('touchstart',UI.setting.hilight.flip)
                 document.getElementById('Animations_btn').addEventListener('touchstart',UI.setting.animation.flip)
                 document.getElementById('tiles_btn').addEventListener('touchstart',UI.setting.tiles.flip)
+                document.getElementById('close_btn').addEventListener('touchstart',()=>{
+                    console.log('closed full tile screen');
+                    document.getElementById('fullscreen_tile').style.display="none";
+                });
             }else{//Desktop
                 document.getElementById('table_btn').addEventListener('click',UI.navigate.TABLE)
                 document.getElementById('manage_btn').addEventListener('click',UI.navigate.MANAGE)
@@ -1932,6 +1962,10 @@ let UI={
                 document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
                 document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
                 document.getElementById('tiles_btn').addEventListener('click',UI.setting.tiles.flip)
+                document.getElementById('close_btn').addEventListener('click',()=>{
+                    console.log('closed full tile screen');
+                    document.getElementById('fullscreen_tile').style.display="none";
+                });
             }
         }
         else{
@@ -1943,6 +1977,10 @@ let UI={
             document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
             document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
             document.getElementById('tiles_btn').addEventListener('click',UI.setting.tiles.flip)
+            document.getElementById('close_btn').addEventListener('click',()=>{
+                console.log('closed full tile screen');
+                document.getElementById('fullscreen_tile').style.display="none";
+            });
         }
         
         document.getElementById('about_btn').addEventListener('click',function(){
@@ -1959,13 +1997,16 @@ let UI={
     navigate:{
         BACK:function(){//Back button handle
             console.log('Back navigation started');
-            if(config.properties.view=="table"){
-                console.warn('Backbutton triggered exit strategy')
-                this.exitstrategy();
-            }else if(document.getElementById('dataentry_screen').style.display=="block"){
+            if(document.getElementById('dataentry_screen').style.display=="block"){
                 console.warn('Backbutton closed dataentry screen');
                 manage.dialogue.close();
                 manage.dialogue.clear();
+            }else if(document.getElementById('fullscreen_tile').style.display=='block'){
+                console.warn('Back button closed full table tile');
+                document.getElementById('fullscreen_tile').style.display='none';
+            }else if(config.properties.view=="table"){
+                console.warn('Backbutton triggered exit strategy')
+                this.exitstrategy();
             }else{
                 console.warn('Backbutton Navigated to table view');
                 this.TABLE();
