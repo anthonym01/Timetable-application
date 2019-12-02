@@ -1998,7 +1998,7 @@ let UI={
                 manage.dialogue.clear();
             }else if(document.getElementById('fullscreen_tile').style.display=='block'){
                 console.warn('Back button closed full table tile');
-                document.getElementById('fullscreen_tile').style.display='none';
+                this.close_tile();
             }else if(config.properties.view=="table"){
                 console.warn('Backbutton triggered exit strategy')
                 this.exitstrategy();

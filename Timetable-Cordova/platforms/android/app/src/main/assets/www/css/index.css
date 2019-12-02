@@ -120,10 +120,10 @@
         bottom:7vh;
         left:0;
         width: 100vw;
-        height:93vh;
+        height:0;
         z-index: 500;
         display: none;
-        transition: opacity 200ms;
+        transition: opacity 200ms,height 200ms;
         opacity: 1;
     }
     #fullscreen_tile table{margin-top:12vh;margin-bottom:auto;width: 100%;font-size: 4vh;border-collapse: collapse;text-align: center;table-layout: fixed;}
