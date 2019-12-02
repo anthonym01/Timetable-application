@@ -1790,7 +1790,6 @@ let manage = {
         open:function(){//The listener for the add open btn is in manage.data.render()
             console.log('Dialogue open called');
             document.getElementById('view_put').value=config.data.table_selected;//if new
-            document.getElementById('dataentry_screen').style.display="block";
             if(config.properties.overwrite==null){
                 document.getElementById('savepluss_btn').style.display='block';
                 document.getElementById('delete_btn').style.display='none';
@@ -1803,6 +1802,15 @@ let manage = {
             document.getElementById('name_put').style.border="";
             document.getElementById('start_time_put').style.border="";
             document.getElementById('end_time_put').style.border="";
+            if(config.data.animation){
+                document.getElementById('dataentry_screen').style.transform="translate(100%,0)"; 
+                document.getElementById('dataentry_screen').style.display="block";
+                setTimeout(()=>{
+                    document.getElementById('dataentry_screen').style.transform="initial";
+                },500);
+            }else{
+                document.getElementById('dataentry_screen').style.display="block";    
+            }
         },
         clear:function(){//clear the input and remove the input screen
             console.log('Dialogue clear called');
@@ -2010,14 +2018,14 @@ let UI={
                 document.getElementById('fullscreen_tile').style.opacity="0.0";
                 document.getElementById('fullscreen_tile').style.height="0";
                 setTimeout(()=>{
-                    document.getElementById('fullscreen_tile').style.display="initial";
-                    document.getElementById('fullscreen_tile').style.opacity="initial";
-                    document.getElementById('fullscreen_tile').style.height="initial";
+                    document.getElementById('fullscreen_tile').style.display="none";
+                    document.getElementById('fullscreen_tile').style.opacity="1.0";
+                    document.getElementById('fullscreen_tile').style.height="93vh";
                 },200);
             }else{
-                document.getElementById('fullscreen_tile').style.height="initial";
-                document.getElementById('fullscreen_tile').style.opacity="initial";
-                document.getElementById('fullscreen_tile').style.display="initial";    
+                document.getElementById('fullscreen_tile').style.display="none";   
+                document.getElementById('fullscreen_tile').style.height="93vh";
+                document.getElementById('fullscreen_tile').style.opacity="1.0"; 
             }
         },
         exitstrategy:function(){

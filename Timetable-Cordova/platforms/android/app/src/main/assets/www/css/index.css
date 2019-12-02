@@ -293,6 +293,7 @@
         width:100%;
         display: none;
         overflow: scroll;
+        transition: transfrom 200ms;
     }
     #dataentry_screen table{/*  TEMPORARY   */
         position: relative;
@@ -300,7 +301,7 @@
         margin-right: auto;
         width:95%;
         font-size: 8vw;
-        margin-bottom: 15vh;
+        margin-bottom: 10vh;
     }
     #dataentry_screen label{
         font-size: 6vw;
