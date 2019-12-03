@@ -39,9 +39,9 @@
     </div>
 
     <view id="table1">          <!--Table view-->
-        <div id="fullscreen_tile">
+        <div id="fullscreen_tile"><!-- Onclick title card -->
             <div id="close_btn">Close</div>
-            <table>
+            <table id="tile_table">
                 <tr>
                     <th id="title_cell" colspan="2"></th>
                 </tr>
@@ -325,7 +325,7 @@
     </view>
 
     <view id="manage_view">     <!--management view-->
-        <div class="select_container">
+        <div class="select_container" id="table_sect_container">
             <div class="select_text" id="tableselector_text">Table_selector</div>
             <select id="table_selector">
                 <option value="1" id='1_selectormain'>Table 1 items</option>
@@ -445,7 +445,37 @@
                 <div class="databtns" id="delete_btn" title="Delete this entry?">Delete</div>
             </div>
             <div id="delete_confirm_pannel">
-                <div class="title">Delete this?</div>
+                <div class="title">Delete</div>
+                <div id="pseudo_container">
+                    <table>
+                        <tr>
+                            <th id="title_cellp" colspan="2"></th>
+                        </tr>
+                        <tr>
+                            <td class="lefter">Day :</td>
+                            <td class="righter" id="day_cellp"></td>
+                        </tr>
+                        <tr>
+                            <td class="lefter">Room :</td>
+                            <td class="righter" id="room_cellp"></td>
+                        </tr>
+                        <tr>
+                            <td class="lefter">Lecturer :</td>
+                            <td class="righter" id="Lecturer_cellp"></td>
+                        </tr>
+                        <tr>
+                            <td class="lefter">Type :</td>
+                            <td class="righter" id="type_cellp"></td>
+                        </tr>
+                        <tr>
+                            <td class="lefter">C. Code :</td>
+                            <td class="righter" id="coursecode_cellp"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" id="time_cellp"></td>
+                        </tr>
+                    </table>
+                </div>
                 <button id="no_btn">No</button>
                 <button id="yes_btn">Yes</button>
             </div>

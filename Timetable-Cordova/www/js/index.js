@@ -503,7 +503,7 @@ let table = {
                     if(config.data.tiles){//show full tile view
                         tempblock.name="off";
                         tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
-                        document.getElementById('fullscreen_tile').style.display='block';
+                        document.getElementById('tile_table').setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
                         document.getElementById('title_cell').innerText=config.data.table1_db[index].name;
                         switch (config.data.table1_db[index].day) {
                             case 1: document.getElementById('day_cell').innerText="Monday"; break;
@@ -524,6 +524,7 @@ let table = {
                         if(config.data.table1_db[index].course_code!=undefined){document.getElementById('coursecode_cell').innerText=config.data.table1_db[index].course_code}
                         else{document.getElementById('coursecode_cell').innerText="unknown"}
                         document.getElementById('time_cell').innerText = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
+                        document.getElementById('fullscreen_tile').style.display='block';
                     }else{//show the normal card flip out view
                         if(tempblock.name=="on"){
                             tempblock.name="off";
@@ -782,22 +783,18 @@ let manage = {
         });
         document.getElementById('save_btn').addEventListener('click',this.dialogue.save); //Save button
         document.getElementById('savepluss_btn').addEventListener('click',this.dialogue.saveplus);
-        document.getElementById('delete_btn').addEventListener('click',function(){      // save button
-            console.log('Delete pseudo function called');
-            //document.getElementById('page_shade').style.display='block';
-            document.getElementById('delete_confirm_pannel').style.display='block';
-        });
-        document.getElementById('yes_btn').addEventListener('click',function(){         // Delete yes button
+        document.getElementById('delete_btn').addEventListener('click',this.dialogue.call_delete);
+        document.getElementById('yes_btn').addEventListener('click',function(){// Delete yes button
             console.log('Delete Confirmation called');
             config.data.table1_db[config.properties.overwrite].deleted=true;//pseudo delete function
-            manage.initalize();
             manage.dialogue.clear();
             manage.dialogue.close();
             config.properties.changed=true;
             config.save();
             document.getElementById('delete_confirm_pannel').style.display='none';
+            manage.initalize();
         });
-        document.getElementById('no_btn').addEventListener('click',function(){          // Delete No button
+        document.getElementById('no_btn').addEventListener('click',function(){// Delete No button
             console.log('Delete denial called');
             document.getElementById('delete_confirm_pannel').style.display='none';
         });
@@ -1205,6 +1202,56 @@ let manage = {
                 manage.dialogue.open();
             }
         },
+        call_delete:function(){
+            console.log('Delete pseudo function called');
+            //time processing
+            var startmeridian = 'a.m.';
+            var starthr=0;
+            var startminute=Number(config.data.table1_db[config.properties.overwrite].start%1*60).toFixed(0);
+            if(startminute==0){startminute='00'}
+            var endmeridian = 'a.m.';
+            var endhr = 0;
+            var endminute=Number(config.data.table1_db[config.properties.overwrite].end%1*60).toFixed(0);
+            if(endminute==0){endminute='00'}
+            
+            if(config.data.table1_db[config.properties.overwrite].start>12){
+                startmeridian='p.m.';//morning or evening
+                starthr=Number(config.data.table1_db[config.properties.overwrite].start-12)-config.data.table1_db[config.properties.overwrite].start%1;//removes remainder
+            }else{
+                starthr=Number(config.data.table1_db[config.properties.overwrite].start)-config.data.table1_db[config.properties.overwrite].start%1;//removes remainder
+            }
+            if(config.data.table1_db[config.properties.overwrite].end>12){
+                endmeridian='p.m.';//morning or evening
+                endhr=Number(config.data.table1_db[config.properties.overwrite].end-12)-config.data.table1_db[config.properties.overwrite].end%1;//removes remainder
+            }else{
+                endhr=Number(config.data.table1_db[config.properties.overwrite].end)-config.data.table1_db[config.properties.overwrite].end%1;//removes remainder
+            }
+            if(starthr==0){starthr=12}
+            if(endhr==0){endhr=12}
+
+            document.getElementById('title_cellp').innerText=config.data.table1_db[config.properties.overwrite].name;
+            switch (config.data.table1_db[config.properties.overwrite].day) {
+                case 1: document.getElementById('day_cellp').innerText="Monday"; break;
+                case 2: document.getElementById('day_cellp').innerText="Tuesday"; break;
+                case 3: document.getElementById('day_cellp').innerText="Wednesday"; break;
+                case 4: document.getElementById('day_cellp').innerText="Thursday"; break;
+                case 5: document.getElementById('day_cellp').innerText="Friday"; break;
+                case 6: document.getElementById('day_cellp').innerText="Saturday"; break;
+                case 7: document.getElementById('day_cellp').innerText="Sunday"; break;
+                default: console.log('Date error on config.properties.overwrite: ',config.properties.overwrite,' Returned value: ',config.data.table1_db[config.properties.overwrite].day);
+            }
+            if(config.data.table1_db[config.properties.overwrite].room!=undefined){document.getElementById('room_cellp').innerText=config.data.table1_db[config.properties.overwrite].room}
+            else{document.getElementById('room_cellp').innerText="unknown"}
+            if(config.data.table1_db[config.properties.overwrite].Lecturer!=undefined){document.getElementById('Lecturer_cellp').innerText=config.data.table1_db[config.properties.overwrite].Lecturer}
+            else{document.getElementById('Lecturer_cellp').innerText="unknown"}
+            if(config.data.table1_db[config.properties.overwrite].type!=undefined){document.getElementById('type_cellp').innerText=config.data.table1_db[config.properties.overwrite].type}
+            else{document.getElementById('type_cellp').innerText="unknown"}
+            if(config.data.table1_db[config.properties.overwrite].course_code!=undefined){document.getElementById('coursecode_cellp').innerText=config.data.table1_db[config.properties.overwrite].course_code}
+            else{document.getElementById('coursecode_cellp').innerText="unknown"}
+            document.getElementById('time_cellp').innerText = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
+            document.getElementById('pseudo_container').setAttribute("class", "data_block hue"+config.data.table1_db[config.properties.overwrite].color);
+            document.getElementById('delete_confirm_pannel').style.display='block';
+        }
     },
     batch_delete:{
         detect:function(){
@@ -1235,6 +1282,11 @@ let task = {
             if(config.data.task_db[i]==null||undefined){
                 //show first time setup screen
                 console.log('The task database is empty show no tasks');
+            }else{
+                while(config.data.task_db[i]!=null||undefined){
+                    this.build_bar_db1(i);
+                    i++;
+                }
             }
         },
         build_bar_db1:function(index){//Builds timetable from database

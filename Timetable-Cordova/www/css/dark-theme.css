@@ -184,7 +184,7 @@ body{
 }
 
 #delete_confirm_pannel{/*   Delete confirmation pannel  */
-    background-color: inherit;
+    background-color: rgba(0,0,0,0.7);
 }
 #yes_btn{
     background-color: #3ad61a;
