@@ -82,6 +82,7 @@ var config={
                 end:            End time of the class represented in 24hr
                     (minutes represented as percentage of hr "30/60 = 0.5")
             */
+           /*
             {show:1,day:1,name:"Analysis of Algorithms",Lecturer:"David W. White",room:"1A-66",course_code:"CIT3003",type:"Lecture",color:1,start:10.00,end:11.833},
             {show:1,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Tutorial",color:2,start:17.00,end:18.00},
             {show:1,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Practical",color:2,start:18.00,end:21},
@@ -113,12 +114,12 @@ var config={
             {show:2,day:2,name:"Information Technology",room:"1B-C2",course_code:"",type:"Lecture",color:6,start:11.00,end:12.00},
             {show:2,day:2,name:"Information Technology",room:"47B-3",course_code:"",type:"Practical",color:6,start:14.00,end:17.00},
             {show:2,day:2,name:"General Chemistry 1",room:"1B-C2",course_code:"",type:"Tutorial",color:1,start:12.00,end:13.00},
-            
+            */
         ],
         task_db:[// task database
-            {name:"test",date:null,description:"",color:4},
-            {name:"test 2",date:null,description:"",color:7},
-            {name:"test 3",date:null,description:"",color:2},
+            {name:"test 1",date:null,description:"Placeholder description 1",color:4},
+            {name:"test 2",date:null,description:"Placeholder description 2",color:7},
+            {name:"test 3",date:null,description:"Placeholder description 3",color:2},
         ],
     },
     properties:{
@@ -503,7 +504,7 @@ let table = {
                     if(config.data.tiles){//show full tile view
                         tempblock.name="off";
                         tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
-                        document.getElementById('tile_table').setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
+                        //document.getElementById('tile_table').setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
                         document.getElementById('title_cell').innerText=config.data.table1_db[index].name;
                         switch (config.data.table1_db[index].day) {
                             case 1: document.getElementById('day_cell').innerText="Monday"; break;
@@ -764,8 +765,15 @@ let manage = {
     initalize:function(){
         console.log('Manager initializes');
         document.getElementById('table_selector').value=config.data.table_selected; //Set the table selectors value
-        document.getElementById('tableselector_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
-        document.getElementById('view_put_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
+        switch(config.data.table_selected){
+            case "0":document.getElementById('tableselector_text').innerText="Hidden" ;break;
+            case "1":document.getElementById('tableselector_text').innerText=config.data.table_details[0].purpose; ;break;
+            case "2":document.getElementById('tableselector_text').innerText=config.data.table_details[1].purpose; ;break;
+            case "3":document.getElementById('tableselector_text').innerText=config.data.table_details[2].purpose; ;break;
+            case "4":document.getElementById('tableselector_text').innerText=config.data.table_details[3].purpose; ;break;
+        }
+        //document.getElementById('tableselector_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
+        //document.getElementById('view_put_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
         document.getElementById('1_selectorsub').innerHTML = config.data.table_details[0].purpose;
         document.getElementById('1_selectormain').innerHTML = config.data.table_details[0].purpose;
         document.getElementById('2_selectorsub').innerHTML= config.data.table_details[1].purpose;
@@ -800,7 +808,7 @@ let manage = {
         });
         document.getElementById('color_put').addEventListener('change',function(){      // Change color put color on change
             console.log('Color selection changed to :',document.getElementById('color_put').value);
-            document.getElementById('color_put_container').className='select_container hue'+document.getElementById('color_put').value;
+            document.getElementById('color_put_container').className='hue'+document.getElementById('color_put').value+' select_container';
             switch(document.getElementById('color_put').value){
                 case "0":document.getElementById('color_put_text').innerText="Grey";break;
                 case "1":document.getElementById('color_put_text').innerText="Red";break;
@@ -822,7 +830,13 @@ let manage = {
         document.getElementById('table_selector').addEventListener('change',function(){
             console.log('table_selector changed');
             config.data.table_selected=document.getElementById('table_selector').value;
-            document.getElementById('tableselector_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
+            switch(document.getElementById('table_selector').value){
+                case "0":document.getElementById('tableselector_text').innerText="Hidden Items" ;break;
+                case "1":document.getElementById('tableselector_text').innerText=config.data.table_details[0].purpose; ;break;
+                case "2":document.getElementById('tableselector_text').innerText=config.data.table_details[1].purpose; ;break;
+                case "3":document.getElementById('tableselector_text').innerText=config.data.table_details[2].purpose; ;break;
+                case "4":document.getElementById('tableselector_text').innerText=config.data.table_details[3].purpose; ;break;
+            }
             config.properties.changed=true;
             manage.data.render();
             config.save();
@@ -843,7 +857,13 @@ let manage = {
         });
         document.getElementById('view_put').addEventListener('change',function(){/* Switches text displayed on change */
             console.log('View put changed');
-            document.getElementById('view_put_text').innerText=config.data.table_details[document.getElementById('view_put').value-1].purpose;
+            switch(document.getElementById('view_put').value){
+                case "0":document.getElementById('view_put_text').innerText="Hidden" ;break;
+                case "1":document.getElementById('view_put_text').innerText=config.data.table_details[0].purpose; ;break;
+                case "2":document.getElementById('view_put_text').innerText=config.data.table_details[1].purpose; ;break;
+                case "3":document.getElementById('view_put_text').innerText=config.data.table_details[2].purpose; ;break;
+                case "4":document.getElementById('view_put_text').innerText=config.data.table_details[3].purpose; ;break;
+            }
         });
     },
     data:{
@@ -1014,7 +1034,7 @@ let manage = {
                 case 6:document.getElementById('day_put_text').innerText="Saturday" ;break;
             }
             document.getElementById('color_put').value = config.data.table1_db[index].color;    //set color feild
-            document.getElementById('color_put_container').className='select_container hue'+config.data.table1_db[index].color;    //set color class to make the feild glow
+            document.getElementById('color_put_container').className='hue'+config.data.table1_db[index].color+' select_container';    //set color class to make the feild glow
             switch(document.getElementById('color_put').value){//set name of color
                 case "0":document.getElementById('color_put_text').innerText="Grey";break;
                 case "1":document.getElementById('color_put_text').innerText="Red";break;
@@ -1048,6 +1068,14 @@ let manage = {
             document.getElementById('end_time_put').value = endhr+':'+endminute;            //Set the end time feild
             this.open();
             document.getElementById('view_put').value=config.data.table1_db[index].show;    //Set view state feild
+            switch(config.data.table1_db[index].show){
+                case 0:document.getElementById('view_put_text').innerText="Hidden" ;break;
+                case 1:document.getElementById('view_put_text').innerText=config.data.table_details[0].purpose; ;break;
+                case 2:document.getElementById('view_put_text').innerText=config.data.table_details[1].purpose; ;break;
+                case 3:document.getElementById('view_put_text').innerText=config.data.table_details[2].purpose; ;break;
+                case 4:document.getElementById('view_put_text').innerText=config.data.table_details[3].purpose; ;break;
+            }
+            //document.getElementById('view_put_text').innerText=config.data.table_details[index].purpose;//view state text
         },
         open:function(){//The listener for the add open btn is in manage.data.render()
             console.log('Dialogue open called');
@@ -1249,7 +1277,7 @@ let manage = {
             if(config.data.table1_db[config.properties.overwrite].course_code!=undefined){document.getElementById('coursecode_cellp').innerText=config.data.table1_db[config.properties.overwrite].course_code}
             else{document.getElementById('coursecode_cellp').innerText="unknown"}
             document.getElementById('time_cellp').innerText = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
-            document.getElementById('pseudo_container').setAttribute("class", "data_block hue"+config.data.table1_db[config.properties.overwrite].color);
+            //document.getElementById('pseudo_container').setAttribute("class", "data_block hue"+config.data.table1_db[config.properties.overwrite].color);
             document.getElementById('delete_confirm_pannel').style.display='block';
         }
     },
@@ -1263,6 +1291,7 @@ let manage = {
 /*  Task manager    */
 let task = {
     initalize:function(){
+        this.data.clear();
         this.data.render();
     },
     data:{
@@ -1295,26 +1324,27 @@ let task = {
             var tempblock = document.createElement('div');
             tempblock.title="Click to edit";
             //assign a color
-            switch(config.data.task_db[index].color){
-                case 0: tempblock.setAttribute("class", "data_bar hue0"); break;
-                case 1: tempblock.setAttribute("class", "hue1 data_bar"); break;
-                case 2: tempblock.setAttribute("class", "hue2 data_bar"); break;
-                case 3: tempblock.setAttribute("class", "hue3 data_bar"); break;
-                case 4: tempblock.setAttribute("class", "hue4 data_bar"); break;
-                case 5: tempblock.setAttribute("class", "hue5 data_bar"); break;
-                case 6: tempblock.setAttribute("class", "hue6 data_bar"); break;
-                case 7: tempblock.setAttribute("class", "hue7 data_bar"); break;
-                case 8: tempblock.setAttribute("class", "hue8 data_bar"); break;
-                case 9: tempblock.setAttribute("class", "hue9 data_bar"); break;
-                case 10: tempblock.setAttribute("class", "hue10 data_bar"); break;
-                case 11: tempblock.setAttribute("class", "hue11 data_bar"); break;
-                default:
-                tempblock.setAttribute("class", "data_bar");
-                console.log('Color was defaulted :');
-                console.table(config.data.task_db[index]);
-            }
+            tempblock.setAttribute("class", "task_bar hue"+config.data.task_db[index].color);
+            //Task title (name)
+            var task_title = document.createElement("div");
+            task_title.setAttribute("class","task_title");
+            task_title.innerText = config.data.task_db[index].name;
+            //Task description box
+            var task_text = document.createElement("div");
+            task_text.setAttribute("class","task_text");
+            task_text.innerText = config.data.task_db[index].description;
+            //task time remaining
+            var task_time_remaining = document.createElement("div");
+            task_time_remaining.setAttribute("class","task_time_remaining");
+            //Process time remaining
+            task_time_remaining.innerText = "Ptime rem";//Display time remaining here
+
+            //Puts Details into document
+            tempblock.appendChild(task_title);
+            tempblock.appendChild(task_text);
+            tempblock.appendChild(task_time_remaining);
             document.getElementById('task_dataspace').appendChild(tempblock);//put the bar into the dukument
-            console.log('Bar: ',index,' Complete');
+            console.log('Task: ',index,' Complete');
         },
         clear:function(){
             console.log('task_dataspace clear called');

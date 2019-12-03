@@ -134,9 +134,9 @@
     }
     #fullscreen_tile_tab_container{
         position: absolute;
-        bottom:15vh;
-        left: 3vw;
-        width: 94vw;
+        top:15vh;
+        right: 0;
+        width: 100%;
         font-size: 4vh;
         border-collapse: collapse;
         text-align: center;
@@ -145,7 +145,6 @@
     #fullscreen_tile_tab_container table{
         height:100%;
         width: 100%;
-        border-radius: 3vh;
     }
     #fullscreen_tile_tab_container th{padding: 3px;padding-bottom: 1vh;}
     #fullscreen_tile_tab_container .puff{padding-bottom: 1vh;}
@@ -269,7 +268,7 @@
         width:90vw;
         height:100%;
     }
-    .data_bar{/*    Detailed representaion of the data to be managed    */
+    .data_bar{/*    Detailed representaion of the data to be managed , reused in the dataspace  */
         position: relative;
         display: block;
         float: left;
@@ -352,8 +351,6 @@
         margin-top:2vh;
         transition:background-color 300ms,color 300ms;
     }.select_container:active{
-        background-color: rgb(255, 255, 255);
-        color: rgb(0, 0, 0);
         transition:background-color 0ms,color 0ms;
     }
     .select_container select{
@@ -448,10 +445,9 @@
     #delete_confirm_pannel #pseudo_container{
         position: absolute;
         top:15vh;
-        left:3vw;
+        right:0;
         height: auto;
-        width: 94vw;
-        border-radius: 3vh;
+        width: 100%;
     }
     #pseudo_container table{width: 100%;margin:0;font-size: 4vh;border-collapse: collapse;text-align: center;table-layout: fixed;}
     #pseudo_container th{padding: 3px;padding-bottom: 1vh;}
@@ -497,7 +493,40 @@
     }
 
 /*  task view  */
+    #task_dataspace{
 
+    }
+    .task_bar{/*    Detailed representaion of the data to be managed , reused in the dataspace  */
+        position: relative;
+        display: block;
+        float: left;
+        height: auto;
+        width:90%;
+        min-width: 40%;
+        font-size:3.2vh;
+        padding:1.2vh;
+        border-radius: 3vh;
+        cursor: pointer;
+        box-shadow: 0vh 0vh 0vh 0vh;
+        margin-top:2vh;
+        margin-bottom: 1vh;
+        margin-left:2vw;
+        text-align: center;
+    }
+    .task_bar .task_title{
+    
+    }
+    .task_bar .task_text{
+
+    }
+    .task_bar .task_time_remaining{
+
+    }
+    .task_bar table{width: 100%;border-collapse: collapse;text-align: center;table-layout: fixed;}
+    .task_bar th{padding: 2px;}
+    .task_bar td{padding: 2px;vertical-align: middle;align-content: center}
+    .task_bar .lefter{text-align: right}
+    .task_bar .righter{text-align: left}
 
 /*  Setting view  */
     #setting_view{

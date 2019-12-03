@@ -101,30 +101,30 @@ body{
 }
 
 /*  Colors are class based because im lazy  */
-.hue0{background-color: hsl(0, 0%, 75%)!important}
-.hue0:active{background-color: hsl(0, 0%, 92%)!important}
-.hue1{background-color: hsl(0,100%,70%)!important}
-.hue1:active{background-color: hsl(0,100%,40%)!important}
-.hue2{background-color: hsl(30,100%,60%)!important}
-.hue2:active{background-color: hsl(30,100%,40%)!important}
-.hue3{background-color: hsl(40,100%,60%)!important}
-.hue3:active{background-color: hsl(40,100%,40%)!important}
-.hue4{background-color: hsl(60,100%,60%)!important}
-.hue4:active{background-color: hsl(60,100%,40%)!important}
-.hue5{background-color: hsl(120,100%,60%)!important}
-.hue5:active{background-color: hsl(120,100%,40%)!important}
-.hue6{background-color: hsl(150,100%,60%)!important}
-.hue6:active{background-color: hsl(150,100%,40%)!important}
-.hue7{background-color: hsl(180,100%,60%)!important}
-.hue7:active{background-color: hsl(180,100%,40%)!important}
-.hue8{background-color: hsl(210,100%,60%)!important}
-.hue8:active{background-color: hsl(210,100%,40%)!important}
-.hue9{background-color: hsl(260,100%,60%)!important}
-.hue9:active{background-color: hsl(260,100%,40%)!important}
-.hue10{background-color: hsl(270,100%,60%)!important}
-.hue10:active{background-color: hsl(270,100%,40%)!important}
-.hue11{background-color: hsl(328,100%,60%)!important}
-.hue11:active{background-color: hsl(328,100%,70%)!important}
+.hue0{background-color: hsl(0, 0%, 75%)}
+.hue0:active{background-color: hsl(0, 0%, 92%)}
+.hue1{background-color: hsl(0,100%,70%)}
+.hue1:active{background-color: hsl(0,100%,40%)}
+.hue2{background-color: hsl(30,100%,60%)}
+.hue2:active{background-color: hsl(30,100%,40%)}
+.hue3{background-color: hsl(40,100%,60%)}
+.hue3:active{background-color: hsl(40,100%,40%)}
+.hue4{background-color: hsl(60,100%,60%)}
+.hue4:active{background-color: hsl(60,100%,40%)}
+.hue5{background-color: hsl(120,100%,60%)}
+.hue5:active{background-color: hsl(120,100%,40%)}
+.hue6{background-color: hsl(150,100%,60%)}
+.hue6:active{background-color: hsl(150,100%,40%)}
+.hue7{background-color: hsl(180,100%,60%)}
+.hue7:active{background-color: hsl(180,100%,40%)}
+.hue8{background-color: hsl(210,100%,60%)}
+.hue8:active{background-color: hsl(210,100%,40%)}
+.hue9{background-color: hsl(260,100%,60%)}
+.hue9:active{background-color: hsl(260,100%,40%)}
+.hue10{background-color: hsl(270,100%,60%)}
+.hue10:active{background-color: hsl(270,100%,40%)}
+.hue11{background-color: hsl(328,100%,60%)}
+.hue11:active{background-color: hsl(328,100%,70%)}
 
 /*  manage_view   */
 .data_noot{
@@ -153,7 +153,7 @@ body{
 .select_container{/*  Select boxes made to be more effective on mobile  */
     border:0.3vh solid #000000;
     color: rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
+    /*background-color: rgb(255, 255, 255);*/
 }.select_container:active{
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
