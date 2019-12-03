@@ -132,24 +132,26 @@
         transition: opacity 200ms,height 200ms;
         opacity: 1;
     }
-    #fullscreen_tile table{
-        position: relative;
-        margin-top:12vh;
-        margin-left:auto;
-        margin-right:auto;
-        margin-bottom:auto;
-        width: 95%;
-        border-radius: 3vh;
+    #fullscreen_tile_tab_container{
+        position: absolute;
+        bottom:15vh;
+        left: 3vw;
+        width: 94vw;
         font-size: 4vh;
         border-collapse: collapse;
         text-align: center;
         table-layout: fixed;
     }
-    #fullscreen_tile th{padding: 3px;padding-bottom: 1vh;}
-    #fullscreen_tile .puff{padding-bottom: 1vh;}
-    #fullscreen_tile td{padding: 3px;padding-bottom: 1vh;vertical-align: middle;align-content: center;}
-    #fullscreen_tile .lefter{text-align: right;}
-    #fullscreen_tile .righter{text-align: left;}
+    #fullscreen_tile_tab_container table{
+        height:100%;
+        width: 100%;
+        border-radius: 3vh;
+    }
+    #fullscreen_tile_tab_container th{padding: 3px;padding-bottom: 1vh;}
+    #fullscreen_tile_tab_container .puff{padding-bottom: 1vh;}
+    #fullscreen_tile_tab_container td{padding: 3px;padding-bottom: 1vh;vertical-align: middle;align-content: center;}
+    #fullscreen_tile_tab_container .lefter{text-align: right;}
+    #fullscreen_tile_tab_container .righter{text-align: left;}
     #close_btn{
         position: absolute;
         bottom: 1vh;
@@ -439,20 +441,19 @@
     }
     #delete_confirm_pannel .title{
         margin-top: 2vh;
-        margin-bottom: 2vh;
         width:100%;
         text-align:center;
         font-size:6vh;
     }
     #delete_confirm_pannel #pseudo_container{
-        position: relative;
+        position: absolute;
+        top:15vh;
+        left:3vw;
         height: auto;
-        width: 95%;
-        margin-left:auto;
-        margin-right:auto;
+        width: 94vw;
         border-radius: 3vh;
     }
-    #pseudo_container table{margin-top:12vh;margin-bottom:auto;width: 100%;font-size: 4vh;border-collapse: collapse;text-align: center;table-layout: fixed;}
+    #pseudo_container table{width: 100%;margin:0;font-size: 4vh;border-collapse: collapse;text-align: center;table-layout: fixed;}
     #pseudo_container th{padding: 3px;padding-bottom: 1vh;}
     #pseudo_container .puff{padding-bottom: 1vh;}
     #pseudo_container td{padding: 3px;padding-bottom: 1vh;vertical-align: middle;align-content: center;}
