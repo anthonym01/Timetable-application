@@ -83,37 +83,13 @@ var config={
                     (minutes represented as percentage of hr "30/60 = 0.5")
             */
            
-            {show:1,day:1,name:"Analysis of Algorithms",Lecturer:"David W. White",room:"1A-66",course_code:"CIT3003",type:"Lecture",color:1,start:10.00,end:11.833},
-            {show:2,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Tutorial",color:2,start:17.00,end:18.00},
-            {show:1,day:1,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"1A-X",course_code:"CIT3002",type:"Practical",color:2,start:18.00,end:21},
-            {show:1,day:1,name:"IT Project Management",room:"2B-3",course_code:"CIT4024",type:"Tutorial",color:5,start:15.00,end:17.00},
-            {show:1,day:1,name:"IT Project Management",room:"LT-48",course_code:"CIT4024",type:"Lecture",color:5,start:12.00,end:13.00},
-            {show:1,day:2,name:"Academic Writing II",room:"LT-49",course_code:"COM2013",type:"Lecture",color:3,start:9.00,end:10.00},
-            {show:4,day:2,name:"Analysis of Algorithms",Lecturer:"David W. White",room:"1A-65",course_code:"CIT3003",type:"Tutorial",color:1,start:15.00,end:16.00},
-            {show:1,day:2,name:"Operating Systems",Lecturer:"Khalilah Burrell-Battick",room:"47C-1",course_code:"CIT3002",type:"Lecture",color:2,start:13.00,end:14.00},
-            {show:1,day:2,name:"Academic Writing II",Lecturer:"Kay dougly",room:"LT-48/49",course_code:"COM2013",type:"Lecture",color:3,start:18.00,end:19.00},
-            {show:1,day:3,name:"IT Project Management",room:"LT-49",course_code:"CIT4024",type:"Tutorial",color:5,start:12.00,end:13.00},
-            {show:2,day:3,name:"IT Project Management",room:"2B-3",course_code:"",type:"Tutorial",color:0,start:8.00,end:9.833},
-            {show:1,day:3,name:"IT Project Management",room:"2B-6",course_code:"",type:"Tutorial",color:0,start:19.00,end:21.00},
-            {show:1,day:5,name:"Academic Writing II",Lecturer:"Kay dougly",room:"2B-5",course_code:"COM2013",type:"Tutorial",color:3,start:8.00,end:10},
-            {show:3,day:1,name:"Academic Writing II",room:"LT-48",course_code:"COM2013",type:"Lecture",color:3,start:13.00,end:13.833},
-            
-            {show:0,day:2,name:"Forensics",room:"1A-12",course_code:"",type:"Practical",color:8,start:14.00,end:16.00},
-            {show:2,day:5,name:"Forensics",room:"47B-3",course_code:"",type:"Lecture",color:8,start:14.00,end:15.00},
-            {show:0,day:5,name:"Forensics",room:"47B-3",course_code:"",type:"Lecture",color:8,start:15.00,end:17.00},
-            {show:3,day:3,name:"Advanced Programming",room:"2B-7",course_code:"CIT4024",type:"Tutorial",color:0,start:12.00,end:13.00},
-            {show:0,day:2,name:"Advanced Programming",room:"2B-7",course_code:"CIT4024",type:"Practical",color:0,start:12.00,end:14.00},
-            {show:1,day:1,name:"Forensics",room:"C1",course_code:"",type:"Practical",color:8,start:15.00,end:17.00},
-            {show:0,day:3,name:"Forensics",room:"22B-1",course_code:"",type:"Lecture",color:8,start:12.00,end:13.00},
-            {show:2,day:3,name:"Operating Systems",room:"",course_code:"CIT3002",type:"Tutorial",color:2,start:11.00,end:12.00},
-            {show:2,day:4,name:"Advanced Programming",room:"Lab C",course_code:"CIT4024",type:"Practical",color:0,start:12.00,end:15.00},
-            {show:1,day:2,name:"Operating Systems",room:"3B-20",course_code:"CIT3002",type:"Lecture",color:2,start:18.00,end:19.00},
-
-            {show:1,day:1,name:"General Chemistry Lab 1",room:"3B-5",course_code:"",type:"Practical",color:3,start:8.00,end:11.00},
-            {show:2,day:2,name:"Academic writing 1",room:"1B-C2",course_code:"",type:"lecture & Tutorial",color:5,start:8.00,end:11.00},
-            {show:3,day:2,name:"Information Technology",room:"1B-C2",course_code:"",type:"Lecture",color:6,start:11.00,end:12.00},
-            {show:0,day:2,name:"Information Technology",room:"47B-3",course_code:"",type:"Practical",color:6,start:14.00,end:17.00},
-            {show:1,day:2,name:"General Chemistry 1",room:"1B-C2",course_code:"",type:"Tutorial",color:1,start:12.00,end:13.00},
+            {show:1,day:1,name:"Test 1",Lecturer:"placeholder",room:"none",course_code:"cpyxkt",type:"test_class",color:1,start:10.00,end:11.833},
+            {show:1,day:2,name:"Test 2",Lecturer:"placeholder",room:"none",course_code:"wfsvvt",type:"test_class",color:2,start:12.5,end:14.833},
+            {show:1,day:3,name:"Test 3",Lecturer:"placeholder",room:"none",course_code:"dfvsdzf",type:"test_class",color:3,start:10.5,end:13},
+            {show:1,day:4,name:"Test 4",Lecturer:"placeholder",room:"none",course_code:"wfvt",type:"test_class",color:4,start:9.2,end:12},
+            {show:1,day:5,name:"Test 5",Lecturer:"placeholder",room:"none",course_code:"wfsvvvt",type:"test_class",color:5,start:13.8,end:14.833},
+            {show:1,day:6,name:"Test 6",Lecturer:"placeholder",room:"none",course_code:"wfsvvsfvvt",type:"test_class",color:6,start:12.5,end:16.833},
+            {show:1,day:7,name:"Test 7",Lecturer:"placeholder",room:"none",course_code:"svfdvt",type:"test_class",color:7,start:10.5,end:15.833},
             
         ],
         task_db:[// task database
@@ -766,11 +742,11 @@ let manage = {
         console.log('Manager initializes');
         document.getElementById('table_selector').value=config.data.table_selected; //Set the table selectors value
         switch(config.data.table_selected){
-            case "0":document.getElementById('tableselector_text').innerText="Hidden" ;break;
-            case "1":document.getElementById('tableselector_text').innerText=config.data.table_details[0].purpose; ;break;
-            case "2":document.getElementById('tableselector_text').innerText=config.data.table_details[1].purpose; ;break;
-            case "3":document.getElementById('tableselector_text').innerText=config.data.table_details[2].purpose; ;break;
-            case "4":document.getElementById('tableselector_text').innerText=config.data.table_details[3].purpose; ;break;
+            case 0:document.getElementById('tableselector_text').innerText="Hidden" ;break;
+            case 1:document.getElementById('tableselector_text').innerText=config.data.table_details[0].purpose; ;break;
+            case 2:document.getElementById('tableselector_text').innerText=config.data.table_details[1].purpose; ;break;
+            case 3:document.getElementById('tableselector_text').innerText=config.data.table_details[2].purpose; ;break;
+            case 4:document.getElementById('tableselector_text').innerText=config.data.table_details[3].purpose; ;break;
         }
         //document.getElementById('tableselector_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
         //document.getElementById('view_put_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;

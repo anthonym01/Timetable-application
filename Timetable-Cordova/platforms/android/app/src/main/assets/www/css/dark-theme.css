@@ -155,6 +155,7 @@ body{
     color: inherit;
     outline: none;
 }
+
 .select_container{/*  Select boxes made to be more effective on mobile  */
     border:0.3vh solid #ffffff;
     color: rgb(255, 255, 255);
@@ -163,6 +164,7 @@ body{
     background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
 }
+
 .databtns{
     background-color: #000000;
     border:0.3vh solid #ffffff;
