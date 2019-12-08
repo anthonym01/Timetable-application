@@ -262,10 +262,10 @@
 
     /*  manage_view   */
     #manage_view{/* Adjust manage view to align with table selector at the bottom*/
-        bottom:12.2vh;
+        top:0;
         left:0;
         width: 100vw;
-        height:86.8vh;
+        height:85vh;
     }
     .dataspace{/*   Block Containing the data_bar(s)   */
         position: relative;

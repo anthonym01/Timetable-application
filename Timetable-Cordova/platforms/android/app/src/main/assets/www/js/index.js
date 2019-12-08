@@ -776,7 +776,7 @@ let manage = {
             config.properties.changed=true;
             config.save();
             document.getElementById('delete_confirm_pannel').style.display='none';
-            manage.initalize();
+            manage.data.render();
         });
         document.getElementById('no_btn').addEventListener('click',function(){// Delete No button
             console.log('Delete denial called');
@@ -942,7 +942,7 @@ let manage = {
             }
             if(config.data.table1_db[index].deleted){//Check deleted state
                 //populate the block with relivant data
-                tempblock.innerHTML=config.data.table1_db[index].name+'<br> Marked for delete, click to undo';
+                tempblock.innerHTML=config.data.table1_db[index].name+'<br> Marked for delete, tap to undo';
                 tempblock.setAttribute("class", "data_bar hue0");
                 tempblock.style.border="0.3vh solid red";
                 //alow editing function
