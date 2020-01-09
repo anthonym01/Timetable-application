@@ -46,9 +46,8 @@ window.addEventListener('load',function(){//window loads
         config.validate()
     }
     UI.initalize();
-    manage.initalize();
-    task.initalize();
     table.initialize();
+    manage.initalize();
     config.properties.startup=false;
     setTimeout(()=>{
         console.log('Closing loading screen...');
@@ -82,7 +81,7 @@ var config={
                 end:            End time of the class represented in 24hr
                     (minutes represented as percentage of hr "30/60 = 0.5")
             */
-           
+            /*
             {show:1,day:1,name:"Test 1",Lecturer:"placeholder",room:"none",course_code:"cpyxkt",type:"test_class",color:1,start:10.00,end:11.833},
             {show:1,day:2,name:"Test 2",Lecturer:"placeholder",room:"none",course_code:"wfsvvt",type:"test_class",color:2,start:12.5,end:14.833},
             {show:1,day:3,name:"Test 3",Lecturer:"placeholder",room:"none",course_code:"dfvsdzf",type:"test_class",color:3,start:10.5,end:13},
@@ -90,12 +89,7 @@ var config={
             {show:1,day:5,name:"Test 5",Lecturer:"placeholder",room:"none",course_code:"wfsvvvt",type:"test_class",color:5,start:13.8,end:14.833},
             {show:1,day:6,name:"Test 6",Lecturer:"placeholder",room:"none",course_code:"wfsvvsfvvt",type:"test_class",color:6,start:12.5,end:16.833},
             {show:1,day:7,name:"Test 7",Lecturer:"placeholder",room:"none",course_code:"svfdvt",type:"test_class",color:7,start:10.5,end:15.833},
-            
-        ],
-        task_db:[// task database
-            {name:"test 1",date:null,description:"Placeholder description 1",color:4},
-            {name:"test 2",date:null,description:"Placeholder description 2",color:7},
-            {name:"test 3",date:null,description:"Placeholder description 3",color:2},
+            */
         ],
     },
     properties:{
@@ -160,20 +154,6 @@ var config={
             }
         }else{
             this.data.table1_db=[];
-            configisvalid=false;
-            console.log('"Table1_database" was found to not exist and was set to default');
-        }
-        
-        if(typeof(this.data.task_db)!=='undefined'){
-            if(this.data.task_db==undefined||null){//check db existance
-                this.data.task_db=[];
-                configisvalid=false;
-                console.log('"Task_database" was found to be invalid and was set to default');
-            }else{//validate after design
-                   
-            }
-        }else{
-            this.data.task_db=[];
             configisvalid=false;
             console.log('"Table1_database" was found to not exist and was set to default');
         }
@@ -268,15 +248,7 @@ let table = {
             if(config.data.table_selected==0){config.data.table_selected=1}//Fix oversight
             if(config.data.table1_db[i]==null||undefined){
                 //show first time setup screen
-                console.log('The table database is empty');
-                utility.toast('To start off lets add something to display');
-                document.getElementById('data_title').innerHTML='First Time?';
-
-                setTimeout(()=>{manage.dialogue.open();UI.navigate.MANAGE();},100);
-
-                document.getElementById('Loading').style.display='none';
-                console.log('Closing loading screen...');
-    
+                this.first_settup(1);
             }else{
                 while(config.data.table1_db[i]!=null||undefined){//Get minimum time and maximum time to construct correct height
                     if(config.data.table1_db[i].deleted!=true && config.data.table1_db[i].show==config.data.table_selected){
@@ -632,11 +604,19 @@ let table = {
             }
             if(days==0 || rows==0){
                 //Table is empty
-                this.clear();
+                this.first_settup(config.data.table_selected);
                 utility.toast(' This table is empty...');
             }
             console.log('Table validated');
-        }
+        },
+        first_settup:function(table_num){
+            console.log('First settup called table#: ',table_num);
+            utility.toast('To start off lets add something to display');
+            document.getElementById('data_title').innerHTML='First Time?';
+            setTimeout(()=>{manage.dialogue.open();UI.navigate.MANAGE();},100);
+            document.getElementById('Loading').style.display='none';
+            console.log('Closing loading screen...');
+        },
     },
     clock:{
         clock_tick_trigger:null,//setInterval(()=>{table.clock.clock_tick()},1000),
@@ -748,8 +728,6 @@ let manage = {
             case 3:document.getElementById('tableselector_text').innerText=config.data.table_details[2].purpose; ;break;
             case 4:document.getElementById('tableselector_text').innerText=config.data.table_details[3].purpose; ;break;
         }
-        //document.getElementById('tableselector_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
-        //document.getElementById('view_put_text').innerText=config.data.table_details[config.data.table_selected-1].purpose;
         document.getElementById('1_selectorsub').innerHTML = config.data.table_details[0].purpose;
         document.getElementById('1_selectormain').innerHTML = config.data.table_details[0].purpose;
         document.getElementById('2_selectorsub').innerHTML= config.data.table_details[1].purpose;
@@ -782,6 +760,10 @@ let manage = {
             console.log('Delete denial called');
             document.getElementById('delete_confirm_pannel').style.display='none';
         });
+        //initalize color put selector (needs an upgrade)
+        document.getElementById('color_put').value="1";
+        document.getElementById('color_put_text').innerText="Red";
+        document.getElementById('color_put_container').className='hue1 select_container';
         document.getElementById('color_put').addEventListener('change',function(){      // Change color put color on change
             console.log('Color selection changed to :',document.getElementById('color_put').value);
             document.getElementById('color_put_container').className='hue'+document.getElementById('color_put').value+' select_container';
@@ -817,6 +799,9 @@ let manage = {
             manage.data.render();
             config.save();
         });
+        //Initalize day_put selector
+        document.getElementById('day_put').value="1";
+        document.getElementById('day_put_text').innerText="Monday"
         document.getElementById('day_put').addEventListener('change',function(){/* Switches dates on change */
             console.log('Day put changed');
             var tmp = document.getElementById('day_put').value;
@@ -831,11 +816,14 @@ let manage = {
                 default:console.error('Blyat');
             }
         });
+        // view put selector
+        document.getElementById('view_put').value="1";
+        document.getElementById('view_put_text').innerText=config.data.table_details[0].purpose;
         document.getElementById('view_put').addEventListener('change',function(){/* Switches text displayed on change */
             console.log('View put changed');
             switch(document.getElementById('view_put').value){
                 case "0":document.getElementById('view_put_text').innerText="Hidden" ;break;
-                case "1":document.getElementById('view_put_text').innerText=config.data.table_details[0].purpose; ;break;
+                case "1":document.getElementById('view_put_text').innerText=config.data.table_details[0].purpose;/* purpose is the array with names of tables */ ;break;
                 case "2":document.getElementById('view_put_text').innerText=config.data.table_details[1].purpose; ;break;
                 case "3":document.getElementById('view_put_text').innerText=config.data.table_details[2].purpose; ;break;
                 case "4":document.getElementById('view_put_text').innerText=config.data.table_details[3].purpose; ;break;
@@ -1053,7 +1041,7 @@ let manage = {
             }
             //document.getElementById('view_put_text').innerText=config.data.table_details[index].purpose;//view state text
         },
-        open:function(){//The listener for the add open btn is in manage.data.render()
+        open:function(){//The listener for the add open btn is in manage.data.render() 
             console.log('Dialogue open called');
             document.getElementById('view_put').value=config.data.table_selected;//if new
             if(config.properties.overwrite==null){
@@ -1264,71 +1252,6 @@ let manage = {
     }
 }
 
-/*  Task manager    */
-let task = {
-    initalize:function(){
-        this.data.clear();
-        this.data.render();
-    },
-    data:{
-        render:function(){//initalizes, and feeds the build function
-            console.log('Task render started')
-            //Add new button
-            var tempblock = document.createElement('div');
-            tempblock.setAttribute("class", "data_bar hue0");
-            tempblock.innerHTML='New Task';
-            tempblock.title='Add a new task';
-            document.getElementById('task_dataspace').appendChild(tempblock);
-            var plusimg = document.createElement('div');//plus image
-            plusimg.setAttribute("class","plusimg");
-            tempblock.appendChild(plusimg);
-            tempblock.addEventListener('click',function(){task.dialogue.open();console.log('Add new task button clicked')});//add new btn listener
-            var i=0;
-            if(config.data.task_db[i]==null||undefined){
-                //show first time setup screen
-                console.log('The task database is empty show no tasks');
-            }else{
-                while(config.data.task_db[i]!=null||undefined){
-                    this.build_bar_db1(i);
-                    i++;
-                }
-            }
-        },
-        build_bar_db1:function(index){//Builds timetable from database
-            //Create the data block
-            console.log('Building Bar: ',index);
-            var tempblock = document.createElement('div');
-            tempblock.title="Click to edit";
-            //assign a color
-            tempblock.setAttribute("class", "task_bar hue"+config.data.task_db[index].color);
-            //Task title (name)
-            var task_title = document.createElement("div");
-            task_title.setAttribute("class","task_title");
-            task_title.innerText = config.data.task_db[index].name;
-            //Task description box
-            var task_text = document.createElement("div");
-            task_text.setAttribute("class","task_text");
-            task_text.innerText = config.data.task_db[index].description;
-            //task time remaining
-            var task_time_remaining = document.createElement("div");
-            task_time_remaining.setAttribute("class","task_time_remaining");
-            //Process time remaining
-            task_time_remaining.innerText = "Ptime rem";//Display time remaining here
-
-            //Puts Details into document
-            tempblock.appendChild(task_title);
-            tempblock.appendChild(task_text);
-            tempblock.appendChild(task_time_remaining);
-            document.getElementById('task_dataspace').appendChild(tempblock);//put the bar into the dukument
-            console.log('Task: ',index,' Complete');
-        },
-        clear:function(){
-            console.log('task_dataspace clear called');
-            document.getElementById('task_dataspace').innerHTML='';
-        },
-    },
-}
-
 /*  UI trickery */
 let UI={
     initalize:function(){
@@ -1348,7 +1271,6 @@ let UI={
                 document.getElementById('table_btn').addEventListener('touchstart',UI.navigate.TABLE)
                 document.getElementById('manage_btn').addEventListener('touchstart',UI.navigate.MANAGE)
                 document.getElementById('setting_btn').addEventListener('touchstart',UI.navigate.SETTING)
-                document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
                 document.getElementById('hilight_btn').addEventListener('touchstart',UI.setting.hilight.flip)
                 document.getElementById('Animations_btn').addEventListener('touchstart',UI.setting.animation.flip)
                 document.getElementById('tiles_btn').addEventListener('touchstart',UI.setting.tiles.flip)
@@ -1357,7 +1279,6 @@ let UI={
                 document.getElementById('table_btn').addEventListener('click',UI.navigate.TABLE)
                 document.getElementById('manage_btn').addEventListener('click',UI.navigate.MANAGE)
                 document.getElementById('setting_btn').addEventListener('click',UI.navigate.SETTING)
-                document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
                 document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
                 document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
                 document.getElementById('tiles_btn').addEventListener('click',UI.setting.tiles.flip)
@@ -1369,7 +1290,6 @@ let UI={
             document.getElementById('table_btn').addEventListener('click',UI.navigate.TABLE)
             document.getElementById('manage_btn').addEventListener('click',UI.navigate.MANAGE)
             document.getElementById('setting_btn').addEventListener('click',UI.navigate.SETTING)
-            document.getElementById('task_btn').addEventListener('click',UI.navigate.TASK)
             document.getElementById('hilight_btn').addEventListener('click',UI.setting.hilight.flip)
             document.getElementById('Animations_btn').addEventListener('click',UI.setting.animation.flip)
             document.getElementById('tiles_btn').addEventListener('click',UI.setting.tiles.flip)
@@ -1442,26 +1362,21 @@ let UI={
                 document.getElementById('table1').style.display='block';
                 document.getElementById('manage_view').style.display='none';
                 document.getElementById('setting_view').style.display='none';
-                document.getElementById('task_view').style.display='none';
                 document.getElementById('setting_btn_icon').style.transform='rotate(0deg)';//Rotate the button
                 document.getElementById('setting_btn').className="menubtn";
-                document.getElementById('task_btn').className="menubtn";
                 document.getElementById('manage_btn').className="menubtn";
                 document.getElementById('table_btn').className="menubtn_active";
             }
             
         },
         MANAGE:function(){
-            
             console.log('MANAGE navigation started');
             config.properties.view="manage";
             table.clock.stop_clock();
             document.getElementById('table1').style.display='none';
             document.getElementById('manage_view').style.display='block';
             document.getElementById('setting_view').style.display='none';
-            document.getElementById('task_view').style.display='none';
             document.getElementById('setting_btn').className="menubtn";
-            document.getElementById('task_btn').className="menubtn";
             document.getElementById('manage_btn').className="menubtn_active";
             document.getElementById('table_btn').className="menubtn";
         },
@@ -1473,28 +1388,11 @@ let UI={
             document.getElementById('table1').style.display='none';
             document.getElementById('manage_view').style.display='none';
             document.getElementById('setting_view').style.display='block';
-            document.getElementById('task_view').style.display='none';
             document.getElementById('setting_btn_icon').style.transform='rotate(90deg)';//Rotate the button
             document.getElementById('setting_btn').className="menubtn_active";
-            document.getElementById('task_btn').className="menubtn";
             document.getElementById('manage_btn').className="menubtn";
             document.getElementById('table_btn').className="menubtn";
         },
-        TASK:function(){
-            
-            console.log('TASK navigation started');
-            config.properties.view="task";
-            table.clock.stop_clock();
-            document.getElementById('table1').style.display='none';
-            document.getElementById('manage_view').style.display='none';
-            document.getElementById('setting_view').style.display='none';
-            document.getElementById('task_view').style.display='block';
-            document.getElementById('setting_btn_icon').style.transform='rotate(0deg)';//Rotate the button
-            document.getElementById('setting_btn').className="menubtn";
-            document.getElementById('task_btn').className="menubtn_active";
-            document.getElementById('manage_btn').className="menubtn";
-            document.getElementById('table_btn').className="menubtn";
-        }
     },
     setting:{
         theme:{

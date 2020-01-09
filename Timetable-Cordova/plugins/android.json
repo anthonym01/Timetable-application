@@ -7,14 +7,14 @@
     "files": {}
   },
   "installed_plugins": {
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.ANTHONYM.timetable"
+    },
     "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.ANTHONYM.APPNAME"
+      "PACKAGE_NAME": "com.ANTHONYM.timetable"
     },
     "cordova-plugin-x-toast": {
-      "PACKAGE_NAME": "com.ANTHONYM.APPNAME"
-    },
-    "cordova-plugin-device": {
-      "PACKAGE_NAME": "com.ANTHONYM.APPNAME"
+      "PACKAGE_NAME": "com.ANTHONYM.timetable"
     }
   },
   "dependent_plugins": {}
