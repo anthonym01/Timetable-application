@@ -1,5 +1,5 @@
 
-var app = {// Application Constructor
+let app = {// Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
         document.addEventListener("backbutton", this.onBackKeyDown, false);
@@ -27,9 +27,9 @@ var app = {// Application Constructor
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+        let parentElement = document.getElementById(id);
+        let listeningElement = parentElement.querySelector('.listening');
+        let receivedElement = parentElement.querySelector('.received');
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
@@ -56,12 +56,12 @@ window.addEventListener('load',function(){//window loads
 });
 
 /*  Config file handler    */
-var config={
+let config = {
     data:{
         theme:"dark",
         hilight_engine:false,
         animation:true,
-        tiles:false,
+        tiles:true,
         table_selected:1,
         table_details:[// Details about different tables
             {purpose:"table 1"},
@@ -81,7 +81,7 @@ var config={
                 end:            End time of the class represented in 24hr
                     (minutes represented as percentage of hr "30/60 = 0.5")
             */
-            /*
+            
             {show:1,day:1,name:"Test 1",Lecturer:"placeholder",room:"none",course_code:"cpyxkt",type:"test_class",color:1,start:10.00,end:11.833},
             {show:1,day:2,name:"Test 2",Lecturer:"placeholder",room:"none",course_code:"wfsvvt",type:"test_class",color:2,start:12.5,end:14.833},
             {show:1,day:3,name:"Test 3",Lecturer:"placeholder",room:"none",course_code:"dfvsdzf",type:"test_class",color:3,start:10.5,end:13},
@@ -89,8 +89,9 @@ var config={
             {show:1,day:5,name:"Test 5",Lecturer:"placeholder",room:"none",course_code:"wfsvvvt",type:"test_class",color:5,start:13.8,end:14.833},
             {show:1,day:6,name:"Test 6",Lecturer:"placeholder",room:"none",course_code:"wfsvvsfvvt",type:"test_class",color:6,start:12.5,end:16.833},
             {show:1,day:7,name:"Test 7",Lecturer:"placeholder",room:"none",course_code:"svfdvt",type:"test_class",color:7,start:10.5,end:15.833},
-            */
+            
         ],
+        previous_colors:[3,40,100,26,150,200,250,300,360,276],
     },
     properties:{
         monday:false,
@@ -122,17 +123,17 @@ var config={
     },
     validate:function(){//validate configuration file
         console.log('Config is being validated');
-        var configisvalid = true;
+        let configisvalid = true;
         if(typeof(this.data.table1_db)!=='undefined'){
             if(this.data.table1_db==undefined||null){//check db existance
                 this.data.table1_db=[];
                 configisvalid=false;
                 console.log('"Table1_database" was found to be invalid and was set to default');
             }else{
-                var i=0;
-                var overwrite=[];
-                var deleted=[];
-                var detetioncheck=false;
+                let i=0;
+                let overwrite=[];
+                let deleted=[];
+                let detetioncheck=false;
                 //Construct the data
                 while(config.data.table1_db[i]!=null||undefined){
                     console.log('checked state on :',i);
@@ -156,6 +157,18 @@ var config={
             this.data.table1_db=[];
             configisvalid=false;
             console.log('"Table1_database" was found to not exist and was set to default');
+        }
+
+        if(typeof(this.data.previous_colors)!=='undefined'){
+            if(this.data.previous_colors==undefined||null){//check db existance
+                this.data.previous_colors=[];
+                configisvalid=false;
+                console.log('"previous_colors" was found to be invalid and was set to default');
+            }
+        }else{
+            this.data.previous_colors=[];
+            configisvalid=false;
+            console.log('"previous_colors" was found to not exist and was set to default');
         }
 
         if(typeof(this.data.theme)=='undefined'){
@@ -237,58 +250,57 @@ var config={
 let table = {
     initialize:function(){
         console.log('Table initalization Begins');
-        this.construct.render();
+        this.data_render();
         this.clock.clock_tick();
         setTimeout(()=>{table.hilight_engine.initialize();},50);
     },
-    construct:{
-        render:function(){//initalizes, and feeds the build function
-            console.log('Table render started')
-            var i=0;
-            if(config.data.table_selected==0){config.data.table_selected=1}//Fix oversight
-            if(config.data.table1_db[i]==null||undefined){
-                //show first time setup screen
-                this.first_settup(1);
-            }else{
-                while(config.data.table1_db[i]!=null||undefined){//Get minimum time and maximum time to construct correct height
-                    if(config.data.table1_db[i].deleted!=true && config.data.table1_db[i].show==config.data.table_selected){
-                        var starthraw =Number(config.data.table1_db[i].start)-config.data.table1_db[i].start%1;//removes remainder
-                        config.properties.min = Math.min(starthraw,config.properties.min);//find minimum time in all datu
-                        config.properties.max = Math.max(config.data.table1_db[i].end,config.properties.max);//find maximum time in all datu
-                    }
-                    i++;
+    data_render:function(){
+        console.log('Table render started')
+        let i=0;
+        if(config.data.table_selected==0){config.data.table_selected=1}//Fix oversight
+        if(config.data.table1_db[i]==null||undefined){
+            //show first time setup screen
+            first_settup(1);
+        }else{
+            while(config.data.table1_db[i]!=null||undefined){//Get minimum time and maximum time to construct correct height
+                if(config.data.table1_db[i].deleted!=true && config.data.table1_db[i].show==config.data.table_selected){
+                    let starthraw =Number(config.data.table1_db[i].start)-config.data.table1_db[i].start%1;//removes remainder
+                    config.properties.min = Math.min(starthraw,config.properties.min);//find minimum time in all datu
+                    config.properties.max = Math.max(config.data.table1_db[i].end,config.properties.max);//find maximum time in all datu
                 }
-                console.warn('Table minimum found to be: ',config.properties.min);
-                console.warn('Table maximum found to be: ',config.properties.max);
-                i=0;
-                while(config.data.table1_db[i]!=null){//construct table
-                    console.log('Data run on index :',i);
-                    if(config.data.table1_db[i].deleted!=true && config.data.table1_db[i].show==config.data.table_selected){
-                        this.build_block_db1(i);
-                    }
-                    i++;
-                }
-                this.validate();//Strip empty cells form top and bottom
+                i++;
             }
-            console.log('Table render Completed');
-            UI.navigate.TABLE();//Starts the ticking of the clock
-        },
-        build_block_db1:function(index){//Builds timetable from database
+            console.warn('Table minimum found to be: ',config.properties.min);
+            console.warn('Table maximum found to be: ',config.properties.max);
+            i=0;
+            while(config.data.table1_db[i]!=null){//construct table
+                console.log('Data run on index :',i);
+                if(config.data.table1_db[i].deleted!=true && config.data.table1_db[i].show==config.data.table_selected){
+                    build_block_db1(i);
+                }
+                i++;
+            }
+            validate();//Strip empty cells form top and bottom
+        }
+        console.log('Table render Completed');
+        UI.navigate.TABLE();//Starts the ticking of the clock
+
+        function build_block_db1(index){//Builds timetable from database
             console.log('Building Block :',index);
                 //Create the data block
-                var tempblock = document.createElement('div');
+                let tempblock = document.createElement('div');
                 
                 //assign a color
                 tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
 
                 //time processing
-                var startmeridian = 'a.m.';
-                var starthr=0;
-                var startminute=Number(config.data.table1_db[index].start%1*60).toFixed(0);
+                let startmeridian = 'a.m.';
+                let starthr=0;
+                let startminute=Number(config.data.table1_db[index].start%1*60).toFixed(0);
                 if(startminute==0){startminute='00'}
-                var endmeridian = 'a.m.';
-                var endhr = 0;
-                var endminute=Number(config.data.table1_db[index].end%1*60).toFixed(0);
+                let endmeridian = 'a.m.';
+                let endhr = 0;
+                let endminute=Number(config.data.table1_db[index].end%1*60).toFixed(0);
                 if(endminute==0){endminute='00'}
                 
                 if(config.data.table1_db[index].start>12){
@@ -311,7 +323,7 @@ let table = {
                 tempblock.innerHTML=config.data.table1_db[index].name/* + '<br>' + starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian*/;
 
                 //info doots
-                var doot = document.createElement('div');
+                let doot = document.createElement('div');
                 doot.setAttribute('class','infodoot');
                 if(config.data.table1_db[index].start<config.properties.min+3){//Set the doot to flip up or down depending on the pannels position
                     doot.style.top='0vh';
@@ -320,18 +332,18 @@ let table = {
 
                 //Put doot into the Data Bar
                 //make table in doot to keep things even
-                var sub_tab = document.createElement("table");
-                var name_tab_row = document.createElement("tr");
-                var name_tab_content = document.createElement("th");
+                let sub_tab = document.createElement("table");
+                let name_tab_row = document.createElement("tr");
+                let name_tab_content = document.createElement("th");
                 name_tab_content.innerHTML=config.data.table1_db[index].name;
                 name_tab_content.setAttribute("colspan",2);
                 name_tab_row.appendChild(name_tab_content);
                 sub_tab.appendChild(name_tab_row);
                 doot.appendChild(sub_tab);
                 if(config.data.table1_db[index].room!="" && config.data.table1_db[index].room!=undefined){
-                    var room_tab_row = document.createElement("tr");
-                    var room_tab_head = document.createElement("td");
-                    var room_tab_content = document.createElement("td");
+                    let room_tab_row = document.createElement("tr");
+                    let room_tab_head = document.createElement("td");
+                    let room_tab_content = document.createElement("td");
                     room_tab_head.setAttribute("class","lefter");
                     room_tab_content.setAttribute("class","righter");
                     room_tab_head.innerHTML='Room : ';
@@ -342,9 +354,9 @@ let table = {
                     doot.appendChild(sub_tab);
                 }
                 if(config.data.table1_db[index].course_code!="" && config.data.table1_db[index].course_code!=undefined){
-                    var course_code_tab_row = document.createElement("tr");
-                    var course_code_tab_head = document.createElement("td");
-                    var course_code_tab_content = document.createElement("td");
+                    let course_code_tab_row = document.createElement("tr");
+                    let course_code_tab_head = document.createElement("td");
+                    let course_code_tab_content = document.createElement("td");
                     course_code_tab_head.setAttribute("class","lefter");
                     course_code_tab_content.setAttribute("class","righter");
                     course_code_tab_head.innerHTML='Code : ';
@@ -355,9 +367,9 @@ let table = {
                     doot.appendChild(sub_tab);
                 }
                 if(config.data.table1_db[index].Lecturer!="" && config.data.table1_db[index].Lecturer!=undefined){
-                    var Lecturer_tab_row = document.createElement("tr");
-                    var Lecturer_tab_head = document.createElement("td");
-                    var Lecturer_tab_content = document.createElement("td");
+                    let Lecturer_tab_row = document.createElement("tr");
+                    let Lecturer_tab_head = document.createElement("td");
+                    let Lecturer_tab_content = document.createElement("td");
                     Lecturer_tab_head.setAttribute("class","lefter");
                     Lecturer_tab_content.setAttribute("class","righter");
                     Lecturer_tab_head.innerHTML='Lecturer : ';
@@ -368,9 +380,9 @@ let table = {
                     doot.appendChild(sub_tab);
                 }
                 if(config.data.table1_db[index].type!="" && config.data.table1_db[index].type!=undefined){
-                    var type_tab_row = document.createElement("tr");
-                    var type_tab_head = document.createElement("td");
-                    var type_tab_content = document.createElement("td");
+                    let type_tab_row = document.createElement("tr");
+                    let type_tab_head = document.createElement("td");
+                    let type_tab_content = document.createElement("td");
                     type_tab_head.setAttribute("class","lefter");
                     type_tab_content.setAttribute("class","righter");
                     type_tab_head.innerHTML='Type : ';
@@ -380,8 +392,8 @@ let table = {
                     sub_tab.appendChild(type_tab_row);
                     doot.appendChild(sub_tab);
                 }
-                var time_tab_row = document.createElement("tr");
-                var time_tab = document.createElement("td");
+                let time_tab_row = document.createElement("tr");
+                let time_tab = document.createElement("td");
                 time_tab.setAttribute("colspan",2);
                 time_tab.innerHTML = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
                 time_tab_row.appendChild(time_tab);
@@ -390,7 +402,7 @@ let table = {
                 tempblock.appendChild(doot);
 
                 //Decide where it does
-                var starthraw =Number(config.data.table1_db[index].start)-config.data.table1_db[index].start%1;//removes remainder
+                let starthraw =Number(config.data.table1_db[index].start)-config.data.table1_db[index].start%1;//removes remainder
                 console.warn('Raw Time value: ',starthraw);
                 switch(config.data.table1_db[index].day){//Day decsion
                     case 1://Monday
@@ -439,10 +451,10 @@ let table = {
                 }
                 //time to height calculations must be done after render
                 setTimeout(()=>{
-                    var blockheight=Number(config.data.table1_db[index].end-config.data.table1_db[index].start)*100;
+                    let blockheight=Number(config.data.table1_db[index].end-config.data.table1_db[index].start)*100;
                     console.log(config.data.table1_db[index].name,' As assigned height of :',blockheight,'%');
                     tempblock.style.height=blockheight+'%';
-                    var blocktop = document.getElementById('live_clock').offsetHeight*startminute/60;//gets the height of a cell in pixels and the multiples by minute percentage
+                    let blocktop = document.getElementById('live_clock').offsetHeight*startminute/60;//gets the height of a cell in pixels and the multiples by minute percentage
                     tempblock.style.transform="translate(-0.5vh,"+blocktop+'px'+")";
                 },5);
 
@@ -472,7 +484,7 @@ let table = {
                         else{document.getElementById('type_cell').innerText="unknown"}
                         if(config.data.table1_db[index].course_code!=undefined){document.getElementById('coursecode_cell').innerText=config.data.table1_db[index].course_code}
                         else{document.getElementById('coursecode_cell').innerText="unknown"}
-                        document.getElementById('time_cell').innerText = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
+                        document.getElementById('time_cell').innerText = starthr+':'+startminute+' '+startmeridian+' to '+endhr+':'+endminute+' '+endmeridian;
                         document.getElementById('fullscreen_tile').style.display='block';
                     }else{//show the normal card flip out view
                         if(tempblock.name=="on"){
@@ -485,11 +497,11 @@ let table = {
                     }
                 });
             console.log('Block :',index,' Check complete');
-        },
-        validate:function(){
+        }
+        function validate(){
             //Remove empty days
             console.log('Validating Table');
-            var days=7;
+            let days=7;
             if(!config.properties.monday){//remove monday?
                 document.getElementById('day1').style.display='none';//Blank the title
                 for(i=0;i<24;i++){//Loop to blank the cells associated with that title
@@ -557,7 +569,7 @@ let table = {
                 //add a reload check here
             }
 
-            var rows=24;
+            let rows=24;
             for(i=0;i<config.properties.min;i++){//knock out all below minimum start time
                 console.log('Called null on row: ',i);
                 if(document.getElementById('timerow_'+i)){
@@ -604,25 +616,24 @@ let table = {
             }
             if(days==0 || rows==0){
                 //Table is empty
-                this.first_settup(config.data.table_selected);
-                utility.toast(' This table is empty...');
+                utility.toast('Table: '+config.data.table_selected+'This table is empty...');
             }
             console.log('Table validated');
-        },
-        first_settup:function(table_num){
+        }
+        function first_settup(table_num){
             console.log('First settup called table#: ',table_num);
             utility.toast('To start off lets add something to display');
             document.getElementById('data_title').innerHTML='First Time?';
             setTimeout(()=>{manage.dialogue.open();UI.navigate.MANAGE();},100);
             document.getElementById('Loading').style.display='none';
             console.log('Closing loading screen...');
-        },
+        }
     },
     clock:{
         clock_tick_trigger:null,//setInterval(()=>{table.clock.clock_tick()},1000),
         clock_tick:function(){
             console.log('Clock ticks');
-            var date = new Date();
+            let date = new Date();
             document.getElementById('live_clock').innerHTML=date.toLocaleTimeString();
             switch(date.getDay()){//Date switch
                 case 0:document.getElementById('day0').style.backgroundColor='red';document.getElementById('day1').style.backgroundColor='';document.getElementById('day2').style.backgroundColor='';document.getElementById('day3').style.backgroundColor='';document.getElementById('day4').style.backgroundColor='';document.getElementById('day5').style.backgroundColor='';document.getElementById('day6').style.backgroundColor='';break;
@@ -674,8 +685,8 @@ let table = {
         initialize:function(){
             if(config.data.hilight_engine){
                 console.log('Hilight Query state Checking..');
-                var query = document.querySelectorAll(".maincell");
-                var i=0;
+                let query = document.querySelectorAll(".maincell");
+                let i=0;
                 if(typeof(device)!="undefined"){
                     if(device.platform=='Android'||'iOS'){//mobile
                         while(query[i]!=null || query[i]!=undefined){
@@ -720,23 +731,7 @@ let table = {
 let manage = {
     initalize:function(){
         console.log('Manager initializes');
-        document.getElementById('table_selector').value=config.data.table_selected; //Set the table selectors value
-        switch(config.data.table_selected){
-            case 0:document.getElementById('tableselector_text').innerText="Hidden" ;break;
-            case 1:document.getElementById('tableselector_text').innerText=config.data.table_details[0].purpose; ;break;
-            case 2:document.getElementById('tableselector_text').innerText=config.data.table_details[1].purpose; ;break;
-            case 3:document.getElementById('tableselector_text').innerText=config.data.table_details[2].purpose; ;break;
-            case 4:document.getElementById('tableselector_text').innerText=config.data.table_details[3].purpose; ;break;
-        }
-        document.getElementById('1_selectorsub').innerHTML = config.data.table_details[0].purpose;
-        document.getElementById('1_selectormain').innerHTML = config.data.table_details[0].purpose;
-        document.getElementById('2_selectorsub').innerHTML= config.data.table_details[1].purpose;
-        document.getElementById('2_selectormain').innerHTML= config.data.table_details[1].purpose;
-        document.getElementById('3_selectorsub').innerHTML= config.data.table_details[2].purpose;
-        document.getElementById('3_selectormain').innerHTML= config.data.table_details[2].purpose;
-        document.getElementById('4_selectorsub').innerHTML= config.data.table_details[3].purpose;
-        document.getElementById('4_selectormain').innerHTML= config.data.table_details[3].purpose;
-        this.data.render();
+        this.render_list();
         document.getElementById('cancel_btn').addEventListener('click',()=>{//Click because touch start gay
             console.log('Cancel button clicked');
             manage.dialogue.clear();
@@ -754,7 +749,7 @@ let manage = {
             config.properties.changed=true;
             config.save();
             document.getElementById('delete_confirm_pannel').style.display='none';
-            manage.data.render();
+            manage.render_list();
         });
         document.getElementById('no_btn').addEventListener('click',function(){// Delete No button
             console.log('Delete denial called');
@@ -785,6 +780,29 @@ let manage = {
         });
         document.getElementById('erraser').addEventListener('click',manage.dialogue.clear);
 
+        // table selector
+        document.getElementById('table_selector').value=config.data.table_selected; //Set the table selectors value
+        switch(config.data.table_selected){
+            case 0:document.getElementById('tableselector_text').innerText="Hidden" ;break;
+            case 1:document.getElementById('tableselector_text').innerText=config.data.table_details[0].purpose; ;break;
+            case 2:document.getElementById('tableselector_text').innerText=config.data.table_details[1].purpose; ;break;
+            case 3:document.getElementById('tableselector_text').innerText=config.data.table_details[2].purpose; ;break;
+            case 4:document.getElementById('tableselector_text').innerText=config.data.table_details[3].purpose; ;break;
+            case "0":document.getElementById('tableselector_text').innerText="Hidden" ;break;
+            case "1":document.getElementById('tableselector_text').innerText=config.data.table_details[0].purpose; ;break;
+            case "2":document.getElementById('tableselector_text').innerText=config.data.table_details[1].purpose; ;break;
+            case "3":document.getElementById('tableselector_text').innerText=config.data.table_details[2].purpose; ;break;
+            case "4":document.getElementById('tableselector_text').innerText=config.data.table_details[3].purpose; ;break;
+            default: document.getElementById('tableselector_text').innerText=config.data.table_details[0].purpose;
+        }
+        document.getElementById('1_selectorsub').innerHTML = config.data.table_details[0].purpose;
+        document.getElementById('1_selectormain').innerHTML = config.data.table_details[0].purpose;
+        document.getElementById('2_selectorsub').innerHTML= config.data.table_details[1].purpose;
+        document.getElementById('2_selectormain').innerHTML= config.data.table_details[1].purpose;
+        document.getElementById('3_selectorsub').innerHTML= config.data.table_details[2].purpose;
+        document.getElementById('3_selectormain').innerHTML= config.data.table_details[2].purpose;
+        document.getElementById('4_selectorsub').innerHTML= config.data.table_details[3].purpose;
+        document.getElementById('4_selectormain').innerHTML= config.data.table_details[3].purpose;
         document.getElementById('table_selector').addEventListener('change',function(){
             console.log('table_selector changed');
             config.data.table_selected=document.getElementById('table_selector').value;
@@ -796,7 +814,7 @@ let manage = {
                 case "4":document.getElementById('tableselector_text').innerText=config.data.table_details[3].purpose; ;break;
             }
             config.properties.changed=true;
-            manage.data.render();
+            manage.render_list();
             config.save();
         });
         //Initalize day_put selector
@@ -804,7 +822,7 @@ let manage = {
         document.getElementById('day_put_text').innerText="Monday"
         document.getElementById('day_put').addEventListener('change',function(){/* Switches dates on change */
             console.log('Day put changed');
-            var tmp = document.getElementById('day_put').value;
+            let tmp = document.getElementById('day_put').value;
             switch(tmp){
                 case "1":document.getElementById('day_put_text').innerText="Monday";break;
                 case "2":document.getElementById('day_put_text').innerText="Tuesday" ;break;
@@ -830,48 +848,46 @@ let manage = {
             }
         });
     },
-    data:{
-        render:function(){//initalizes, and feeds the build function
-            console.log('Manager Render starts');
-            this.clear();
-            var i=0;
-            //Add new button
-            var tempblock = document.createElement('div');
-            tempblock.setAttribute("class", "data_bar hue0");
-            tempblock.innerHTML='New Class';
-            tempblock.title='Add a new class';
-            document.getElementById('manage_dataspace').appendChild(tempblock);
-            var plusimg = document.createElement('div');//plus image
-            plusimg.setAttribute("class","plusimg");
-            tempblock.appendChild(plusimg);
-            tempblock.addEventListener('click',function(){manage.dialogue.open();console.log('Add new class button clicked')});//add new btn listener
-            if(config.data.table1_db[i]==null||undefined){
-                //show first time setup screen
-                console.log('The table database is empty,manager will show first time setup');
-            }else{
-                //Construct the data
-                while(config.data.table1_db[i]!=null||undefined){
-                    console.log('Data run on index :',i);
-                    if(config.data.table1_db[i].show==config.data.table_selected){
-                        this.build_bar_db1(i);
-                    }
-                    i++;
+    render_list:function(){
+        console.log('Manager Render starts');
+        clear();
+        let i=0;
+        //Add new button
+        let tempblock = document.createElement('div');
+        tempblock.setAttribute("class", "data_bar hue0");
+        tempblock.innerHTML='New Class';
+        tempblock.title='Add a new class';
+        document.getElementById('manage_dataspace').appendChild(tempblock);
+        let plusimg = document.createElement('div');//plus image
+        plusimg.setAttribute("class","plusimg");
+        tempblock.appendChild(plusimg);
+        tempblock.addEventListener('click',function(){manage.dialogue.open();console.log('Add new class button clicked')});//add new btn listener
+        if(config.data.table1_db[i]==null||undefined){
+            //show first time setup screen
+            console.log('The table database is empty,manager will show first time setup');
+        }else{
+            //Construct the data
+            while(config.data.table1_db[i]!=null||undefined){
+                console.log('Data run on index :',i);
+                if(config.data.table1_db[i].show==config.data.table_selected){
+                    build_bar_db1(i);
                 }
-                i=0;
-                while(config.data.table1_db[i]!=null||undefined){
-                    console.log('Data run on index :',i);
-                    if(config.data.table1_db[i].show!=config.data.table_selected){
-                        this.build_bar_db1(i);
-                    }
-                    i++;
-                }
+                i++;
             }
-            console.log('Manager Render Completed');
-        },
-        build_bar_db1:function(index){//Builds timetable from database
+            i=0;
+            while(config.data.table1_db[i]!=null||undefined){
+                console.log('Data run on index :',i);
+                if(config.data.table1_db[i].show!=config.data.table_selected){
+                    build_bar_db1(i);
+                }
+                i++;
+            }
+        }
+        console.log('Manager Render Completed');
+        function build_bar_db1(index){//Builds timetable from database
             //Create the data block
             console.log('Building Bar: ',index);
-            var tempblock = document.createElement('div');
+            let tempblock = document.createElement('div');
             tempblock.title="Click to edit";
             //assign a color
             switch(config.data.table1_db[index].color){
@@ -894,13 +910,13 @@ let manage = {
             }
     
             //time processing
-            var startmeridian = 'a.m.';
-            var starthr=0;
-            var startminute=Number(config.data.table1_db[index].start%1*60).toFixed(0);
+            let startmeridian = 'a.m.';
+            let starthr=0;
+            let startminute=Number(config.data.table1_db[index].start%1*60).toFixed(0);
             if(startminute==0){startminute='00'}
-            var endmeridian = 'a.m.';
-            var endhr = 0;
-            var endminute=Number(config.data.table1_db[index].end%1*60).toFixed(0);
+            let endmeridian = 'a.m.';
+            let endhr = 0;
+            let endminute=Number(config.data.table1_db[index].end%1*60).toFixed(0);
             if(endminute==0){endminute='00'}
             
             if(config.data.table1_db[index].start>12){
@@ -917,7 +933,7 @@ let manage = {
             }
             if(starthr==0){starthr=12}
             if(endhr==0){endhr=12}
-            var day;
+            let day;
             switch (config.data.table1_db[index].day) {
                 case 1: day = "Monday"; break;
                 case 2: day = "Tuesday"; break;
@@ -935,21 +951,21 @@ let manage = {
                 tempblock.style.border="0.3vh solid red";
                 //alow editing function
                 tempblock.setAttribute('id','bar_'+index);
-                tempblock.addEventListener('click',function(){config.data.table1_db[index].deleted=false;config.save();manage.data.render();});//un-"delete"
+                tempblock.addEventListener('click',function(){config.data.table1_db[index].deleted=false;config.save();manage.render_list();});//un-"delete"
             }else{
                 //populate the block with relivant data
                 //make table in tempblock to keep things even
-                var sub_tab = document.createElement("table");
-                var name_tab_row = document.createElement("tr");
-                var name_tab_content = document.createElement("th");
+                let sub_tab = document.createElement("table");
+                let name_tab_row = document.createElement("tr");
+                let name_tab_content = document.createElement("th");
                 name_tab_content.innerHTML=config.data.table1_db[index].name;
                 name_tab_content.setAttribute("colspan",2);
                 name_tab_row.appendChild(name_tab_content);
                 sub_tab.appendChild(name_tab_row);
                 tempblock.appendChild(sub_tab);
-                var day_tab_row = document.createElement("tr");
-                //var day_tab_head = document.createElement("td");
-                var day_tab_content = document.createElement("td");
+                let day_tab_row = document.createElement("tr");
+                //let day_tab_head = document.createElement("td");
+                let day_tab_content = document.createElement("td");
                 /*day_tab_head.setAttribute("class","lefter");
                 day_tab_content.setAttribute("class","righter");
                 day_tab_head.innerHTML='Day : ';*/
@@ -959,8 +975,8 @@ let manage = {
                 day_tab_row.appendChild(day_tab_content);
                 sub_tab.appendChild(day_tab_row);
                 tempblock.appendChild(sub_tab);
-                var time_tab_row = document.createElement("tr");
-                var time_tab = document.createElement("td");
+                let time_tab_row = document.createElement("tr");
+                let time_tab = document.createElement("td");
                 time_tab.setAttribute("colspan",2);
                 time_tab.innerHTML = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
                 time_tab_row.appendChild(time_tab);
@@ -970,18 +986,18 @@ let manage = {
                 tempblock.setAttribute('id','bar_'+index);
                 tempblock.addEventListener('click',function(){manage.dialogue.edit(index)});//Edit btn
             }
-            var noot = document.createElement('div');
+            let noot = document.createElement('div');
             if(config.data.table1_db[index].show==0){noot.innerHTML='<del>'+config.data.table1_db[index].show+'</del>';noot.style.color='red';}//noot is hidden
             else{noot.innerHTML=config.data.table1_db[index].show;}//not gets a number
             noot.setAttribute('class','data_noot');
             tempblock.appendChild(noot)
             document.getElementById('manage_dataspace').appendChild(tempblock);//put the bar into the dukument
             console.log('Bar: ',index,' Complete');
-        },
-        clear:function(){
+        }
+        function clear(){
             console.log('manage_dataspace clear called');
             document.getElementById('manage_dataspace').innerHTML='';
-        },
+        }
     },
     dialogue:{
         edit:function(index){//Does not edit anything, only populates feilds in the editor with data, listener found in manage.data.build_bar_db1();
@@ -1020,12 +1036,12 @@ let manage = {
             document.getElementById('name_put').value = config.data.table1_db[index].name;  //Set Name feild
             
             //process time
-            var starthr = Number(config.data.table1_db[index].start)-config.data.table1_db[index].start%1;//removes remainder
-            var startminute=Number(config.data.table1_db[index].start%1*60).toFixed(0);
+            let starthr = Number(config.data.table1_db[index].start)-config.data.table1_db[index].start%1;//removes remainder
+            let startminute=Number(config.data.table1_db[index].start%1*60).toFixed(0);
             if(startminute==0){startminute='00'}
             if(starthr<10){starthr='0'+starthr}
-            var endhr = Number(config.data.table1_db[index].end)-config.data.table1_db[index].end%1;//removes remainder
-            var endminute = Number(config.data.table1_db[index].end%1*60).toFixed(0);
+            let endhr = Number(config.data.table1_db[index].end)-config.data.table1_db[index].end%1;//removes remainder
+            let endminute = Number(config.data.table1_db[index].end%1*60).toFixed(0);
             if(endminute==0){endminute='00'}
             if(endhr<10){endhr='0'+endhr}
             document.getElementById('start_time_put').value = starthr+':'+startminute;      //Set start time feild
@@ -1041,7 +1057,7 @@ let manage = {
             }
             //document.getElementById('view_put_text').innerText=config.data.table_details[index].purpose;//view state text
         },
-        open:function(){//The listener for the add open btn is in manage.data.render() 
+        open:function(){//The listener for the add open btn is in manage.render_list() 
             console.log('Dialogue open called');
             document.getElementById('view_put').value=config.data.table_selected;//if new
             if(config.properties.overwrite==null){
@@ -1098,8 +1114,8 @@ let manage = {
         },
         save:function(){
             console.log('Dialogue save called');
-            var tempentry = {show:true,day:null,name:null,room:null,course_code:null,Lecturer:null,type:null,color:null,start:null,end:null};//Its test data
-            var entryisvalid=true;
+            let tempentry = {show:true,day:null,name:null,room:null,course_code:null,Lecturer:null,type:null,color:null,start:null,end:null};//Its test data
+            let entryisvalid=true;
 
             //get day select, no validation, because default is valid
             tempentry.day = Number(document.getElementById('day_put').value);
@@ -1131,10 +1147,10 @@ let manage = {
             }
 
             //Process time
-            var start_time_raw = document.getElementById('start_time_put').value.toString();
-            var end_time_raw = document.getElementById('end_time_put').value.toString();
-            var percentage_start = Number((start_time_raw.slice(0,2)/1/*I divide it by one becasue the scripting engine is drunk*/) + (start_time_raw.slice(3)/60));
-            var percentage_end = Number((end_time_raw.slice(0,2)/1/*I divide it by one becasue the scripting engine is drunk*/) + (end_time_raw.slice(3)/60));
+            let start_time_raw = document.getElementById('start_time_put').value.toString();
+            let end_time_raw = document.getElementById('end_time_put').value.toString();
+            let percentage_start = Number((start_time_raw.slice(0,2)/1/*I divide it by one becasue the scripting engine is drunk*/) + (start_time_raw.slice(3)/60));
+            let percentage_end = Number((end_time_raw.slice(0,2)/1/*I divide it by one becasue the scripting engine is drunk*/) + (end_time_raw.slice(3)/60));
             if(start_time_raw=="" ||start_time_raw==null ||start_time_raw==undefined){
                 utility.toast('Start time cannot be empty');
                 document.getElementById('start_time_put').style.border="0.3vh solid #ff0000";
@@ -1187,7 +1203,7 @@ let manage = {
         saveplus:function(){
             console.log('Dialogue savepluss was called');
             config.properties.called_from_plus=true;
-            var entryisvalid = manage.dialogue.save();
+            let entryisvalid = manage.dialogue.save();
             if(entryisvalid){
                 utility.toast(document.getElementById('name_put').value+' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
@@ -1197,13 +1213,13 @@ let manage = {
         call_delete:function(){
             console.log('Delete pseudo function called');
             //time processing
-            var startmeridian = 'a.m.';
-            var starthr=0;
-            var startminute=Number(config.data.table1_db[config.properties.overwrite].start%1*60).toFixed(0);
+            let startmeridian = 'a.m.';
+            let starthr=0;
+            let startminute=Number(config.data.table1_db[config.properties.overwrite].start%1*60).toFixed(0);
             if(startminute==0){startminute='00'}
-            var endmeridian = 'a.m.';
-            var endhr = 0;
-            var endminute=Number(config.data.table1_db[config.properties.overwrite].end%1*60).toFixed(0);
+            let endmeridian = 'a.m.';
+            let endhr = 0;
+            let endminute=Number(config.data.table1_db[config.properties.overwrite].end%1*60).toFixed(0);
             if(endminute==0){endminute='00'}
             
             if(config.data.table1_db[config.properties.overwrite].start>12){
@@ -1240,7 +1256,7 @@ let manage = {
             else{document.getElementById('type_cellp').innerText="unknown"}
             if(config.data.table1_db[config.properties.overwrite].course_code!=undefined){document.getElementById('coursecode_cellp').innerText=config.data.table1_db[config.properties.overwrite].course_code}
             else{document.getElementById('coursecode_cellp').innerText="unknown"}
-            document.getElementById('time_cellp').innerText = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
+            document.getElementById('time_cellp').innerText = starthr+':'+startminute+' '+startmeridian+' to '+endhr+':'+endminute+' '+endmeridian;
             //document.getElementById('pseudo_container').setAttribute("class", "data_block hue"+config.data.table1_db[config.properties.overwrite].color);
             document.getElementById('delete_confirm_pannel').style.display='block';
         }
@@ -1253,7 +1269,7 @@ let manage = {
 }
 
 /*  UI trickery */
-let UI={
+let UI = {
     initalize:function(){
         console.log('UI Initalize');
         switch(config.data.theme){
@@ -1517,7 +1533,7 @@ let utility = {//Some usefull things
     /*  Push text to the keyboard   */
     clipboard:function(textpush) {
         copyText.toString(); //Makes it a string so the clipboard will accept it
-        var temptxtbox = document.createElement("input"); //creates an 'input' element and assigns it to 'temptxtbox'
+        let temptxtbox = document.createElement("input"); //creates an 'input' element and assigns it to 'temptxtbox'
         document.body.appendChild(temptxtbox); //Puts the input element into the document
         temptxtbox.setAttribute("id", "temp_copy"); //Assigns an id to the input element
         document.getElementById("temp_copy").value = copyText; //Puts the txt u want to copy into the input element

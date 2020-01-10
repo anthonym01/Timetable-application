@@ -75,6 +75,9 @@ body{
     background-image: url('../img/whiteground.webp');
 }
 #fullscreen_tile{background-color: rgba(255, 255, 255, 0.7);}
+#fullscreen_tile_tab_container tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.7);
+}
 #close_btn{ 
     border:0.3vh solid rgb(0, 0, 0);
     color: rgb(0, 0, 0);
@@ -185,6 +188,9 @@ body{
 }
 
 #delete_confirm_pannel{/*   Delete confirmation pannel  */
+    background-color: rgba(255, 255, 255, 0.7);
+}
+#pseudo_container_table tr:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.7);
 }
 #yes_btn{

@@ -149,8 +149,8 @@
     #fullscreen_tile_tab_container th{padding: 3px;padding-bottom: 1vh;}
     #fullscreen_tile_tab_container .puff{padding-bottom: 1vh;}
     #fullscreen_tile_tab_container td{padding: 3px;padding-bottom: 1vh;vertical-align: middle;align-content: center;}
-    #fullscreen_tile_tab_container .lefter{text-align: right;}
-    #fullscreen_tile_tab_container .righter{text-align: left;}
+    #fullscreen_tile_tab_container .lefter{text-align: right;width: 35%;}
+    #fullscreen_tile_tab_container .righter{text-align: center;width: 65%;}
     #close_btn{
         position: absolute;
         bottom: 1vh;
@@ -161,7 +161,8 @@
         text-align: center;
         border-radius:2vh;
         -webkit-touch-callout: none;
-        transition:background-color 300ms,color 300ms;    
+        transition:background-color 300ms,color 300ms;
+        cursor: pointer;
     }#close_btn:active{transition:background-color 0ms,color 0ms;}
     #timetable{/*   The body of the timetable   */
         position: relative;
@@ -450,12 +451,12 @@
         height: auto;
         width: 100%;
     }
-    #pseudo_container table{width: 100%;margin:0;font-size: 4vh;border-collapse: collapse;text-align: center;table-layout: fixed;}
+    #pseudo_container table{width: 100%;margin:0;font-size: 4vh;border-collapse: collapse;text-align: center;}
     #pseudo_container th{padding: 3px;padding-bottom: 1vh;}
     #pseudo_container .puff{padding-bottom: 1vh;}
     #pseudo_container td{padding: 3px;padding-bottom: 1vh;vertical-align: middle;align-content: center;}
-    #pseudo_container .lefter{text-align: right;}
-    #pseudo_container .righter{text-align: left;}
+    #pseudo_container .lefter{text-align: right;width: 35%;}
+    #pseudo_container .righter{text-align: center;width: 65%;}
     #yes_btn{
         position: absolute;
         outline: none;
@@ -492,42 +493,6 @@
         cursor: pointer;
         transition:transform 500ms;
     }
-
-/*  task view  */
-    #task_dataspace{
-
-    }
-    .task_bar{/*    Detailed representaion of the data to be managed , reused in the dataspace  */
-        position: relative;
-        display: block;
-        float: left;
-        height: auto;
-        width:90%;
-        min-width: 40%;
-        font-size:3.2vh;
-        padding:1.2vh;
-        border-radius: 3vh;
-        cursor: pointer;
-        box-shadow: 0vh 0vh 0vh 0vh;
-        margin-top:2vh;
-        margin-bottom: 1vh;
-        margin-left:2vw;
-        text-align: center;
-    }
-    .task_bar .task_title{
-    
-    }
-    .task_bar .task_text{
-
-    }
-    .task_bar .task_time_remaining{
-
-    }
-    .task_bar table{width: 100%;border-collapse: collapse;text-align: center;table-layout: fixed;}
-    .task_bar th{padding: 2px;}
-    .task_bar td{padding: 2px;vertical-align: middle;align-content: center}
-    .task_bar .lefter{text-align: right}
-    .task_bar .righter{text-align: left}
 
 /*  Setting view  */
     #setting_view{
