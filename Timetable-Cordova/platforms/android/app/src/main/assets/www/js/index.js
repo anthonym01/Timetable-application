@@ -81,17 +81,15 @@ let config = {
                 end:            End time of the class represented in 24hr
                     (minutes represented as percentage of hr "30/60 = 0.5")
             */
-            
-            {show:1,day:1,name:"Test 1",Lecturer:"placeholder",room:"none",course_code:"cpyxkt",type:"test_class",color:1,start:10.00,end:11.833},
-            {show:1,day:2,name:"Test 2",Lecturer:"placeholder",room:"none",course_code:"wfsvvt",type:"test_class",color:2,start:12.5,end:14.833},
-            {show:1,day:3,name:"Test 3",Lecturer:"placeholder",room:"none",course_code:"dfvsdzf",type:"test_class",color:3,start:10.5,end:13},
-            {show:1,day:4,name:"Test 4",Lecturer:"placeholder",room:"none",course_code:"wfvt",type:"test_class",color:4,start:9.2,end:12},
-            {show:1,day:5,name:"Test 5",Lecturer:"placeholder",room:"none",course_code:"wfsvvvt",type:"test_class",color:5,start:13.8,end:14.833},
-            {show:1,day:6,name:"Test 6",Lecturer:"placeholder",room:"none",course_code:"wfsvvsfvvt",type:"test_class",color:6,start:12.5,end:16.833},
-            {show:1,day:7,name:"Test 7",Lecturer:"placeholder",room:"none",course_code:"svfdvt",type:"test_class",color:7,start:10.5,end:15.833},
-            
+            {show:4,day:1,name:"Test 1",Lecturer:"placeholder",room:"none",course_code:"test data",type:"test data",color:0,start:0.0,end:1.0},
+            {show:4,day:2,name:"Test 2",Lecturer:"placeholder",room:"none",course_code:"test data",type:"test data",color:10,start:11.62,end:14.57},
+            {show:4,day:3,name:"Test 3",Lecturer:"placeholder",room:"none",course_code:"test data",type:"test data",color:20,start:8.5,end:10.76},
+            {show:4,day:4,name:"Test 4",Lecturer:"placeholder",room:"none",course_code:"test data",type:"test data",color:30,start:1.32,end:4.0},
+            {show:4,day:5,name:"Test 5",Lecturer:"placeholder",room:"none",course_code:"test data",type:"test data",color:40,start:2.0,end:4.0},
+            {show:4,day:6,name:"Test 6",Lecturer:"placeholder",room:"none",course_code:"test data",type:"test data",color:50,start:4.0,end:5.4},
+            {show:4,day:7,name:"Test 7",Lecturer:"placeholder",room:"none",course_code:"test data",type:"test data",color:60,start:6.0,end:7.7},
         ],
-        previous_colors:[3,40,100,26,150,200,250,300,360,276],
+        previous_colors:[],
     },
     properties:{
         monday:false,
@@ -108,6 +106,7 @@ let config = {
         view:"table",//defaults to table
         exit:false,
         startup:true,
+        colors_changed:true,//re-render color pannel when this is true
     },
     configlocation:"TT001_cfg",//not strict, can be anything. Think of it as a file name/path
     save:function(){//Save the config file
@@ -241,7 +240,7 @@ let config = {
         console.log('config deleted: ');
         console.table(this.data);
         utility.toast('App will now restart');
-        setTimeout(()=>{location.reload()},3000);
+        setTimeout(()=>{location.reload()},100);
         this.validate();
     },
 }
@@ -291,8 +290,9 @@ let table = {
                 let tempblock = document.createElement('div');
                 
                 //assign a color
-                tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
+                tempblock.setAttribute("class", "data_block");
                 tempblock.style.backgroundColor="hsl("+config.data.table1_db[index].color+",100%,50%)";
+                tempblock.setAttribute("name", config.data.table1_db[index].color);//for hilight engine
                 //time processing
                 let startmeridian = 'a.m.';
                 let starthr=0;
@@ -463,8 +463,7 @@ let table = {
                     console.log('Triggered data cell: ',tempblock);
                     if(config.data.tiles){//show full tile view
                         tempblock.name="off";
-                        tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
-                        //document.getElementById('tile_table').setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
+                        tempblock.setAttribute("class", "data_block");
                         document.getElementById('title_cell').innerText=config.data.table1_db[index].name;
                         switch (config.data.table1_db[index].day) {
                             case 1: document.getElementById('day_cell').innerText="Monday"; break;
@@ -489,10 +488,10 @@ let table = {
                     }else{//show the normal card flip out view
                         if(tempblock.name=="on"){
                             tempblock.name="off";
-                            tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
+                            tempblock.setAttribute("class", "data_block");
                         }else{
                             tempblock.name="on";
-                            tempblock.setAttribute("class", "data_block_active hue"+config.data.table1_db[index].color);
+                            tempblock.setAttribute("class", "data_block_active");
                         }
                     }
                 });
@@ -714,14 +713,16 @@ let table = {
         engine:function(event){
             if(config.data.hilight_engine){
                 console.log('Hilight Engine trigger fired on :',event);
-                if(config.data.theme=="light"){
-                    event.target.style.color='black';
-                    event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,70%)';//color the target
-                }else if(config.data.theme=="dark"){
-                    event.target.style.color='black';
-                    event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,60%)';//color the target
+                if(event.target.name==null){
+                    if(config.data.theme=="light"){
+                        event.target.style.color='black';
+                        event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,70%)';//color the target
+                    }else if(config.data.theme=="dark"){
+                        event.target.style.color='black';
+                        event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,60%)';//color the target
+                    }
+                    setTimeout(()=>{event.target.style.backgroundColor="";event.target.style.color='';},1000);//un-color the target
                 }
-                setTimeout(()=>{event.target.style.backgroundColor='initial';event.target.style.color='initial';},1000);//un-color the target
             }
         },
     },
@@ -831,7 +832,7 @@ let manage = {
         let i=0;
         //Add new button
         let tempblock = document.createElement('div');
-        tempblock.setAttribute("class", "data_bar hue0");
+        tempblock.setAttribute("class", "data_bar");
         tempblock.innerHTML='New Class';
         tempblock.title='Add a new class';
         document.getElementById('manage_dataspace').appendChild(tempblock);
@@ -908,7 +909,7 @@ let manage = {
             if(config.data.table1_db[index].deleted){//Check deleted state
                 //populate the block with relivant data
                 tempblock.innerHTML=config.data.table1_db[index].name+'<br> Marked for delete, tap to undo';
-                tempblock.setAttribute("class", "data_bar hue0");
+                tempblock.setAttribute("class", "data_bar");
                 tempblock.style.border="0.3vh solid red";
                 //alow editing function
                 tempblock.setAttribute('id','bar_'+index);
@@ -1031,6 +1032,31 @@ let manage = {
                 document.getElementById('btn_bar').style.display="block";    
                 document.getElementById('dataentry_screen').style.display="block";    
             }
+            if(config.properties.colors_changed==true){// render recent colors
+                if(config.data.previous_colors!=null){
+                    document.getElementById('recent_colors').innerHTML="";
+                    config.data.previous_colors = Array.from(new Set(config.data.previous_colors));//remove dublicates vary comblicated (Sets dont allow duplicates, convert array to new set using "new Set()" then back to array using "Array.from()"")
+                    var index=config.data.previous_colors.length-1;
+                    while(config.data.previous_colors[index]!=null){
+                        render_color(index);
+                        index--;
+                    }
+                    config.properties.colors_changed=false;
+                }else{
+                    document.getElementById('recent_colors').innerHTML="Recent Colors";
+                }
+            }
+            function render_color(index){
+                console.log('Rendering recent color :',config.data.previous_colors[index],', index:',index);
+                var color_doot = document.createElement("div");
+                color_doot.setAttribute("class","color_doot");
+                color_doot.style.backgroundColor="hsl("+config.data.previous_colors[index]+",100%,50%)";
+                document.getElementById('recent_colors').appendChild(color_doot);
+                color_doot.addEventListener('click',function(){
+                    document.getElementById('color_put').value = config.data.previous_colors[index];
+                    console.warn('Pushed recent color: ',config.data.previous_colors[index])
+                });
+            }
         },
         clear:function(){//clear the input and remove the input screen
             console.log('Dialogue clear called');
@@ -1065,6 +1091,10 @@ let manage = {
 
             //get color select, no validation, because default is valid
             tempentry.color = document.getElementById('color_put').value;
+            if(tempentry.color!=config.data.previous_colors[config.data.previous_colors.length-1]){
+                config.data.previous_colors.push(tempentry.color);
+                config.properties.colors_changed=true;
+            }
 
             //Course Code is not required and can be anything, even nothing
             tempentry.course_code = document.getElementById('course_code_put').value;
@@ -1200,7 +1230,6 @@ let manage = {
             if(config.data.table1_db[config.properties.overwrite].course_code!=undefined){document.getElementById('coursecode_cellp').innerText=config.data.table1_db[config.properties.overwrite].course_code}
             else{document.getElementById('coursecode_cellp').innerText="unknown"}
             document.getElementById('time_cellp').innerText = starthr+':'+startminute+' '+startmeridian+' to '+endhr+':'+endminute+' '+endmeridian;
-            //document.getElementById('pseudo_container').setAttribute("class", "data_block hue"+config.data.table1_db[config.properties.overwrite].color);
             document.getElementById('delete_confirm_pannel').style.display='block';
         }
     },
