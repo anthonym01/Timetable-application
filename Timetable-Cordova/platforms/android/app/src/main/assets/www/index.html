@@ -392,22 +392,9 @@
                 <tr>
                     <td colspan="2">
                         <label for="color_put">Color</label>
-                        <div class="select_container" id="color_put_container">
-                            <div class="select_text" id="color_put_text">Select a color</div>
-                            <select id="color_put">
-                                <option value="0" class="hue0">no color</option>
-                                <option value="1" class="hue1">Red</option>
-                                <option value="2" class="hue2">Orange</option>
-                                <option value="3" class="hue3">Yellow</option>
-                                <option value="4" class="hue4">Lime</option>
-                                <option value="5" class="hue5">Green</option>
-                                <option value="6" class="hue6">Aqua</option>
-                                <option value="7" class="hue7">Sky-Blue</option>
-                                <option value="8" class="hue8">Blue</option>
-                                <option value="9" class="hue9">Purple</option>
-                                <option value="10" class="hue10">Royal-blue</option>
-                                <option value="11" class="hue11">Cherry</option>
-                            </select>
+                        <input type="range" max="360" min="0" value="180" id="color_put">
+                        <div class="color_container">
+
                         </div>
                     </td>
                 </tr>

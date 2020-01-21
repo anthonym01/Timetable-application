@@ -106,34 +106,23 @@ body{
 }
 
 /*  Colors are class based because im lazy  */
-.hue0{background-color: hsl(0, 0%, 39%)}
-.hue0:active{background-color: rgb(185, 185, 185)}
-.hue1{background-color: hsl(0,100%,40%)}
-.hue1:active{background-color: hsl(0,100%,60%)}
-.hue2{background-color: hsl(30,100%,40%)}
-.hue2:active{background-color: hsl(30,100%,60%)}
-.hue3{background-color: hsl(60,100%,40%)}
-.hue3:active{background-color: hsl(60,100%,60%)}
-.hue4{background-color: hsl(90,100%,40%)}
-.hue4:active{background-color: hsl(90,100%,60%)}
-.hue5{background-color: hsl(120,100%,40%)}
-.hue5:active{background-color: hsl(120,100%,60%)}
-.hue6{background-color: hsl(150,100%,40%)}
-.hue6:active{background-color: hsl(150,100%,60%)}
-.hue7{background-color: hsl(180,100%,40%)}
-.hue7:active{background-color: hsl(180,100%,60%)}
-.hue8{background-color: hsl(210,100%,40%)}
-.hue8:active{background-color: hsl(210,100%,60%)}
-.hue9{background-color: hsl(240,100%,40%)}
-.hue9:active{background-color: hsl(240,100%,60%)}
-.hue10{background-color: hsl(270,100%,40%)}
-.hue10:active{background-color: hsl(270,100%,60%)}
-.hue11{background-color: hsl(328,100%,60%)}
-.hue11:active{background-color: hsl(328,100%,70%)}
+.data_block{background-color: hsl(0, 0%, 39%);color:#ffffff;transition: background-color 300ms color 300ms;}
+.data_block:active{
+    background-color: hsl(0, 0%, 92%)!important;color:#000000!important;transition-duration: 0ms;
+}
+.infodoot:active{background-color: hsl(0, 0%, 92%)!important;color:#000000!important;transition-duration: 0ms;}/*
 
 /*  manage_view   */
 .data_bar{/*    Detailed representaion of the data to be managed    */
     text-shadow: 0vh 0vh 1vh #000000;
+    background-color: hsl(0, 0%, 39%);
+    color: white;
+    transition: background-color 300ms color 300ms;
+}
+.data_bar:active{
+    background-color: hsl(0, 0%, 100%);
+    color: rgb(0, 0, 0);
+    transition: background-color 0ms color 0ms;
 }
 .data_noot{
     color: rgb(0, 0, 0);

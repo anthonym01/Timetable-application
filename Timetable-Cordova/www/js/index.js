@@ -292,7 +292,7 @@ let table = {
                 
                 //assign a color
                 tempblock.setAttribute("class", "data_block hue"+config.data.table1_db[index].color);
-
+                tempblock.style.backgroundColor="hsl("+config.data.table1_db[index].color+",100%,50%)";
                 //time processing
                 let startmeridian = 'a.m.';
                 let starthr=0;
@@ -395,7 +395,7 @@ let table = {
                 let time_tab_row = document.createElement("tr");
                 let time_tab = document.createElement("td");
                 time_tab.setAttribute("colspan",2);
-                time_tab.innerHTML = starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian;
+                time_tab.innerHTML = starthr+':'+startminute+' '+startmeridian+' to '+endhr+':'+endminute+' '+endmeridian;
                 time_tab_row.appendChild(time_tab);
                 sub_tab.appendChild(time_tab_row);
                 doot.appendChild(sub_tab);
@@ -721,7 +721,7 @@ let table = {
                     event.target.style.color='black';
                     event.target.style.backgroundColor='hsl('+ utility.rand.number(360,0) +',100%,60%)';//color the target
                 }
-                setTimeout(()=>{event.target.style.backgroundColor='';event.target.style.color='';},1000);//un-color the target
+                setTimeout(()=>{event.target.style.backgroundColor='initial';event.target.style.color='initial';},1000);//un-color the target
             }
         },
     },
@@ -754,29 +754,6 @@ let manage = {
         document.getElementById('no_btn').addEventListener('click',function(){// Delete No button
             console.log('Delete denial called');
             document.getElementById('delete_confirm_pannel').style.display='none';
-        });
-        //initalize color put selector (needs an upgrade)
-        document.getElementById('color_put').value="1";
-        document.getElementById('color_put_text').innerText="Red";
-        document.getElementById('color_put_container').className='hue1 select_container';
-        document.getElementById('color_put').addEventListener('change',function(){      // Change color put color on change
-            console.log('Color selection changed to :',document.getElementById('color_put').value);
-            document.getElementById('color_put_container').className='hue'+document.getElementById('color_put').value+' select_container';
-            switch(document.getElementById('color_put').value){
-                case "0":document.getElementById('color_put_text').innerText="Grey";break;
-                case "1":document.getElementById('color_put_text').innerText="Red";break;
-                case "2":document.getElementById('color_put_text').innerText="Orange";break;
-                case "3":document.getElementById('color_put_text').innerText="Yellow";break;
-                case "4":document.getElementById('color_put_text').innerText="Lime";break;
-                case "5":document.getElementById('color_put_text').innerText="Green";break;
-                case "6":document.getElementById('color_put_text').innerText="Aqua";break;
-                case "7":document.getElementById('color_put_text').innerText="Sky-Blue";break;
-                case "8":document.getElementById('color_put_text').innerText="Blue";break;
-                case "9":document.getElementById('color_put_text').innerText="Purple";break;
-                case "10":document.getElementById('color_put_text').innerText="Royal-blue";break;
-                case "11":document.getElementById('color_put_text').innerText="Cherry";break;
-                default:console.warn('Colors went blyat');
-            }
         });
         document.getElementById('erraser').addEventListener('click',manage.dialogue.clear);
 
@@ -889,25 +866,9 @@ let manage = {
             console.log('Building Bar: ',index);
             let tempblock = document.createElement('div');
             tempblock.title="Click to edit";
+            tempblock.setAttribute("class", "data_bar");
             //assign a color
-            switch(config.data.table1_db[index].color){
-                case 0: tempblock.setAttribute("class", "data_bar hue0"); break;
-                case 1: tempblock.setAttribute("class", "hue1 data_bar"); break;
-                case 2: tempblock.setAttribute("class", "hue2 data_bar"); break;
-                case 3: tempblock.setAttribute("class", "hue3 data_bar"); break;
-                case 4: tempblock.setAttribute("class", "hue4 data_bar"); break;
-                case 5: tempblock.setAttribute("class", "hue5 data_bar"); break;
-                case 6: tempblock.setAttribute("class", "hue6 data_bar"); break;
-                case 7: tempblock.setAttribute("class", "hue7 data_bar"); break;
-                case 8: tempblock.setAttribute("class", "hue8 data_bar"); break;
-                case 9: tempblock.setAttribute("class", "hue9 data_bar"); break;
-                case 10: tempblock.setAttribute("class", "hue10 data_bar"); break;
-                case 11: tempblock.setAttribute("class", "hue11 data_bar"); break;
-                default:
-                tempblock.setAttribute("class", "data_bar");
-                console.log('Color was defaulted :');
-                console.table(config.data.table1_db[index]);
-            }
+            tempblock.style.backgroundColor="hsl("+config.data.table1_db[index].color+",100%,50%)";
     
             //time processing
             let startmeridian = 'a.m.';
@@ -1014,22 +975,6 @@ let manage = {
                 case 6:document.getElementById('day_put_text').innerText="Saturday" ;break;
             }
             document.getElementById('color_put').value = config.data.table1_db[index].color;    //set color feild
-            document.getElementById('color_put_container').className='hue'+config.data.table1_db[index].color+' select_container';    //set color class to make the feild glow
-            switch(document.getElementById('color_put').value){//set name of color
-                case "0":document.getElementById('color_put_text').innerText="Grey";break;
-                case "1":document.getElementById('color_put_text').innerText="Red";break;
-                case "2":document.getElementById('color_put_text').innerText="Orange";break;
-                case "3":document.getElementById('color_put_text').innerText="Yellow";break;
-                case "4":document.getElementById('color_put_text').innerText="Lime";break;
-                case "5":document.getElementById('color_put_text').innerText="Green";break;
-                case "6":document.getElementById('color_put_text').innerText="Aqua";break;
-                case "7":document.getElementById('color_put_text').innerText="Sky-Blue";break;
-                case "8":document.getElementById('color_put_text').innerText="Blue";break;
-                case "9":document.getElementById('color_put_text').innerText="Purple";break;
-                case "10":document.getElementById('color_put_text').innerText="Royal-blue";break;
-                case "11":document.getElementById('color_put_text').innerText="Cherry";break;
-                default:console.warn('Colors went blyat');
-            }
             document.getElementById('course_code_put').value = config.data.table1_db[index].course_code;    //set course code
             document.getElementById('type_put').value = config.data.table1_db[index].type;  //set room type
             document.getElementById('room_put').value = config.data.table1_db[index].room;  //set room feild
@@ -1089,8 +1034,6 @@ let manage = {
         },
         clear:function(){//clear the input and remove the input screen
             console.log('Dialogue clear called');
-            //document.getElementById('day_put').value = "";
-            //document.getElementById('color_put').value = "";
             document.getElementById('course_code_put').value = "";
             document.getElementById('Lecture_put').value = "";
             document.getElementById('type_put').value = "";
@@ -1121,7 +1064,7 @@ let manage = {
             tempentry.day = Number(document.getElementById('day_put').value);
 
             //get color select, no validation, because default is valid
-            tempentry.color = Number(document.getElementById('color_put').value);
+            tempentry.color = document.getElementById('color_put').value;
 
             //Course Code is not required and can be anything, even nothing
             tempentry.course_code = document.getElementById('course_code_put').value;
