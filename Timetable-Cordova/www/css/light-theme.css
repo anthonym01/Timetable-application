@@ -1,4 +1,3 @@
-@keyframes pulse {0%{text-shadow: 0vh 0vh 0vh #000000} 50% {text-shadow: 0vh 0vh 5vh #000000} 100%{text-shadow: 0vh 0vh 0vh #000000}}
 @keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
 @keyframes glowrow { 0%{background-color: rgb(0, 180, 255)} 50%{background-color: rgb(0, 113, 161)} 100%{background-color: rgb(0, 180, 255)}}
 
@@ -7,7 +6,7 @@ body{
     color:rgb(0, 0, 0);
 }
 
-#light_pallet{box-shadow: 0vh 0vh 2vh 0vh rgb(0, 180, 255);}
+#light_pallet{box-shadow: 0vh 0vh 2vh 0vh rgb(0, 180, 255)}
 
 /*  page darkener  */
 #page_shade{
@@ -16,8 +15,8 @@ body{
 
 /*  Loading Screen  */
 #Loading{
-    box-shadow: #ffffff;
-    background-color: inherit;
+    box-shadow: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
 }
 #loader{
     border: 3vh solid #ffffff;
@@ -36,13 +35,9 @@ body{
 }
 
 /* Main navigation buttons */
-.menubtn,.menubtn_active{
-    background-color:inherit;
-    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
-}
-.menubtn_active{
-    background-color: rgb(45, 192, 255);
-}
+.menubtn,.menubtn_active{background-color:inherit}
+.menubtn_active{background-color: hsl(198, 100%, 50%)}
+
 .menubtn #setting_btn_icon{   /*  Setting button    */
     transform: rotate(0deg);
     background-image: url('../img/setting-dark.webp');
@@ -71,10 +66,8 @@ body{
 }
 
 /*Timetable tags*/
-#timetable{
-    background-image: url('../img/whiteground.webp');
-}
-#fullscreen_tile{background-color: rgba(255, 255, 255, 0.7);}
+#timetable{background-image: url('../img/whiteground.webp')}
+#fullscreen_tile{background-color: rgba(255, 255, 255, 0.7)}
 #fullscreen_tile_tab_container tr:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.7);
 }
@@ -87,13 +80,17 @@ body{
     color: rgb(255, 255, 255);
 }
 #table1::-webkit-scrollbar-thumb {background: rgb(0, 0, 0);}/*scrollbar thumb*/
-.glowrow {background-color: rgb(0, 180, 255);}
+.glowrow {
+    background-color: rgb(0, 180, 255);
+    animation:glowrow 2s infinite;
+}
 .maincell{/*  Cells of the table  */
     border:0.2vh solid #000000;
 }
 .data_block,.data_block_active{/*  The blocks containing the classes   */
     background-color: inherit;
     color:inherit;
+    text-shadow: 0vw 0vw 3vw #ffffff,0vw 0vw 1vw #ffffff;
 }
 .data_block_active{
     color: rgba(0, 0, 0, 0);
@@ -101,33 +98,15 @@ body{
 .infodoot{
     color: rgb(0, 0, 0);
     background-color: inherit;
+    text-shadow: 0vw 0vw 3vw #ffffff,0vw 0vw 1vw #ffffff;
 }
 
 /*  Colors are class based because im lazy  */
-.hue0{background-color: hsl(0, 0%, 75%)}
-.hue0:active{background-color: hsl(0, 0%, 92%)}
-.hue1{background-color: hsl(0,100%,70%)}
-.hue1:active{background-color: hsl(0,100%,40%)}
-.hue2{background-color: hsl(30,100%,60%)}
-.hue2:active{background-color: hsl(30,100%,40%)}
-.hue3{background-color: hsl(40,100%,60%)}
-.hue3:active{background-color: hsl(40,100%,40%)}
-.hue4{background-color: hsl(60,100%,60%)}
-.hue4:active{background-color: hsl(60,100%,40%)}
-.hue5{background-color: hsl(120,100%,60%)}
-.hue5:active{background-color: hsl(120,100%,40%)}
-.hue6{background-color: hsl(150,100%,60%)}
-.hue6:active{background-color: hsl(150,100%,40%)}
-.hue7{background-color: hsl(180,100%,60%)}
-.hue7:active{background-color: hsl(180,100%,40%)}
-.hue8{background-color: hsl(210,100%,60%)}
-.hue8:active{background-color: hsl(210,100%,40%)}
-.hue9{background-color: hsl(260,100%,60%)}
-.hue9:active{background-color: hsl(260,100%,40%)}
-.hue10{background-color: hsl(270,100%,60%)}
-.hue10:active{background-color: hsl(270,100%,40%)}
-.hue11{background-color: hsl(328,100%,60%)}
-.hue11:active{background-color: hsl(328,100%,70%)}
+.data_block{background-color: hsl(0, 0%, 75%);color:#000000;transition: background-color 300ms color 300ms;}
+.data_block:active{
+    background-color: hsl(0, 0%, 56%)!important;color:#ffffff!important;transition-duration: 0ms;
+}
+.infodoot:active{background-color: hsl(0, 0%, 56%)!important;color:#000000!important;transition-duration: 0ms;}
 
 /*  manage_view   */
 .data_noot{

@@ -1,32 +1,32 @@
-@keyframes pulse {0%{text-shadow: 0vh 0vh 0vh #ffffff} 50% {text-shadow: 0vh 0vh 5vh #ffffff} 100%{text-shadow: 0vh 0vh 0vh #ffffff}}
 @keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
-@keyframes glowrow { 0%{background-color: rgb(43, 255, 0)} 50%{background-color: rgb(24, 145, 0)} 100%{background-color: rgb(43, 255, 0)}}
+@keyframes glowrow { 0%{background-color: #2bff00} 50%{background-color: #189100} 100%{background-color: #2bff00}}
 
 body{
-    background-color: rgb(0, 0, 0);
-    color:rgb(255, 255, 255);
+    background-color :#000;
+    color            :#fff;
 }
-#amoled_pallet{box-shadow: 0vh 0vh 2vh 0vh #2bff00;}
+
+#amoled_pallet{box-shadow: 0vh 0vh 2vh 0vh #2bff00}
 
 /*  page darkener  */
 #page_shade{
-    background-color: rgb(0, 0, 0);/*  Always black    */
+    background-color: #000;/*  Always black    */
 }
 
 /*  Loading Screen  */
 #Loading{
-    box-shadow: rgb(255, 255, 255);
-    background-color: rgb(0, 0, 0);
+    box-shadow: #fff;
+    background-color: #000;
 }
 #loader{
-    border: 3vh solid #ffffff;
+    border: 3vh solid #fff;
     border-top: 3vh solid #2bff00;
 }
 
 /*Scrollbar custom*/
-::-webkit-scrollbar-track {background: rgb(0, 0, 0);}/*Scrollbar background*/
-::-webkit-scrollbar-thumb {background: rgb(170, 170, 170);}/*scrollbar thumb*/
-::-webkit-scrollbar-thumb:active {background: rgb(255, 255, 255);}/*activeing on scrollbar thumb*/
+::-webkit-scrollbar-track {background: #000;}/*Scrollbar background*/
+::-webkit-scrollbar-thumb {background: #aaa;}/*scrollbar thumb*/
+::-webkit-scrollbar-thumb:active {background: #fff;}/*activeing on scrollbar thumb*/
 
 /*  Foooter && Menu   */
 .footbar{   /* The body of the footer   */
@@ -35,13 +35,9 @@ body{
 }
 
 /* Main navigation buttons */
-.menu_panel,.menu_panel_active{
-    background-color:inherit;
-    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
-}
-.menubtn_active{
-    background-color: #199401;
-}
+.menu_panel,.menu_panel_active{background-color:inherit}
+.menubtn_active{background-color: #199400}
+
 .menubtn #setting_btn_icon{   /*  Setting button    */
     transform: rotate(0deg);
     background-image: url('../img/setting-light.webp');
@@ -70,74 +66,79 @@ body{
 }
 
 /*Timetable tags*/
-#timetable{
-    background-image: url('../img/blyatground.webp');
-}
-#fullscreen_tile{background-color: rgba(0,0,0,0.8);}
+#timetable{background-image: url('../img/blyatground.webp')}
+#fullscreen_tile{background-color: #000c}
 #fullscreen_tile_tab_container tr:nth-child(even) {
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 #close_btn{ 
-    border:0.3vh solid rgb(255, 255, 255);
-    color: rgb(255, 255, 255);
-    background-color: rgb(0, 0, 0);
+    border:0.3vh solid #fff;
+    color: #fff;
+    background-color: #000;
+    text-shadow: 0vw 0vw 2vw #000,0vw 0vw 1vw #000;
 }#close_btn:active{
-    background-color: rgb(255, 0, 0);
-    color: rgb(0, 0, 0);
+    border:0.3vh solid #000;
+    background-color: #f00!important;
+    color: #000!important;
+    text-shadow: none;
 }
-#table1::-webkit-scrollbar-thumb {background: rgb(0, 0, 0);}/*scrollbar thumb*/
-
-.glowrow {background-color:rgb(43, 255, 0);}
+#table1::-webkit-scrollbar-thumb {background: #000;}/*scrollbar thumb*/
+.glowrow {
+    background-color:#2bff00;
+    animation:glowrow 2s infinite;
+}
 .maincell{/*  Cells of the table  */
-    border:0.2vh solid #ffffff;
+    border:0.2vh solid #fff;
 }
 .data_block,.data_block_active{/*  The blocks containing the classes   */
-    background-color: inherit;
-    color:inherit;
-    text-shadow: 0vw 0vw 3vw #000000,0vw 0vw 1vw #000000;
+    text-shadow: 0vw 0vw 2vw #000,0vw 0vw 1vw #000;
+    background-color: #636363;
+    color:#fff;
+    transition: background-color 300ms color 300ms;
 }
-.data_block_active{
-    color: rgba(0, 0, 0, 0);
+.data_block:active{
+    text-shadow: 0vw 0vw 2vw #fff,0vw 0vw 1vw #fff!important;
+    background-color: #ebebeb!important;
+    color:#000!important;
+    transition-duration: 0ms;
 }
 .infodoot{
-    color: rgb(255, 255, 255);
+    color: #fff;
     background-color: inherit;
-    text-shadow: 0vw 0vw 3vw #000000,0vw 0vw 1vw #000000;
+    text-shadow: 0vw 0vw 3vw #000,0vw 0vw 1vw #000;
 }
-
-/*  Colors are class based because im lazy  */
-.data_block{background-color: hsl(0, 0%, 39%);color:#ffffff;transition: background-color 300ms color 300ms;}
-.data_block:active{
-    background-color: hsl(0, 0%, 92%)!important;color:#000000!important;transition-duration: 0ms;
+.infodoot:active{
+    background-color: #ebebeb!important;
+    color:#000!important;
 }
-.infodoot:active{background-color: hsl(0, 0%, 92%)!important;color:#000000!important;transition-duration: 0ms;}/*
 
 /*  manage_view   */
 .data_bar{/*    Detailed representaion of the data to be managed    */
-    text-shadow: 0vw 0vw 3vw #000000,0vw 0vw 1vw #000000;
-    background-color: hsl(0, 0%, 39%);
-    color: white;
+    text-shadow: 0vw 0vw 2vw #000,0vw 0vw 1vw #000;
+    background-color: #636363;
+    color: #fff;
     transition: background-color 300ms color 300ms;
 }
 .data_bar:active{
-    background-color: hsl(0, 0%, 100%);
-    color: rgb(0, 0, 0);
+    text-shadow: 0vw 0vw 2vw #fff,0vw 0vw 1vw #fff;
+    background-color: #fff!important;
+    color: #000!important;
     transition: background-color 0ms color 0ms;
 }
 .data_noot{
-    color: rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
+    color: #000;
+    background-color: #fff;
     text-shadow: none;
 }
 .plusimg{/* Little icon in the add new button */
     background-image: url('../img/plus-light.webp');
 }
 #dataentry_screen{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
-    background-color: rgb(0, 0, 0);
+    background-color: #000;
 }
 #dataentry_screen input{
     border:none;
-    border-bottom:0.3vh solid #ffffff;
+    border-bottom:0.3vh solid #fff;
     background-color: inherit;
     color: inherit;
 }#dataentry_screen input:focus{
@@ -147,19 +148,21 @@ body{
     color: inherit;
     outline: none;
 }
+#dataentry_screen select:focus{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
+    border:0.3vh solid #2bff00;
+}
 
 .select_container{/*  Select boxes made to be more effective on mobile  */
-    border:0.3vh solid #ffffff;
-    color: rgb(255, 255, 255);
-    /*background-color: rgb(0, 0, 0);*/
+    border:0.3vh solid #fff;
+    color: #fff;
 }.select_container:active{
-    background-color: rgb(255, 255, 255);
-    color: rgb(0, 0, 0);
+    background-color: #fff;
+    color: #000;
 }
 
 .databtns{
-    background-color: #000000;
-    border:0.3vh solid #ffffff;
+    background-color: #000;
+    border:0.3vh solid #fff;
 }
 #cancel_btn:active{ /*cancel button*/
     background-color: #ff5656;
@@ -179,10 +182,10 @@ body{
 }
 
 #delete_confirm_pannel{/*   Delete confirmation pannel  */
-    background-color: rgba(0,0,0,0.7);
+    background-color: #000000b3;
 }
 #pseudo_container_table tr:nth-child(even) {
-    background-color: rgba(0,0,0,0.7);
+    background-color: #000000b3;
 }
 #yes_btn{
     background-color: #3ad61a;
@@ -208,32 +211,22 @@ body{
     border:1px solid #00ff0d;
 }
 #light_selection_put{
-    border:1px solid #ffffff;
+    border:1px solid #fff;
 }
 .selcetion_put:checked{
     background-color: #00ff0d;
 }
 .selcetion_put:checked::after{
-    border-color: #000000;
+    border-color: #000;
 }
 
 /* Switches */
-.switch_container_active{
-    background-color: rgb(0, 0, 0);
-}
-.switch_container_active .switchbdy{
-    background-color: rgb(0, 0, 0);
-}
-.switch_container_active .switch{
-    background-color: rgb(255, 255, 255);
-}
+.switch_container_active{background-color: #000}
+.switch_container_active .switchbdy{background-color: #000}
+.switch_container_active .switch{background-color: #fff}
 .switch_container_dissabled{
-    background-color: rgb(0, 0, 0);
-    border:0.5vh solid rgb(122,122,122);
+    background-color: #000;
+    border:0.5vh solid #7a7a7a;
 }
-.switch_container_dissabled .switchbdy{
-    background-color: rgb(0, 0, 0);
-}
-.switch_container_dissabled .switch{
-    background-color: rgb(122,122,122);
-}
+.switch_container_dissabled .switchbdy{background-color: #000}
+.switch_container_dissabled .switch{background-color: #7a7a7a}

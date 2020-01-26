@@ -7,12 +7,12 @@
     @font-face {font-family: Lexend_Deca; src: url(../fonts/LexendDeca-Regular.ttf);}
 
     body{
-        -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
-        -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-        -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-        font-family: Lexend_Deca,Serif,Arial, Helvetica, sans-serif;
-        height:100vh;
-        margin:0px;
+        -webkit-touch-callout       : none;                /* prevent callout to copy image, etc when tap to hold */
+        -webkit-text-size-adjust    : none;             /* prevent webkit from resizing text to fit */
+        -webkit-user-select         : none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+        font-family                 : Lexend_Deca,Serif,Arial, Helvetica, sans-serif;
+        height                      : 100vh;
+        margin                      : 0px;
         /* Padding to avoid the "unsafe" areas behind notches in the screen */
         padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-right, 0px);
         width:100vw;
@@ -179,7 +179,6 @@
         background-repeat: no-repeat;
     }
     tr{transition:background-color 250ms;}
-    .glowrow {animation:glowrow 2s infinite;}
     td{vertical-align: top;}
     .maincell{/*    Cells of the table  */
         position: relative;
@@ -216,7 +215,9 @@
         transform: translate(-0.5vh,0vh);
         padding-left:0.5vh;
         padding-right:0.5vh;
-        transition: box-shadow 300ms,transform 300ms,background-color 300ms,color 300ms;
+        transition: box-shadow 300ms,transform 500ms linear 3000ms,background-color 300ms,color 300ms;
+        text-decoration: none;
+        display: block;
     }
     .data_block,.data_block_active:active{
         transition: box-shadow 0ms,background-color 0ms,color 0ms;
@@ -237,13 +238,15 @@
         /*transform: ;*/
         padding:1vh;
         border-radius: 1vh 1vh 1vh 1vh;
-        transition:box-shadow 500ms,transform 300ms,background-color 500ms,color 500ms,opacity 500ms;
+        transition:box-shadow 500ms,transform 300ms,background-color 500ms,color 500ms,opacity 500ms,width 500ms,right 500ms;
     }
     .data_block_active .infodoot{
         display: block;
         opacity: 1;
         z-index: 400;
         transform: rotate3d(1,0,0,0deg) translate(1vh,0);
+        width: 200%;
+        right:-50%;
     }
     .infodoot table{width: 100%;border-collapse: collapse;text-align: center;table-layout: fixed;background:none!important;}
     .infodoot th{padding: 3px;background:none!important;}
@@ -315,40 +318,55 @@
     }
 
     /* Dataentry screen */
-    #color_put {/*  Input slider   */
+    .colorslider{
+        outline: none;
+        opacity: 1;
+        border: none!important;
+        cursor: pointer;
         -webkit-appearance: none;
         width:100%;
         border-radius: 3vh;
         height: 10vw;
-        background: linear-gradient(90deg, hsl(0,100%,50%),hsl(10,100%,50%),hsl(20,100%,50%),hsl(30,100%,50%),hsl(40,100%,50%),hsl(50,100%,50%),hsl(60,100%,50%),hsl(70,100%,50%),hsl(80,100%,50%),hsl(90,100%,50%),hsl(100,100%,50%),hsl(110,100%,50%),hsl(120,100%,50%),hsl(130,100%,50%),hsl(140,100%,50%),hsl(150,100%,50%),hsl(160,100%,50%),hsl(170,100%,50%),hsl(180,100%,50%),hsl(190,100%,50%),hsl(200,100%,50%),hsl(210,100%,50%),hsl(220,100%,50%),hsl(230,100%,50%),hsl(240,100%,50%),hsl(250,100%,50%),hsl(260,100%,50%),hsl(270,100%,50%),hsl(280,100%,50%),hsl(290,100%,50%),hsl(300,100%,50%),hsl(310,100%,50%),hsl(320,100%,50%),hsl(330,100%,50%),hsl(340,100%,50%),hsl(350,100%,50%),hsl(360,100%,50%));
-        outline: none;
-        opacity: 1;
-        border: none!important;
     }
-    #color_put::-webkit-slider-thumb {
+    .colorslider::-webkit-slider-thumb {
         border-radius:3vw;
         -webkit-appearance: none;
         appearance: none;
-        width: 3vw;
-        height: 10vw;
+        width: 8vw;
+        height: 8vw;
         background: none;
-        border: 0.8vw solid #000000;
+        background: linear-gradient(45deg,rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1));
+        border-radius: 50%;
         cursor: pointer;
+    }
+    #color_put {/*  Input slider   */
+        background: linear-gradient(90deg, hsl(0,100%,50%),hsl(10,100%,50%),hsl(20,100%,50%),hsl(30,100%,50%),hsl(40,100%,50%),hsl(50,100%,50%),hsl(60,100%,50%),hsl(70,100%,50%),hsl(80,100%,50%),hsl(90,100%,50%),hsl(100,100%,50%),hsl(110,100%,50%),hsl(120,100%,50%),hsl(130,100%,50%),hsl(140,100%,50%),hsl(150,100%,50%),hsl(160,100%,50%),hsl(170,100%,50%),hsl(180,100%,50%),hsl(190,100%,50%),hsl(200,100%,50%),hsl(210,100%,50%),hsl(220,100%,50%),hsl(230,100%,50%),hsl(240,100%,50%),hsl(250,100%,50%),hsl(260,100%,50%),hsl(270,100%,50%),hsl(280,100%,50%),hsl(290,100%,50%),hsl(300,100%,50%),hsl(310,100%,50%),hsl(320,100%,50%),hsl(330,100%,50%),hsl(340,100%,50%),hsl(350,100%,50%),hsl(360,100%,50%));
+    }
+    #sat_put{
+        background: linear-gradient(90deg, rgb(128, 128, 128),hsl(172, 100%, 50%));
+        transition: background 300ms;
+    }
+    #light_put{
+        background: linear-gradient(90deg, #000000,hsl(172, 100%, 50%),#ffffff);
+        transition: background 300ms;
     }
     .color_container{/* Contains recent colors */
         position: relative;
         width: 100%;
         height:25vw;
         overflow-y: scroll;
+        text-align: center;
     }
     .color_doot{
         position: relative;
-        margin: 1.8vw;
-        height: 15vw;
-        width: 15vw;
+        margin: 1.5vw;
+        height: 14.5vw;
+        width: 14.5vw;
         float: left;
         background-color: #c9c9c9;
-        border-radius: 3vw;
+        border: 0.5vw solid #aaaaaa;
+        border-radius: 50%;
+        cursor: pointer;
     }
     #dataentry_screen{
         position: fixed;
@@ -642,7 +660,7 @@
         margin-top:2vh;
     }
     .Bar_title{
-        height: 6vh;
+        /*height: 6vh;*/
         font-size:  5.5vh;
         text-align: center;
         cursor: pointer;

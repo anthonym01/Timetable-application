@@ -337,7 +337,7 @@
         <div class="dataspace" id="manage_dataspace">
             
         </div>
-        <div id="dataentry_screen">
+        <form id="dataentry_screen">
             <table>
                 <tr>
                     <th colspan="2" id="data_title">placeholder</th>
@@ -368,7 +368,9 @@
                 <tr>
                     <td colspan="2">
                         <label for="color_put">Color</label>
-                        <input type="range" max="360" min="0" value="180" id="color_put">
+                        <input type="range" max="360" min="0" value="180" id="color_put" class="colorslider">
+                        <input type="range" max="100" min="0" value="100" id="sat_put" class="colorslider">
+                        <input type="range" max="100" min="0" value="50" id="light_put" class="colorslider">
                         <div class="color_container" id="recent_colors">
                             recent colors
                         </div>
@@ -466,7 +468,7 @@
                 <button id="yes_btn">Yes</button>
             </div>
             <div id="erraser" title="clear inputs"></div>
-        </div>
+        </form>
     </view>
 
     <view id="setting_view">    <!--Setting View-->
@@ -519,7 +521,7 @@
             </div>
         </div>
 
-        <div class="setting_bar" id="hilight_btn" title="toggle hilights">
+        <div class="setting_bar" id="hilight_btn" title="toggle hilights" style="display: block;"><!--Permanently dissabled untill fixed-->
             <div class="Bar_title">Hilights</div>
             <div class="switch_container_active" id="hilight_switch_container">
                 <div class="switchbdy" id="hilight_switchbdy"><div class="switch"></div></div>
@@ -534,9 +536,16 @@
         </div>
 
         <div class="setting_bar" id="tiles_btn" title="toggle fullscreen tiles">
-            <div class="Bar_title">Full tiles</div>
+            <div class="Bar_title">Full Tiles</div>
             <div class="switch_container_active" id="tiles_switch_container">
                 <div class="switchbdy" id="tiles_switchbdy"><div class="switch"></div></div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="Row_btn" title="toggle Empty cells">
+            <div class="Bar_title">Empty Rows</div>
+            <div class="switch_container_active" id="Row_switch_container">
+                <div class="switchbdy" id="Row_switchbdy"><div class="switch"></div></div>
             </div>
         </div>
 
