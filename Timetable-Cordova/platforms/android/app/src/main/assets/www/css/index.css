@@ -399,6 +399,7 @@
         border-radius: 1vh;
         text-align: center;
         transition: border 300ms;
+        position: relative;
     }
     .select_container{/*  Select boxes made to be more effective on mobile  */
         position: relative;

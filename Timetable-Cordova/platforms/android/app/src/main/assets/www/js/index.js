@@ -71,24 +71,14 @@ let config = {
             { purpose: "table 4" }
         ],
         table1_db: [// Table database
-            /*          KEY
-                name:           Name of the class
-                day:            1-7, represent monday to friday
-                room:           Room/location of the class
-                type:           class type (1 - Lecture,2 - Practical,custom - a custom string)
-                course_code:    A string containing the courses id code
-                color:          Color of the block
-                start:          The starting time of the class represented in 24hr
-                end:            End time of the class represented in 24hr
-                    (minutes represented as percentage of hr "30/60 = 0.5")
-            */
+/*
             { show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
             { show: 4, day: 2, name: "Test 2", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 50, sat: 100, light: 50 }, start: 11.62, end: 14.57 },
             { show: 4, day: 3, name: "Test 3", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 100, sat: 100, light: 50 }, start: 8.5, end: 10.76 },
             { show: 4, day: 4, name: "Test 4", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 150, sat: 100, light: 50 }, start: 1.32, end: 4.0 },
             { show: 4, day: 5, name: "Test 5", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 200, sat: 100, light: 50 }, start: 2.0, end: 4.0 },
             { show: 4, day: 6, name: "Test 6", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 250, sat: 100, light: 50 }, start: 4.0, end: 5.4 },
-            { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
+            { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },*/
         ],
         previous_colors: [],
     },
@@ -289,7 +279,8 @@ let table = {
         if (config.data.table_selected == 0) { config.data.table_selected = 1 }//Fix oversight
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
-            first_settup(1);
+            //first_settup(1);
+            //Replace with emty table setu[/allert]
         } else {
             while (config.data.table1_db[i] != null || undefined) {//Get minimum time and maximum time to construct correct height
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
@@ -657,14 +648,14 @@ let table = {
             }
 
         }
-        function first_settup(table_num) {
+        /*function first_settup(table_num) {
             console.log('First settup called table#: ', table_num);
             utility.toast('To start off lets add something to display');
             document.getElementById('data_title').innerHTML = 'First Time?';
             setTimeout(() => { manage.dialogue.open(); UI.navigate.MANAGE(); }, 100);
             document.getElementById('Loading').style.display = 'none';
             console.log('Closing loading screen...');
-        }
+        }*/
     },
     clock: {
         clock_tick_trigger: null,//setInterval(()=>{table.clock.clock_tick()},1000),

@@ -1,43 +1,4 @@
 
-let app = {// Application Constructor
-    initialize: function () {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-        document.addEventListener("backbutton", this.onBackKeyDown, false);
-        document.addEventListener("pause", this.onPause, false);
-        document.addEventListener("resume", this.onResume, false);
-    },// deviceready Event Handler
-
-    onDeviceReady: function () {//device ready event
-        this.receivedEvent('deviceready');
-        console.log('Device Ready...');
-    },
-    onBackKeyDown: function () {//Back button pressed event
-        console.log('"Backbtn" event triggered');
-        UI.navigate.BACK();
-    },
-    onPause: function () {//application pause event
-        console.log('"pause" event triggered');
-        table.clock.stop_clock();//Stop ze clock
-        config.save();
-    },
-    onResume: function () {
-        console.log('"Resume" event triggered');
-        if (config.properties.view == 'table') { table.clock.start_clock() }//resume clock tick
-    },
-
-    // Update DOM on a Received Event
-    receivedEvent: function (id) {
-        let parentElement = document.getElementById(id);
-        let listeningElement = parentElement.querySelector('.listening');
-        let receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
-    }
-}; app.initialize();
-
 window.addEventListener('load', function () {//window loads
     console.warn('javascript Starts')
     if (localStorage.getItem(config.configlocation)) {
@@ -71,14 +32,14 @@ let config = {
             { purpose: "table 4" }
         ],
         table1_db: [// Table database
-/*
+
             { show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
             { show: 4, day: 2, name: "Test 2", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 50, sat: 100, light: 50 }, start: 11.62, end: 14.57 },
             { show: 4, day: 3, name: "Test 3", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 100, sat: 100, light: 50 }, start: 8.5, end: 10.76 },
             { show: 4, day: 4, name: "Test 4", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 150, sat: 100, light: 50 }, start: 1.32, end: 4.0 },
             { show: 4, day: 5, name: "Test 5", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 200, sat: 100, light: 50 }, start: 2.0, end: 4.0 },
             { show: 4, day: 6, name: "Test 6", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 250, sat: 100, light: 50 }, start: 4.0, end: 5.4 },
-            { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },*/
+            { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
         ],
         previous_colors: [],
     },

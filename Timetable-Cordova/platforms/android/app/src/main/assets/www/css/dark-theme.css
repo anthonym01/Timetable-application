@@ -138,18 +138,28 @@ body{
 }
 #dataentry_screen input{
     border:none;
-    border-bottom:0.3vh solid #fff;
+
+    border-bottom:0.5vw solid #fff;
     background-color: inherit;
     color: inherit;
 }#dataentry_screen input:focus{
     border:none;
-    border-bottom:0.3vh solid #2bff00;
+    border-bottom:0.5vh solid #2bff00;
     background-color: inherit;
     color: inherit;
     outline: none;
-}
+}/*#dataentry_screen input::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    border-bottom:0.5vw solid #2bff00;
+    z-index: 5;
+}*/
 #dataentry_screen select:focus{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
-    border:0.3vh solid #2bff00;
+    border:0.5vw solid #2bff00;
 }
 
 .select_container{/*  Select boxes made to be more effective on mobile  */
