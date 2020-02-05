@@ -1,6 +1,10 @@
 
 window.addEventListener('load', function () {//window loads
-    console.warn('javascript Starts')
+    if(typeof(require) == 'undefined'){//initialize node modules
+        console.warn('Running in Browser');
+    }else{
+        console.warn('Running in Node mode');
+    }
     if (localStorage.getItem(config.configlocation)) {
         config.load()
     } else {
@@ -609,14 +613,6 @@ let table = {
             }
 
         }
-        /*function first_settup(table_num) {
-            console.log('First settup called table#: ', table_num);
-            utility.toast('To start off lets add something to display');
-            document.getElementById('data_title').innerHTML = 'First Time?';
-            setTimeout(() => { manage.dialogue.open(); UI.navigate.MANAGE(); }, 100);
-            document.getElementById('Loading').style.display = 'none';
-            console.log('Closing loading screen...');
-        }*/
     },
     clock: {
         clock_tick_trigger: null,//setInterval(()=>{table.clock.clock_tick()},1000),
@@ -676,25 +672,6 @@ let table = {
             console.log('Hilight Query state Checking..');
             let query = document.querySelectorAll(".maincell");
             let i = 0;
-            if (typeof (device) != "undefined") {
-                if (device.platform == 'Android' || 'iOS') {//mobile
-                    touchspark(query, i);
-                } else {//Desktop
-                    clickspark(query, i);
-                }
-            } else {
-                console.error('"device" plugin broke!');
-                clickspark(query, i);
-            }
-        }
-        function touchspark(query, i) {
-            while (query[i] != null || query[i] != undefined) {
-                query[i].addEventListener('touchstart', () => { table.engine_spark(event) }, { passive: true });
-                i++;
-                console.log('Added event listener for hilight_query: ', i);
-            }
-        }
-        function clickspark(query, i) {
             while (query[i] != null || query[i] != undefined) {
                 query[i].addEventListener('mouseover', () => { table.engine_spark(event) }, { passive: true });
                 i++;
@@ -724,7 +701,7 @@ let manage = {
     initalize: function () {
         console.log('Manager initializes');
         this.render_list();
-        document.getElementById('cancel_btn').addEventListener('click', () => {//Click because touch start gay
+        document.getElementById('cancel_btn').addEventListener('click', () => {
             console.log('Cancel button clicked');
             manage.dialogue.clear();
             manage.dialogue.close();
@@ -777,10 +754,10 @@ let manage = {
             config.data.table_selected = document.getElementById('table_selector').value;
             switch (document.getElementById('table_selector').value) {
                 case "0": document.getElementById('tableselector_text').innerText = "Hidden Items"; break;
-                case "1": document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose;; break;
-                case "2": document.getElementById('tableselector_text').innerText = config.data.table_details[1].purpose;; break;
-                case "3": document.getElementById('tableselector_text').innerText = config.data.table_details[2].purpose;; break;
-                case "4": document.getElementById('tableselector_text').innerText = config.data.table_details[3].purpose;; break;
+                case "1": document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose; break;
+                case "2": document.getElementById('tableselector_text').innerText = config.data.table_details[1].purpose; break;
+                case "3": document.getElementById('tableselector_text').innerText = config.data.table_details[2].purpose; break;
+                case "4": document.getElementById('tableselector_text').innerText = config.data.table_details[3].purpose; break;
             }
             config.properties.changed = true;
             manage.render_list();
@@ -817,13 +794,18 @@ let manage = {
             }
         });
         //color sliders initalizer
-        document.getElementById('color_put').addEventListener('touchmove', function () {
+        document.getElementById('color_put').addEventListener('change', slidecolor)
+        document.getElementById('sat_put').addEventListener('change', slidesat)
+        document.getElementById('color_put').addEventListener('mousemove', slidecolor)
+        document.getElementById('sat_put').addEventListener('mousemove', slidesat)
+        function slidecolor() {
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
             document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + document.getElementById('color_put').value + ", 100%, 50%)";
-        });
-        document.getElementById('sat_put').addEventListener('touchmove', function () {
+        }
+        function slidesat() {
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
-        });
+        }
+
     },
     render_list: function () {
         console.log('Manager Render starts');
@@ -1268,16 +1250,14 @@ let UI = {
         this.setting.animation.setpostition();
         this.setting.tiles.setpostition();
         this.setting.Row.setpostition();
-        if (typeof (device) != "undefined") {//sometimes plugins break
-            if (device.platform == 'Android' || 'iOS') {//mobile
-                touchstart()
-            } else {//Desktop
-                clickstart()
-            }
-        } else {
-            console.error('"device" plugin broke!');
-            clickstart()
-        }
+        document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
+        document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
+        document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
+        document.getElementById('hilight_btn').addEventListener('click', UI.setting.hilight.flip)
+        document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
+        document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
+        document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
+        document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
 
         document.getElementById('about_btn').addEventListener('click', function () {
             /*
@@ -1289,26 +1269,6 @@ let UI = {
 
         document.getElementById('dark_theme_selection').addEventListener('click', this.setting.theme.set_dark)
         document.getElementById('light_theme_selection').addEventListener('click', this.setting.theme.set_light)
-        function touchstart() {
-            document.getElementById('table_btn').addEventListener('touchstart', UI.navigate.TABLE)
-            document.getElementById('manage_btn').addEventListener('touchstart', UI.navigate.MANAGE)
-            document.getElementById('setting_btn').addEventListener('touchstart', UI.navigate.SETTING)
-            document.getElementById('hilight_btn').addEventListener('touchstart', UI.setting.hilight.flip)
-            document.getElementById('Animations_btn').addEventListener('touchstart', UI.setting.animation.flip)
-            document.getElementById('Row_btn').addEventListener('touchstart', UI.setting.Row.flip)
-            document.getElementById('tiles_btn').addEventListener('touchstart', UI.setting.tiles.flip)
-            document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
-        }
-        function clickstart() {
-            document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
-            document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
-            document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
-            document.getElementById('hilight_btn').addEventListener('click', UI.setting.hilight.flip)
-            document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
-            document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
-            document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
-            document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
-        }
     },
     navigate: {
         BACK: function () {//Back button handle

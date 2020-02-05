@@ -22,12 +22,6 @@ body{
     border: 3vh solid #fff;
     border-top: 3vh solid #2bff00;
 }
-
-/*Scrollbar custom*/
-::-webkit-scrollbar-track {background: #000;}/*Scrollbar background*/
-::-webkit-scrollbar-thumb {background: #aaa;}/*scrollbar thumb*/
-::-webkit-scrollbar-thumb:active {background: #fff;}/*activeing on scrollbar thumb*/
-
 /*  Foooter && Menu   */
 .footbar{   /* The body of the footer   */
     background-color: inherit;

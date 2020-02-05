@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
     <meta http-equiv="Content-Security-Policy" script-src='unsafe-inline'>
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
@@ -12,31 +14,40 @@
     <link rel="stylesheet" id="nomation" href="">
     <title>Timetable</title>
 </head>
+
 <body>
 
     <div id="Loading">
-        <div id="title">Timetable</div><!--Title-->
-        <div id="loader"></div><!--Spinny boi-->
-    </div><!--Loading Screen-->
+        <div id="title">Timetable</div>
+        <!--Title-->
+        <div id="loader"></div>
+        <!--Spinny boi-->
+    </div>
+    <!--Loading Screen-->
 
-    <div id="page_shade"></div><!--Page shader-->
+    <div id="page_shade"></div>
+    <!--Page shader-->
 
-    <div class="footbar"><!--Header  & menus -->
-        <div class="menuholder">
-            <div class="menubtn" id="setting_btn" title="Settings">
-                <div class="menubtn_icon" id="setting_btn_icon"></div>
-            </div>
-            <div class="menubtn" id="manage_btn" title="Manage classes">
-                <div class="menubtn_icon" id="manage_btn_icon"></div>
-            </div>
-            <div class="menubtn" id="table_btn" title="Time table">
-                <div class="menubtn_icon" id="table_btn_icon"></div>
-            </div>
+    <div class="Action_bar">
+        <!--Header  & menus -->
+        <div class="menubtn" id="table_btn" title="Time table">
+            <div class="menubtn_icon" id="table_btn_icon"></div>
+            <div class="menu_txt">Timetable</div>
+        </div>
+        <div class="menubtn" id="manage_btn" title="Manage classes">
+            <div class="menubtn_icon" id="manage_btn_icon"></div>
+            <div class="menu_txt">Manage</div>
+        </div>
+        <div class="menubtn" id="setting_btn" title="Settings">
+            <div class="menubtn_icon" id="setting_btn_icon"></div>
+            <div class="menu_txt">Settings</div>
         </div>
     </div>
 
-    <view id="table1">          <!--Table view-->
-        <div id="fullscreen_tile"><!-- Onclick title card -->
+    <view id="table1">
+        <!--Table view-->
+        <div id="fullscreen_tile">
+            <!-- Onclick title card -->
             <div id="close_btn">Close</div>
             <div id="fullscreen_tile_tab_container">
                 <table id="tile_table">
@@ -70,7 +81,8 @@
             </div>
         </div>
         <table id="timetable">
-            <tr><!--Head row-->
+            <tr>
+                <!--Head row-->
                 <th class="maincell" id="live_clock">live_clock</th>
                 <th class="maincell" id="day1">&nbsp;&nbsp;&nbsp;Monday&nbsp;&nbsp;&nbsp;</th>
                 <th class="maincell" id="day2">&nbsp;&nbsp;&nbsp;Tuesday&nbsp;&nbsp;&nbsp;</th>
@@ -80,7 +92,8 @@
                 <th class="maincell" id="day6">&nbsp;&nbsp;&nbsp;Saturday&nbsp;&nbsp;&nbsp;</th>
                 <th class="maincell" id="day0">&nbsp;&nbsp;&nbsp;Sunday&nbsp;&nbsp;&nbsp;</th>
             </tr>
-            <tr id="timerow_0"><!--0:00 - 1:00 row-->
+            <tr id="timerow_0">
+                <!--0:00 - 1:00 row-->
                 <th class="maincell">12:00 - 1:00 a.m.</th>
                 <td class="maincell" id="1_0"></td>
                 <td class="maincell" id="2_0"></td>
@@ -90,7 +103,8 @@
                 <td class="maincell" id="6_0"></td>
                 <td class="maincell" id="7_0"></td>
             </tr>
-            <tr id="timerow_1"><!--1:00 - 2:00 row-->
+            <tr id="timerow_1">
+                <!--1:00 - 2:00 row-->
                 <th class="maincell">1:00 - 2:00 a.m.</th>
                 <td class="maincell" id="1_1"></td>
                 <td class="maincell" id="2_1"></td>
@@ -100,7 +114,8 @@
                 <td class="maincell" id="6_1"></td>
                 <td class="maincell" id="7_1"></td>
             </tr>
-            <tr id="timerow_2"><!--2:00 - 3:00 row-->
+            <tr id="timerow_2">
+                <!--2:00 - 3:00 row-->
                 <th class="maincell">2:00 - 3:00 a.m.</th>
                 <td class="maincell" id="1_2"></td>
                 <td class="maincell" id="2_2"></td>
@@ -110,7 +125,8 @@
                 <td class="maincell" id="6_2"></td>
                 <td class="maincell" id="7_2"></td>
             </tr>
-            <tr id="timerow_3"><!--3:00 - 4:00 row-->
+            <tr id="timerow_3">
+                <!--3:00 - 4:00 row-->
                 <th class="maincell">3:00 - 4:00 a.m.</th>
                 <td class="maincell" id="1_3"></td>
                 <td class="maincell" id="2_3"></td>
@@ -120,7 +136,8 @@
                 <td class="maincell" id="6_3"></td>
                 <td class="maincell" id="7_3"></td>
             </tr>
-            <tr id="timerow_4"><!--4:00 - 5:00 row-->
+            <tr id="timerow_4">
+                <!--4:00 - 5:00 row-->
                 <th class="maincell">4:00 - 5:00 a.m.</th>
                 <td class="maincell" id="1_4"></td>
                 <td class="maincell" id="2_4"></td>
@@ -130,7 +147,8 @@
                 <td class="maincell" id="6_4"></td>
                 <td class="maincell" id="7_4"></td>
             </tr>
-            <tr id="timerow_5"><!--5:00 - 6:00 row-->
+            <tr id="timerow_5">
+                <!--5:00 - 6:00 row-->
                 <th class="maincell">5:00 - 6:00 a.m.</th>
                 <td class="maincell" id="1_5"></td>
                 <td class="maincell" id="2_5"></td>
@@ -140,7 +158,8 @@
                 <td class="maincell" id="6_5"></td>
                 <td class="maincell" id="7_5"></td>
             </tr>
-            <tr id="timerow_6"><!--6:00 - 7:00 row-->
+            <tr id="timerow_6">
+                <!--6:00 - 7:00 row-->
                 <th class="maincell">6:00 - 7:00 a.m.</th>
                 <td class="maincell" id="1_6"></td>
                 <td class="maincell" id="2_6"></td>
@@ -150,7 +169,8 @@
                 <td class="maincell" id="6_6"></td>
                 <td class="maincell" id="7_6"></td>
             </tr>
-            <tr id="timerow_7"><!--7:00 - 8:00 row-->
+            <tr id="timerow_7">
+                <!--7:00 - 8:00 row-->
                 <th class="maincell">7:00 - 8:00 a.m.</th>
                 <td class="maincell" id="1_7"></td>
                 <td class="maincell" id="2_7"></td>
@@ -160,7 +180,8 @@
                 <td class="maincell" id="6_7"></td>
                 <td class="maincell" id="7_7"></td>
             </tr>
-            <tr id="timerow_8"><!--8:00 - 9:00 row-->
+            <tr id="timerow_8">
+                <!--8:00 - 9:00 row-->
                 <th class="maincell">8:00 - 9:00 a.m.</th>
                 <td class="maincell" id="1_8"></td>
                 <td class="maincell" id="2_8"></td>
@@ -170,7 +191,8 @@
                 <td class="maincell" id="6_8"></td>
                 <td class="maincell" id="7_8"></td>
             </tr>
-            <tr id="timerow_9"><!--9:00 - 10:00 row-->
+            <tr id="timerow_9">
+                <!--9:00 - 10:00 row-->
                 <th class="maincell">9:00 - 10:00 a.m.</th>
                 <td class="maincell" id="1_9"></td>
                 <td class="maincell" id="2_9"></td>
@@ -180,7 +202,8 @@
                 <td class="maincell" id="6_9"></td>
                 <td class="maincell" id="7_9"></td>
             </tr>
-            <tr  id="timerow_10"><!--10:00 - 11:00 row-->
+            <tr id="timerow_10">
+                <!--10:00 - 11:00 row-->
                 <th class="maincell">10:00 - 11:00 a.m.</th>
                 <td class="maincell" id="1_10"></td>
                 <td class="maincell" id="2_10"></td>
@@ -190,7 +213,8 @@
                 <td class="maincell" id="6_10"></td>
                 <td class="maincell" id="7_10"></td>
             </tr>
-            <tr id="timerow_11"><!--11:00 - 12:00 row-->
+            <tr id="timerow_11">
+                <!--11:00 - 12:00 row-->
                 <th class="maincell">11:00 - 12:00 p.m.</th>
                 <td class="maincell" id="1_11"></td>
                 <td class="maincell" id="2_11"></td>
@@ -200,7 +224,8 @@
                 <td class="maincell" id="6_11"></td>
                 <td class="maincell" id="7_11"></td>
             </tr>
-            <tr id="timerow_12"><!--12:00 - 13:00 row-->
+            <tr id="timerow_12">
+                <!--12:00 - 13:00 row-->
                 <th class="maincell">12:00 - 1:00 p.m.</th>
                 <td class="maincell" id="1_12"></td>
                 <td class="maincell" id="2_12"></td>
@@ -210,7 +235,8 @@
                 <td class="maincell" id="6_12"></td>
                 <td class="maincell" id="7_12"></td>
             </tr>
-            <tr id="timerow_13"><!--13:00 - 14:00 row-->
+            <tr id="timerow_13">
+                <!--13:00 - 14:00 row-->
                 <th class="maincell">1:00 - 2:00 p.m.</th>
                 <td class="maincell" id="1_13"></td>
                 <td class="maincell" id="2_13"></td>
@@ -220,7 +246,8 @@
                 <td class="maincell" id="6_13"></td>
                 <td class="maincell" id="7_13"></td>
             </tr>
-            <tr id="timerow_14"><!--14:00 - 15:00 row-->
+            <tr id="timerow_14">
+                <!--14:00 - 15:00 row-->
                 <th class="maincell">2:00 - 3:00 p.m.</th>
                 <td class="maincell" id="1_14"></td>
                 <td class="maincell" id="2_14"></td>
@@ -230,7 +257,8 @@
                 <td class="maincell" id="6_14"></td>
                 <td class="maincell" id="7_14"></td>
             </tr>
-            <tr id="timerow_15"><!--15:00 - 16:00 row-->
+            <tr id="timerow_15">
+                <!--15:00 - 16:00 row-->
                 <th class="maincell">3:00 - 4:00 p.m.</th>
                 <td class="maincell" id="1_15"></td>
                 <td class="maincell" id="2_15"></td>
@@ -240,7 +268,8 @@
                 <td class="maincell" id="6_15"></td>
                 <td class="maincell" id="7_15"></td>
             </tr>
-            <tr id="timerow_16"><!--16:00 - 17:00 row-->
+            <tr id="timerow_16">
+                <!--16:00 - 17:00 row-->
                 <th class="maincell">4:00 - 5:00 p.m.</th>
                 <td class="maincell" id="1_16"></td>
                 <td class="maincell" id="2_16"></td>
@@ -250,7 +279,8 @@
                 <td class="maincell" id="6_16"></td>
                 <td class="maincell" id="7_16"></td>
             </tr>
-            <tr id="timerow_17"><!--17:00 - 18:00 row-->
+            <tr id="timerow_17">
+                <!--17:00 - 18:00 row-->
                 <th class="maincell">5:00 - 6:00 p.m.</th>
                 <td class="maincell" id="1_17"></td>
                 <td class="maincell" id="2_17"></td>
@@ -260,7 +290,8 @@
                 <td class="maincell" id="6_17"></td>
                 <td class="maincell" id="7_17"></td>
             </tr>
-            <tr id="timerow_18"><!--18:00 - 19:00 row-->
+            <tr id="timerow_18">
+                <!--18:00 - 19:00 row-->
                 <th class="maincell">6:00 - 7:00 p.m.</th>
                 <td class="maincell" id="1_18"></td>
                 <td class="maincell" id="2_18"></td>
@@ -270,7 +301,8 @@
                 <td class="maincell" id="6_18"></td>
                 <td class="maincell" id="7_18"></td>
             </tr>
-            <tr id="timerow_19"><!--19:00 - 20:00 row-->
+            <tr id="timerow_19">
+                <!--19:00 - 20:00 row-->
                 <th class="maincell">7:00 - 8:00 p.m.</th>
                 <td class="maincell" id="1_19"></td>
                 <td class="maincell" id="2_19"></td>
@@ -280,7 +312,8 @@
                 <td class="maincell" id="6_19"></td>
                 <td class="maincell" id="7_19"></td>
             </tr>
-            <tr id="timerow_20"><!--20:00 - 21:00 row-->
+            <tr id="timerow_20">
+                <!--20:00 - 21:00 row-->
                 <th class="maincell">8:00 - 9:00 p.m.</th>
                 <td class="maincell" id="1_20"></td>
                 <td class="maincell" id="2_20"></td>
@@ -290,7 +323,8 @@
                 <td class="maincell" id="6_20"></td>
                 <td class="maincell" id="7_20"></td>
             </tr>
-            <tr id="timerow_21"><!--21:00 - 22:00 row-->
+            <tr id="timerow_21">
+                <!--21:00 - 22:00 row-->
                 <th class="maincell">9:00 - 10:00 p.m.</th>
                 <td class="maincell" id="1_21"></td>
                 <td class="maincell" id="2_21"></td>
@@ -300,7 +334,8 @@
                 <td class="maincell" id="6_21"></td>
                 <td class="maincell" id="7_21"></td>
             </tr>
-            <tr id="timerow_22"><!--22:00 - 23:00 row-->
+            <tr id="timerow_22">
+                <!--22:00 - 23:00 row-->
                 <th class="maincell">10:00 - 11:00 p.m.</th>
                 <td class="maincell" id="1_22"></td>
                 <td class="maincell" id="2_22"></td>
@@ -310,7 +345,8 @@
                 <td class="maincell" id="6_22"></td>
                 <td class="maincell" id="7_22"></td>
             </tr>
-            <tr id="timerow_23"><!--23:00 - 24:00 row-->
+            <tr id="timerow_23">
+                <!--23:00 - 24:00 row-->
                 <th class="maincell">11:00 - 11:59 p.m.</th>
                 <td class="maincell" id="1_23"></td>
                 <td class="maincell" id="2_23"></td>
@@ -323,7 +359,8 @@
         </table>
     </view>
 
-    <view id="manage_view">     <!--management view-->
+    <view id="manage_view">
+        <!--management view-->
         <div class="select_container" id="table_sect_container">
             <div class="select_text" id="tableselector_text">Table_selector</div>
             <select id="table_selector">
@@ -335,7 +372,7 @@
             </select>
         </div>
         <div class="dataspace" id="manage_dataspace">
-            
+
         </div>
         <form id="dataentry_screen">
             <table>
@@ -429,7 +466,8 @@
             <div id="btn_bar">
                 <div class="databtns" id="cancel_btn" title="">Cancel</div>
                 <div class="databtns" id="save_btn" title="Saves this entry">Save</div>
-                <div class="databtns" id="savepluss_btn" title="Saves this entry and lets u add another right away">New</div>
+                <div class="databtns" id="savepluss_btn" title="Saves this entry and lets u add another right away">New
+                </div>
                 <div class="databtns" id="delete_btn" title="Delete this entry?">Delete</div>
             </div>
             <div id="delete_confirm_pannel">
@@ -471,20 +509,69 @@
         </form>
     </view>
 
-    <view id="setting_view">    <!--Setting View-->
+    <view id="setting_view">
+        <!--Setting View-->
         <div class="Setting_title">Theme</div>
         <div class="selection_container">
             <div class="selectionbox" id="light_theme_selection">
                 <div class="mincropallet" id="light_pallet">
                     <table>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
                     </table>
                     <div class="palletfoot">
                         <div class="icon lightcon"></div>
@@ -496,18 +583,66 @@
                 </div>
                 <div class="selection_title">LIGHT</div>
             </div>
-            
+
             <div class="selectionbox" id="dark_theme_selection">
                 <div class="mincropallet" id="amoled_pallet">
                     <table>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
-                        <tr><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"><td  class="maincell"></td  class="maincell"></tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
                     </table>
                     <div class="palletfoot">
                         <div class="icon darcon"></div>
@@ -515,45 +650,53 @@
                         <div class="icon darkclip"></div>
                         <div class="icon lightgear"></div>
                     </div>
-                    <input type="checkbox" class="selcetion_put"  id="dark_selection_put"></input>
+                    <input type="checkbox" class="selcetion_put" id="dark_selection_put"></input>
                 </div>
                 <div class="selection_title">DARK</div>
             </div>
         </div>
 
-        <div class="setting_bar" id="hilight_btn" title="toggle hilights" style="display: block;"><!--Permanently dissabled untill fixed-->
+        <div class="setting_bar" id="hilight_btn" title="toggle hilights" style="display: block;">
+            <!--Permanently dissabled untill fixed-->
             <div class="Bar_title">Hilights</div>
             <div class="switch_container_active" id="hilight_switch_container">
-                <div class="switchbdy" id="hilight_switchbdy"><div class="switch"></div></div>
+                <div class="switchbdy" id="hilight_switchbdy">
+                    <div class="switch"></div>
+                </div>
             </div>
         </div>
 
         <div class="setting_bar" id="Animations_btn" title="toggle Animations">
             <div class="Bar_title">Animations</div>
             <div class="switch_container_active" id="Animations_switch_container">
-                <div class="switchbdy" id="Animations_switchbdy"><div class="switch"></div></div>
+                <div class="switchbdy" id="Animations_switchbdy">
+                    <div class="switch"></div>
+                </div>
             </div>
         </div>
 
         <div class="setting_bar" id="tiles_btn" title="toggle fullscreen tiles">
             <div class="Bar_title">Full Tiles</div>
             <div class="switch_container_active" id="tiles_switch_container">
-                <div class="switchbdy" id="tiles_switchbdy"><div class="switch"></div></div>
+                <div class="switchbdy" id="tiles_switchbdy">
+                    <div class="switch"></div>
+                </div>
             </div>
         </div>
 
         <div class="setting_bar" id="Row_btn" title="toggle Empty cells">
             <div class="Bar_title">Empty Rows</div>
             <div class="switch_container_active" id="Row_switch_container">
-                <div class="switchbdy" id="Row_switchbdy"><div class="switch"></div></div>
+                <div class="switchbdy" id="Row_switchbdy">
+                    <div class="switch"></div>
+                </div>
             </div>
         </div>
 
         <div class="Setting_title" id="about_btn" title="Copies contact info to clipboard">About</div>
         <!--<div class="Setting_title">Placeholder btn 1</div>-->
     </view>
-
-<script type="text/javascript" src="cordova.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
 </body>
+
 </html>
