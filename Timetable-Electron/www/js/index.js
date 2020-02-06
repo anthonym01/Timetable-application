@@ -1,8 +1,8 @@
 
 window.addEventListener('load', function () {//window loads
-    if(typeof(require) == 'undefined'){//initialize node modules
+    if (typeof (require) == 'undefined') {//initialize node modules
         console.warn('Running in Browser');
-    }else{
+    } else {
         console.warn('Running in Node mode');
     }
     if (localStorage.getItem(config.configlocation)) {

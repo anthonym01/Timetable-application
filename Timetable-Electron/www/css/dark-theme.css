@@ -1,148 +1,226 @@
-@keyframes rotate {0% {transform: rotate(0deg)} 100%{transform: rotate(360deg)}}
-@keyframes glowrow { 0%{background-color: #2bff00} 50%{background-color: #189100} 100%{background-color: #2bff00}}
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg)
+    }
 
-body{
-    background-color :#000;
-    color            :#fff;
+    100% {
+        transform: rotate(360deg)
+    }
 }
 
-#amoled_pallet{box-shadow: 0vh 0vh 2vh 0vh #2bff00}
+@keyframes glowrow {
+    0% {
+        background-color: #2bff00
+    }
+
+    50% {
+        background-color: #189100
+    }
+
+    100% {
+        background-color: #2bff00
+    }
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+#amoled_pallet {
+    box-shadow: 0vh 0vh 2vh 0vh #2bff00
+}
 
 /*  page darkener  */
-#page_shade{
-    background-color: #000;/*  Always black    */
+#page_shade {
+    background-color: #000;
+    /*  Always black    */
 }
 
 /*  Loading Screen  */
-#Loading{
+#Loading {
     box-shadow: #fff;
     background-color: #000;
 }
-#loader{
+
+#loader {
     border: 3vh solid #fff;
     border-top: 3vh solid #2bff00;
 }
+
 /*  Foooter && Menu   */
-.footbar{   /* The body of the footer   */
+.footbar {
+    /* The body of the footer   */
     background-color: inherit;
-    border-bottom:none;
+    border-bottom: none;
 }
 
 /* Main navigation buttons */
-.menu_panel,.menu_panel_active{background-color:inherit}
-.menubtn_active{background-color: #199400}
+.menu_panel,
+.menu_panel_active {
+    background-color: inherit
+}
 
-.menubtn #setting_btn_icon{   /*  Setting button    */
+.menubtn_active {
+    background-color: #199400
+}
+
+.menubtn #setting_btn_icon {
+    /*  Setting button    */
     transform: rotate(0deg);
     background-image: url('../img/setting-light.webp');
 }
-.menubtn_active #setting_btn_icon{   
+
+.menubtn_active #setting_btn_icon {
     transform: rotate(90deg);
     background-image: url('../img/setting-light.webp');
 }
-.menubtn #manage_btn_icon{    /*  Manager button  (the little book) */
+
+.menubtn #manage_btn_icon {
+    /*  Manager button  (the little book) */
     background-image: url('../img/manage-dark.webp');
 }
-.menubtn_active #manage_btn_icon{
+
+.menubtn_active #manage_btn_icon {
     background-image: url('../img/manage-open-dark.webp');
 }
-.menubtn #table_btn_icon{     /* The button with the logo, that switches back to the main table   */
+
+.menubtn #table_btn_icon {
+    /* The button with the logo, that switches back to the main table   */
     background-image: url('../img/icon-inverse.webp');
 }
-.menubtn_active #table_btn_icon{
+
+.menubtn_active #table_btn_icon {
     background-image: url('../img/icon.webp');
 }
-.menubtn #task_btn_icon{    /*  task button    */
+
+.menubtn #task_btn_icon {
+    /*  task button    */
     background-image: url('../img/Clip-dark-closes.webp');
 }
-.menubtn_active #task_btn_icon{
+
+.menubtn_active #task_btn_icon {
     background-image: url('../img/Clip-dark.webp');
 }
 
 /*Timetable tags*/
-#timetable{background-image: url('../img/blyatground.webp')}
-#fullscreen_tile{background-color: #000c}
+#timetable {
+    background-image: url('../img/blyatground.webp')
+}
+
+#fullscreen_tile {
+    background-color: #000c
+}
+
 #fullscreen_tile_tab_container tr:nth-child(even) {
     background-color: rgba(0, 0, 0, 0.3);
 }
-#close_btn{ 
-    border:0.3vh solid #fff;
+
+#close_btn {
+    border: 0.3vh solid #fff;
     color: #fff;
     background-color: #000;
-    text-shadow: 0vw 0vw 2vw #000,0vw 0vw 1vw #000;
-}#close_btn:active{
-    border:0.3vh solid #000;
-    background-color: #f00!important;
-    color: #000!important;
+    text-shadow: 0vw 0vw 2vw #000, 0vw 0vw 1vw #000;
+}
+
+#close_btn:active {
+    border: 0.3vh solid #000;
+    background-color: #f00 !important;
+    color: #000 !important;
     text-shadow: none;
 }
-#table1::-webkit-scrollbar-thumb {background: #000;}/*scrollbar thumb*/
+
+#table1::-webkit-scrollbar-thumb {
+    background: #000;
+}
+
+/*scrollbar thumb*/
 .glowrow {
-    background-color:#2bff00;
-    animation:glowrow 2s infinite;
+    background-color: #2bff00;
+    animation: glowrow 2s infinite;
 }
-.maincell{/*  Cells of the table  */
-    border:0.2vh solid #fff;
+
+.maincell {
+    /*  Cells of the table  */
+    border: 0.2vh solid #fff;
 }
-.data_block,.data_block_active{/*  The blocks containing the classes   */
-    text-shadow: 0vw 0vw 2vw #000,0vw 0vw 1vw #000;
+
+.data_block,
+.data_block_active {
+    /*  The blocks containing the classes   */
+    text-shadow: 0vw 0vw 2vw #000, 0vw 0vw 1vw #000;
     background-color: #636363;
-    color:#fff;
+    color: #fff;
     transition: background-color 300ms color 300ms;
 }
-.data_block:active{
-    text-shadow: 0vw 0vw 2vw #fff,0vw 0vw 1vw #fff!important;
-    background-color: #ebebeb!important;
-    color:#000!important;
+
+.data_block:active {
+    text-shadow: 0vw 0vw 2vw #fff, 0vw 0vw 1vw #fff !important;
+    background-color: #ebebeb !important;
+    color: #000 !important;
     transition-duration: 0ms;
 }
-.infodoot{
+
+.infodoot {
     color: #fff;
     background-color: inherit;
-    text-shadow: 0vw 0vw 3vw #000,0vw 0vw 1vw #000;
+    text-shadow: 0vw 0vw 3vw #000, 0vw 0vw 1vw #000;
 }
-.infodoot:active{
-    background-color: #ebebeb!important;
-    color:#000!important;
+
+.infodoot:active {
+    background-color: #ebebeb !important;
+    color: #000 !important;
 }
 
 /*  manage_view   */
-.data_bar{/*    Detailed representaion of the data to be managed    */
-    text-shadow: 0vw 0vw 2vw #000,0vw 0vw 1vw #000;
+.data_bar {
+    /*    Detailed representaion of the data to be managed    */
+    text-shadow: 0vw 0vw 2vw #000, 0vw 0vw 1vw #000;
     background-color: #636363;
     color: #fff;
     transition: background-color 300ms color 300ms;
 }
-.data_bar:active{
-    text-shadow: 0vw 0vw 2vw #fff,0vw 0vw 1vw #fff;
-    background-color: #fff!important;
-    color: #000!important;
+
+.data_bar:active {
+    text-shadow: 0vw 0vw 2vw #fff, 0vw 0vw 1vw #fff;
+    background-color: #fff !important;
+    color: #000 !important;
     transition: background-color 0ms color 0ms;
 }
-.data_noot{
+
+.data_noot {
     color: #000;
     background-color: #fff;
     text-shadow: none;
 }
-.plusimg{/* Little icon in the add new button */
+
+.plusimg {
+    /* Little icon in the add new button */
     background-image: url('../img/plus-light.webp');
 }
-#dataentry_screen{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
+
+#dataentry_screen {
+    /*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
     background-color: #000;
 }
-#dataentry_screen input{
-    border:none;
 
-    border-bottom:0.5vw solid #fff;
+#dataentry_screen input {
+    border: none;
+
+    border-bottom: 0.5vw solid #fff;
     background-color: inherit;
     color: inherit;
-}#dataentry_screen input:focus{
-    border:none;
-    border-bottom:0.5vh solid #2bff00;
+}
+
+#dataentry_screen input:focus {
+    border: none;
+    border-bottom: 0.5vh solid #2bff00;
     background-color: inherit;
     color: inherit;
     outline: none;
-}/*#dataentry_screen input::before{
+}
+
+/*#dataentry_screen input::before{
     content: "";
     position: absolute;
     top: 0;
@@ -152,85 +230,124 @@ body{
     border-bottom:0.5vw solid #2bff00;
     z-index: 5;
 }*/
-#dataentry_screen select:focus{/*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
-    border:0.5vw solid #2bff00;
+#dataentry_screen select:focus {
+    /*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
+    border: 0.5vw solid #2bff00;
 }
 
-.select_container{/*  Select boxes made to be more effective on mobile  */
-    border:0.3vh solid #fff;
+.select_container {
+    /*  Select boxes made to be more effective on mobile  */
+    border: 0.3vh solid #fff;
     color: #fff;
-}.select_container:active{
+}
+
+.select_container:active {
     background-color: #fff;
     color: #000;
 }
 
-.databtns{
+.databtns {
     background-color: #000;
-    border:0.3vh solid #fff;
-}
-#cancel_btn:active{ /*cancel button*/
-    background-color: #ff5656;
-    border:0.3vh solid #912e2e;
-}
-#save_btn:active{ /*Save button*/
-    background-color: #00c3ff;
-    border:0.3vh solid #178caf;
-}
-#savepluss_btn:active{/*Save and add new entry button*/
-    background-color: #44ff1e;
-    border:0.3vh solid #30b914;
-}
-#delete_btn:active{/*Save and add new entry button*/
-    background-color: #ff5656;
-    border:0.3vh solid #912e2e;
+    border: 0.3vh solid #fff;
 }
 
-#delete_confirm_pannel{/*   Delete confirmation pannel  */
+#cancel_btn:active {
+    /*cancel button*/
+    background-color: #ff5656;
+    border: 0.3vh solid #912e2e;
+}
+
+#save_btn:active {
+    /*Save button*/
+    background-color: #00c3ff;
+    border: 0.3vh solid #178caf;
+}
+
+#savepluss_btn:active {
+    /*Save and add new entry button*/
+    background-color: #44ff1e;
+    border: 0.3vh solid #30b914;
+}
+
+#delete_btn:active {
+    /*Save and add new entry button*/
+    background-color: #ff5656;
+    border: 0.3vh solid #912e2e;
+}
+
+#delete_confirm_pannel {
+    /*   Delete confirmation pannel  */
     background-color: #000000b3;
 }
+
 #pseudo_container_table tr:nth-child(even) {
     background-color: #000000b3;
 }
-#yes_btn{
+
+#yes_btn {
     background-color: #3ad61a;
-    border:0.3vh solid #248d0f;
-}#yes_btn:active{
-    background-color: #44ff1e;
-    border:0.3vh solid #3ad61a;
-}
-#no_btn{
-    background-color: #ff5656;
-    border:0.3vh solid #912e2e;
-}#no_btn:active{
-    background-color: #ff3434;
-    border:0.3vh solid #b33e3e;
+    border: 0.3vh solid #248d0f;
 }
 
-#erraser{/* Clear inputs    */
+#yes_btn:active {
+    background-color: #44ff1e;
+    border: 0.3vh solid #3ad61a;
+}
+
+#no_btn {
+    background-color: #ff5656;
+    border: 0.3vh solid #912e2e;
+}
+
+#no_btn:active {
+    background-color: #ff3434;
+    border: 0.3vh solid #b33e3e;
+}
+
+#erraser {
+    /* Clear inputs    */
     background-image: url('../img/Eraser-dark.webp');
 }
 
 /*  Settinng things */
-#dark_selection_put{
-    border:1px solid #00ff0d;
+#dark_selection_put {
+    border: 1px solid #00ff0d;
 }
-#light_selection_put{
-    border:1px solid #fff;
+
+#light_selection_put {
+    border: 1px solid #fff;
 }
-.selcetion_put:checked{
+
+.selcetion_put:checked {
     background-color: #00ff0d;
 }
-.selcetion_put:checked::after{
+
+.selcetion_put:checked::after {
     border-color: #000;
 }
 
 /* Switches */
-.switch_container_active{background-color: #000}
-.switch_container_active .switchbdy{background-color: #000}
-.switch_container_active .switch{background-color: #fff}
-.switch_container_dissabled{
-    background-color: #000;
-    border:0.5vh solid #7a7a7a;
+.switch_container_active {
+    background-color: #000
 }
-.switch_container_dissabled .switchbdy{background-color: #000}
-.switch_container_dissabled .switch{background-color: #7a7a7a}
+
+.switch_container_active .switchbdy {
+    background-color: #000
+}
+
+.switch_container_active .switch {
+    background-color: #fff
+}
+
+.switch_container_dissabled {
+    background-color: #000;
+    border: 0.5vh solid #7a7a7a;
+}
+
+.switch_container_dissabled .switchbdy {
+    background-color: #000
+}
+
+.switch_container_dissabled .switch {
+    background-color: #7a7a7a
+}
