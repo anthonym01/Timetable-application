@@ -1990,6 +1990,7 @@
         transition: transform 500ms;
     }
 
+    /* Setting View */
     .Setting_title {
         margin-top: 1vh;
         font-size: 6vh;
@@ -2019,6 +2020,9 @@
     }
 
     .selcetion_put {
+        position: absolute;
+        bottom: 0;
+        right: 0;
         -webkit-appearance: none;
         padding: 0;
         height: 3.5vh;
@@ -2051,10 +2055,20 @@
         margin-left: auto;
         transition: box-shadow 500ms;
     }
+    .mincropallet .palletfoot {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 5vh;
+    }
 
     .mincropallet table {
-        height: 85%;
-        width: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: calc(100% - 5vh);
         border-collapse: collapse;
         table-layout: fixed;
         background-size: cover;
@@ -2076,18 +2090,6 @@
         border: 1px solid #ffffff;
     }
 
-    #dark_pallet {
-        background-color: rgb(49, 49, 49)
-    }
-
-    #dark_pallet table {
-        background-image: url('../img/blyatground.webp');
-    }
-
-    #dark_pallet td {
-        border: 1px solid #c9c9c9;
-    }
-
     #light_pallet {
         background-color: rgb(255, 255, 255);
     }
@@ -2100,15 +2102,10 @@
         border: 1px solid #000000;
     }
 
-    .mincropallet .palletfoot {
-        height: 15%;
-        width: 100%;
-    }
-
     .palletfoot .icon {
-        height: 100%;
-        width: 25%;
-        float: left;
+        position: relative;
+        height: 5vh;
+        width: 5vh;
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
@@ -2120,10 +2117,6 @@
 
     .lightbook {
         background-image: url('../img/manage-light.webp');
-    }
-
-    .lightclip {
-        background-image: url('../img/Clip-light.webp');
     }
 
     .lightgear {
@@ -2142,8 +2135,11 @@
         background-image: url('../img/manage-dark.webp');
     }
 
-    .darkclip {
-        background-image: url('../img/Clip-dark.webp');
+    .notification_pallet,.notification_pallet_active {
+        position: relative;
+        float: left;
+        height: 100%;
+        width: 25%;
     }
 
     .setting_bar {

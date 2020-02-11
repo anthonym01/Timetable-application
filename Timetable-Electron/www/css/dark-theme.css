@@ -45,9 +45,6 @@ body {
     color: #fff;
 }
 
-#amoled_pallet {
-    box-shadow: 0vh 0vh 2vh 0vh #2bff00
-}
 
 /*  page darkener  */
 #page_shade {
@@ -335,6 +332,10 @@ body {
 }
 
 /*  Settinng things */
+
+#amoled_pallet {
+    box-shadow: 0vh 0vh 2vh 0vh #2bff00
+}
 #dark_selection_put {
     border: 1px solid #00ff0d;
 }
@@ -349,6 +350,9 @@ body {
 
 .selcetion_put:checked::after {
     border-color: #000;
+}
+.notification_pallet_active {
+    box-shadow: 0vh 0vh 2vh 0vh #2bff00
 }
 
 /* Switches */
@@ -410,7 +414,7 @@ body {
 }
 
 .notification_style3 .title::after {
-    background-image: url('Logo.png')
+    background-image: url('../img/icon-inverse.webp')
 }
 
 .notification_style3 .title::before,

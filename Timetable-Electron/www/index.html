@@ -513,8 +513,14 @@
         <!--Setting View-->
         <div class="Setting_title">Theme</div>
         <div class="selection_container">
+            <!-- Container for themes -->
             <div class="selectionbox" id="light_theme_selection">
                 <div class="mincropallet" id="light_pallet">
+                    <div class="palletfoot">
+                        <div class="icon lightcon"></div>
+                        <div class="icon lightbook"></div>
+                        <div class="icon darkgear"></div>
+                    </div>
                     <table>
                         <tr>
                             <td class="maincell"></td class="maincell">
@@ -573,12 +579,6 @@
                             <td class="maincell"></td class="maincell">
                         </tr>
                     </table>
-                    <div class="palletfoot">
-                        <div class="icon lightcon"></div>
-                        <div class="icon lightbook"></div>
-                        <div class="icon lightclip"></div>
-                        <div class="icon darkgear"></div>
-                    </div>
                     <input type="checkbox" class="selcetion_put" id="light_selection_put"></input>
                 </div>
                 <div class="selection_title">LIGHT</div>
@@ -586,6 +586,11 @@
 
             <div class="selectionbox" id="dark_theme_selection">
                 <div class="mincropallet" id="amoled_pallet">
+                    <div class="palletfoot">
+                        <div class="icon darcon"></div>
+                        <div class="icon darkbook"></div>
+                        <div class="icon lightgear"></div>
+                    </div>
                     <table>
                         <tr>
                             <td class="maincell"></td class="maincell">
@@ -644,18 +649,44 @@
                             <td class="maincell"></td class="maincell">
                         </tr>
                     </table>
-                    <div class="palletfoot">
-                        <div class="icon darcon"></div>
-                        <div class="icon darkbook"></div>
-                        <div class="icon darkclip"></div>
-                        <div class="icon lightgear"></div>
-                    </div>
                     <input type="checkbox" class="selcetion_put" id="dark_selection_put"></input>
                 </div>
                 <div class="selection_title">DARK</div>
             </div>
         </div>
-
+        <div class="Setting_title">Alert Style</div>
+        <div class="selection_container" style="height: 25vh;width: 98%;margin-left: auto;margin-right: auto;">
+            <!-- Container for ALert styles -->
+            <div class="notification_pallet" id="notification_pallet1">
+                <div class="notification_style1" id="notification_style1"
+                    style="position: relative;transform: translate(2.5vw,4vh);">
+                    <div class="title">Type 1</div>
+                    <div class="notifbody">Select notification type 1</div>
+                </div>
+                <input type="checkbox" class="selcetion_put" id=""></input>
+            </div>
+            <div class="notification_pallet" id="notification_pallet2">
+                <div class="notification_style2" id="notification_style2"
+                    style="position: relative;transform: translate(2.5vw,6.5vh);width: 20vw;">
+                    <div class="title">Type 2</div>
+                    <div class="notifbody">Select notification type 2</div>
+                </div>
+            </div>
+            <div class="notification_pallet" id="notification_pallet3">
+                <div class="notification_style3" id="notification_style3"
+                    style="position: relative;transform: translate(2.5vw,6.5vh);width: 20vw;">
+                    <div class="title">Type 3</div>
+                    <div class="notifbody">Select notification type 3</div>
+                </div>
+            </div>
+            <div class="notification_pallet" id="notification_pallet4">
+                <div class="notification_style4" id="notification_style4"
+                    style="position: relative;transform: translate(2.5vw,4vh);">
+                    <div class="title">Type 4</div>
+                    <div class="notifbody">Select notification type 4</div>
+                </div>
+            </div>
+        </div>
         <div class="setting_bar" id="hilight_btn" title="toggle hilights" style="display: block;">
             <!--Permanently dissabled untill fixed-->
             <div class="Bar_title">Hilights</div>
