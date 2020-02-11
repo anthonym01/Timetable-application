@@ -41,6 +41,7 @@ body{
 .menubtn #setting_btn_icon{   /*  Setting button    */
     transform: rotate(0deg);
     background-image: url('../img/setting-dark.webp');
+    filter: invert(100%);
 }
 .menubtn_active #setting_btn_icon{   
     transform: rotate(90deg);
@@ -48,15 +49,18 @@ body{
 }
 .menubtn #manage_btn_icon{    /*  Manager button  (the little book) */
     background-image: url('../img/manage-light.webp');
+    filter: invert(100%);
 }
 .menubtn_active #manage_btn_icon{
     background-image: url('../img/manage-open-light.webp');
 }
 .menubtn #table_btn_icon{     /* The button with the logo, that switches back to the main table   */
     background-image: url('../img/icon.webp');
+    filter: invert(100%);
 }
 .menubtn_active #table_btn_icon{
     background-image: url('../img/icon-inverse.webp');
+    filter: invert(100%);
 }
 .menubtn #task_btn_icon{    /*  task button    */
     background-image: url('../img/Clip-light-closes.webp');

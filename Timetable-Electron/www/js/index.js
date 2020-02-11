@@ -224,7 +224,7 @@ let config = {
         localStorage.clear(this.configlocation);
         console.log('config deleted: ');
         console.table(this.data);
-        utility.toast('App will now restart');
+        notify.new('App will now restart');
         setTimeout(() => { location.reload() }, 100);
         this.validate();
     },
@@ -607,7 +607,7 @@ let table = {
                 }
                 if (days == 0 || rows == 0) {
                     //Table is empty
-                    utility.toast('Table: ' + config.data.table_selected + 'This table is empty...');
+                    notify.new('Table: ' + config.data.table_selected,'Table #' + config.data.table_selected + ' is empty...',3);
                 }
                 console.log('Table validated');
             }
@@ -1108,7 +1108,7 @@ let manage = {
             if (tempentry.name == "" || undefined || null) {
                 entryisvalid = false;
                 document.getElementById('name_put').style.border = "0.3vh solid #ff0000";
-                utility.toast('Please Enter a name');
+                notify.new('Please Enter a name');
             } else {
                 document.getElementById('name_put').style.border = "";
                 console.log('Name detected: ', tempentry.name);
@@ -1120,11 +1120,11 @@ let manage = {
             let percentage_start = Number((start_time_raw.slice(0, 2) / 1/*I divide it by one becasue the scripting engine is drunk*/) + (start_time_raw.slice(3) / 60));
             let percentage_end = Number((end_time_raw.slice(0, 2) / 1/*I divide it by one becasue the scripting engine is drunk*/) + (end_time_raw.slice(3) / 60));
             if (start_time_raw == "" || start_time_raw == null || start_time_raw == undefined) {
-                utility.toast('Start time cannot be empty');
+                notify.new('Start time cannot be empty');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (end_time_raw == "" || end_time_raw == null || end_time_raw == undefined) {
-                utility.toast('End time cannot be empty');
+                notify.new('End time cannot be empty');
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start == percentage_end) {
@@ -1132,7 +1132,7 @@ let manage = {
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start > percentage_end) {
-                utility.toast('Class cannot start after it ends');
+                notify.new('Class cannot start after it ends');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
@@ -1173,7 +1173,7 @@ let manage = {
             config.properties.called_from_plus = true;
             let entryisvalid = manage.dialogue.save();
             if (entryisvalid) {
-                utility.toast(document.getElementById('name_put').value + ' was saved, U may now add another');
+                notify.new(document.getElementById('name_put').value + ' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
                 manage.dialogue.open();
             }
@@ -1262,9 +1262,9 @@ let UI = {
         document.getElementById('about_btn').addEventListener('click', function () {
             /*
             utility.clipboard('Phone: 876-5744-801, Email: samuelmatheson15@gmail.com');
-            utility.toast('Contact info coppied to clipboard');*/
+            notify.new('Contact info coppied to clipboard');*/
             utility.clipboard(JSON.stringify(config.data));
-            utility.toast('Debug info coppied to clipboard');
+            notify.new('Debug info coppied to clipboard');
         });
 
         document.getElementById('dark_theme_selection').addEventListener('click', this.setting.theme.set_dark)
@@ -1310,13 +1310,15 @@ let UI = {
             else {
                 config.properties.exit = true;
                 setTimeout(() => { config.properties.exit = false; }, 2000);
-                utility.toast('Press back button again to exit');
+                notify.new('Press back button again to exit');
             }
         },
         TABLE: function () {
             console.log('Table navigation started');
             if (config.properties.changed) {
                 window.location.reload();
+                /*table.data_render();
+                setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
             } else {
                 if (config.properties.view != "table") {
                     table.clock.start_clock();
@@ -1382,13 +1384,13 @@ let UI = {
                 if (config.data.hilight_engine) {
                     //turn off the switch
                     config.data.hilight_engine = false;
-                    utility.toast('hilights dissabled');
+                    notify.new('hilights dissabled');
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
                     config.data.hilight_engine = true;
                     table.hilight_engine_go_vroom();
-                    utility.toast('hilights enabled');
+                    notify.new('hilights enabled');
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
                 }
@@ -1411,11 +1413,11 @@ let UI = {
                 if (config.data.animation) {
                     //turn off the switch
                     config.data.animation = false;
-                    utility.toast('animations dissabled'); console.warn('animations dissabled');
+                    notify.new('animations dissabled'); console.warn('animations dissabled');
                 } else {
                     //turn on the witch
                     config.data.animation = true;
-                    utility.toast('animations enabled'); console.warn('animations enabled');
+                    notify.new('animations enabled'); console.warn('animations enabled');
                 }
                 config.save();
                 UI.setting.animation.setpostition();
@@ -1436,11 +1438,11 @@ let UI = {
                 if (config.data.tiles) {
                     //turn off the switch
                     config.data.tiles = false;
-                    utility.toast('tiles dissabled'); console.warn('tiles dissabled');
+                    notify.new('tiles dissabled'); console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
                     config.data.tiles = true;
-                    utility.toast('tiles enabled'); console.warn('tiles enabled');
+                    notify.new('tiles enabled'); console.warn('tiles enabled');
                 }
                 config.save();
                 UI.setting.tiles.setpostition();
@@ -1459,12 +1461,12 @@ let UI = {
                 if (config.data.empty_rows) {
                     //turn off the switch
                     config.data.empty_rows = false;
-                    utility.toast('Empty Rows dissabled'); console.warn('Empty Rows dissabled');
+                    notify.new('Empty Rows dissabled'); console.warn('Empty Rows dissabled');
                     config.properties.changed = true;
                 } else {
                     //turn on the witch
                     config.data.empty_rows = true;
-                    utility.toast('Empty Rows Enabled'); console.warn('Empty Rows Enabled');
+                    notify.new('Empty Rows Enabled'); console.warn('Empty Rows Enabled');
                     config.properties.changed = true;
                 }
                 config.save();
@@ -1492,15 +1494,6 @@ let utility = {//Some usefull things
         } else {
             window.close();
         }
-    },
-    /*  Produce toast messages    */
-    toast: function (text, durration_in_ms, position_top_right_left_bottom, offset_in_px) {
-        if (typeof (device) != 'undefined') {
-            if (position_top_right_left_bottom == undefined) { position_top_right_left_bottom = 'bottom' }//default the position
-            if (durration_in_ms == undefined) { durration_in_ms = 4000 }//default the duration
-            if (offset_in_px == undefined) { offset_in_px = -160 }//default the offset
-            window.plugins.toast.showWithOptions({ message: text, duration: durration_in_ms, position: position_top_right_left_bottom, addPixelsY: offset_in_px });
-        } else { console.error('Device plugin broke cannot push toast') }
     },
     /*  Push text to the keyboard   */
     clipboard: function (textpush) {
