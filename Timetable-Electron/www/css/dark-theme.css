@@ -152,11 +152,6 @@ body {
     text-shadow: none;
 }
 
-#table1::-webkit-scrollbar-thumb {
-    background: #000;
-}
-
-/*scrollbar thumb*/
 .glowrow {
     background-color: #2bff00;
     animation: glowrow 2s infinite;
@@ -170,14 +165,14 @@ body {
 .data_block,
 .data_block_active {
     /*  The blocks containing the classes   */
-    text-shadow: 0vw 0vw 2vw #000, 0vw 0vw 1vw #000;
+    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000;
     background-color: #636363;
     color: #fff;
     transition: background-color 300ms color 300ms;
 }
 
 .data_block:active {
-    text-shadow: 0vw 0vw 2vw #fff, 0vw 0vw 1vw #fff !important;
+    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000!important;
     background-color: #ebebeb !important;
     color: #000 !important;
     transition-duration: 0ms;
@@ -195,16 +190,18 @@ body {
 }
 
 /*  manage_view   */
+.data_button,
 .data_bar {
     /*    Detailed representaion of the data to be managed    */
-    text-shadow: 0vw 0vw 2vw #000, 0vw 0vw 1vw #000;
+    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000;
     background-color: #636363;
     color: #fff;
     transition: background-color 300ms color 300ms;
 }
 
+.data_button:active,
 .data_bar:active {
-    text-shadow: 0vw 0vw 2vw #fff, 0vw 0vw 1vw #fff;
+    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000;
     background-color: #fff !important;
     color: #000 !important;
     transition: background-color 0ms color 0ms;
@@ -316,12 +313,12 @@ body {
     border: 0.3vh solid #3ad61a;
 }
 
-#no_btn {
+#no_del_btn {
     background-color: #ff5656;
     border: 0.3vh solid #912e2e;
 }
 
-#no_btn:active {
+#no_del_btn:active {
     background-color: #ff3434;
     border: 0.3vh solid #b33e3e;
 }

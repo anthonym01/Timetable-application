@@ -29,7 +29,7 @@ let config = {
         tiles: true,
         empty_rows: false,
         notification_type: 3,
-        table_selected: 1,
+        table_selected: 4,
         table_details: [// Details about different tables
             { purpose: "table 1" },
             { purpose: "table 2" },
@@ -238,7 +238,7 @@ let config = {
         localStorage.clear(this.configlocation);
         console.log('config deleted: ');
         console.table(this.data);
-        notify.new('App','app is preparing to restart');
+        notify.new('App', 'app is preparing to restart');
         setTimeout(() => { location.reload() }, 2000);
         this.validate();
     },
@@ -734,14 +734,17 @@ let manage = {
             document.getElementById('delete_confirm_pannel').style.display = 'none';
             manage.render_list();
         });
-        document.getElementById('no_btn').addEventListener('click', function () {// Delete No button
+
+        document.getElementById('no_del_btn').addEventListener('click', function () {// Delete No button
             console.log('Delete denial called');
             document.getElementById('delete_confirm_pannel').style.display = 'none';
         });
         document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
 
         // table selector
-        document.getElementById('table_selector').value = config.data.table_selected; //Set the table selectors value
+        console.log('Table selected: ', config.data.table_selected)
+        document.getElementById('tablemanage_txt').innerText = config.data.table_details[Number(config.data.table_selected - 1)].purpose
+        /*document.getElementById('table_selector').value = config.data.table_selected; //Set the table selectors value
         switch (config.data.table_selected) {
             case 0: document.getElementById('tableselector_text').innerText = "Hidden"; break;
             case 1: document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose;; break;
@@ -763,7 +766,7 @@ let manage = {
         document.getElementById('3_selectormain').innerHTML = config.data.table_details[2].purpose;
         document.getElementById('4_selectorsub').innerHTML = config.data.table_details[3].purpose;
         document.getElementById('4_selectormain').innerHTML = config.data.table_details[3].purpose;
-        document.getElementById('table_selector').addEventListener('change', function () {
+        /*document.getElementById('table_selector').addEventListener('change', function () {
             console.log('table_selector changed');
             config.data.table_selected = document.getElementById('table_selector').value;
             switch (document.getElementById('table_selector').value) {
@@ -776,7 +779,7 @@ let manage = {
             config.properties.changed = true;
             manage.render_list();
             config.save();
-        });
+        });*/
         //Initalize day_put selector
         document.getElementById('day_put').value = "1";
         document.getElementById('day_put_text').innerText = "Monday"
@@ -826,15 +829,10 @@ let manage = {
         clear();
         let i = 0;
         //Add new button
-        let tempblock = document.createElement('div');
-        tempblock.setAttribute("class", "data_bar");
-        tempblock.innerHTML = 'New Class';
-        tempblock.title = 'Add a new class';
-        document.getElementById('manage_dataspace').appendChild(tempblock);
-        let plusimg = document.createElement('div');//plus image
-        plusimg.setAttribute("class", "plusimg");
-        tempblock.appendChild(plusimg);
-        tempblock.addEventListener('click', function () { manage.dialogue.open(); console.log('Add new class button clicked') });//add new btn listener
+        document.getElementById('new_class_button').addEventListener('click', function () {
+            manage.dialogue.open();
+            console.log('Add new class button clicked')
+        })//add new btn listener
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
             console.log('The table database is empty,manager will show first time setup');
@@ -863,8 +861,30 @@ let manage = {
             let tempblock = document.createElement('div');
             tempblock.title = "Click to edit";
             tempblock.setAttribute("class", "data_bar");
+
             //assign a color
             tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+
+            //build menu
+            let sub_optionbar = document.createElement('div');
+            sub_optionbar.setAttribute("class", "sub_optionbar");
+            let editbtn = document.createElement('div');
+            editbtn.setAttribute("class", "optionbutton editbtn");
+            editbtn.setAttribute("title", "edit");
+            let deletebtn = document.createElement('div');
+            deletebtn.setAttribute("class", "optionbutton deletebtn");
+            deletebtn.setAttribute("title", "delete");
+            let selectbutton = document.createElement('div');
+            selectbutton.setAttribute("class", "optionbutton selectbutton");
+            selectbutton.setAttribute("title", "select");
+            let selectimput = document.createElement('input');
+            selectimput.setAttribute("type", "checkbox");
+
+            sub_optionbar.appendChild(editbtn)
+            sub_optionbar.appendChild(deletebtn)
+            selectbutton.appendChild(selectimput)
+            sub_optionbar.appendChild(selectbutton)
+            tempblock.appendChild(sub_optionbar)
 
             //time processing
             let startmeridian = 'a.m.';
@@ -941,7 +961,9 @@ let manage = {
                 tempblock.appendChild(sub_tab);
                 //alow editing function
                 tempblock.setAttribute('id', 'bar_' + index);
-                tempblock.addEventListener('click', function () { manage.dialogue.edit(index) });//Edit btn
+                editbtn.addEventListener('click', function () { manage.dialogue.edit(index) });//Edit btn
+                deletebtn.addEventListener('click', function () { manage.dialogue.edit(index); manage.dialogue.call_delete() })
+                selectbutton.addEventListener('click', function () { console.error('Select fucntion is incomplete') })
             }
             let noot = document.createElement('div');
             if (config.data.table1_db[index].show == 0) { noot.innerHTML = '<del>' + config.data.table1_db[index].show + '</del>'; noot.style.color = 'red'; }//noot is hidden
@@ -1290,32 +1312,32 @@ let UI = {
 
         switch (config.data.notification_type) {
             case 1:
-                document.getElementById('notification_pallet1').classList="notification_pallet_active"
-                document.getElementById('notification_pallet2').classList="notification_pallet"
-                document.getElementById('notification_pallet3').classList="notification_pallet"
-                document.getElementById('notification_pallet4').classList="notification_pallet"
-            break;
+                document.getElementById('notification_pallet1').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
+                break;
             case 2:
-                document.getElementById('notification_pallet1').classList="notification_pallet"
-                document.getElementById('notification_pallet2').classList="notification_pallet_active"
-                document.getElementById('notification_pallet3').classList="notification_pallet"
-                document.getElementById('notification_pallet4').classList="notification_pallet"
-            break;
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
+                break;
             case 3:
-                document.getElementById('notification_pallet1').classList="notification_pallet"
-                document.getElementById('notification_pallet2').classList="notification_pallet"
-                document.getElementById('notification_pallet3').classList="notification_pallet_active"
-                document.getElementById('notification_pallet4').classList="notification_pallet"
-            break;
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
+                break;
             case 4:
-                document.getElementById('notification_pallet1').classList="notification_pallet"
-                document.getElementById('notification_pallet2').classList="notification_pallet"
-                document.getElementById('notification_pallet3').classList="notification_pallet"
-                document.getElementById('notification_pallet4').classList="notification_pallet_active"
-            break;
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet_active"
+                break;
             default:
 
-            break;
+                break;
         }
 
     },
@@ -1365,7 +1387,7 @@ let UI = {
         TABLE: function () {
             console.log('Table navigation started');
             if (config.properties.changed) {
-                window.location.reload();
+                //window.location.reload();
                 /*table.data_render();
                 setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
             } else {
@@ -1433,40 +1455,40 @@ let UI = {
                 config.data.notification_type = 1
                 config.save();
                 notify.new('Notifications', 'Notification type 1 selected');
-                document.getElementById('notification_pallet1').classList="notification_pallet_active"
-                document.getElementById('notification_pallet2').classList="notification_pallet"
-                document.getElementById('notification_pallet3').classList="notification_pallet"
-                document.getElementById('notification_pallet4').classList="notification_pallet"
+                document.getElementById('notification_pallet1').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
             },
             set_2: function () {
                 console.warn('Notification type 2 selected');
                 config.data.notification_type = 2
                 config.save();
                 notify.new('Notifications', 'Notification type 2 selected');
-                document.getElementById('notification_pallet1').classList="notification_pallet"
-                document.getElementById('notification_pallet2').classList="notification_pallet_active"
-                document.getElementById('notification_pallet3').classList="notification_pallet"
-                document.getElementById('notification_pallet4').classList="notification_pallet"
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
             },
             set_3: function () {
                 console.warn('Notification type 3 selected');
                 config.data.notification_type = 3
                 config.save();
                 notify.new('Notifications', 'Notification type 3 selected');
-                document.getElementById('notification_pallet1').classList="notification_pallet"
-                document.getElementById('notification_pallet2').classList="notification_pallet"
-                document.getElementById('notification_pallet3').classList="notification_pallet_active"
-                document.getElementById('notification_pallet4').classList="notification_pallet"
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
             },
             set_4: function () {
                 console.warn('Notification type 4 selected');
                 config.data.notification_type = 4
                 config.save();
                 notify.new('Notifications', 'Notification type 4 selected');
-                document.getElementById('notification_pallet1').classList="notification_pallet"
-                document.getElementById('notification_pallet2').classList="notification_pallet"
-                document.getElementById('notification_pallet3').classList="notification_pallet"
-                document.getElementById('notification_pallet4').classList="notification_pallet_active"
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet_active"
             },
         },
         hilight: {

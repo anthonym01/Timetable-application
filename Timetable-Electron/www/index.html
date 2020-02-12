@@ -361,18 +361,29 @@
 
     <view id="manage_view">
         <!--management view-->
-        <div class="select_container" id="table_sect_container">
-            <div class="select_text" id="tableselector_text">Table_selector</div>
-            <select id="table_selector">
-                <option value="1" id='1_selectormain'>Table 1 items</option>
-                <option value="2" id='2_selectormain'>Table 2 items</option>
-                <option value="3" id='3_selectormain'>Table 3 items</option>
-                <option value="4" id='4_selectormain'>Table 4 items</option>
-                <option value="0">Hidden items</option>
-            </select>
+        <div class="data_action_header">
+            <div id="tablemanger" title="manage tables"><span id="tablemanage_txt">placeholder</span></div>
+            <div class="data_button" id="new_class_button" title="Add a new class">New Class<div class="plusimg"></div></div>
         </div>
         <div class="dataspace" id="manage_dataspace">
-
+            <div title="Click to edit" class="data_bar" id="bar_2" style="background-color: rgb(85, 255, 0);">
+                <div class="sub_optionbar">
+                    <div class="optionbutton editbtn" title="edit"></div>
+                    <div class="optionbutton deletebtn" title="delete"></div>
+                    <div class="optionbutton selectbutton" title="select"><input type="checkbox" id=""></input></div>
+                </div>
+                <table>
+                    <tr>
+                        <th colspan="2">Test 3</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Wednesday</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">8:30 a.m. - 10:46 a.m.</td>
+                    </tr>
+                </table>
+            <div class="data_noot">4</div></div>
         </div>
         <form id="dataentry_screen">
             <table>
@@ -502,8 +513,8 @@
                         </tr>
                     </table>
                 </div>
-                <button id="no_btn">No</button>
-                <button id="yes_btn">Yes</button>
+                <button type="button" id="no_del_btn">No</button>
+                <button type="button" id="yes_btn">Yes</button>
             </div>
             <div id="erraser" title="clear inputs"></div>
         </form>
