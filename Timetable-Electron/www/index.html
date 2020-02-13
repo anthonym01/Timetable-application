@@ -362,8 +362,25 @@
     <view id="manage_view">
         <!--management view-->
         <div class="data_action_header">
-            <div id="tablemanger" title="manage tables"><span id="tablemanage_txt">placeholder</span></div>
-            <div class="data_button" id="new_class_button" title="Add a new class">New Class<div class="plusimg"></div></div>
+            <div id="tablemanger" title="manage tables">
+                <!-- Revised table manager -->
+                <span id="tablemanage_txt">placeholder</span>
+                <div id="tablespace_render" title="">
+                    <div class="table_bar">
+                        <span>Suka Blyat</span>
+                        <div class="tabmenu">
+                            <div class="tabtion_btn editbtn_std" title="edit"></div>
+                            <div class="tabtion_btn deletebtn_std" title="delete"></div>
+                            <div class="tabtion_btn confirmimg" title="confirm"></div>
+                            <div class="tabtion_btn cancelimg" title="cancel"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="data_button" id="new_class_button" title="Add a new class">
+                <span>New Class</span>
+                <div class="plusimg"></div>
+            </div>
         </div>
         <div class="dataspace" id="manage_dataspace">
             <div title="Click to edit" class="data_bar" id="bar_2" style="background-color: rgb(85, 255, 0);">
@@ -383,7 +400,8 @@
                         <td colspan="2">8:30 a.m. - 10:46 a.m.</td>
                     </tr>
                 </table>
-            <div class="data_noot">4</div></div>
+                <div class="data_noot">4</div>
+            </div>
         </div>
         <form id="dataentry_screen">
             <table>

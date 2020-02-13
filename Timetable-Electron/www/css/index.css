@@ -407,6 +407,7 @@
         margin-left: 2vw;
         text-align: center;
     }
+
     /*  Insert new code  */
 
     .data_bar table {
@@ -1612,18 +1613,19 @@
         overflow-y: hidden;
     }
 
-    .data_action_header{
+    .data_action_header {
         position: absolute;
         top: 0;
         right: 0;
         width: 100%;
         height: 10vh;
     }
-    .data_button{
+
+    .data_button {
         position: relative;
         display: block;
         float: left;
-        height: auto;
+        height: 4vh;
         width: 40vh;
         max-width: 33vw;
         min-width: 100px;
@@ -1635,11 +1637,12 @@
         cursor: pointer;
         text-align: center;
     }
-    #tablemanger{
+
+    #tablemanger {
         position: relative;
         display: block;
         float: left;
-        height: auto;
+        height: 4vh;
         width: 40vh;
         max-width: 33vw;
         min-width: 100px;
@@ -1650,8 +1653,78 @@
         border-radius: 3vh;
         cursor: pointer;
         text-align: center;
-        border:0.5vh solid white;
+        /*border:0.5vh solid white;*/
+        transition: border-radius 80ms 0ms ease;
+        white-space: nowrap;
     }
+
+    #tablespace_render {
+        /* Pannel which displays buttons to allow selection and editing of tables */
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transform: translate(0, 100%);
+        height: 0;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background-color: #000000;
+        box-shadow: 0vh 0vh 2vh 0vh #fff;
+        z-index: 100;
+        transition: height 80ms 0ms ease;
+        cursor: default;
+    }
+
+    #tablemanger:hover {
+        border-radius: 3vh 3vh 0vh 0vh;
+        transition: border-radius 300ms 100ms ease;
+    }
+
+    #tablemanger:hover #tablespace_render {
+        height: 40vh;
+        transition: height 300ms 100ms ease;
+    }
+
+    .table_bar {
+        /* Positioning/container for individual table management buttons */
+        position: relative;
+        cursor: pointer;
+        padding-top: 1vh;
+        padding-bottom: 1vh;
+        font-size: 3.2vh;
+        height: 4vh;
+    }
+
+    .tabmenu {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 3.2vh;
+        height: 100%;
+        width: 0;
+        /* temporary color */
+        transition: width 300ms 80ms ease;
+    }
+
+    .table_bar:hover .tabmenu {
+        width: 12vh;
+        transition: width 80ms 0ms ease;
+    }
+
+    .tabtion_btn {
+        position: relative;
+        float: left;
+        height: 100%;
+        width: 5vh;
+        margin-left: 0.5vh;
+        margin-right: 0.5vh;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: block;
+    }
+
+    /* Where the data is rendered */
     .dataspace {
         /*   Block Containing the data_bar(s)   */
         position: relative;
@@ -1680,22 +1753,26 @@
         margin-left: 2vw;
         text-align: center;
     }
-    .data_bar .sub_optionbar{/* options for databars */
+
+    .data_bar .sub_optionbar {
+        /* options for databars */
         position: absolute;
-        top:2%;
-        right:8%;
+        top: 2%;
+        right: 8%;
         height: 4vh;
-        width:0vh;
+        width: 0vh;
         display: block;
         overflow: hidden;
-        transition: width 0ms 0ms ease-in;
+        transition: width 80ms 0ms ease-in;
     }
-    .data_bar:hover .sub_optionbar{
+
+    .data_bar:hover .sub_optionbar {
         display: block;
         width: 15vh;
-        transition: width 300ms 100ms ease-in;
+        transition: width 300ms 50ms ease-in;
     }
-    .data_bar .optionbutton{
+
+    .data_bar .optionbutton {
         position: relative;
         height: 4vh;
         width: 4vh;
@@ -1704,20 +1781,25 @@
         background-position: center;
         float: left;
     }
-    .editbtn{
-        background-image: url('../img/edit-pngrepo-com.png');
+
+    .editbtn {
+        background-image: url('../img/edit-pngrepo-com.webp');
     }
-    .selectbutton{
+
+    .selectbutton {
         background-image: url('');
     }
-    .selectbutton input{/* temp style this later */
+
+    .selectbutton input {
+        /* temp style this later */
         height: 90%;
         width: 90%;
         margin: 10%;
         border-radius: 10px;
     }
-    .deletebtn{
-        background-image: url('../img/delete-button-pngrepo-com.png');
+
+    .deletebtn {
+        background-image: url('../img/delete-button-dark.webp');
     }
 
     .data_bar table {
@@ -2136,6 +2218,7 @@
         margin-left: auto;
         transition: box-shadow 500ms;
     }
+
     .mincropallet .palletfoot {
         position: absolute;
         top: 0;
@@ -2216,7 +2299,8 @@
         background-image: url('../img/manage-dark.webp');
     }
 
-    .notification_pallet,.notification_pallet_active {
+    .notification_pallet,
+    .notification_pallet_active {
         position: relative;
         float: left;
         height: 100%;

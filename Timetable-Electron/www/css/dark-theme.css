@@ -172,7 +172,7 @@ body {
 }
 
 .data_block:active {
-    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000!important;
+    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000 !important;
     background-color: #ebebeb !important;
     color: #000 !important;
     transition-duration: 0ms;
@@ -191,12 +191,17 @@ body {
 
 /*  manage_view   */
 .data_button,
-.data_bar {
+.data_bar,
+#tablemanger {
     /*    Detailed representaion of the data to be managed    */
     text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000;
     background-color: #636363;
     color: #fff;
     transition: background-color 300ms color 300ms;
+}
+
+.table_bar:hover {
+    box-shadow: 0vh 0vh 1vh 0vh #fff;
 }
 
 .data_button:active,
@@ -206,6 +211,20 @@ body {
     color: #000 !important;
     transition: background-color 0ms color 0ms;
 }
+
+.editbtn_std {
+    background-image: url('../img/edit-pngrepo-com.webp');
+    filter: invert(100%);
+}
+
+.deletebtn_std {
+    background-image: url('../img/delete-button-dark.webp');
+    filter: invert(100%);
+}
+
+.confirmimg{background-image: url('../img/confirm-pngrepo-com.webp');}
+
+.cancelimg{background-image: url('../img/cancel-error-pngrepo-com.webp');}
 
 .data_noot {
     color: #000;
@@ -333,6 +352,7 @@ body {
 #amoled_pallet {
     box-shadow: 0vh 0vh 2vh 0vh #2bff00
 }
+
 #dark_selection_put {
     border: 1px solid #00ff0d;
 }
@@ -348,6 +368,7 @@ body {
 .selcetion_put:checked::after {
     border-color: #000;
 }
+
 .notification_pallet_active {
     box-shadow: 0vh 0vh 2vh 0vh #2bff00
 }

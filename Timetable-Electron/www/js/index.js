@@ -18,6 +18,8 @@ window.addEventListener('load', function () {//window loads
         console.log('Closing loading screen...')
         document.getElementById('Loading').style.display = 'none'
     }, 50)
+    UI.navigate.MANAGE();
+    //UI.navigate.SETTING();
 })
 
 /*  Config file handler    */
@@ -715,6 +717,7 @@ let manage = {
     initalize: function () {
         console.log('Manager initializes');
         this.render_list();
+        this.render_tables();
         document.getElementById('cancel_btn').addEventListener('click', () => {
             console.log('Cancel button clicked');
             manage.dialogue.clear();
@@ -744,6 +747,7 @@ let manage = {
         // table selector
         console.log('Table selected: ', config.data.table_selected)
         document.getElementById('tablemanage_txt').innerText = config.data.table_details[Number(config.data.table_selected - 1)].purpose
+
         /*document.getElementById('table_selector').value = config.data.table_selected; //Set the table selectors value
         switch (config.data.table_selected) {
             case 0: document.getElementById('tableselector_text').innerText = "Hidden"; break;
@@ -780,6 +784,7 @@ let manage = {
             manage.render_list();
             config.save();
         });*/
+
         //Initalize day_put selector
         document.getElementById('day_put').value = "1";
         document.getElementById('day_put_text').innerText = "Monday"
@@ -797,6 +802,7 @@ let manage = {
                 default: console.error('Blyat');
             }
         });
+
         // view put selector
         document.getElementById('view_put').value = "1";
         document.getElementById('view_put_text').innerText = config.data.table_details[0].purpose;
@@ -810,6 +816,7 @@ let manage = {
                 case "4": document.getElementById('view_put_text').innerText = config.data.table_details[3].purpose;; break;
             }
         });
+
         //color sliders initalizer
         document.getElementById('color_put').addEventListener('change', slidecolor)
         document.getElementById('sat_put').addEventListener('change', slidesat)
@@ -823,6 +830,49 @@ let manage = {
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
         }
 
+    },
+    render_tables: function () {
+        console.log('Table management render started');
+        clear();
+        let i = 0;
+        while (config.data.table_details[i] != undefined || null) {
+            renderbar(config.data.table_details[i]);
+            i++;
+        }
+        function renderbar(table) {
+            console.log('Creating actionbutton for :', table);
+            let table_bar = document.createElement('div');
+            table_bar.setAttribute("class", "table_bar");
+            let titlespan = document.createElement('span');
+            titlespan.innerHTML = table.purpose;
+            let tabmenu = document.createElement('div');
+            tabmenu.setAttribute("class", "tabmenu");
+            let editbtn_std = document.createElement('div');
+            editbtn_std.setAttribute("class", "tabtion_btn editbtn_std");
+            editbtn_std.setAttribute("title", "Edit " + table.purpose);
+            let deletebtn_std = document.createElement('div');
+            deletebtn_std.setAttribute("class", "tabtion_btn deletebtn_std");
+            deletebtn_std.setAttribute("title", "Delete " + table.purpose);
+
+            let confirmimg = document.createElement('div');
+            confirmimg.setAttribute("class", "tabtion_btn confirmimg");
+            confirmimg.setAttribute("title", "Confirm delete " + table.purpose);
+            let cancelimg = document.createElement('div');
+            cancelimg.setAttribute("class", "tabtion_btn cancelimg");
+            cancelimg.setAttribute("title", "Do not delete " + table.purpose);
+
+            tabmenu.appendChild(confirmimg)
+            tabmenu.appendChild(cancelimg)
+            //tabmenu.appendChild(editbtn_std)
+            //tabmenu.appendChild(deletebtn_std)
+            table_bar.appendChild(titlespan)
+            table_bar.appendChild(tabmenu)
+            document.getElementById('tablespace_render').appendChild(table_bar);
+
+        }
+        function clear() {
+            document.getElementById('tablespace_render').innerHTML = "";
+        }
     },
     render_list: function () {
         console.log('Manager Render starts');
