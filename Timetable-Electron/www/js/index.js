@@ -19,8 +19,8 @@ window.addEventListener('load', function () {//window loads
         document.getElementById('Loading').style.display = 'none'
     }, 50)
     setTimeout(() => {
-        UI.navigate.MANAGE();
-        //UI.navigate.SETTING();
+        UI.navigate.MANAGE()
+        //UI.navigate.SETTING()
     }, 500)
 })
 
@@ -35,10 +35,10 @@ let config = {
         notification_type: 3,
         table_selected: 4,
         table_details: [// Details about different tables
-            { purpose: "table 1", deleted: false, identifier: 1 },
-            { purpose: "table 2", deleted: false, identifier: 2 },
-            { purpose: "table 3", deleted: false, identifier: 3 },
-            { purpose: "table 4", deleted: false, identifier: 4 }
+            { purpose: "table #1", deleted: false, identifier: 1 },
+            { purpose: "table #2", deleted: false, identifier: 2 },
+            { purpose: "table #3", deleted: false, identifier: 3 },
+            { purpose: "table #4", deleted: false, identifier: 4 }
         ],
         table1_db: [// Table database
 
@@ -105,8 +105,6 @@ let config = {
                         console.log('State of ', i, ' false')
                         detetioncheck = true
                     } else {
-                        //  check show values, if they match a deleted table, those classes are homeess, assign them to 0, use a loop here
-                        //if (config.data.table_details[config.data.table1_db[i].show].deleted==true) { config.data.table1_db[i].show = 0 }//fix oversight on older version
                         overwrite.push(config.data.table1_db[i])
                         console.log('State of ', i, ' true')
                     }
@@ -127,6 +125,28 @@ let config = {
             this.data.table_details = [{ purpose: "Table #1" }, { purpose: "Table #2" }, { purpose: "Table #3" }, { purpose: "Table #4" }];
             console.log('Table names were not defined!');
             configisvalid = false;
+        } else {//Remove deleted Items from the array
+            let i = 0
+            let overwrite = []
+            let deleted = []
+            let detetioncheck = false
+            //Construct the data
+            while (config.data.table_details[i] != null || undefined) {
+                console.log('checked state on :', i)
+                if (config.data.table_details[i].deleted == true) {
+                    deleted.push(config.data.table_details[i])
+                    console.log('State of ', i, ' false')
+                    detetioncheck = true
+                } else {
+                    overwrite.push(config.data.table_details[i])
+                    console.log('State of ', i, ' true')
+                }
+                i++
+            }
+            if (detetioncheck) {
+                console.table(deleted)
+                config.data.table_details = overwrite;
+            }
         }
 
         if (typeof (this.data.previous_colors) !== 'undefined') {
@@ -725,8 +745,15 @@ let manage = {
         this.render_list();
         this.render_tables();
         //Set text feilds
-        document.getElementById('selected_table').innerText = config.data.table_details[Number(config.data.table_selected-1)].purpose;
-        document.getElementById('tablemanage_txt').innerText = config.data.table_details[Number(config.data.table_selected-1)].purpose;
+        let i = 0;
+        while (config.data.table_details[i] != null) {
+            if (config.data.table_details[i].identifier == Number(config.data.table_selected) && config.data.table_details[i].deleted != true) {
+                document.getElementById('selected_table').innerText = config.data.table_details[i].purpose;
+                document.getElementById('tablemanage_txt').innerText = config.data.table_details[i].purpose;
+                break;
+            }
+            i++
+        }
         //make functional
         document.getElementById('cancel_btn').addEventListener('click', () => {
             console.log('Cancel button clicked');
@@ -796,7 +823,34 @@ let manage = {
             }
             i++;
         }
-        //place "not in any table" button here
+        //Button to add new table
+        let table_bar = document.createElement('div');
+        table_bar.setAttribute("class", "table_bar");
+        let titlespan = document.createElement('span');
+        titlespan.innerHTML = "Create new table";
+        let tabmenu = document.createElement('div');
+        tabmenu.setAttribute("class", "tabmenu");
+
+        //inject into document
+        table_bar.appendChild(titlespan)
+        table_bar.appendChild(tabmenu)
+        document.getElementById('tablespace_render').appendChild(table_bar);
+        table_bar.addEventListener('click', function () {
+            let identifier = 1
+            let i = 0;
+            while (config.data.table_details[i] != null) {
+                if (config.data.table_details[i].deleted != true) {
+                    identifier = Math.max(config.data.table_details[i].identifier, identifier)
+                }
+                i++
+            }
+            let newtable = { purpose: "new table #" + Number(identifier + 1), deleted: false, identifier: Number(identifier + 1) }
+            config.data.table_details.push(newtable);
+            config.save();
+            console.warn('value: ', identifier)
+            manage.initalize();
+            config.properties.changed = true
+        })
         function renderbar(index) {
             console.log('Creating actionbutton for :', config.data.table_details[index]);
             //build menu
@@ -833,7 +887,7 @@ let manage = {
             document.getElementById('tablespace_render').appendChild(table_bar);
 
             //make fucntion
-            tab_put.addEventListener('click',event.stopPropagation)//stop this event from trigering table select action
+            tab_put.addEventListener('click', event.stopPropagation)//stop this event from trigering table select action
             table_bar.addEventListener('click', function () {//select table fucntion
                 console.warn('Table selected by identifier : ', config.data.table_details[index].identifier)
                 config.data.table_selected = config.data.table_details[index].identifier;
@@ -908,24 +962,43 @@ let manage = {
             console.log('The table database is empty,manager will show first time setup');
         } else {
             //Construct the data
-            while (config.data.table1_db[i] != null || undefined) {//render selected tables data
-                console.log('Data run on index :', i);
-                if (config.data.table1_db[i].show == config.data.table_selected) {
+            if (config.data.table_details[0] != null) {//there are no tables, everyone is homeless render them all
+                while (config.data.table1_db[i] != null || undefined) {//render selected tables data
+                    console.log('Data run on index :', i);
                     build_bar_db1(i);
+                    i++;
                 }
-                i++;
-            }
-            i = 0;
-            while (config.data.table1_db[i] != null || undefined) {//render non-selected tables data
-                console.log('Data run on index :', i);
-                if (config.data.table1_db[i].show != config.data.table_selected) {
-                    build_bar_db1(i);
+            } else {
+                while (config.data.table1_db[i] != null || undefined) {//render selected tables data
+                    console.log('Data run on index :', i);
+                    if (config.data.table1_db[i].show == config.data.table_selected) {
+                        build_bar_db1(i);
+                    }
+                    i++;
                 }
-                i++;
+                i = 0;
+                while (config.data.table1_db[i] != null || undefined) {//render non-selected tables data
+                    console.log('Data run on index :', i);
+                    if (config.data.table1_db[i].show != config.data.table_selected) {
+                        build_bar_db1(i);
+                    }
+                    i++;
+                }
             }
+            config.save()//save because many things get changed and shuffled durring this function
         }
         console.log('Manager Render Completed');
         function build_bar_db1(index) {//Builds timetable from database
+            //check if block is homeless (has no table or its tables been deleted)
+            let i = 0
+            let homeless = true
+            while (config.data.table_details[i] != null) {
+                if (config.data.table_details[i].identifier == config.data.table1_db[index].show && config.data.table_details[i].deleted != true) {
+                    homeless = false
+                }
+                i++;
+            }
+            if (homeless) { config.data.table1_db[index].show = 0; }
             //Create the data block
             console.log('Building Bar: ', index);
             let tempblock = document.createElement('div');
@@ -1037,10 +1110,19 @@ let manage = {
             }
             let noot = document.createElement('div');
             if (config.data.table1_db[index].show == 0) {// this dataset is homeless
-                noot.innerHTML = '<del>' + config.data.table1_db[index].show + '</del>';
+                noot.innerHTML = '<del>Not in a table</del>';
                 noot.style.color = 'red';
             }//noot is hidden
-            else { noot.innerHTML = config.data.table_details[Number(config.data.table_selected-1)].purpose; }//not gets a number
+            else {
+                let i = 0;
+                while (config.data.table_details[i] != null) {
+                    if (config.data.table_details[i].identifier == Number(config.data.table1_db[index].show) && config.data.table_details[i].deleted != true) {
+                        noot.innerHTML = config.data.table_details[i].purpose;
+                        break;
+                    }
+                    i++
+                }
+            }//not gets a number
             noot.setAttribute('class', 'data_noot');
             tempblock.appendChild(noot)
             document.getElementById('manage_dataspace').appendChild(tempblock);//put the bar into the dukument
