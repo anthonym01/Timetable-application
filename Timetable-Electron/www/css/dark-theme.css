@@ -142,7 +142,7 @@ body {
     border: 0.3vh solid #fff;
     color: #fff;
     background-color: #000;
-    text-shadow: 0vw 0vw 2vw #000, 0vw 0vw 1vw #000;
+    text-shadow: 0vw 0vw 0.5vw #000;
 }
 
 #close_btn:active {
@@ -165,14 +165,14 @@ body {
 .data_block,
 .data_block_active {
     /*  The blocks containing the classes   */
-    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000;
+    text-shadow: 0vw 0vw 0.5vw #000;
     background-color: #636363;
     color: #fff;
     transition: background-color 300ms color 300ms;
 }
 
 .data_block:active {
-    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000 !important;
+    text-shadow: 0vw 0vw 0.5vw #000 !important;
     background-color: #ebebeb !important;
     color: #000 !important;
     transition-duration: 0ms;
@@ -181,7 +181,7 @@ body {
 .infodoot {
     color: #fff;
     background-color: inherit;
-    text-shadow: 0vw 0vw 3vw #000, 0vw 0vw 1vw #000;
+    text-shadow: 0vw 0vw 0.5vw #000;
 }
 
 .infodoot:active {
@@ -194,7 +194,7 @@ body {
 .data_bar,
 #tablemanger {
     /*    Detailed representaion of the data to be managed    */
-    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000;
+    text-shadow: 0vw 0vw 0.5vw #000;
     background-color: #636363;
     color: #fff;
     transition: background-color 300ms color 300ms;
@@ -204,9 +204,15 @@ body {
     box-shadow: 0vh 0vh 1vh 0vh #fff;
 }
 
+.tab_put {
+    background-color: #000;
+    color: white;
+    border: none;
+}
+
 .data_button:active,
 .data_bar:active {
-    text-shadow: 0vw 0vw 0.5vw #000, 0vw 0vw 0.5vw #000;
+    text-shadow: 0vw 0vw 0.5vw #000;
     background-color: #fff !important;
     color: #000 !important;
     transition: background-color 0ms color 0ms;
@@ -222,9 +228,13 @@ body {
     filter: invert(100%);
 }
 
-.confirmimg{background-image: url('../img/confirm-pngrepo-com.webp');}
+.confirmimg {
+    background-image: url('../img/confirm-pngrepo-com.webp');
+}
 
-.cancelimg{background-image: url('../img/cancel-error-pngrepo-com.webp');}
+.cancelimg {
+    background-image: url('../img/cancel-error-pngrepo-com.webp');
+}
 
 .data_noot {
     color: #000;

@@ -1701,14 +1701,14 @@
         right: 0;
         font-size: 3.2vh;
         height: 100%;
-        width: 0;
-        /* temporary color */
-        transition: width 300ms 80ms ease;
+        width: 12vh;
+        transform: translate(12vh, 0);
+        transition: transform 80ms 0ms ease;
     }
 
     .table_bar:hover .tabmenu {
-        width: 12vh;
-        transition: width 80ms 0ms ease;
+        transform: translate(0, 0);
+        transition: transform 300ms 80ms ease;
     }
 
     .tabtion_btn {
@@ -1721,7 +1721,21 @@
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
-        display: block;
+        display: none;
+    }
+
+    .tab_put {
+        /* Input box to edit the table */
+        position: absolute;
+        top: 0;
+        right: 12vh;
+        font-size: 3.2vh;
+        height: 100%;
+        width: calc(100% - 12vh);
+        text-align: center;
+        appearance: none;
+        display: none;
+        font-family: Lexend_Deca;
     }
 
     /* Where the data is rendered */
@@ -1760,16 +1774,13 @@
         top: 2%;
         right: 8%;
         height: 4vh;
-        width: 0vh;
-        display: block;
+        width: 15vh;
+        display: none;
         overflow: hidden;
-        transition: width 80ms 0ms ease-in;
     }
 
     .data_bar:hover .sub_optionbar {
         display: block;
-        width: 15vh;
-        transition: width 300ms 50ms ease-in;
     }
 
     .data_bar .optionbutton {
@@ -1831,9 +1842,10 @@
         position: absolute;
         top: 0;
         right: 0;
-        font-size: 3.5vh;
-        height: 4vh;
-        width: 4vh;
+        font-size: 2vh;
+        height: 3vh;
+        width: auto;
+        padding: 0.5vh;
         border-radius: 4vh;
         transform: translate(1vh, -1.5vh);
     }

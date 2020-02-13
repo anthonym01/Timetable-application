@@ -18,8 +18,10 @@ window.addEventListener('load', function () {//window loads
         console.log('Closing loading screen...')
         document.getElementById('Loading').style.display = 'none'
     }, 50)
-    UI.navigate.MANAGE();
-    //UI.navigate.SETTING();
+    setTimeout(() => {
+        UI.navigate.MANAGE();
+        //UI.navigate.SETTING();
+    }, 500)
 })
 
 /*  Config file handler    */
@@ -33,10 +35,10 @@ let config = {
         notification_type: 3,
         table_selected: 4,
         table_details: [// Details about different tables
-            { purpose: "table 1" },
-            { purpose: "table 2" },
-            { purpose: "table 3" },
-            { purpose: "table 4" }
+            { purpose: "table 1", deleted: false, identifier: 1 },
+            { purpose: "table 2", deleted: false, identifier: 2 },
+            { purpose: "table 3", deleted: false, identifier: 3 },
+            { purpose: "table 4", deleted: false, identifier: 4 }
         ],
         table1_db: [// Table database
 
@@ -47,6 +49,9 @@ let config = {
             { show: 4, day: 5, name: "Test 5", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 200, sat: 100, light: 50 }, start: 2.0, end: 4.0 },
             { show: 4, day: 6, name: "Test 6", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 250, sat: 100, light: 50 }, start: 4.0, end: 5.4 },
             { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
+            { show: 3, day: 7, name: "Test 8", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 7.0, end: 8.7 },
+            { show: 2, day: 7, name: "Test 9", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 8.0, end: 9.7 },
+            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },
         ],
         previous_colors: [],
     },
@@ -100,7 +105,8 @@ let config = {
                         console.log('State of ', i, ' false')
                         detetioncheck = true
                     } else {
-                        if (config.data.table1_db[i].show != 1 && 2 && 3 && 4 && 0) { config.data.table1_db[i].show = 1 }//fix oversight on older version
+                        //  check show values, if they match a deleted table, those classes are homeess, assign them to 0, use a loop here
+                        //if (config.data.table_details[config.data.table1_db[i].show].deleted==true) { config.data.table1_db[i].show = 0 }//fix oversight on older version
                         overwrite.push(config.data.table1_db[i])
                         console.log('State of ', i, ' true')
                     }
@@ -115,6 +121,12 @@ let config = {
             this.data.table1_db = [];
             configisvalid = false;
             console.log('"Table1_database" was found to not exist and was set to default');
+        }
+
+        if (typeof (this.data.table_details) == 'undefined') {
+            this.data.table_details = [{ purpose: "Table #1" }, { purpose: "Table #2" }, { purpose: "Table #3" }, { purpose: "Table #4" }];
+            console.log('Table names were not defined!');
+            configisvalid = false;
         }
 
         if (typeof (this.data.previous_colors) !== 'undefined') {
@@ -205,12 +217,6 @@ let config = {
                 configisvalid = false;
                 console.log('"notification_type" was found to not exist and was set to default');
             }
-        }
-
-        if (typeof (this.data.table_details) == 'undefined') {
-            this.data.table_details = [{ purpose: "Table #1" }, { purpose: "Table #2" }, { purpose: "Table #3" }, { purpose: "Table #4" }];
-            console.log('Table names were not defined!');
-            configisvalid = false;
         }
 
         if (typeof (this.data.previous_colors) == 'undefined') {
@@ -718,6 +724,10 @@ let manage = {
         console.log('Manager initializes');
         this.render_list();
         this.render_tables();
+        //Set text feilds
+        document.getElementById('selected_table').innerText = config.data.table_details[Number(config.data.table_selected-1)].purpose;
+        document.getElementById('tablemanage_txt').innerText = config.data.table_details[Number(config.data.table_selected-1)].purpose;
+        //make functional
         document.getElementById('cancel_btn').addEventListener('click', () => {
             console.log('Cancel button clicked');
             manage.dialogue.clear();
@@ -744,47 +754,6 @@ let manage = {
         });
         document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
 
-        // table selector
-        console.log('Table selected: ', config.data.table_selected)
-        document.getElementById('tablemanage_txt').innerText = config.data.table_details[Number(config.data.table_selected - 1)].purpose
-
-        /*document.getElementById('table_selector').value = config.data.table_selected; //Set the table selectors value
-        switch (config.data.table_selected) {
-            case 0: document.getElementById('tableselector_text').innerText = "Hidden"; break;
-            case 1: document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose;; break;
-            case 2: document.getElementById('tableselector_text').innerText = config.data.table_details[1].purpose;; break;
-            case 3: document.getElementById('tableselector_text').innerText = config.data.table_details[2].purpose;; break;
-            case 4: document.getElementById('tableselector_text').innerText = config.data.table_details[3].purpose;; break;
-            case "0": document.getElementById('tableselector_text').innerText = "Hidden"; break;
-            case "1": document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose;; break;
-            case "2": document.getElementById('tableselector_text').innerText = config.data.table_details[1].purpose;; break;
-            case "3": document.getElementById('tableselector_text').innerText = config.data.table_details[2].purpose;; break;
-            case "4": document.getElementById('tableselector_text').innerText = config.data.table_details[3].purpose;; break;
-            default: document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose;
-        }
-        document.getElementById('1_selectorsub').innerHTML = config.data.table_details[0].purpose;
-        document.getElementById('1_selectormain').innerHTML = config.data.table_details[0].purpose;
-        document.getElementById('2_selectorsub').innerHTML = config.data.table_details[1].purpose;
-        document.getElementById('2_selectormain').innerHTML = config.data.table_details[1].purpose;
-        document.getElementById('3_selectorsub').innerHTML = config.data.table_details[2].purpose;
-        document.getElementById('3_selectormain').innerHTML = config.data.table_details[2].purpose;
-        document.getElementById('4_selectorsub').innerHTML = config.data.table_details[3].purpose;
-        document.getElementById('4_selectormain').innerHTML = config.data.table_details[3].purpose;
-        /*document.getElementById('table_selector').addEventListener('change', function () {
-            console.log('table_selector changed');
-            config.data.table_selected = document.getElementById('table_selector').value;
-            switch (document.getElementById('table_selector').value) {
-                case "0": document.getElementById('tableselector_text').innerText = "Hidden Items"; break;
-                case "1": document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose; break;
-                case "2": document.getElementById('tableselector_text').innerText = config.data.table_details[1].purpose; break;
-                case "3": document.getElementById('tableselector_text').innerText = config.data.table_details[2].purpose; break;
-                case "4": document.getElementById('tableselector_text').innerText = config.data.table_details[3].purpose; break;
-            }
-            config.properties.changed = true;
-            manage.render_list();
-            config.save();
-        });*/
-
         //Initalize day_put selector
         document.getElementById('day_put').value = "1";
         document.getElementById('day_put_text').innerText = "Monday"
@@ -800,20 +769,6 @@ let manage = {
                 case "6": document.getElementById('day_put_text').innerText = "Saturday"; break;
                 case "7": document.getElementById('day_put_text').innerText = "Sunday"; break;
                 default: console.error('Blyat');
-            }
-        });
-
-        // view put selector
-        document.getElementById('view_put').value = "1";
-        document.getElementById('view_put_text').innerText = config.data.table_details[0].purpose;
-        document.getElementById('view_put').addEventListener('change', function () {/* Switches text displayed on change */
-            console.log('View put changed');
-            switch (document.getElementById('view_put').value) {
-                case "0": document.getElementById('view_put_text').innerText = "Hidden"; break;
-                case "1": document.getElementById('view_put_text').innerText = config.data.table_details[0].purpose;/* purpose is the array with names of tables */; break;
-                case "2": document.getElementById('view_put_text').innerText = config.data.table_details[1].purpose;; break;
-                case "3": document.getElementById('view_put_text').innerText = config.data.table_details[2].purpose;; break;
-                case "4": document.getElementById('view_put_text').innerText = config.data.table_details[3].purpose;; break;
             }
         });
 
@@ -836,39 +791,104 @@ let manage = {
         clear();
         let i = 0;
         while (config.data.table_details[i] != undefined || null) {
-            renderbar(config.data.table_details[i]);
+            if (config.data.table_details[i].deleted != true) {
+                renderbar(i);
+            }
             i++;
         }
-        function renderbar(table) {
-            console.log('Creating actionbutton for :', table);
+        //place "not in any table" button here
+        function renderbar(index) {
+            console.log('Creating actionbutton for :', config.data.table_details[index]);
+            //build menu
             let table_bar = document.createElement('div');
             table_bar.setAttribute("class", "table_bar");
             let titlespan = document.createElement('span');
-            titlespan.innerHTML = table.purpose;
+            titlespan.innerHTML = config.data.table_details[index].purpose;
             let tabmenu = document.createElement('div');
             tabmenu.setAttribute("class", "tabmenu");
             let editbtn_std = document.createElement('div');
+            editbtn_std.style.display = "block";
             editbtn_std.setAttribute("class", "tabtion_btn editbtn_std");
-            editbtn_std.setAttribute("title", "Edit " + table.purpose);
+            editbtn_std.setAttribute("title", "Edit " + config.data.table_details[index].purpose);
             let deletebtn_std = document.createElement('div');
+            deletebtn_std.style.display = "block";
             deletebtn_std.setAttribute("class", "tabtion_btn deletebtn_std");
-            deletebtn_std.setAttribute("title", "Delete " + table.purpose);
-
+            deletebtn_std.setAttribute("title", "Delete " + config.data.table_details[index].purpose);
             let confirmimg = document.createElement('div');
             confirmimg.setAttribute("class", "tabtion_btn confirmimg");
-            confirmimg.setAttribute("title", "Confirm delete " + table.purpose);
             let cancelimg = document.createElement('div');
             cancelimg.setAttribute("class", "tabtion_btn cancelimg");
-            cancelimg.setAttribute("title", "Do not delete " + table.purpose);
+            let tab_put = document.createElement('input');
+            tab_put.setAttribute("class", "tab_put");
 
+
+            //inject into document
             tabmenu.appendChild(confirmimg)
             tabmenu.appendChild(cancelimg)
-            //tabmenu.appendChild(editbtn_std)
-            //tabmenu.appendChild(deletebtn_std)
+            tabmenu.appendChild(editbtn_std)
+            tabmenu.appendChild(deletebtn_std)
             table_bar.appendChild(titlespan)
+            table_bar.appendChild(tab_put)
             table_bar.appendChild(tabmenu)
             document.getElementById('tablespace_render').appendChild(table_bar);
 
+            //make fucntion
+            tab_put.addEventListener('click',event.stopPropagation)//stop this event from trigering table select action
+            table_bar.addEventListener('click', function () {//select table fucntion
+                console.warn('Table selected by identifier : ', config.data.table_details[index].identifier)
+                config.data.table_selected = config.data.table_details[index].identifier;
+                config.save()
+                manage.initalize()
+                config.properties.changed = true
+            })
+            editbtn_std.addEventListener('click', function () {//edit button is pressed
+                event.stopPropagation();
+                console.log('Edit called on table name: ' + config.data.table_details[index].purpose)
+                confirmimg.setAttribute("title", "Confirm name change")
+                cancelimg.setAttribute("title", "Do not change")
+                confirmimg.style.display = "block"
+                cancelimg.style.display = "block"
+                deletebtn_std.style.display = "none"
+                editbtn_std.style.display = "none"
+                tab_put.style.display = "block"
+                tab_put.value = config.data.table_details[index].purpose
+                setTimeout(() => { tab_put.focus() }, 500)
+            })
+            deletebtn_std.addEventListener('click', function () {//edit button is pressed
+                event.stopPropagation();
+                console.log('Delete called on table name: ' + config.data.table_details[index].purpose)
+                confirmimg.setAttribute("title", "Confirm delete " + config.data.table_details[index].purpose);
+                cancelimg.setAttribute("title", "Do not delete " + config.data.table_details[index].purpose);
+                confirmimg.style.display = "block"
+                cancelimg.style.display = "block"
+                deletebtn_std.style.display = "none"
+                editbtn_std.style.display = "none"
+                tab_put.style.display = "none"
+            })
+            confirmimg.addEventListener('click', function () {//cancel button is pressed
+                event.stopPropagation();
+                console.log('Confirm button pressed')
+                //perform confirmation action
+                if (tab_put.style.display == "block") {
+                    console.log('save action on: ' + config.data.table_details[index])
+                    config.data.table_details[index].purpose = tab_put.value;
+                } else if (tab_put.style.display == "none") {
+                    console.log('delete action')
+                    config.data.table_details[index].deleted = true;
+                }
+                config.save()
+                manage.initalize()
+                config.properties.changed = true
+            })
+            cancelimg.addEventListener('click', function () {//cancel button is pressed
+                event.stopPropagation();
+                console.log('Cancel button pressed')
+                confirmimg.style.display = "none"
+                cancelimg.style.display = "none"
+                deletebtn_std.style.display = "block"
+                editbtn_std.style.display = "block"
+                tab_put.style.display = "none"
+            })
         }
         function clear() {
             document.getElementById('tablespace_render').innerHTML = "";
@@ -888,7 +908,7 @@ let manage = {
             console.log('The table database is empty,manager will show first time setup');
         } else {
             //Construct the data
-            while (config.data.table1_db[i] != null || undefined) {
+            while (config.data.table1_db[i] != null || undefined) {//render selected tables data
                 console.log('Data run on index :', i);
                 if (config.data.table1_db[i].show == config.data.table_selected) {
                     build_bar_db1(i);
@@ -896,7 +916,7 @@ let manage = {
                 i++;
             }
             i = 0;
-            while (config.data.table1_db[i] != null || undefined) {
+            while (config.data.table1_db[i] != null || undefined) {//render non-selected tables data
                 console.log('Data run on index :', i);
                 if (config.data.table1_db[i].show != config.data.table_selected) {
                     build_bar_db1(i);
@@ -1016,8 +1036,11 @@ let manage = {
                 selectbutton.addEventListener('click', function () { console.error('Select fucntion is incomplete') })
             }
             let noot = document.createElement('div');
-            if (config.data.table1_db[index].show == 0) { noot.innerHTML = '<del>' + config.data.table1_db[index].show + '</del>'; noot.style.color = 'red'; }//noot is hidden
-            else { noot.innerHTML = config.data.table1_db[index].show; }//not gets a number
+            if (config.data.table1_db[index].show == 0) {// this dataset is homeless
+                noot.innerHTML = '<del>' + config.data.table1_db[index].show + '</del>';
+                noot.style.color = 'red';
+            }//noot is hidden
+            else { noot.innerHTML = config.data.table_details[Number(config.data.table_selected-1)].purpose; }//not gets a number
             noot.setAttribute('class', 'data_noot');
             tempblock.appendChild(noot)
             document.getElementById('manage_dataspace').appendChild(tempblock);//put the bar into the dukument
@@ -1437,7 +1460,7 @@ let UI = {
         TABLE: function () {
             console.log('Table navigation started');
             if (config.properties.changed) {
-                //window.location.reload();
+                window.location.reload();
                 /*table.data_render();
                 setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
             } else {

@@ -32,7 +32,7 @@
         <!--Header  & menus -->
         <div class="menubtn" id="table_btn" title="Time table">
             <div class="menubtn_icon" id="table_btn_icon"></div>
-            <div class="menu_txt">Timetable</div>
+            <div class="menu_txt" id="selected_table">Timetable</div>
         </div>
         <div class="menubtn" id="manage_btn" title="Manage classes">
             <div class="menubtn_icon" id="manage_btn_icon"></div>
@@ -368,6 +368,10 @@
                 <div id="tablespace_render" title="">
                     <div class="table_bar">
                         <span>Suka Blyat</span>
+                        <input type="text" class="tab_put">
+                        <div class="tab_put">
+                            <!--Couldnt bother with event bubbling, so this is the target-->
+                        </div>
                         <div class="tabmenu">
                             <div class="tabtion_btn editbtn_std" title="edit"></div>
                             <div class="tabtion_btn deletebtn_std" title="delete"></div>
@@ -756,6 +760,7 @@
         <div class="Setting_title" id="about_btn" title="Copies contact info to clipboard">About</div>
         <!--<div class="Setting_title">Placeholder btn 1</div>-->
     </view>
+
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/notification.js"></script>
 
