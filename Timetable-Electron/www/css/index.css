@@ -1349,12 +1349,13 @@
         font-size: 5vh;
         text-align: center;
         opacity: 0;
-        transition: opacity 0ms 300ms ease;
+        transition: opacity 0ms 300ms ease, display 0ms 300ms ease;
         height: 0;
         padding-top: 0;
         width: 0;
         margin-left: 0;
         display: none;
+        white-space: nowrap;
     }
 
     .Action_bar:hover .menu_txt {
@@ -1364,7 +1365,7 @@
         padding-top: 1.5vh;
         width: calc(100% - 9vh);
         margin-left: 9vh;
-        transition: opacity 500ms 300ms ease;
+        transition: opacity 500ms 300ms ease, display 500ms 300ms ease;
     }
 
     /*  Views   */

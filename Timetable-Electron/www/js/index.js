@@ -1,3 +1,9 @@
+//var remote = require('remote'); // Load remote compnent that contains the dialog dependency
+//var dialog = remote.require('dialog'); // Load the dialogs component of the OS
+//var dialog = app.dialog;
+var fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
+var app = require('electron').remote; 
+const {dialog} = require('electron').remote;
 
 window.addEventListener('load', function () {//window loads
     if (typeof (require) == 'undefined') {//initialize node modules
@@ -24,16 +30,19 @@ window.addEventListener('load', function () {//window loads
     }, 500)
 })
 
+
+
 /*  Config file handler    */
 let config = {
     data: {
-        theme: "dark",
-        hilight_engine: false,
+        theme: "dark",//sets theme
+        backgroundimg: null,
+        hilight_engine: false,//hilight engine whether to run or not
         animation: true,
         tiles: true,
         empty_rows: false,
         notification_type: 3,
-        table_selected: 4,
+        table_selected: 1,
         table_details: [// Details about different tables
             { purpose: "table #1", deleted: false, identifier: 1 },
             { purpose: "table #2", deleted: false, identifier: 2 },
@@ -272,18 +281,18 @@ let config = {
     },
 }
 
-/*  Table generator\manager */
+/*  Table generator */
 let table = {
     initialize: function () {
         console.log('Table initalization Begins');
-        this.data_render();
-        this.clock.start_clock();
+        this.data_render();//render data
+        this.clock.start_clock();//render
         setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);
     },
     data_render: function () {
         console.log('Table render started')
         let i = 0;
-        if (config.data.table_selected == 0) { config.data.table_selected = 1 }//Fix oversight
+        //if (config.data.table_selected == 0) { config.data.table_selected = 1 }//Fix oversight
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
             //first_settup(1);
@@ -751,6 +760,8 @@ let manage = {
                 document.getElementById('selected_table').innerText = config.data.table_details[i].purpose;
                 document.getElementById('tablemanage_txt').innerText = config.data.table_details[i].purpose;
                 break;
+            } else {
+                document.getElementById('tablemanage_txt').innerText = "Homeless tiles";
             }
             i++
         }
@@ -823,19 +834,31 @@ let manage = {
             }
             i++;
         }
+
+        //button to select table 0
+        let table0_button = document.createElement('div');
+        table0_button.setAttribute("class", "table_bar");
+        let titlespan0 = document.createElement('span');
+        titlespan0.innerHTML = "Homeless tiles";
+        titlespan0.title = "Tiles not associated with any table";
+        table0_button.appendChild(titlespan0)
+        document.getElementById('tablespace_render').appendChild(table0_button);
+        table0_button.addEventListener('click', function () {
+            config.data.table_selected = 0;
+            config.save();
+            manage.initalize();
+            config.properties.changed = true
+        })
+
         //Button to add new table
-        let table_bar = document.createElement('div');
-        table_bar.setAttribute("class", "table_bar");
+        let new_table_button = document.createElement('div');
+        new_table_button.setAttribute("class", "table_bar");
         let titlespan = document.createElement('span');
         titlespan.innerHTML = "Create new table";
-        let tabmenu = document.createElement('div');
-        tabmenu.setAttribute("class", "tabmenu");
-
-        //inject into document
-        table_bar.appendChild(titlespan)
-        table_bar.appendChild(tabmenu)
-        document.getElementById('tablespace_render').appendChild(table_bar);
-        table_bar.addEventListener('click', function () {
+        titlespan.title = "Click to create new empty table";
+        new_table_button.appendChild(titlespan)
+        document.getElementById('tablespace_render').appendChild(new_table_button);
+        new_table_button.addEventListener('click', function () {
             let identifier = 1
             let i = 0;
             while (config.data.table_details[i] != null) {
@@ -851,6 +874,7 @@ let manage = {
             manage.initalize();
             config.properties.changed = true
         })
+
         function renderbar(index) {
             console.log('Creating actionbutton for :', config.data.table_details[index]);
             //build menu
@@ -962,7 +986,7 @@ let manage = {
             console.log('The table database is empty,manager will show first time setup');
         } else {
             //Construct the data
-            if (config.data.table_details[0] != null) {//there are no tables, everyone is homeless render them all
+            if (config.data.table_details[0] == null) {//there are no tables, everyone is homeless render them all
                 while (config.data.table1_db[i] != null || undefined) {//render selected tables data
                     console.log('Data run on index :', i);
                     build_bar_db1(i);
@@ -1441,6 +1465,7 @@ let UI = {
         this.setting.animation.setpostition();
         this.setting.tiles.setpostition();
         this.setting.Row.setpostition();
+        this.setting.wallpaper.set_wallpaper()
         document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
         document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
         document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
@@ -1748,6 +1773,11 @@ let UI = {
                 }
             },
         },
+        wallpaper: {
+            set_wallpaper: function () {
+                document.getElementById('timetable').style.backgroundImage = "url('img/usebkgrounds/test-user-background.jpg')"
+            },
+        }
     },
 }
 

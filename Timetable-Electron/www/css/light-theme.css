@@ -70,7 +70,14 @@ body{
 }
 
 /*Timetable tags*/
-#timetable{background-image: url('../img/whiteground.webp')}
+#timetable {
+    background-image: url('../img/whiteground.webp');
+    /*filter: invert(100%);*/
+        /* Will be overwritten if the user selects their own image */
+}
+#timetable .maincell{
+    background-color: rgba(255, 255, 255, 0.4);
+}
 #fullscreen_tile{background-color: rgba(255, 255, 255, 0.7)}
 #fullscreen_tile_tab_container tr:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.7);
