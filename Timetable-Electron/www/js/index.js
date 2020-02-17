@@ -2,8 +2,8 @@
 //var dialog = remote.require('dialog'); // Load the dialogs component of the OS
 //var dialog = app.dialog;
 var fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
-var app = require('electron').remote; 
-const {dialog} = require('electron').remote;
+var app = require('electron').remote;
+const { dialog } = require('electron').remote;
 
 window.addEventListener('load', function () {//window loads
     if (typeof (require) == 'undefined') {//initialize node modules
@@ -30,6 +30,24 @@ window.addEventListener('load', function () {//window loads
     }, 500)
 })
 
+//read from a file with a dialog
+dialog.showOpenDialog((fileNames) => {
+    // fileNames is an array that contains all the selected
+    if (fileNames === undefined) {
+        console.warn("No file selected");
+        return false;
+    }
+
+    fs.readFile(filepath, 'utf-8', (err, data) => {
+        if (err) {
+            alert("An error ocurred reading the file :" + err.message);
+            return;
+        }
+
+        // Change how to handle the file content
+        console.log("The file content is : " + data);
+    });
+});
 
 
 /*  Config file handler    */
