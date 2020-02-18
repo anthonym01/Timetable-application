@@ -1,10 +1,7 @@
-//var remote = require('remote'); // Load remote compnent that contains the dialog dependency
-//var dialog = remote.require('dialog'); // Load the dialogs component of the OS
-//var dialog = app.dialog;
-var fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
-var app = require('electron').remote;
-const { dialog } = require('electron').remote;
 
+const { dialog } = require('electron').remote;
+const fs = require('fs');
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 window.addEventListener('load', function () {//window loads
     if (typeof (require) == 'undefined') {//initialize node modules
         console.warn('Running in Browser');
@@ -30,29 +27,10 @@ window.addEventListener('load', function () {//window loads
     }, 500)
 })
 
-//read from a file with a dialog
-dialog.showOpenDialog((fileNames) => {
-    // fileNames is an array that contains all the selected
-    if (fileNames === undefined) {
-        console.warn("No file selected");
-        return false;
-    }
-
-    fs.readFile(filepath, 'utf-8', (err, data) => {
-        if (err) {
-            alert("An error ocurred reading the file :" + err.message);
-            return;
-        }
-
-        // Change how to handle the file content
-        console.log("The file content is : " + data);
-    });
-});
-
-
 /*  Config file handler    */
 let config = {
     data: {
+        key:"TT01",
         theme: "dark",//sets theme
         backgroundimg: null,
         hilight_engine: false,//hilight engine whether to run or not
@@ -83,6 +61,7 @@ let config = {
         previous_colors: [],
     },
     properties: {
+        tempdata: false,
         monday: false,
         tuesday: false,
         wednsday: false,
@@ -297,6 +276,46 @@ let config = {
         setTimeout(() => { location.reload() }, 2000);
         this.validate();
     },
+    backup: function () {//backup configuration to file
+        console.log('Configuration backup initiated')
+        var date = new Date();
+        var filepath = dialog.showSaveDialog({defaultPath:"Timetable backup "+Number(date.getMonth()+1)+" - "+date.getDate()+" - "+date.getFullYear()+".json",buttonLabel:null});
+        if (filepath == undefined) {//the file save dialogue was canceled my the user
+            console.warn('The file dialogue was canceled by the user')
+        } else {
+            fs.writeFile(filepath, JSON.stringify(config.data), (error) => {
+                if (error) {
+                    alert("An error occurred creating the file " + err.message)
+                } else {
+                    console.log("The file has been successfully saved");
+                    notify.new('Sucess', 'Saved to: <a href="' + filepath.toString() + '">' + filepath.toString() + '</a> ')
+                }
+            })
+        }
+    },
+    restore: function () {//restore configuration from file
+        console.log('Configuration backup initiated')
+        var filepath = dialog.showOpenDialog({ buttonLabel: "open" })
+        console.log(filepath)
+        if (filepath == undefined) {
+            console.log("No file selected");
+        } else {
+            fs.readFile(filepath[0], 'utf-8', (err, data) => {
+                if (err) { alert("An error ocurred reading the file :" + err.message) }
+                console.log("The file content is : " + data);
+                var fileout = JSON.parse(data)
+                if(fileout.key == "TT01"){//check if this file is a timetable backup file
+                    config.data = fileout
+                    config.save();
+                    notify.new('Sucess', 'Backup restored')
+                    setTimeout(()=>{location.reload()},2000)
+                }else{
+                    notify.new('Error', filepath[0]+' is not a backup file')
+                }
+                
+            })
+        }
+    }
 }
 
 /*  Table generator */
@@ -1910,7 +1929,6 @@ let notify = {  /*  Notification handler  */
                 }
             }
         }
-        console.table(notify);
     },
     timing_effects: function (notificationindex, tempnotif) {
         setTimeout(() => { document.getElementById('notif' + notificationindex).style.transform = 'translate(0vw,0vh)' }, 50);
