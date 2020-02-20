@@ -1,13 +1,17 @@
 
 const { dialog } = require('electron').remote;
 const fs = require('fs');
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+/*const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]*/
+
 window.addEventListener('load', function () {//window loads
-    if (typeof (require) == 'undefined') {//initialize node modules
-        console.warn('Running in Browser');
-    } else {
-        console.warn('Running in Node mode');
+
+    if(localStorage.getItem("TT01_baseconfig")){
+        baseconfig = JSON.parse(localStorage.getItem("TT01_baseconfig"))
+    }else{
+        //first startup
+        localStorage.setItem("TT01_baseconfig",JSON.stringify(baseconfig))
     }
+
     if (localStorage.getItem(config.configlocation)) {
         config.load()
     } else {
@@ -60,6 +64,10 @@ let config = {
         ],
         previous_colors: [],
     },
+    baseconfig:{
+        use_alt_storage:false,
+        alt_location:"",
+    },
     properties: {
         tempdata: false,
         monday: false,
@@ -80,13 +88,26 @@ let config = {
     },
     configlocation: "TT001_cfg",//not strict, can be anything. Think of it as a file name/path
     save: function () {//Save the config file
-        localStorage.setItem(this.configlocation, JSON.stringify(this.data))
-        console.log('config saved: ')
+        if(baseconfig.alt_location == true){
+            //save to alternate storage location
+            
+        }else{
+            //save to application storage
+            localStorage.setItem(this.configlocation, JSON.stringify(this.data))
+            console.log('config saved to application storage')
+        }
         console.table(this.data)
     },
     load: function () {//Load the config file into memory
-        this.data = JSON.parse(localStorage.getItem(this.configlocation))
-        console.log('config Loaded: ')
+        if(baseconfig.alt_location == true){
+            //load from alternate storage location
+
+        }else{
+            //load from application storage
+            this.data = JSON.parse(localStorage.getItem(this.configlocation))
+            console.log('config Loaded from application storage')
+        }
+        
         console.table(this.data)
         this.validate()
     },
