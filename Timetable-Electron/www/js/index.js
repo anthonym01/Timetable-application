@@ -1,16 +1,10 @@
 
 const { dialog } = require('electron').remote;
 const fs = require('fs');
+const fse = require('fs-extra')
 /*const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]*/
 
 window.addEventListener('load', function () {//window loads
-
-    if(localStorage.getItem("TT01_baseconfig")){
-        baseconfig = JSON.parse(localStorage.getItem("TT01_baseconfig"))
-    }else{
-        //first startup
-        localStorage.setItem("TT01_baseconfig",JSON.stringify(baseconfig))
-    }
 
     if (localStorage.getItem(config.configlocation)) {
         config.load()
@@ -24,17 +18,17 @@ window.addEventListener('load', function () {//window loads
     setTimeout(() => {
         console.log('Closing loading screen...')
         document.getElementById('Loading').style.display = 'none'
-    }, 50)
+    }, 50)/*
     setTimeout(() => {
         UI.navigate.MANAGE()
         //UI.navigate.SETTING()
-    }, 500)
+    }, 500)*/
 })
 
 /*  Config file handler    */
 let config = {
     data: {
-        key:"TT01",
+        key: "TT01",
         theme: "dark",//sets theme
         backgroundimg: null,
         hilight_engine: false,//hilight engine whether to run or not
@@ -45,13 +39,13 @@ let config = {
         table_selected: 1,
         table_details: [// Details about different tables
             { purpose: "table #1", deleted: false, identifier: 1 },
-            { purpose: "table #2", deleted: false, identifier: 2 },
+            /*{ purpose: "table #2", deleted: false, identifier: 2 },
             { purpose: "table #3", deleted: false, identifier: 3 },
-            { purpose: "table #4", deleted: false, identifier: 4 }
+            { purpose: "table #4", deleted: false, identifier: 4 }*/
         ],
         table1_db: [// Table database
 
-            { show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
+            /*{ show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
             { show: 4, day: 2, name: "Test 2", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 50, sat: 100, light: 50 }, start: 11.62, end: 14.57 },
             { show: 4, day: 3, name: "Test 3", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 100, sat: 100, light: 50 }, start: 8.5, end: 10.76 },
             { show: 4, day: 4, name: "Test 4", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 150, sat: 100, light: 50 }, start: 1.32, end: 4.0 },
@@ -60,13 +54,13 @@ let config = {
             { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
             { show: 3, day: 7, name: "Test 8", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 7.0, end: 8.7 },
             { show: 2, day: 7, name: "Test 9", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 8.0, end: 9.7 },
-            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },
+            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },*/
         ],
         previous_colors: [],
     },
-    baseconfig:{
-        use_alt_storage:false,
-        alt_location:"",
+    baseconfig: {
+        use_alt_storage: false,
+        alt_location: "",
     },
     properties: {
         tempdata: false,
@@ -88,28 +82,86 @@ let config = {
     },
     configlocation: "TT001_cfg",//not strict, can be anything. Think of it as a file name/path
     save: function () {//Save the config file
-        if(baseconfig.alt_location == true){
+        if (config.baseconfig.use_alt_storage == true) {
             //save to alternate storage location
-            
-        }else{
-            //save to application storage
-            localStorage.setItem(this.configlocation, JSON.stringify(this.data))
+            fse.ensureDirSync(config.baseconfig.alt_location.toString())//endure the directory exists
+            //fse.ensureFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json")//Ensure the file exists
+            fs.writeFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", JSON.stringify(config.data), 'utf8', function (err) {
+                alert('File could not be saved to: ' + config.baseconfig.alt_location.toString() + "/Timetableconfig.json" + err.message);
+            })
+            console.log('config saved to: ' + config.baseconfig.alt_location.toString())
+        } else {
             console.log('config saved to application storage')
         }
+        localStorage.setItem(this.configlocation, JSON.stringify(this.data))
         console.table(this.data)
     },
     load: function () {//Load the config file into memory
-        if(baseconfig.alt_location == true){
-            //load from alternate storage location
+        if (localStorage.getItem("TT01_baseconfig")) {//load base config firt
+            config.baseconfig = JSON.parse(localStorage.getItem("TT01_baseconfig"))
+        } else {
+            //first startup
+            localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig))
+        }
 
-        }else{
+        if (config.baseconfig.use_alt_storage == true) {
+            //load from alternate storage location
+            if(fs.existsSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json")){//Directory exists
+                var fileout = fs.readFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", { encoding: 'utf8' },(ctx)=>{
+                    console.error('The file directory was not found, ',ctx);
+                });
+                console.log('config Loaded from: ' + config.baseconfig.alt_location.toString())
+                console.warn('Data from fs read operation: ', fileout)
+                fileout = JSON.parse(fileout)
+                if (fileout.key == "TT01") {
+                    config.data = fileout;
+                    console.warn('configuration applied from file')
+                } else {
+                    console.warn('The file is not a config file, internal configuration will be used')
+                    this.data = JSON.parse(localStorage.getItem(this.configlocation))
+                }
+            }else{//file does not exist, was moved, deleted or is inaccesible
+                this.data = JSON.parse(localStorage.getItem(this.configlocation))
+                config.save()//save to recreate the file
+            }
+        } else {
             //load from application storage
             this.data = JSON.parse(localStorage.getItem(this.configlocation))
             console.log('config Loaded from application storage')
         }
-        
+
         console.table(this.data)
         this.validate()
+    },
+    selectlocation: function () {
+        var path = dialog.showOpenDialog({ properties: ['createDirectory', 'openDirectory'], defaultPath: config.baseconfig.alt_location.toString() })
+        console.warn('Alternate configuration path :', path[0])
+        config.baseconfig.use_alt_storage = true
+        config.baseconfig.alt_location = path[0]
+        localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig))//save base config
+        var fileout = fs.readFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", { encoding: 'utf8' });
+        fileout = JSON.parse(fileout)
+        if (fileout != undefined) {
+            if (fileout.key == "TT01") {
+                console.warn('A file exists here, prompt the user on what to keep, default is currently whats in the file')
+                config.properties.changed = true
+                config.data = fileout
+                manage.initalize()
+                UI.initalize()
+                config.save()
+            } else {
+                console.warn('No file exists here, config from this app is used')
+                config.save()//to create the file
+            }
+        } else {
+            console.warn('No file exists here, config from this app is used')
+            config.save()//to create the file
+        }
+
+    },
+    usedefault: function () {
+        config.baseconfig.use_alt_storage = false
+        localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig))//save base config
     },
     validate: function () {//validate configuration file
         console.log('Config is being validated')
@@ -149,7 +201,7 @@ let config = {
         }
 
         if (typeof (this.data.table_details) == 'undefined') {
-            this.data.table_details = [{ purpose: "Table #1" }, { purpose: "Table #2" }, { purpose: "Table #3" }, { purpose: "Table #4" }];
+            this.data.table_details = [{ purpose: "table #1", deleted: false, identifier: 1  }];
             console.log('Table names were not defined!');
             configisvalid = false;
         } else {//Remove deleted Items from the array
@@ -284,7 +336,7 @@ let config = {
 
         if (!configisvalid) {
             console.log('config was found to be invalid and will be overwritten');
-            this.save();//Save new confog because old config is no longer valid
+            config.save();//Save new confog because old config is no longer valid
         } else {
             console.log('config was found to be valid');
         }
@@ -293,6 +345,7 @@ let config = {
         localStorage.clear(this.configlocation);
         console.log('config deleted: ');
         console.table(this.data);
+        //overwite the file if any file exists
         notify.new('App', 'app is preparing to restart');
         setTimeout(() => { location.reload() }, 2000);
         this.validate();
@@ -300,7 +353,7 @@ let config = {
     backup: function () {//backup configuration to file
         console.log('Configuration backup initiated')
         var date = new Date();
-        var filepath = dialog.showSaveDialog({defaultPath:"Timetable backup "+Number(date.getMonth()+1)+" - "+date.getDate()+" - "+date.getFullYear()+".json",buttonLabel:null});
+        var filepath = dialog.showSaveDialog({ defaultPath: "Timetable backup " + Number(date.getMonth() + 1) + " - " + date.getDate() + " - " + date.getFullYear() + ".json", buttonLabel: null });
         if (filepath == undefined) {//the file save dialogue was canceled my the user
             console.warn('The file dialogue was canceled by the user')
         } else {
@@ -325,15 +378,15 @@ let config = {
                 if (err) { alert("An error ocurred reading the file :" + err.message) }
                 console.log("The file content is : " + data);
                 var fileout = JSON.parse(data)
-                if(fileout.key == "TT01"){//check if this file is a timetable backup file
+                if (fileout.key == "TT01") {//check if this file is a timetable backup file
                     config.data = fileout
                     config.save();
                     notify.new('Sucess', 'Backup restored')
-                    setTimeout(()=>{location.reload()},2000)
-                }else{
-                    notify.new('Error', filepath[0]+' is not a backup file')
+                    setTimeout(() => { location.reload() }, 2000)
+                } else {
+                    notify.new('Error', filepath[0] + ' is not a backup file')
                 }
-                
+
             })
         }
     }
@@ -1067,7 +1120,7 @@ let manage = {
                     i++;
                 }
             }
-            config.save()//save because many things get changed and shuffled durring this function
+            //config.save()//save because many things get changed and shuffled durring this function
         }
         console.log('Manager Render Completed');
         function build_bar_db1(index) {//Builds timetable from database
@@ -1577,6 +1630,26 @@ let UI = {
 
                 break;
         }
+        if (config.baseconfig.use_alt_storage == true) {
+            document.getElementById('selectconfiglocationbtn').innerText = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
+        }
+        document.getElementById('defaultconfigbtn').addEventListener('click', function () {//default the configuration
+            config.delete()
+            config.properties.changed = true
+        })
+        document.getElementById('saveconfigbtn').addEventListener('click', function () {//save the configuration
+            config.save()
+            config.properties.changed = true
+        })
+        document.getElementById('defaultconfiglocationbtn').addEventListener('click', function () {//default the configuration location
+            config.usedefault()
+            config.properties.changed = true
+        })
+        document.getElementById('selectconfiglocationbtn').addEventListener('click', function () {//Select the configuration location
+            config.selectlocation()
+            document.getElementById('selectconfiglocationbtn').innerText = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
+            config.properties.changed = true
+        })
 
     },
     navigate: {
@@ -1676,7 +1749,6 @@ let UI = {
                 config.data.theme = 'dark'
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = true;
-                config.save();
             },
             set_light: function () {
                 console.warn('Theme set Light');
@@ -1684,7 +1756,6 @@ let UI = {
                 config.data.theme = 'light'
                 document.getElementById('light_selection_put').checked = true;
                 document.getElementById('dark_selection_put').checked = false;
-                config.save();
             },
         },
         notification: {

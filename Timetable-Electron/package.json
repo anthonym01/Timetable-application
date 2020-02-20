@@ -8,6 +8,9 @@
     "package": "",
     "build": ""
   },
+  "icon": "D:/Git/Timetable-application/Resources/icons/icon.ico",
+  "displayName": "Timetable",
+  "bin": "TT01",
   "author": "Anthonym",
   "license": "ISC",
   "devDependencies": {
@@ -16,6 +19,7 @@
     "electron-packager": "^13.1.1"
   },
   "dependencies": {
-    "electron-window-state": "^5.0.3"
+    "electron-window-state": "^5.0.3",
+    "fs-extra": "^8.1.0"
   }
 }
