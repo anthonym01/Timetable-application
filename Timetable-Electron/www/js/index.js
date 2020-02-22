@@ -2,6 +2,7 @@
 const { dialog } = require('electron').remote;
 const fs = require('fs');
 const fse = require('fs-extra')
+const path = require('path');
 /*const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]*/
 
 window.addEventListener('load', function () {//window loads
@@ -16,10 +17,11 @@ window.addEventListener('load', function () {//window loads
     manage.initalize()
     config.properties.startup = false
     setTimeout(() => {
+        UI.navigate.TABLE()
         console.log('Closing loading screen...')
         document.getElementById('Loading').style.display = 'none'
-    }, 50)/*
-    setTimeout(() => {
+    }, 50)
+    /*setTimeout(() => {
         UI.navigate.MANAGE()
         //UI.navigate.SETTING()
     }, 500)*/
@@ -75,7 +77,7 @@ let config = {
         max: 0, min: 24,//Swapped because big brain, big big brain
         overwrite: null,
         called_from_plus: false,
-        view: "table",//defaults to table
+        view: "",//defaults to table
         exit: false,
         startup: true,
         colors_changed: true,//re-render color pannel when this is true
@@ -430,7 +432,6 @@ let table = {
             validate();//Strip empty cells form top and bottom
         }
         console.log('Table render Completed');
-        UI.navigate.TABLE();//Starts the ticking of the clock
 
         function build_block_db1(index) {//Builds timetable from database
             console.log('Building Block :', index);
@@ -1697,7 +1698,7 @@ let UI = {
         },
         TABLE: function () {
             console.log('Table navigation started');
-            if (config.properties.changed) {
+            if (config.properties.changed || config.properties.view == "table") {
                 window.location.reload();
                 /*table.data_render();
                 setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
@@ -1904,7 +1905,7 @@ let UI = {
         },
         wallpaper: {
             set_wallpaper: function () {
-                document.getElementById('timetable').style.backgroundImage = "url('img/usebkgrounds/test-user-background.jpg')"
+                document.getElementById('timetable').style.backgroundImage = "url('D:/Git/Timetable-application/Timetable-Electron/www/img/usebkgrounds/test-user-background.jpg')"
             },
         }
     },
