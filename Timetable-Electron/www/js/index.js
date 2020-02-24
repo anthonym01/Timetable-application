@@ -6,7 +6,7 @@ const path = require('path');
 /*const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]*/
 
 window.addEventListener('load', function () {//window loads
-    console.warn('Running from:', process.resourcesPath.toString().splice())
+    console.warn('Running from:', process.resourcesPath)
     if (localStorage.getItem(config.configlocation)) {
         config.load()
     } else {
