@@ -1,17 +1,18 @@
 
-const { dialog } = require('electron').remote;
+const { dialog,process } = require('electron').remote;
 const fs = require('fs');
 const fse = require('fs-extra')
 const path = require('path');
 /*const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]*/
 
 window.addEventListener('load', function () {//window loads
-
+    console.warn('Running from:', process.resourcesPath.toString().splice())
     if (localStorage.getItem(config.configlocation)) {
         config.load()
     } else {
         config.validate()
     }
+
     UI.initalize()
     table.initialize()
     manage.initalize()
@@ -21,10 +22,7 @@ window.addEventListener('load', function () {//window loads
         console.log('Closing loading screen...')
         document.getElementById('Loading').style.display = 'none'
     }, 50)
-    /*setTimeout(() => {
-        UI.navigate.MANAGE()
-        //UI.navigate.SETTING()
-    }, 500)*/
+    
 })
 
 /*  Config file handler    */
@@ -81,6 +79,7 @@ let config = {
         exit: false,
         startup: true,
         colors_changed: true,//re-render color pannel when this is true
+        clocking: false,// is clock ticking
     },
     configlocation: "TT001_cfg",//not strict, can be anything. Think of it as a file name/path
     save: function () {//Save the config file
@@ -108,9 +107,9 @@ let config = {
 
         if (config.baseconfig.use_alt_storage == true) {
             //load from alternate storage location
-            if(fs.existsSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json")){//Directory exists
-                var fileout = fs.readFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", { encoding: 'utf8' },(ctx)=>{
-                    console.error('The file directory was not found, ',ctx);
+            if (fs.existsSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json")) {//Directory exists
+                var fileout = fs.readFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", { encoding: 'utf8' }, (ctx) => {
+                    console.error('The file directory was not found, ', ctx);
                 });
                 console.log('config Loaded from: ' + config.baseconfig.alt_location.toString())
                 console.warn('Data from fs read operation: ', fileout)
@@ -122,7 +121,7 @@ let config = {
                     console.warn('The file is not a config file, internal configuration will be used')
                     this.data = JSON.parse(localStorage.getItem(this.configlocation))
                 }
-            }else{//file does not exist, was moved, deleted or is inaccesible
+            } else {//file does not exist, was moved, deleted or is inaccesible
                 this.data = JSON.parse(localStorage.getItem(this.configlocation))
                 config.save()//save to recreate the file
             }
@@ -203,7 +202,7 @@ let config = {
         }
 
         if (typeof (this.data.table_details) == 'undefined') {
-            this.data.table_details = [{ purpose: "table #1", deleted: false, identifier: 1  }];
+            this.data.table_details = [{ purpose: "table #1", deleted: false, identifier: 1 }];
             console.log('Table names were not defined!');
             configisvalid = false;
         } else {//Remove deleted Items from the array
@@ -399,7 +398,8 @@ let table = {
     initialize: function () {
         console.log('Table initalization Begins');
         this.data_render();//render data
-        this.clock.start_clock();//render
+        //this.clock.start_clock();
+        //setTimeout(() => { this.change.startcheck(); }, 5000);//Start check manually scrub
         setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);
     },
     data_render: function () {
@@ -437,14 +437,7 @@ let table = {
             console.log('Building Block :', index);
             //Create the data block
             let tempblock = document.createElement('div');
-
-            //assign a color
             tempblock.setAttribute("class", "data_block");
-            tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
-
-            //set up link transition
-            /*tempblock.setAttribute("id", "data_block"+index);
-            tempblock.setAttribute("href", "#data_block"+index);*/
 
             //time processing
             let startmeridian = 'a.m.';
@@ -606,6 +599,7 @@ let table = {
             setTimeout(() => {
                 let blockheight = Number(config.data.table1_db[index].end - config.data.table1_db[index].start) * 100;
                 console.log(config.data.table1_db[index].name, ' As assigned height of :', blockheight, '%');
+                tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60;//gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
@@ -823,11 +817,37 @@ let table = {
         stop_clock: function () {
             console.warn('Clock was stopped');
             clearInterval(this.clock_tick_trigger);//stops teh clock ticking
+            config.properties.clocking = false
         },
         start_clock: function () {
             console.warn('Clock has started');
             this.clock_tick();
             setTimeout(() => { this.clock_tick_trigger = setInterval(() => { this.clock_tick() }, 1000); }, 500);// Set timeout higher if slow devices can initalize intime
+            config.properties.clocking = true
+        },
+    },
+    change: {
+        changeinterval: null,
+        startcheck: function () {
+            if (config.baseconfig.use_alt_storage) {
+                this.changeinterval = setInterval(() => {
+                    this.check()//every 5 seconds checks if the file has changed
+                }, 5000);
+            }
+        },
+        check: function () {
+            //a test function comparing length of array in data to array length in file
+            console.log('A file check is being made')
+            var configarraylength = config.data.table1_db.length
+            var fileout = JSON.parse(fs.readFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", { encoding: 'utf8' }))
+            //before comparison files configuration needs to be validated
+            var filearraylength = fileout.table1_db.length
+            if (configarraylength != filearraylength) {
+                console.log(configarraylength,filearraylength)
+                //location.reload()//reload to re-render table, do not reload if this user is editing data
+            }else{
+                console.log('there is no change');
+            }
         },
     },
     hilight_engine_go_vroom: function () {
@@ -1703,7 +1723,7 @@ let UI = {
                 /*table.data_render();
                 setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
             } else {
-                if (config.properties.view != "table") {
+                if (config.properties.clocking == false || undefined) {
                     table.clock.start_clock();
                 }
                 config.properties.view = "table";
@@ -1905,7 +1925,7 @@ let UI = {
         },
         wallpaper: {
             set_wallpaper: function () {
-                document.getElementById('timetable').style.backgroundImage = "url('D:/Git/Timetable-application/Timetable-Electron/www/img/usebkgrounds/test-user-background.jpg')"
+                document.getElementById('timetable').style.backgroundImage = "url('img/usebkgrounds/test-user-background.jpg')"
             },
         }
     },

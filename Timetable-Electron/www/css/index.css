@@ -1462,7 +1462,7 @@
         /*   The body of the timetable   */
         position: relative;
         margin-top: 0vh;
-        height: calc(100% - 0.2vh);
+        height: calc(100% - 0.2vh);/* border */
         /* -0.2vh to facilitate border colapse on maincell */
         max-height: none;
         min-width: 100%;
@@ -1528,10 +1528,16 @@
         display: block;
     }
 
-    .data_block,
+    .data_block:active,
     .data_block_active:active {
         transition: box-shadow 0ms, background-color 0ms, color 0ms;
     }
+    .data_block:hover,
+    .data_block_active:hover {
+        transition: box-shadow 0ms, background-color 0ms, color 0ms;
+        box-shadow: 0vh 0.5vh 2vh 0vh #ffffff;
+    }
+
 
     .data_block_active {
         z-index: 400;
