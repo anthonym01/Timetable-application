@@ -415,6 +415,13 @@ body {
 }
 
 /* Notification colors*/
+
+.x-button:hover::before,
+.x-button:hover::after {
+    box-shadow: 0vh 0vh 1vh 0vh #fff;
+}
+
+/* Notification colors*/
 .notification_style1 {
     border-top: 0.5vh solid rgb(255, 255, 255);
     background-color: rgb(0, 0, 0);
@@ -426,7 +433,7 @@ body {
 .notification_style2:hover,
 .notification_style3:hover,
 .notification_style4:hover {
-    box-shadow: 0vh 0vh 3vh 0vh #ffffff;
+    box-shadow: 0vh 0vh 2vh 0vh #ffffff;
 }
 
 .notification_style1 .title {
@@ -441,13 +448,14 @@ body {
 .notification_style2,
 .notification_style3 {
     border-left: 0.5vw solid #2bff00;
+    border-top: none;
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
     box-shadow: 0vh 0vh 0.5vh 0vh #ffffff;
 }
 
 .notification_style3 .title::after {
-    background-image: url('../img/icon-inverse.webp')
+    background-image: url('../img/icon.webp')
 }
 
 .notification_style3 .title::before,

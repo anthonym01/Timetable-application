@@ -1009,17 +1009,16 @@
         transition-duration: 300ms;
     }
 
-    /* "Notifications" */
     @keyframes stretch {
         from {
             width: 0%
         }
-
+    
         to {
             width: 100%
         }
     }
-
+    
     /*   Type 1 notification   */
     .notification_style1 {
         position: fixed;
@@ -1027,13 +1026,12 @@
         right: 1vw;
         height: 20vh;
         width: 20vw;
-        border-radius: 1vw;
         transform: translate(20vw, 0vh);
         overflow: hidden;
         cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms;
+        transition: transform 500ms, box-shadow 200ms,opacity 300ms;
     }
-
+    
     .notification_style1 .title {
         position: absolute;
         top: 0;
@@ -1045,7 +1043,7 @@
         white-space: nowrap;
         cursor: inherit;
     }
-
+    
     .notification_style1 .title::before {
         position: absolute;
         transform: translate(0, 100%);
@@ -1057,7 +1055,7 @@
         content: "";
         cursor: inherit;
     }
-
+    
     .notification_style1 .notifbody {
         position: absolute;
         bottom: 0;
@@ -1069,7 +1067,7 @@
         overflow: hidden;
         cursor: inherit;
     }
-
+    
     /*   Type 2 notification   */
     .notification_style2 {
         position: fixed;
@@ -1081,9 +1079,9 @@
         border-top: none;
         overflow: hidden;
         cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms;
+        transition: transform 500ms, box-shadow 200ms,opacity 300ms;
     }
-
+    
     .notification_style2 .title {
         position: absolute;
         top: 0;
@@ -1096,7 +1094,7 @@
         white-space: nowrap;
         cursor: inherit;
     }
-
+    
     .notification_style2 .title::before {
         position: absolute;
         transform: translate(0, 100%);
@@ -1108,7 +1106,8 @@
         content: "";
         cursor: inherit;
     }
-
+    
+    
     .notification_style2 .notifbody {
         position: absolute;
         bottom: 0;
@@ -1120,7 +1119,7 @@
         overflow: hidden;
         cursor: inherit;
     }
-
+    
     /*   Type 3 notification   */
     .notification_style3 {
         position: fixed;
@@ -1132,14 +1131,14 @@
         border-top: none;
         overflow: hidden;
         cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms;
+        transition: transform 500ms, box-shadow 200ms,opacity 300ms;
     }
-
+    
     .notification_style3 .title {
         position: absolute;
         top: 0;
-        right: 0;
-        width: 100%;
+        right: 4vh;
+        width: calc(100% - 4vh);
         height: 5.5vh;
         font-size: 4.5vh;
         padding-right: 1vw;
@@ -1147,8 +1146,8 @@
         white-space: nowrap;
         cursor: inherit;
     }
-
-    .notification_style3 .title::after {
+    
+    .notification_style3 .title::after {/* imgae */
         position: absolute;
         top: 0;
         left: 1.2vw;
@@ -1159,8 +1158,8 @@
         content: "";
         cursor: inherit;
     }
-
-    .notification_style3 .title::before {
+    
+    .notification_style3 .title::before {/*prograss bar*/
         position: absolute;
         transform: translate(0, 100%);
         bottom: 0;
@@ -1171,7 +1170,7 @@
         content: "";
         cursor: inherit;
     }
-
+    
     .notification_style3 .notifbody {
         position: absolute;
         bottom: 0;
@@ -1183,7 +1182,7 @@
         overflow: hidden;
         cursor: inherit;
     }
-
+    
     /*   Type 4 notification   */
     .notification_style4 {
         position: fixed;
@@ -1194,9 +1193,9 @@
         transform: translate(20vw, 0vh);
         overflow: hidden;
         cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms;
+        transition: transform 500ms, box-shadow 200ms,opacity 300ms;
     }
-
+    
     .notification_style4 .title {
         position: absolute;
         top: 0;
@@ -1208,7 +1207,7 @@
         white-space: nowrap;
         cursor: inherit;
     }
-
+    
     .notification_style4 .title::before {
         position: absolute;
         transform: translate(0, 0vh);
@@ -1220,7 +1219,7 @@
         content: "";
         cursor: inherit;
     }
-
+    
     .notification_style4 .notifbody {
         position: absolute;
         bottom: 0;
@@ -1232,6 +1231,49 @@
         overflow: hidden;
         cursor: inherit;
     }
+    
+    /* X button */
+    .x-button {
+        height: 4vh;
+        width: 4vh;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    
+    .x-button::before,
+    .x-button::after {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 0.4vh;
+        content: "";
+        background-color: #f00;
+        border-radius: 0.5vh;
+        transition: transform 300ms, box-shadow 200ms;
+    }
+    
+    .x-button::before {
+        /*Left */
+        right: 1.8vh;
+        transform: rotate(-45deg);
+    }
+    
+    .x-button::after {
+        /*Right */
+        left: 1.8vh;
+        transform: rotate(45deg);
+    }
+    
+    
+    .x-button:hover::before {
+        transform: rotate(-230deg);
+    }
+    
+    .x-button:hover::after {
+        transform: rotate(230deg);
+    }
+    
 }
 
 
@@ -2420,229 +2462,5 @@
         transform: translate(-7vh, 0);
         transition: transform, background-color;
         transition-duration: 300ms;
-    }
-
-    /* Notifications */
-    @keyframes stretch {
-        from {
-            width: 0%
-        }
-
-        to {
-            width: 100%
-        }
-    }
-
-    /*   Type 1 notification   */
-    .notification_style1 {
-        position: fixed;
-        bottom: 2vh;
-        right: 1vw;
-        height: 20vh;
-        width: 20vw;
-        border-radius: 1vw;
-        transform: translate(20vw, 0vh);
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms;
-    }
-
-    .notification_style1 .title {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 5.5vh;
-        font-size: 4.5vh;
-        text-align: center;
-        white-space: nowrap;
-        cursor: inherit;
-    }
-
-    .notification_style1 .title::before {
-        position: absolute;
-        transform: translate(0, 100%);
-        bottom: 0;
-        left: 0;
-        z-index: 99;
-        height: 0.5vh;
-        animation: stretch 11000ms;
-        content: "";
-        cursor: inherit;
-    }
-
-    .notification_style1 .notifbody {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 95%;
-        padding: 0.5vh 0.5vw;
-        height: 13vh;
-        font-size: 2.5vh;
-        overflow: hidden;
-        cursor: inherit;
-    }
-
-    /*   Type 2 notification   */
-    .notification_style2 {
-        position: fixed;
-        bottom: 2vh;
-        right: 1vw;
-        height: 15vh;
-        width: 25vw;
-        transform: translate(30vw, 0vh);
-        border-top: none;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms;
-    }
-
-    .notification_style2 .title {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 5.5vh;
-        font-size: 4.5vh;
-        padding-left: 1vw;
-        text-align: left;
-        white-space: nowrap;
-        cursor: inherit;
-    }
-
-    .notification_style2 .title::before {
-        position: absolute;
-        transform: translate(0, 100%);
-        bottom: 0;
-        left: 0;
-        z-index: 99;
-        height: 0.5vh;
-        animation: stretch 11000ms;
-        content: "";
-        cursor: inherit;
-    }
-
-    .notification_style2 .notifbody {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 95%;
-        padding: 0.5vh 0.5vw;
-        height: 8.5vh;
-        font-size: 2.5vh;
-        overflow: hidden;
-        cursor: inherit;
-    }
-
-    /*   Type 3 notification   */
-    .notification_style3 {
-        position: fixed;
-        bottom: 2vh;
-        right: 1vw;
-        height: 15vh;
-        width: 25vw;
-        transform: translate(30vw, 0vh);
-        border-top: none;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms;
-    }
-
-    .notification_style3 .title {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 5.5vh;
-        font-size: 4.5vh;
-        padding-right: 1vw;
-        text-align: right;
-        white-space: nowrap;
-        cursor: inherit;
-    }
-
-    .notification_style3 .title::after {
-        position: absolute;
-        top: 0;
-        left: 1.2vw;
-        height: 5.5vh;
-        width: 5.5vh;
-        background-size: contain;
-        background-repeat: no-repeat;
-        content: "";
-        cursor: inherit;
-    }
-
-    .notification_style3 .title::before {
-        position: absolute;
-        transform: translate(0, 100%);
-        bottom: 0;
-        left: 0;
-        z-index: 99;
-        height: 0.5vh;
-        animation: stretch 11000ms;
-        content: "";
-        cursor: inherit;
-    }
-
-    .notification_style3 .notifbody {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 95%;
-        padding: 0.5vh 0.5vw;
-        height: 8.5vh;
-        font-size: 2.5vh;
-        overflow: hidden;
-        cursor: inherit;
-    }
-
-    /*   Type 4 notification   */
-    .notification_style4 {
-        position: fixed;
-        bottom: 2vh;
-        right: 1vw;
-        height: 20vh;
-        width: 20vw;
-        transform: translate(20vw, 0vh);
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms;
-    }
-
-    .notification_style4 .title {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 5.5vh;
-        font-size: 4.5vh;
-        text-align: center;
-        white-space: nowrap;
-        cursor: inherit;
-    }
-
-    .notification_style4 .title::before {
-        position: absolute;
-        transform: translate(0, 0vh);
-        top: 0;
-        left: 0;
-        z-index: 99;
-        height: 0.5vh;
-        animation: stretch 11000ms;
-        content: "";
-        cursor: inherit;
-    }
-
-    .notification_style4 .notifbody {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 95%;
-        padding: 0.5vh 0.5vw;
-        height: 13vh;
-        font-size: 2.5vh;
-        overflow: hidden;
-        cursor: inherit;
     }
 }

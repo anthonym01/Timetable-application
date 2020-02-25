@@ -236,3 +236,55 @@ body{
 .switch_container_dissabled .switch{
     background-color: rgb(122,122,122);
 }
+
+.x-button:hover::before,
+.x-button:hover::after {
+    box-shadow: 0vh 0vh 1vh 0vh rgb(0, 0, 0);
+}
+
+/* Notification colors*/
+.notification_style1 {
+    border-top: 0.5vh solid rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    box-shadow: 0vh 0vh 0.5vh 0vh #000000;
+}
+
+.notification_style1:hover,
+.notification_style2:hover,
+.notification_style3:hover,
+.notification_style4:hover {
+    box-shadow: 0vh 0vh 1.5vh 0vh #000000;
+}
+
+.notification_style1 .title {
+    border-bottom: 0.25vh solid rgb(0, 0, 0)
+}
+
+.notification_style1 .title::before,
+.notification_style2 .title::before {
+    background-color: rgb(0, 0, 0)
+}
+
+.notification_style2,
+.notification_style3 {
+    border-left: 0.5vw solid #00a2ff;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    box-shadow: 0vh 0vh 0.5vh 0vh #000000;
+}
+
+.notification_style3 .title::after {
+    background-image: url('../img/icon-inverse.webp')
+}
+
+.notification_style3 .title::before,
+.notification_style4 .title::before {
+    background-color: rgb(0, 0, 0)
+}
+
+.notification_style4 {
+    background-color: rgba(255, 255, 255, 0.6);
+    color: rgb(0, 0, 0);
+    box-shadow: 0vh 0vh 0.5vh 0vh #000000;
+}

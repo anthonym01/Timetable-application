@@ -1,5 +1,5 @@
 
-const { dialog,process } = require('electron').remote;
+const { dialog, process } = require('electron').remote;
 const fs = require('fs');
 const fse = require('fs-extra')
 const path = require('path');
@@ -22,7 +22,7 @@ window.addEventListener('load', function () {//window loads
         console.log('Closing loading screen...')
         document.getElementById('Loading').style.display = 'none'
     }, 50)
-    
+
 })
 
 /*  Config file handler    */
@@ -398,18 +398,14 @@ let table = {
     initialize: function () {
         console.log('Table initalization Begins');
         this.data_render();//render data
-        //this.clock.start_clock();
-        //setTimeout(() => { this.change.startcheck(); }, 5000);//Start check manually scrub
         setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);
     },
     data_render: function () {
         console.log('Table render started')
         let i = 0;
-        //if (config.data.table_selected == 0) { config.data.table_selected = 1 }//Fix oversight
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
-            //first_settup(1);
-            //Replace with emty table setu[/allert]
+
         } else {
             while (config.data.table1_db[i] != null || undefined) {//Get minimum time and maximum time to construct correct height
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
@@ -843,9 +839,9 @@ let table = {
             //before comparison files configuration needs to be validated
             var filearraylength = fileout.table1_db.length
             if (configarraylength != filearraylength) {
-                console.log(configarraylength,filearraylength)
+                console.log(configarraylength, filearraylength)
                 //location.reload()//reload to re-render table, do not reload if this user is editing data
-            }else{
+            } else {
                 console.log('there is no change');
             }
         },
@@ -1931,19 +1927,17 @@ let UI = {
     },
 }
 
-let notify = {  /*  Notification handler  */
+/*  Notification handler  */
+let notify = {
     preset_height: 22,//2 more than the height in the css
     previous_type: 1,
     animate_old: false,//turn on and off old notification Animation
     current: 0,//Current is incimented every time theres a new notifyer
     resizecheck: window.addEventListener('resize', () => { notify.clearall() }),
-    new: function (title, body) {
-
-        style = config.data.notification_type;
+    new: function (title, body, fx) {
         this.current++;//Inciment the current pisition
-        if (this.previous_type != style) {
-            this.clearall();
-        }
+        style = config.data.notification_type;
+        if (this.previous_type != style) { this.clearall() }
         this.previous_type = style;
 
         //create the notification holder
@@ -1954,21 +1948,17 @@ let notify = {  /*  Notification handler  */
         //create the title
         var tmptitle = document.createElement("div");       //create a div
         tmptitle.setAttribute("class", "title");             //set the class of the div to 'title'
-        tmptitle.setAttribute("id", "title" + this.current);   //set an id to the 'title' div
-        document.getElementById("notif" + this.current).appendChild(tmptitle);    //Put the 'title' div into the 'notification' div from before
-        document.getElementById("title" + this.current).innerHTML = title;  //Puts the title text into the 'title' div
+        tempnotif.appendChild(tmptitle);    //Put the 'title' div into the 'notification' div from before
+        tmptitle.innerHTML = title;  //Puts the title text into the 'title' div
 
         //create the body
         var tmpbdy = document.createElement("div"); //create a div
         tmpbdy.setAttribute("class", "notifbody");   //set the class of the div to 'notifbody'
-        tmpbdy.setAttribute("id", "body" + this.current);  //set an id to the 'notifbody' div
-        document.getElementById("notif" + this.current).appendChild(tmpbdy);  //put the 'notifbody' div into the 'notification' div from before
-        document.getElementById("body" + this.current).innerHTML = body;    //puts body text into the 'notifbody' div
+        tempnotif.appendChild(tmpbdy);  //put the 'notifbody' div into the 'notification' div from before
+        tmpbdy.innerHTML = body;    //puts body text into the 'notifbody' div
 
-        tempnotif.addEventListener('click', function () { notify.clearall() });//click to close notifications
-        tempnotif.title = 'click to dismiss';
-
-        switch (style) {//style switch change default to change default
+        //style switch
+        switch (style) {
             case 1:
                 tempnotif.setAttribute("class", "notification_style1");    //set the class of the div to 'notification_style1'
                 this.preset_height = 22;
@@ -1985,102 +1975,104 @@ let notify = {  /*  Notification handler  */
                 tempnotif.setAttribute("class", "notification_style4");    //set the class of the div to 'notification_style2'
                 this.preset_height = 22;
                 break;
-            default: tempnotif.setAttribute("class", "notification_style3");    //defaults the class of the div to 'notification_style1'
-                console.warn('Notifier takes style value selectors 1-4, you have selected', style);
-                this.preset_height = 22;
+            default:
+                tempnotif.setAttribute("class", "notification_style3");    //set the class of the div to 'notification_style2'
+                this.preset_height = 16;
+                break;
         }
 
-        this.timing_effects(this.current, tempnotif);//Timing in seperate function to avoid using 'new' object calls or extra variables
+        //Timing effects
+        setTimeout(() => { tempnotif.style.transform = 'translate(0vw,0vh)' }, 50);//Slide into view
+        setTimeout(() => { tempnotif.style.opacity = '0.0' }, 10000);//dissapear
+        setTimeout(() => { document.body.removeChild(tempnotif); }, 11000);//remove from document
 
         //manuver old notifications out of the way
-        if (window.innerHeight >= window.innerWidth) {
-            if (this.animate_old) {
-                if (document.getElementById('notif' + Number(this.current - 1))) {//stars at -1 because 1 less than the latest notification
-                    document.getElementById('notif' + Number(this.current - 1)).style.transform = 'translate(-100vw,0vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 2))) {
-                    document.getElementById('notif' + Number(this.current - 2)).style.transform = 'translate(-100vw,0vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 3))) {
-                    document.getElementById('notif' + Number(this.current - 3)).style.transform = 'translate(-100vw,0vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 4))) {
-                    document.getElementById('notif' + Number(this.current - 4)).style.transform = 'translate(-100vw,0vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 5))) {
-                    document.getElementById('notif' + Number(this.current - 5)).style.transform = 'translate(-100vw,0vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 6))) {
-                    document.getElementById('notif' + Number(this.current - 6)).style.transform = 'translate(-100vw,0vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 7))) {
-                    document.getElementById('notif' + Number(this.current - 7)).style.transform = 'translate(-100vw,0vh)';
-                }
+        if (this.animate_old) {
+            if (document.getElementById('notif' + Number(this.current - 1))) {//stars at -1 because 1 less than the latest notification
+                document.getElementById('notif' + Number(this.current - 1)).style.transform = 'translate(0vw,-' + this.preset_height + 'vh)';
             }
-        } else {
-            if (this.animate_old) {
-                if (document.getElementById('notif' + Number(this.current - 1))) {//stars at -1 because 1 less than the latest notification
-                    document.getElementById('notif' + Number(this.current - 1)).style.transform = 'translate(0vw,-' + this.preset_height + 'vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 2))) {
-                    document.getElementById('notif' + Number(this.current - 2)).style.transform = 'translate(0vw,-' + this.preset_height * 2 + 'vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 3))) {
-                    document.getElementById('notif' + Number(this.current - 3)).style.transform = 'translate(0vw,-' + this.preset_height * 3 + 'vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 4))) {
-                    document.getElementById('notif' + Number(this.current - 4)).style.transform = 'translate(0vw,-' + this.preset_height * 4 + 'vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 5))) {
-                    document.getElementById('notif' + Number(this.current - 5)).style.transform = 'translate(0vw,-' + this.preset_height * 5 + 'vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 6))) {
-                    document.getElementById('notif' + Number(this.current - 6)).style.transform = 'translate(0vw,-' + this.preset_height * 6 + 'vh)';
-                }
-                if (document.getElementById('notif' + Number(this.current - 7))) {
-                    document.getElementById('notif' + Number(this.current - 7)).style.transform = 'translate(0vw,-' + this.preset_height * 7 + 'vh)';
-                }
+            if (document.getElementById('notif' + Number(this.current - 2))) {
+                document.getElementById('notif' + Number(this.current - 2)).style.transform = 'translate(0vw,-' + this.preset_height * 2 + 'vh)';
+            }
+            if (document.getElementById('notif' + Number(this.current - 3))) {
+                document.getElementById('notif' + Number(this.current - 3)).style.transform = 'translate(0vw,-' + this.preset_height * 3 + 'vh)';
+            }
+            if (document.getElementById('notif' + Number(this.current - 4))) {
+                document.getElementById('notif' + Number(this.current - 4)).style.transform = 'translate(0vw,-' + this.preset_height * 4 + 'vh)';
+            }
+            if (document.getElementById('notif' + Number(this.current - 5))) {
+                document.getElementById('notif' + Number(this.current - 5)).style.transform = 'translate(0vw,-' + this.preset_height * 5 + 'vh)';
+            }
+            if (document.getElementById('notif' + Number(this.current - 6))) {
+                document.getElementById('notif' + Number(this.current - 6)).style.transform = 'translate(0vw,-' + this.preset_height * 6 + 'vh)';
+            }
+            if (document.getElementById('notif' + Number(this.current - 7))) {
+                document.getElementById('notif' + Number(this.current - 7)).style.transform = 'translate(0vw,-' + this.preset_height * 7 + 'vh)';
             }
         }
-    },
-    timing_effects: function (notificationindex, tempnotif) {
-        setTimeout(() => { document.getElementById('notif' + notificationindex).style.transform = 'translate(0vw,0vh)' }, 50);
-        setTimeout(() => { document.getElementById('notif' + notificationindex).style.opacity = '0.0' }, 10000);
-        setTimeout(() => { document.body.removeChild(tempnotif); }, 11000);
+
+        if (typeof (fx) == 'function') {//There is a function, use X button
+            tempnotif.addEventListener('click', fx);//asign action to shutter
+
+            //Close button
+            var xbutton = document.createElement('div')
+            xbutton.setAttribute('class', 'x-button')
+            tempnotif.appendChild(xbutton)
+            xbutton.title = 'click to dismiss';
+            xbutton.addEventListener('click', function () {
+                event.stopImmediatePropagation();
+                //close app
+                setTimeout(() => { tempnotif.style.opacity = '0.0'; }, 100)
+                //yee.style.zIndex = '-999';
+                tempnotif.style.transform = 'translate(35vw,0)'
+            })
+        } else {
+            tempnotif.addEventListener('click', function () {
+                setTimeout(() => { this.style.opacity = '0.0'; }, 100)
+                //yee.style.zIndex = '-999';
+                this.style.transform = 'translate(35vw,0)'
+            })
+            tempnotif.title = 'click to dismiss'
+        }
     },
     clearall: function () {
-        //This could be replaced with a "querySelectorAll", but this runs faster, so ill stick with it
         if (document.getElementById('notif' + Number(this.current))) {//nep them from latest going up
             document.getElementById('notif' + Number(this.current)).style.opacity = '0.0';
-            document.getElementById('notif' + Number(this.current)).style.zIndex = '-999';
+            document.getElementById('notif' + Number(this.current)).style.transform = 'translate(0vw,0vh)'
         }
         if (document.getElementById('notif' + Number(this.current - 1))) {
             document.getElementById('notif' + Number(this.current - 1)).style.opacity = '0.0';
-            document.getElementById('notif' + Number(this.current - 1)).style.zIndex = '-999';
+            document.getElementById('notif' + Number(this.current - 1)).style.transform = 'translate(0vw,0vh)'
         }
         if (document.getElementById('notif' + Number(this.current - 2))) {
             document.getElementById('notif' + Number(this.current - 2)).style.opacity = '0.0';
-            document.getElementById('notif' + Number(this.current - 2)).style.zIndex = '-999';
+            document.getElementById('notif' + Number(this.current - 2)).style.transform = 'translate(0vw,0vh)'
+
         }
         if (document.getElementById('notif' + Number(this.current - 3))) {
             document.getElementById('notif' + Number(this.current - 3)).style.opacity = '0.0';
-            document.getElementById('notif' + Number(this.current - 3)).style.zIndex = '-999';
+            document.getElementById('notif' + Number(this.current - 3)).style.transform = 'translate(0vw,0vh)'
+
         }
         if (document.getElementById('notif' + Number(this.current - 4))) {
             document.getElementById('notif' + Number(this.current - 4)).style.opacity = '0.0';
-            document.getElementById('notif' + Number(this.current - 4)).style.zIndex = '-999';
+            document.getElementById('notif' + Number(this.current - 4)).style.transform = 'translate(0vw,0vh)'
+
         }
         if (document.getElementById('notif' + Number(this.current - 5))) {
             document.getElementById('notif' + Number(this.current - 5)).style.opacity = '0.0';
-            document.getElementById('notif' + Number(this.current - 5)).style.zIndex = '-999';
+            document.getElementById('notif' + Number(this.current - 5)).style.transform = 'translate(0vw,0vh)'
+
         }
         if (document.getElementById('notif' + Number(this.current - 6))) {
             document.getElementById('notif' + Number(this.current - 6)).style.opacity = '0.0';
-            document.getElementById('notif' + Number(this.current - 6)).style.zIndex = '-999';
+            document.getElementById('notif' + Number(this.current - 6)).style.transform = 'translate(0vw,0vh)'
+
         }
         if (document.getElementById('notif' + Number(this.current - 7))) {
             document.getElementById('notif' + Number(this.current - 7)).style.opacity = '0.0';
-            document.getElementById('notif' + Number(this.current - 7)).style.zIndex = '-999';
+            document.getElementById('notif' + Number(this.current - 7)).style.transform = 'translate(0vw,0vh)'
+
         }
     }
 }
