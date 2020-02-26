@@ -17,6 +17,7 @@ app.on('ready', function () {
 		width: mainWindowState.width,
 		height: mainWindowState.height,
 		backgroundColor: '#ffffff',
+		title:'Timetable',
 		frame: true,
 		minWidth:400,
 	});
