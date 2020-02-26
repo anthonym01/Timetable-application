@@ -423,23 +423,10 @@
     }
 
     #tablemanger {
-        position: relative;
-        display: block;
-        float: left;
-        height: 4vh;
-        width: 40vh;
-        max-width: 33vw;
-        min-width: 100px;
-        font-size: 3.2vh;
-        padding: 1.2vh;
-        margin-top: 2vh;
-        margin-left: 3vh;
-        border-radius: 3vh;
-        cursor: pointer;
-        text-align: center;
         /*border:0.5vh solid white;*/
         transition: border-radius 80ms 0ms ease;
         white-space: nowrap;
+        overflow: visible;
     }
 
     #tablespace_render {
@@ -576,6 +563,7 @@
         margin-left: 1vh;
         background-size: contain;
         background-position: center;
+        background-repeat: no-repeat;
         float: left;
     }
 
@@ -1856,9 +1844,8 @@
     .data_button {
         position: relative;
         display: block;
-        float: left;
         height: 4vh;
-        width: 40vh;
+        width: 30vw;
         max-width: 33vw;
         min-width: 100px;
         font-size: 3.2vh;
@@ -1871,23 +1858,9 @@
     }
 
     #tablemanger {
-        position: relative;
-        display: block;
-        float: left;
-        height: 4vh;
-        width: 40vh;
-        max-width: 33vw;
-        min-width: 100px;
-        font-size: 3.2vh;
-        padding: 1.2vh;
-        margin-top: 2vh;
-        margin-left: 3vh;
-        border-radius: 3vh;
-        cursor: pointer;
-        text-align: center;
-        /*border:0.5vh solid white;*/
         transition: border-radius 80ms 0ms ease;
         white-space: nowrap;
+        overflow: visible;
     }
 
     #tablespace_render {
@@ -2007,8 +1980,8 @@
     .data_bar .sub_optionbar {
         /* options for databars */
         position: absolute;
-        top: 2%;
-        right: 8%;
+        top: 13%;
+        right: 2%;
         height: 4vh;
         width: 15vh;
         display: none;
@@ -2026,6 +1999,7 @@
         margin-left: 1vh;
         background-size: contain;
         background-position: center;
+        background-repeat: no-repeat;
         float: left;
     }
 
