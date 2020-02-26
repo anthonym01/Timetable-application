@@ -77,12 +77,13 @@
         height: 7vh;
         width: 90vw;
         border-radius: 2vh;
-        overflow:hidden;
+        overflow: hidden;
         animation: none;
     }
-    #loadprogress{
+
+    #loadprogress {
         position: absolute;
-        top:0;
+        top: 0;
         left: 0;
         height: 100%;
         width: 0%;
@@ -147,7 +148,11 @@
         background-image: url('../img/icon.webp');
         transition: background-image 500ms;
     }
-.menu_txt{display: none;}
+
+    .menu_txt {
+        display: none;
+    }
+
     #setting_btn_icon {
         transition: transform 500ms;
     }
@@ -162,12 +167,14 @@
         display: none;
         overflow: hidden;
     }
-/*Timetable view*/
-#table1 {
-    /*overflow: auto;*/
-    overflow-x: auto;
-    overflow-y: auto;
-}
+
+    /*Timetable view*/
+    #table1 {
+        /*overflow: auto;*/
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
     /*Timetable view*/
     #fullscreen_tile {
         position: fixed;
@@ -385,7 +392,8 @@
         overflow-y: auto;
     }
 
-    .data_action_header {/* Top of manager with buttons inside */
+    .data_action_header {
+        /* Top of manager with buttons inside */
         position: absolute;
         top: 0;
         right: 0;
@@ -413,6 +421,7 @@
         overflow: hidden;
         white-space: nowrap;
     }
+
     .plusimg {
         /* Little icon in the add new button */
         position: relative;
@@ -520,7 +529,7 @@
         height: 83vh;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-evenly;
+        justify-content: space-evenly;
     }
 
     .data_bar {
@@ -535,12 +544,12 @@
         border-radius: 3vh;
         cursor: pointer;
         box-shadow: 0vh 0vh 0vh 0vh;
-        margin:1vh;
+        margin: 1vh;
         margin-top: 2vh;
         text-align: center;
     }
 
-    
+
     .data_bar .sub_optionbar {
         /* options for databars */
         position: absolute;
@@ -619,8 +628,8 @@
         right: 0;
         font-size: 2.6vh;
         padding: 0.4vh;
-        padding-right:0.8vh;
-        padding-left:0.8vh;
+        padding-right: 0.8vh;
+        padding-left: 0.8vh;
         height: 4vh;
         width: auto;
         border-radius: 4vh;
@@ -933,10 +942,11 @@
         transition: transform 500ms;
     }
 
-#setting_view{
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
+    #setting_view {
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
     .Setting_title {
         margin-top: 1vh;
         font-size: 6vh;
@@ -1093,6 +1103,14 @@
         background-image: url('../img/Clip-dark.webp');
     }
 
+    .notification_pallet,
+    .notification_pallet_active {
+        position: relative;
+        float: left;
+        height: 50%;
+        width: 50%;
+    }
+
     .setting_bar {
         position: relative;
         height: 6vh;
@@ -1188,25 +1206,25 @@
         from {
             width: 0%
         }
-    
+
         to {
             width: 100%
         }
     }
-    
+
     /*   Type 1 notification   */
     .notification_style1 {
         position: fixed;
         bottom: 2vh;
         right: 1vw;
         height: 20vh;
-        width: 20vw;
+        width: 60vw;
         transform: translate(20vw, 0vh);
         overflow: hidden;
         cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms,opacity 300ms;
+        transition: transform 500ms, box-shadow 200ms, opacity 300ms;
     }
-    
+
     .notification_style1 .title {
         position: absolute;
         top: 0;
@@ -1218,7 +1236,7 @@
         white-space: nowrap;
         cursor: inherit;
     }
-    
+
     .notification_style1 .title::before {
         position: absolute;
         transform: translate(0, 100%);
@@ -1230,7 +1248,7 @@
         content: "";
         cursor: inherit;
     }
-    
+
     .notification_style1 .notifbody {
         position: absolute;
         bottom: 0;
@@ -1242,21 +1260,21 @@
         overflow: hidden;
         cursor: inherit;
     }
-    
+
     /*   Type 2 notification   */
     .notification_style2 {
         position: fixed;
         bottom: 2vh;
         right: 1vw;
         height: 15vh;
-        width: 25vw;
+        width: 60vw;
         transform: translate(30vw, 0vh);
         border-top: none;
         overflow: hidden;
         cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms,opacity 300ms;
+        transition: transform 500ms, box-shadow 200ms, opacity 300ms;
     }
-    
+
     .notification_style2 .title {
         position: absolute;
         top: 0;
@@ -1269,7 +1287,7 @@
         white-space: nowrap;
         cursor: inherit;
     }
-    
+
     .notification_style2 .title::before {
         position: absolute;
         transform: translate(0, 100%);
@@ -1281,8 +1299,8 @@
         content: "";
         cursor: inherit;
     }
-    
-    
+
+
     .notification_style2 .notifbody {
         position: absolute;
         bottom: 0;
@@ -1294,21 +1312,21 @@
         overflow: hidden;
         cursor: inherit;
     }
-    
+
     /*   Type 3 notification   */
     .notification_style3 {
         position: fixed;
         bottom: 2vh;
         right: 1vw;
         height: 15vh;
-        width: 25vw;
+        width: 60vw;
         transform: translate(30vw, 0vh);
         border-top: none;
         overflow: hidden;
         cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms,opacity 300ms;
+        transition: transform 500ms, box-shadow 200ms, opacity 300ms;
     }
-    
+
     .notification_style3 .title {
         position: absolute;
         top: 0;
@@ -1321,8 +1339,9 @@
         white-space: nowrap;
         cursor: inherit;
     }
-    
-    .notification_style3 .title::after {/* imgae */
+
+    .notification_style3 .title::after {
+        /* imgae */
         position: absolute;
         top: 0;
         left: 1.2vw;
@@ -1333,8 +1352,9 @@
         content: "";
         cursor: inherit;
     }
-    
-    .notification_style3 .title::before {/*prograss bar*/
+
+    .notification_style3 .title::before {
+        /*prograss bar*/
         position: absolute;
         transform: translate(0, 100%);
         bottom: 0;
@@ -1345,7 +1365,7 @@
         content: "";
         cursor: inherit;
     }
-    
+
     .notification_style3 .notifbody {
         position: absolute;
         bottom: 0;
@@ -1357,20 +1377,20 @@
         overflow: hidden;
         cursor: inherit;
     }
-    
+
     /*   Type 4 notification   */
     .notification_style4 {
         position: fixed;
         bottom: 2vh;
         right: 1vw;
         height: 20vh;
-        width: 20vw;
+        width: 60vw;
         transform: translate(20vw, 0vh);
         overflow: hidden;
         cursor: pointer;
-        transition: transform 500ms, box-shadow 200ms,opacity 300ms;
+        transition: transform 500ms, box-shadow 200ms, opacity 300ms;
     }
-    
+
     .notification_style4 .title {
         position: absolute;
         top: 0;
@@ -1382,7 +1402,7 @@
         white-space: nowrap;
         cursor: inherit;
     }
-    
+
     .notification_style4 .title::before {
         position: absolute;
         transform: translate(0, 0vh);
@@ -1394,7 +1414,7 @@
         content: "";
         cursor: inherit;
     }
-    
+
     .notification_style4 .notifbody {
         position: absolute;
         bottom: 0;
@@ -1406,7 +1426,39 @@
         overflow: hidden;
         cursor: inherit;
     }
-    
+
+    #notification_style1 {
+        width: 40vw;
+        position: relative;
+        transform: translate(0vw, 2vh);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #notification_style2 {
+        width: 40vw;
+        position: relative;
+        transform: translate(0vw, 4vh);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #notification_style3 {
+        width: 40vw;
+        position: relative;
+        transform: translate(0vw, 4vh);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #notification_style4 {
+        width: 40vw;
+        position: relative;
+        transform: translate(0vw, 2vh);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     /* X button */
     .x-button {
         height: 4vh;
@@ -1415,7 +1467,7 @@
         top: 0;
         right: 0;
     }
-    
+
     .x-button::before,
     .x-button::after {
         position: absolute;
@@ -1427,28 +1479,28 @@
         border-radius: 0.5vh;
         transition: transform 300ms, box-shadow 200ms;
     }
-    
+
     .x-button::before {
         /*Left */
         right: 1.8vh;
         transform: rotate(-45deg);
     }
-    
+
     .x-button::after {
         /*Right */
         left: 1.8vh;
         transform: rotate(45deg);
     }
-    
-    
+
+
     .x-button:hover::before {
         transform: rotate(-230deg);
     }
-    
+
     .x-button:hover::after {
         transform: rotate(230deg);
     }
-    
+
 }
 
 
@@ -1500,9 +1552,10 @@
         animation: none;
         overflow: hidden;
     }
-    #loadprogress{
+
+    #loadprogress {
         position: absolute;
-        top:0;
+        top: 0;
         left: 0;
         height: 100%;
         width: 0%;
@@ -1689,7 +1742,8 @@
         /*   The body of the timetable   */
         position: relative;
         margin-top: 0vh;
-        height: calc(100% - 0.2vh);/* border */
+        height: calc(100% - 0.2vh);
+        /* border */
         /* -0.2vh to facilitate border colapse on maincell */
         max-height: none;
         min-width: 100%;
@@ -1759,6 +1813,7 @@
     .data_block_active:active {
         transition: box-shadow 0ms, background-color 0ms, color 0ms;
     }
+
     .data_block:hover,
     .data_block_active:hover {
         transition: box-shadow 0ms, background-color 0ms, color 0ms;
@@ -1976,7 +2031,7 @@
         font-size: 3.2vh;
         border-radius: 3vh;
         cursor: pointer;
-        margin:1vh;
+        margin: 1vh;
         margin-top: 2vh;
         text-align: center;
     }
@@ -2525,6 +2580,10 @@
         background-image: url('../img/manage-dark.webp');
     }
 
+    #notification_selector{
+        height: 25vh;
+    }
+
     .notification_pallet,
     .notification_pallet_active {
         position: relative;
@@ -2532,6 +2591,7 @@
         height: 100%;
         width: 25%;
     }
+
 
     .setting_bar {
         position: relative;
@@ -2622,5 +2682,94 @@
         transform: translate(-7vh, 0);
         transition: transform, background-color;
         transition-duration: 300ms;
+    }
+
+    /* Notifications */
+    /*   Type 1 notification   */
+    .notification_style1 {
+        position: fixed;
+        bottom: 2vh;
+        right: 1vw;
+        height: 20vh;
+        width: 40vh;
+        transform: translate(20vw, 0vh);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 500ms, box-shadow 200ms, opacity 300ms;
+    }
+
+    /*   Type 2 notification   */
+    .notification_style2 {
+        position: fixed;
+        bottom: 2vh;
+        right: 1vw;
+        height: 15vh;
+        width: 40vh;
+        transform: translate(30vw, 0vh);
+        border-top: none;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 500ms, box-shadow 200ms, opacity 300ms;
+    }
+
+    /*   Type 3 notification   */
+    .notification_style3 {
+        position: fixed;
+        bottom: 2vh;
+        right: 1vw;
+        height: 15vh;
+        width: 40vh;
+        transform: translate(30vw, 0vh);
+        border-top: none;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 500ms, box-shadow 200ms, opacity 300ms;
+    }
+
+    /*   Type 4 notification   */
+    .notification_style4 {
+        position: fixed;
+        bottom: 2vh;
+        right: 1vw;
+        height: 20vh;
+        width: 40vh;
+        transform: translate(20vw, 0vh);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 500ms, box-shadow 200ms, opacity 300ms;
+    }
+
+        
+    #notification_style1 {
+        width: 20vw;
+        position: relative;
+        transform: translate(0vw, 2vh);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /*  isa fter because css overwrite  */
+    #notification_style2 {
+        width: 20vw;
+        position: relative;
+        transform: translate(0vw, 4vh);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #notification_style3 {
+        width: 20vw;
+        position: relative;
+        transform: translate(0vw, 4vh);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #notification_style4 {
+        width: 20vw;
+        position: relative;
+        transform: translate(0vw, 2vh);
+        margin-left: auto;
+        margin-right: auto;
     }
 }
