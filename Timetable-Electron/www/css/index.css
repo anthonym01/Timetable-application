@@ -933,6 +933,10 @@
         transition: transform 500ms;
     }
 
+#setting_view{
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
     .Setting_title {
         margin-top: 1vh;
         font-size: 6vh;
