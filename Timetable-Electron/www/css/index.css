@@ -28,11 +28,11 @@
     }
 
     body {
-        -webkit-touch-callout: none;
+        -webkit-touch-callout: auto;
         /* prevent callout to copy image, etc when tap to hold */
-        -webkit-text-size-adjust: none;
+        -webkit-text-size-adjust: auto;
         /* prevent webkit from resizing text to fit */
-        -webkit-user-select: none;
+        -webkit-user-select: auto;
         /* prevent copy paste, to allow, change 'none' to 'text' */
         font-family: Lexend_Deca, Serif, Arial, Helvetica, sans-serif;
         height: 100vh;
@@ -75,9 +75,18 @@
         margin-left: auto;
         margin-right: auto;
         height: 7vh;
-        width: 7vh;
-        border-radius: 10vh;
-        animation: rotate 1s linear infinite;
+        width: 90vw;
+        border-radius: 2vh;
+        overflow:hidden;
+        animation: none;
+    }
+    #loadprogress{
+        position: absolute;
+        top:0;
+        left: 0;
+        height: 100%;
+        width: 0%;
+        transition: width 50ms;
     }
 
     /*  page darkener   */
@@ -138,7 +147,7 @@
         background-image: url('../img/icon.webp');
         transition: background-image 500ms;
     }
-
+.menu_txt{display: none;}
     #setting_btn_icon {
         transition: transform 500ms;
     }
@@ -153,7 +162,12 @@
         display: none;
         overflow: hidden;
     }
-
+/*Timetable view*/
+#table1 {
+    /*overflow: auto;*/
+    overflow-x: auto;
+    overflow-y: auto;
+}
     /*Timetable view*/
     #fullscreen_tile {
         position: fixed;
@@ -231,7 +245,7 @@
         /*   The body of the timetable   */
         position: relative;
         margin-top: 0vh;
-        height: 92.8vh;
+        height: 91.2vh;
         max-height: 93vh;
         left: 0vw;
         white-space: nowrap;
@@ -360,33 +374,163 @@
         background: none !important;
     }
 
-    #sub_menu {
-        /*    Sub menu to switch tables quickly   */
-        position: absolute;
-        bottom: 7vh;
-        right: 0;
-        height: auto;
-        width: 100%;
-        display: none;
-        z-index: 100;
-    }
-
     /*  manage_view   */
     #manage_view {
         /* Adjust manage view to align with table selector at the bottom*/
         top: 0;
         left: 0;
         width: 100vw;
-        height: 85vh;
+        height: 93vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .data_action_header {/* Top of manager with buttons inside */
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 10vh;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+    }
+
+    .data_button {
+        position: relative;
+        display: block;
+        height: 4vh;
+        width: 40vw;
+        min-width: 100px;
+        font-size: 3.2vh;
+        padding: 1.2vh;
+        margin-top: 2vh;
+        margin-left: 3vh;
+        margin-right: 3vh;
+        border-radius: 3vh;
+        cursor: pointer;
+        text-align: center;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .plusimg {
+        /* Little icon in the add new button */
+        position: relative;
+        float: right;
+        height: 3.8vh;
+        width: 3.8vh;
+        background-size: contain;
+    }
+
+    #tablemanger {
+        position: relative;
+        display: block;
+        float: left;
+        height: 4vh;
+        width: 40vh;
+        max-width: 33vw;
+        min-width: 100px;
+        font-size: 3.2vh;
+        padding: 1.2vh;
+        margin-top: 2vh;
+        margin-left: 3vh;
+        border-radius: 3vh;
+        cursor: pointer;
+        text-align: center;
+        /*border:0.5vh solid white;*/
+        transition: border-radius 80ms 0ms ease;
+        white-space: nowrap;
+    }
+
+    #tablespace_render {
+        /* Pannel which displays buttons to allow selection and editing of tables */
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transform: translate(0, 100%);
+        height: 0;
+        max-height: 40vh;
+        width: 200%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background-color: #000000;
+        box-shadow: 0vh 0vh 2vh 0vh #fff;
+        z-index: 100;
+        transition: height 80ms 0ms ease;
+        cursor: default;
+    }
+
+    #tablemanger:hover {
+        border-radius: 3vh 3vh 0vh 0vh;
+        transition: border-radius 300ms 100ms ease;
+    }
+
+    #tablemanger:hover #tablespace_render {
+        height: 40vh;
+        max-height: 40vh;
+        transition: height 300ms 100ms ease;
+    }
+
+    .table_bar {
+        /* Positioning/container for individual table management buttons */
+        position: relative;
+        cursor: pointer;
+        padding-top: 1vh;
+        padding-bottom: 1vh;
+        font-size: 3.2vh;
+        height: 4vh;
+    }
+
+    .tabmenu {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 3.2vh;
+        height: 100%;
+        width: 12vh;
+        transform: translate(12vh, 0);
+        transition: transform 80ms 0ms ease;
+    }
+
+    .table_bar:hover .tabmenu {
+        transform: translate(0, 0);
+        transition: transform 300ms 80ms ease;
+    }
+
+    .tabtion_btn {
+        position: relative;
+        float: left;
+        height: 100%;
+        width: 5vh;
+        margin-left: 0.5vh;
+        margin-right: 0.5vh;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: none;
+    }
+
+    .tab_put {
+        /* Input box to edit the table */
+        position: absolute;
+        top: 0;
+        right: 12vh;
+        font-size: 3.2vh;
+        height: 100%;
+        width: calc(100% - 12vh);
+        text-align: center;
+        appearance: none;
+        display: none;
+        font-family: Lexend_Deca;
     }
 
     .dataspace {
         /*   Block Containing the data_bar(s)   */
         position: relative;
-        top: 0;
+        top: 10vh;
         margin-left: 5vw;
         width: 90vw;
-        height: 100%;
+        height: 83vh;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-evenly;
@@ -409,7 +553,52 @@
         text-align: center;
     }
 
-    /*  Insert new code  */
+    
+    .data_bar .sub_optionbar {
+        /* options for databars */
+        position: absolute;
+        top: 22%;
+        right: 2%;
+        height: 4vh;
+        width: 15vh;
+        display: none;
+        overflow: hidden;
+    }
+
+    .data_bar:hover .sub_optionbar {
+        display: block;
+    }
+
+    .data_bar .optionbutton {
+        position: relative;
+        height: 4vh;
+        width: 4vh;
+        margin-left: 1vh;
+        background-size: contain;
+        background-position: center;
+        float: left;
+    }
+
+    .editbtn {
+        background-image: url('../img/edit-pngrepo-com.webp');
+    }
+
+    .selectbutton {
+        background-image: url('');
+    }
+
+    .selectbutton input {
+        /* temp style this later */
+        height: 90%;
+        width: 90%;
+        margin: 10%;
+        border-radius: 10px;
+    }
+
+    .deletebtn {
+        background-image: url('../img/delete-button-dark.webp');
+    }
+
 
     .data_bar table {
         width: 100%;
@@ -440,20 +629,14 @@
         position: absolute;
         top: 0;
         right: 0;
-        font-size: 3.5vh;
+        font-size: 2.6vh;
+        padding: 0.4vh;
+        padding-right:0.8vh;
+        padding-left:0.8vh;
         height: 4vh;
-        width: 4vh;
+        width: auto;
         border-radius: 4vh;
         transform: translate(1vh, -1.5vh);
-    }
-
-    .plusimg {
-        /* Little icon in the add new button */
-        position: relative;
-        float: right;
-        height: 3.8vh;
-        width: 3.8vh;
-        background-size: contain;
     }
 
     /* Dataentry screen */
@@ -1319,10 +1502,19 @@
         margin-top: 3vh;
         margin-left: auto;
         margin-right: auto;
-        height: 7vh;
-        width: 7vh;
-        border-radius: 10vh;
-        animation: rotate 1s linear infinite;
+        height: 4vh;
+        width: 90vw;
+        border-radius: 2vh;
+        animation: none;
+        overflow: hidden;
+    }
+    #loadprogress{
+        position: absolute;
+        top:0;
+        left: 0;
+        height: 100%;
+        width: 0%;
+        transition: width 50ms;
     }
 
     /*  page darkener   */
@@ -1642,16 +1834,6 @@
         background: none !important;
     }
 
-    #sub_menu {
-        /*    Sub menu to switch tables quickly   */
-        position: absolute;
-        bottom: 7vh;
-        right: 0;
-        height: auto;
-        width: 100%;
-        display: none;
-        z-index: 100;
-    }
 
     /*  manage_view   */
     #manage_view {

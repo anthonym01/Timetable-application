@@ -59,8 +59,11 @@ body {
 }
 
 #loader {
-    border: 3vh solid #fff;
-    border-top: 3vh solid #2bff00;
+    border: 0.5vh solid #fff;
+}
+
+#loadprogress{
+    background-color: #2bff00;
 }
 
 /* Main navigation buttons */
@@ -128,6 +131,7 @@ body {
 /*Timetable tags*/
 #timetable {
     background-image: url('../img/blyatground.webp');
+    background-position: center;
     /* Will be overwritten if the user selects their own image */
 }
 
@@ -467,4 +471,9 @@ body {
     background-color: rgba(0, 0, 0, 0.6);
     color: rgb(255, 255, 255);
     box-shadow: 0vh 0vh 0.5vh 0vh #fafafa;
+}
+
+@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
+
+    
 }

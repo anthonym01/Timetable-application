@@ -7,15 +7,19 @@ const path = require('path');
 
 window.addEventListener('load', function () {//window loads
     console.warn('Running from:', process.resourcesPath)
+    var loader = document.getElementById('loadprogress');
     if (localStorage.getItem(config.configlocation)) {
         config.load()
     } else {
         config.validate()
     }
-
+    loader.style.width = '25%'
     UI.initalize()
+    loader.style.width = '50%'
     table.initialize()
+    loader.style.width = '75%'
     manage.initalize()
+    loader.style.width = '100%'
     config.properties.startup = false
     setTimeout(() => {
         UI.navigate.TABLE()
