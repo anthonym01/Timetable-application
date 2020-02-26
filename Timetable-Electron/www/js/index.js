@@ -1336,6 +1336,7 @@ let manage = {
             //document.getElementById('view_put_text').innerText=config.data.table_details[index].purpose;//view state text
         },
         open: function () {//The listener for the add open btn is in manage.render_list() 
+            document.getElementById('manage_dataspace').classList="dataspace_compact";
             console.log('Dialogue open called');
             document.getElementById('view_put').value = config.data.table_selected;//if new
             if (config.properties.overwrite == null) {
@@ -1407,6 +1408,7 @@ let manage = {
             document.getElementById('view_put').validate = 1;
         },
         close: function () {//remove the input screen
+            document.getElementById('manage_dataspace').classList="dataspace";
             console.log('Dialogue close called');
             if (config.data.animation) {
                 document.getElementById('dataentry_screen').style.transform = "translate(0,100%)";//strange bug, setting this in css causes the buttons to glitch out

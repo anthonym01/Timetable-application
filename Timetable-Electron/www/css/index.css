@@ -520,16 +520,17 @@
         font-family: Lexend_Deca;
     }
 
-    .dataspace {
+    .dataspace,.dataspace_compact {
         /*   Block Containing the data_bar(s)   */
         position: relative;
-        top: 10vh;
+        margin-top: 10vh;
         margin-left: 5vw;
         width: 90vw;
         height: 83vh;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-evenly;
+        transition:width 300ms;
     }
 
     .data_bar {
@@ -645,7 +646,7 @@
         -webkit-appearance: none;
         width: 100%;
         border-radius: 3vh;
-        height: 10vw;
+        height: 10vh;
     }
 
     .colorslider::-webkit-slider-thumb {
@@ -1503,13 +1504,9 @@
 
 }
 
-
-
 /*
     SEPERATOR
 */
-
-
 
 /*  Landscape layout (with min-width)   */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
@@ -2019,6 +2016,19 @@
         flex-wrap: wrap;
         justify-content: space-evenly
     }
+    .dataspace_compact{
+        position: relative;
+        margin-top: 10vh;
+        margin-left: 0;
+        margin-right: 0;
+        border-bottom: 0.5vh solid #000000;
+        width: calc(100% - 70vh);
+        min-height: 90vh;
+        overflow-y: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly
+    }
 
     .data_bar {
         /*    Detailed representaion of the data to be managed , reused in the dataspace  */
@@ -2136,16 +2146,16 @@
         cursor: pointer;
         -webkit-appearance: none;
         width: 100%;
-        border-radius: 3vh;
-        height: 10vw;
+        border-radius: 2vh;
+        height: 5vh!important;
     }
 
     .colorslider::-webkit-slider-thumb {
         border-radius: 3vw;
         -webkit-appearance: none;
         appearance: none;
-        width: 8vw;
-        height: 8vw;
+        width: 5vh!important;
+        height: 5vh!important;
         background: none;
         background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1));
         border-radius: 50%;
@@ -2171,28 +2181,31 @@
         /* Contains recent colors */
         position: relative;
         width: 100%;
-        height: 25vw;
+        height: 25vh;
         overflow-y: scroll;
         text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
     }
 
     .color_doot {
         position: relative;
-        margin: 1.5vw;
-        height: 14.5vw;
-        width: 14.5vw;
-        float: left;
+        margin: 1vh;
+        height: 8vh;
+        width: 8vh;
         background-color: #c9c9c9;
-        border: 0.5vw solid #aaaaaa;
+        border: 0.3vh solid #aaaaaa;
         border-radius: 50%;
         cursor: pointer;
     }
 
     #dataentry_screen {
         position: fixed;
-        bottom: 0;
-        height: 100%;
-        width: 100%;
+        top: 10vh;
+        right: 0;
+        height: 90vh;
+        width: 70vh;
         display: none;
         overflow: scroll;
         transition: transform 200ms;
@@ -2205,12 +2218,12 @@
         margin-left: auto;
         margin-right: auto;
         width: 95%;
-        font-size: 8vw;
+        font-size: 5vh;
         margin-bottom: 10vh;
     }
 
     #dataentry_screen label {
-        font-size: 6vw;
+        font-size: 4vh;
         width: 100%;
         text-align: center;
         transform: translate(0, 9vh);
@@ -2219,7 +2232,7 @@
     #dataentry_screen input {
         width: 100%;
         height: 100%;
-        font-size: 8vw;
+        font-size: 5vh;
         border-radius: 1vh;
         text-align: center;
         transition: border 300ms;
@@ -2229,12 +2242,12 @@
     .select_container {
         /*  Select boxes made to be more effective on mobile  */
         position: relative;
-        height: 10vw;
+        height: 6vh;
         width: calc(100% - 0.8vh);
         overflow: hidden;
-        border-radius: 2vh;
+        border-radius: 1vh;
         -webkit-touch-callout: none;
-        margin-top: 2vh;
+        margin-top: 1vh;
         transition: background-color 300ms, color 300ms;
     }
 
@@ -2246,7 +2259,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        font-size: 8vw;
+        font-size: 4vh;
         width: 100%;
         height: 100%;
         -webkit-appearance: none;
@@ -2259,17 +2272,10 @@
         top: 0;
         right: 0;
         opacity: 1;
-        font-size: 8vw;
+        font-size: 5vh;
         width: 100%;
         text-align: center;
         background: none;
-    }
-
-    #table_sect_container {
-        position: fixed;
-        bottom: 8vh;
-        left: 0;
-        z-index: 5;
     }
 
     #btn_bar {
