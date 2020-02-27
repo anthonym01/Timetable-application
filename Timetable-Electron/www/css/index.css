@@ -788,12 +788,13 @@
         height: 9vh;
         display: none;
         background: none;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
     }
 
     .databtns {
         /*    Buttons at the bottom of #dataentry_screen  */
-        position: absolute;
-        top: 0;
+        position: relative;
         font-size: 4vh;
         height: 5vh;
         padding: 1vh;
@@ -809,26 +810,6 @@
 
     .databtns:active {
         transition: background-color 0ms;
-    }
-
-    #cancel_btn {
-        /*cancel button*/
-        left: 4vw;
-    }
-
-    #save_btn {
-        /*Save button*/
-        left: 35vw;
-    }
-
-    #savepluss_btn {
-        /*Save and add new entry button*/
-        right: 4vw;
-    }
-
-    #delete_btn {
-        /*Save and add new entry button*/
-        right: 4vw;
     }
 
     .dataimg {
@@ -2035,7 +2016,7 @@
         position: relative;
         display: block;
         height: auto;
-        max-height: 20%;
+        /*max-height: 20%;*/
         width: 28%;
         min-width: 100px;
         font-size: 3.2vh;
@@ -2281,21 +2262,23 @@
     #btn_bar {
         position: fixed;
         bottom: 0vh;
-        width: 100vw;
+        width: 70vh;
         height: 9vh;
-        display: none;
+        display: flex;
         background: none;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
     }
 
     .databtns {
         /*    Buttons at the bottom of #dataentry_screen  */
-        position: absolute;
+        position: relative;
         top: 0;
         font-size: 4vh;
         height: 5vh;
         padding: 1vh;
         text-align: center;
-        width: 25vw;
+        width: 20vh;
         cursor: pointer;
         overflow: hidden;
         border-radius: 2vh;
@@ -2306,26 +2289,6 @@
 
     .databtns:active {
         transition: background-color 0ms;
-    }
-
-    #cancel_btn {
-        /*cancel button*/
-        left: 4vw;
-    }
-
-    #save_btn {
-        /*Save button*/
-        left: 35vw;
-    }
-
-    #savepluss_btn {
-        /*Save and add new entry button*/
-        right: 4vw;
-    }
-
-    #delete_btn {
-        /*Save and add new entry button*/
-        right: 4vw;
     }
 
     .dataimg {

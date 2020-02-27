@@ -1358,12 +1358,12 @@ let manage = {
                 setTimeout(() => {
                     document.getElementById('dataentry_screen').style.transform = "initial";
                     setTimeout(() => {
-                        document.getElementById('btn_bar').style.display = "block";
+                        document.getElementById('btn_bar').style.display = "flex";
                     }, 210);
                 }, 0);
             } else {
                 document.getElementById('dataentry_screen').style.transform = "initial";
-                document.getElementById('btn_bar').style.display = "block";
+                document.getElementById('btn_bar').style.display = "flex";
                 document.getElementById('dataentry_screen').style.display = "block";
             }
             if (config.properties.colors_changed == true) {// render recent colors
