@@ -1050,14 +1050,14 @@ let manage = {
             titlespan.innerHTML = config.data.table_details[index].purpose;
             let tabmenu = document.createElement('div');
             tabmenu.setAttribute("class", "tabmenu");
-            let editbtn_std = document.createElement('div');
-            editbtn_std.style.display = "block";
-            editbtn_std.setAttribute("class", "tabtion_btn editbtn_std");
-            editbtn_std.setAttribute("title", "Edit " + config.data.table_details[index].purpose);
-            let deletebtn_std = document.createElement('div');
-            deletebtn_std.style.display = "block";
-            deletebtn_std.setAttribute("class", "tabtion_btn deletebtn_std");
-            deletebtn_std.setAttribute("title", "Delete " + config.data.table_details[index].purpose);
+            let editbtn = document.createElement('div');
+            editbtn.style.display = "block";
+            editbtn.setAttribute("class", "tabtion_btn editbtn");
+            editbtn.setAttribute("title", "Edit " + config.data.table_details[index].purpose);
+            let deletebtn = document.createElement('div');
+            deletebtn.style.display = "block";
+            deletebtn.setAttribute("class", "tabtion_btn deletebtn");
+            deletebtn.setAttribute("title", "Delete " + config.data.table_details[index].purpose);
             let confirmimg = document.createElement('div');
             confirmimg.setAttribute("class", "tabtion_btn confirmimg");
             let cancelimg = document.createElement('div');
@@ -1069,8 +1069,8 @@ let manage = {
             //inject into document
             tabmenu.appendChild(confirmimg)
             tabmenu.appendChild(cancelimg)
-            tabmenu.appendChild(editbtn_std)
-            tabmenu.appendChild(deletebtn_std)
+            tabmenu.appendChild(editbtn)
+            tabmenu.appendChild(deletebtn)
             table_bar.appendChild(titlespan)
             table_bar.appendChild(tab_put)
             table_bar.appendChild(tabmenu)
@@ -1085,28 +1085,28 @@ let manage = {
                 manage.initalize()
                 config.properties.changed = true
             })
-            editbtn_std.addEventListener('click', function () {//edit button is pressed
+            editbtn.addEventListener('click', function () {//edit button is pressed
                 event.stopPropagation();
                 console.log('Edit called on table name: ' + config.data.table_details[index].purpose)
                 confirmimg.setAttribute("title", "Confirm name change")
                 cancelimg.setAttribute("title", "Do not change")
                 confirmimg.style.display = "block"
                 cancelimg.style.display = "block"
-                deletebtn_std.style.display = "none"
-                editbtn_std.style.display = "none"
+                deletebtn.style.display = "none"
+                editbtn.style.display = "none"
                 tab_put.style.display = "block"
                 tab_put.value = config.data.table_details[index].purpose
                 setTimeout(() => { tab_put.focus() }, 500)
             })
-            deletebtn_std.addEventListener('click', function () {//edit button is pressed
+            deletebtn.addEventListener('click', function () {//edit button is pressed
                 event.stopPropagation();
                 console.log('Delete called on table name: ' + config.data.table_details[index].purpose)
                 confirmimg.setAttribute("title", "Confirm delete " + config.data.table_details[index].purpose);
                 cancelimg.setAttribute("title", "Do not delete " + config.data.table_details[index].purpose);
                 confirmimg.style.display = "block"
                 cancelimg.style.display = "block"
-                deletebtn_std.style.display = "none"
-                editbtn_std.style.display = "none"
+                deletebtn.style.display = "none"
+                editbtn.style.display = "none"
                 tab_put.style.display = "none"
             })
             confirmimg.addEventListener('click', function () {//cancel button is pressed
@@ -1129,8 +1129,8 @@ let manage = {
                 console.log('Cancel button pressed')
                 confirmimg.style.display = "none"
                 cancelimg.style.display = "none"
-                deletebtn_std.style.display = "block"
-                editbtn_std.style.display = "block"
+                deletebtn.style.display = "block"
+                editbtn.style.display = "block"
                 tab_put.style.display = "none"
             })
         }

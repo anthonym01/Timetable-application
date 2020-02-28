@@ -262,8 +262,8 @@ body {
 }
 
 .data_noot {
-    color: #000;
-    background-color: #fff;
+    color: rgb(255, 255, 255);
+    background-color: none;
     text-shadow: none;
 }
 
@@ -276,11 +276,13 @@ body {
     /*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
     background-color: #000;
 }
+.colorslider:focus{
+    border: 0.3vh solid #2bff00;
+}
 
 #dataentry_screen input {
     border: none;
-
-    border-bottom: 0.5vw solid #fff;
+    border-bottom: 0.8vh solid #fff;
     background-color: inherit;
     color: inherit;
 }
