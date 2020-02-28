@@ -139,7 +139,7 @@ let config = {
         this.validate()
     },
     selectlocation: function () {
-        var path = dialog.showOpenDialog({ properties: ['createDirectory', 'openDirectory'], defaultPath: config.baseconfig.alt_location.toString() })
+        var path = dialog.showOpenDialog({ properties: ['createDirectory', 'openDirectory'],/* defaultPath: config.baseconfig.alt_location*/ })
         console.warn('Alternate configuration path :', path[0])
         config.baseconfig.use_alt_storage = true
         config.baseconfig.alt_location = path[0]
@@ -1196,7 +1196,7 @@ let manage = {
             tempblock.setAttribute("class", "data_bar");
 
             //assign a color
-            tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+            tempblock.style.borderColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
 
             //build menu
             let sub_optionbar = document.createElement('div');

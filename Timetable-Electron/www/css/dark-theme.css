@@ -62,7 +62,7 @@ body {
     border: 0.5vh solid #fff;
 }
 
-#loadprogress{
+#loadprogress {
     background-color: #2bff00;
 }
 
@@ -200,7 +200,6 @@ body {
 
 /*  manage_view   */
 .data_button,
-.data_bar,
 #tablemanger {
     /*    Detailed representaion of the data to be managed    */
     text-shadow: 0vw 0vw 0.5vw #000;
@@ -219,7 +218,16 @@ body {
     border: none;
 }
 
-.data_button:active,
+.data_bar {
+    box-shadow: 0vh 0vh 0.5vh 0vh #fff;
+    border-bottom: 1vh solid #00ff0d;
+    transition: box-shadow 50ms 0ms;
+}
+
+.data_bar:hover {
+    box-shadow: 0vh 0vh 1.5vh 0vh #fff;
+}
+
 .data_bar:active {
     text-shadow: 0vw 0vw 0.5vw #000;
     background-color: #fff !important;
@@ -227,12 +235,20 @@ body {
     transition: background-color 0ms color 0ms;
 }
 
-.editbtn_std {
+.sub_optionbar {
+    background-color: rgb(0, 0, 0, 0.6);
+}
+
+.editbtn {
     background-image: url('../img/edit-pngrepo-com.webp');
     filter: invert(100%);
 }
 
-.deletebtn_std {
+.selectbutton {
+    background-image: url('');
+}
+
+.deletebtn {
     background-image: url('../img/delete-button-dark.webp');
     filter: invert(100%);
 }
@@ -473,7 +489,4 @@ body {
     box-shadow: 0vh 0vh 0.5vh 0vh #fafafa;
 }
 
-@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
-
-    
-}
+@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {}

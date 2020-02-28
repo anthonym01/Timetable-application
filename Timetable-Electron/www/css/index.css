@@ -437,6 +437,7 @@
         white-space: nowrap;
         overflow: visible;
     }
+
     #tablespace_render {
         /* Pannel which displays buttons to allow selection and editing of tables */
         position: absolute;
@@ -465,8 +466,14 @@
         max-height: 40vh;
         transition: height 300ms 100ms ease;
     }
-    #tablespace_render:active{color: #fff;}
-    #tablemanger:active #tablespace_render{color: #fff;}
+
+    #tablespace_render:active {
+        color: #fff;
+    }
+
+    #tablemanger:active #tablespace_render {
+        color: #fff;
+    }
 
     .table_bar {
         /* Positioning/container for individual table management buttons */
@@ -521,7 +528,8 @@
         font-family: Lexend_Deca;
     }
 
-    .dataspace,.dataspace_compact {
+    .dataspace,
+    .dataspace_compact {
         /*   Block Containing the data_bar(s)   */
         position: relative;
         margin-top: 10vh;
@@ -531,7 +539,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-evenly;
-        transition:width 300ms;
+        transition: width 300ms;
     }
 
     .data_bar {
@@ -543,12 +551,12 @@
         min-width: 40%;
         font-size: 3.2vh;
         padding: 1.2vh;
-        border-radius: 3vh;
+        border-radius: 0.5vh;
         cursor: pointer;
-        box-shadow: 0vh 0vh 0vh 0vh;
         margin: 1vh;
         margin-top: 2vh;
         text-align: center;
+
     }
 
 
@@ -578,24 +586,12 @@
         float: left;
     }
 
-    .editbtn {
-        background-image: url('../img/edit-pngrepo-com.webp');
-    }
-
-    .selectbutton {
-        background-image: url('');
-    }
-
     .selectbutton input {
         /* temp style this later */
         height: 90%;
         width: 90%;
         margin: 10%;
         border-radius: 10px;
-    }
-
-    .deletebtn {
-        background-image: url('../img/delete-button-dark.webp');
     }
 
 
@@ -2004,7 +2000,8 @@
         flex-wrap: wrap;
         justify-content: space-evenly
     }
-    .dataspace_compact{
+
+    .dataspace_compact {
         position: relative;
         margin-top: 10vh;
         margin-left: 0;
@@ -2027,7 +2024,7 @@
         width: 28%;
         min-width: 100px;
         font-size: 3.2vh;
-        border-radius: 3vh;
+        border-radius: 1vh;
         cursor: pointer;
         margin: 1vh;
         margin-top: 2vh;
@@ -2060,24 +2057,12 @@
         float: left;
     }
 
-    .editbtn {
-        background-image: url('../img/edit-pngrepo-com.webp');
-    }
-
-    .selectbutton {
-        background-image: url('');
-    }
-
     .selectbutton input {
         /* temp style this later */
         height: 90%;
         width: 90%;
         margin: 10%;
         border-radius: 10px;
-    }
-
-    .deletebtn {
-        background-image: url('../img/delete-button-dark.webp');
     }
 
     .data_bar table {
@@ -2135,15 +2120,15 @@
         -webkit-appearance: none;
         width: 100%;
         border-radius: 2vh;
-        height: 5vh!important;
+        height: 5vh !important;
     }
 
     .colorslider::-webkit-slider-thumb {
         border-radius: 3vw;
         -webkit-appearance: none;
         appearance: none;
-        width: 5vh!important;
-        height: 5vh!important;
+        width: 5vh !important;
+        height: 5vh !important;
         background: none;
         background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1));
         border-radius: 50%;
@@ -2557,7 +2542,7 @@
         background-image: url('../img/manage-dark.webp');
     }
 
-    #notification_selector{
+    #notification_selector {
         height: 25vh;
     }
 
@@ -2716,7 +2701,7 @@
         transition: transform 500ms, box-shadow 200ms, opacity 300ms;
     }
 
-        
+
     #notification_style1 {
         width: 20vw;
         position: relative;
