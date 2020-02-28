@@ -351,7 +351,7 @@ let config = {
         console.log('config deleted: ');
         console.table(this.data);
         //overwite the file if any file exists
-        notify.new('App', 'app is preparing to restart');
+        notify.new('Attention', 'Configuration deleted');
         setTimeout(() => { location.reload() }, 2000);
         this.validate();
     },
@@ -897,7 +897,7 @@ let manage = {
             }
             i++
         }
-        //make functional
+
         document.getElementById('cancel_btn').addEventListener('click', () => {
             console.log('Cancel button clicked');
             manage.dialogue.clear();
@@ -942,6 +942,38 @@ let manage = {
             }
         });
 
+        //Initalize Table put selector
+        i = 0;
+        var view_put = document.getElementById('view_put');
+        view_put.innerHTML = "";
+        while (config.data.table_details[i] != null) { 
+            if(config.data.table_details[i].deleted!=true){ buildoption(i) }
+            i++;
+        }
+        document.getElementById('view_put').value = config.data.table_selected;//Value to view put
+        function buildoption(i) {//function build options
+            var option = document.createElement('option')
+            option.value = config.data.table_details[i].identifier;
+            option.innerHTML = config.data.table_details[i].purpose;
+            view_put.appendChild(option);
+            if(config.data.table_details[i].identifier == config.data.table_selected){
+                document.getElementById('view_put_text').innerHTML=config.data.table_details[i].purpose;
+            }
+        }
+        document.getElementById('view_put').addEventListener('change',function(){
+            setTimeout(()=>{
+                var vewalue = document.getElementById('view_put').value;
+                var i=0;
+                while (config.data.table_details[i] != null) { 
+                    if(config.data.table_details[i].deleted!=true && config.data.table_details[i].identifier == vewalue){ 
+                        document.getElementById('view_put_text').innerHTML=config.data.table_details[i].purpose
+                        break;//found it
+                     }
+                    i++;
+                }
+            },50)
+        })
+
         //color sliders initalizer
         document.getElementById('color_put').addEventListener('change', slidecolor)
         document.getElementById('sat_put').addEventListener('change', slidesat)
@@ -976,6 +1008,7 @@ let manage = {
         table0_button.appendChild(titlespan0)
         document.getElementById('tablespace_render').appendChild(table0_button);
         table0_button.addEventListener('click', function () {
+            event.stopPropagation
             config.data.table_selected = 0;
             config.save();
             manage.initalize();
@@ -991,6 +1024,7 @@ let manage = {
         new_table_button.appendChild(titlespan)
         document.getElementById('tablespace_render').appendChild(new_table_button);
         new_table_button.addEventListener('click', function () {
+            event.stopPropagation
             let identifier = 1
             let i = 0;
             while (config.data.table_details[i] != null) {
@@ -1292,6 +1326,7 @@ let manage = {
     dialogue: {
         edit: function (index) {//Does not edit anything, only populates feilds in the editor with data, listener found in manage.data.build_bar_db1();
             console.log('Dialogue Edit called on index: ', index);
+            this.open()//Open first to render selectors
             config.properties.overwrite = index;  //Set overwrtite so save function knows to do
             document.getElementById('day_put').value = config.data.table1_db[index].day;    //set day feild
             switch (config.data.table1_db[index].day) {
@@ -1324,7 +1359,6 @@ let manage = {
             if (endhr < 10) { endhr = '0' + endhr }
             document.getElementById('start_time_put').value = starthr + ':' + startminute      //Set start time feild
             document.getElementById('end_time_put').value = endhr + ':' + endminute            //Set the end time feild
-            this.open()
             document.getElementById('view_put').value = config.data.table1_db[index].show    //Set view state feild
             switch (config.data.table1_db[index].show) {
                 case 0: document.getElementById('view_put_text').innerText = "Hidden"; break;
@@ -1336,9 +1370,12 @@ let manage = {
             //document.getElementById('view_put_text').innerText=config.data.table_details[index].purpose;//view state text
         },
         open: function () {//The listener for the add open btn is in manage.render_list() 
-            document.getElementById('manage_dataspace').classList="dataspace_compact";
             console.log('Dialogue open called');
-            document.getElementById('view_put').value = config.data.table_selected;//if new
+
+            //other stuff
+            document.getElementById('manage_dataspace').classList = "dataspace_compact";//switch dataspace to compact view
+
+            
             if (config.properties.overwrite == null) {
                 document.getElementById('savepluss_btn').style.display = 'block';
                 document.getElementById('delete_btn').style.display = 'none';
@@ -1408,7 +1445,7 @@ let manage = {
             document.getElementById('view_put').validate = 1;
         },
         close: function () {//remove the input screen
-            document.getElementById('manage_dataspace').classList="dataspace";
+            document.getElementById('manage_dataspace').classList = "dataspace";
             console.log('Dialogue close called');
             if (config.data.animation) {
                 document.getElementById('dataentry_screen').style.transform = "translate(0,100%)";//strange bug, setting this in css causes the buttons to glitch out
@@ -1662,10 +1699,6 @@ let UI = {
         })
         document.getElementById('saveconfigbtn').addEventListener('click', function () {//save the configuration
             config.save()
-            config.properties.changed = true
-        })
-        document.getElementById('defaultconfiglocationbtn').addEventListener('click', function () {//default the configuration location
-            config.usedefault()
             config.properties.changed = true
         })
         document.getElementById('selectconfiglocationbtn').addEventListener('click', function () {//Select the configuration location
@@ -1937,7 +1970,7 @@ let UI = {
 let notify = {
     preset_height: 22,//2 more than the height in the css
     previous_type: 1,
-    animate_old: false,//turn on and off old notification Animation
+    animate_old: true,//turn on and off old notification Animation
     current: 0,//Current is incimented every time theres a new notifyer
     resizecheck: window.addEventListener('resize', () => { notify.clearall() }),
     new: function (title, body, fx) {
@@ -1988,34 +2021,36 @@ let notify = {
         }
 
         //Timing effects
-        setTimeout(() => { tempnotif.style.transform = 'translate(0vw,0vh)' }, 50);//Slide into view
+        setTimeout(() => {
+            tempnotif.style.transform = 'translate(0vw,0vh)'
+            //manuver old notifications out of the way
+            if (this.animate_old) {
+                if (document.getElementById('notif' + Number(this.current - 1))) {//stars at -1 because 1 less than the latest notification
+                    document.getElementById('notif' + Number(this.current - 1)).style.transform = 'translate(0vw,-' + this.preset_height + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 2))) {
+                    document.getElementById('notif' + Number(this.current - 2)).style.transform = 'translate(0vw,-' + this.preset_height * 2 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 3))) {
+                    document.getElementById('notif' + Number(this.current - 3)).style.transform = 'translate(0vw,-' + this.preset_height * 3 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 4))) {
+                    document.getElementById('notif' + Number(this.current - 4)).style.transform = 'translate(0vw,-' + this.preset_height * 4 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 5))) {
+                    document.getElementById('notif' + Number(this.current - 5)).style.transform = 'translate(0vw,-' + this.preset_height * 5 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 6))) {
+                    document.getElementById('notif' + Number(this.current - 6)).style.transform = 'translate(0vw,-' + this.preset_height * 6 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 7))) {
+                    document.getElementById('notif' + Number(this.current - 7)).style.transform = 'translate(0vw,-' + this.preset_height * 7 + 'vh)';
+                }
+            }
+
+        }, 50);//Slide into view
         setTimeout(() => { tempnotif.style.opacity = '0.0' }, 10000);//dissapear
         setTimeout(() => { document.body.removeChild(tempnotif); }, 11000);//remove from document
-
-        //manuver old notifications out of the way
-        if (this.animate_old) {
-            if (document.getElementById('notif' + Number(this.current - 1))) {//stars at -1 because 1 less than the latest notification
-                document.getElementById('notif' + Number(this.current - 1)).style.transform = 'translate(0vw,-' + this.preset_height + 'vh)';
-            }
-            if (document.getElementById('notif' + Number(this.current - 2))) {
-                document.getElementById('notif' + Number(this.current - 2)).style.transform = 'translate(0vw,-' + this.preset_height * 2 + 'vh)';
-            }
-            if (document.getElementById('notif' + Number(this.current - 3))) {
-                document.getElementById('notif' + Number(this.current - 3)).style.transform = 'translate(0vw,-' + this.preset_height * 3 + 'vh)';
-            }
-            if (document.getElementById('notif' + Number(this.current - 4))) {
-                document.getElementById('notif' + Number(this.current - 4)).style.transform = 'translate(0vw,-' + this.preset_height * 4 + 'vh)';
-            }
-            if (document.getElementById('notif' + Number(this.current - 5))) {
-                document.getElementById('notif' + Number(this.current - 5)).style.transform = 'translate(0vw,-' + this.preset_height * 5 + 'vh)';
-            }
-            if (document.getElementById('notif' + Number(this.current - 6))) {
-                document.getElementById('notif' + Number(this.current - 6)).style.transform = 'translate(0vw,-' + this.preset_height * 6 + 'vh)';
-            }
-            if (document.getElementById('notif' + Number(this.current - 7))) {
-                document.getElementById('notif' + Number(this.current - 7)).style.transform = 'translate(0vw,-' + this.preset_height * 7 + 'vh)';
-            }
-        }
 
         if (typeof (fx) == 'function') {//There is a function, use X button
             tempnotif.addEventListener('click', fx);//asign action to shutter

@@ -6,9 +6,12 @@
   "scripts": {
     "start": "electron main.js",
     "package": "",
-    "build": ""
+    "build": "",
+    "package-mac": "electron-packager ./ --overwrite --platform=darwin --arch=x64 --icon=assets/icons/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager ./ electron-tutorial-app --overwrite --asar=true --platform=win32 --arch=x64 --icon=assets/icons/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Timetable\"",
+    "package-linux": "electron-packager ./ electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/icon.png --prune=true --out=release-builds"
   },
-  "icon": "D:/Git/Timetable-application/Resources/icons/icon.ico",
+  "icon": "assets/icons/icon.ico",
   "displayName": "Timetable",
   "bin": "TT01",
   "author": "Anthonym",

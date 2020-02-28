@@ -18,6 +18,7 @@ app.on('ready', function () {
 		height: mainWindowState.height,
 		backgroundColor: '#ffffff',
 		title:'Timetable',
+		icon: 'assets/icons/icon.ico',
 		frame: true,
 		minWidth:400,
 	});

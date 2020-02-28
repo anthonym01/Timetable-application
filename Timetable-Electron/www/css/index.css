@@ -437,7 +437,6 @@
         white-space: nowrap;
         overflow: visible;
     }
-
     #tablespace_render {
         /* Pannel which displays buttons to allow selection and editing of tables */
         position: absolute;
@@ -466,6 +465,8 @@
         max-height: 40vh;
         transition: height 300ms 100ms ease;
     }
+    #tablespace_render:active{color: #fff;}
+    #tablemanger:active #tablespace_render{color: #fff;}
 
     .table_bar {
         /* Positioning/container for individual table management buttons */
@@ -703,9 +704,11 @@
         height: 100%;
         width: 100%;
         display: none;
-        overflow: scroll;
+        overflow-y: scroll;
+        overflow-x: hidden;
         transition: transform 200ms;
         z-index: 50;
+
     }
 
     #dataentry_screen table {
@@ -1205,6 +1208,7 @@
         overflow: hidden;
         cursor: pointer;
         transition: transform 500ms, box-shadow 200ms, opacity 300ms;
+        z-index: 500;
     }
 
     .notification_style1 .title {
@@ -1255,6 +1259,7 @@
         overflow: hidden;
         cursor: pointer;
         transition: transform 500ms, box-shadow 200ms, opacity 300ms;
+        z-index: 500;
     }
 
     .notification_style2 .title {
@@ -1307,6 +1312,7 @@
         overflow: hidden;
         cursor: pointer;
         transition: transform 500ms, box-shadow 200ms, opacity 300ms;
+        z-index: 500;
     }
 
     .notification_style3 .title {
@@ -1371,6 +1377,7 @@
         overflow: hidden;
         cursor: pointer;
         transition: transform 500ms, box-shadow 200ms, opacity 300ms;
+        z-index: 500;
     }
 
     .notification_style4 .title {
@@ -2188,7 +2195,8 @@
         height: 90vh;
         width: 70vh;
         display: none;
-        overflow: scroll;
+        overflow-y: scroll;
+        overflow-x: hidden;
         transition: transform 200ms;
         z-index: 50;
     }
