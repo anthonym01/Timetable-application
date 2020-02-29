@@ -404,7 +404,7 @@
         justify-content: space-around;
     }
 
-    .data_button {
+    #tablemanger,.data_button {
         position: relative;
         display: block;
         height: 4vh;
@@ -449,8 +449,6 @@
         width: 200%;
         overflow-x: hidden;
         overflow-y: auto;
-        background-color: #000000;
-        box-shadow: 0vh 0vh 2vh 0vh #fff;
         z-index: 100;
         transition: height 80ms 0ms ease;
         cursor: default;
@@ -465,14 +463,6 @@
         height: 40vh;
         max-height: 40vh;
         transition: height 300ms 100ms ease;
-    }
-
-    #tablespace_render:active {
-        color: #fff;
-    }
-
-    #tablemanger:active #tablespace_render {
-        color: #fff;
     }
 
     .table_bar {
@@ -563,23 +553,27 @@
     .data_bar .sub_optionbar {
         /* options for databars */
         position: absolute;
-        top: 22%;
-        right: 2%;
+        top: 2%;
+        right: 0%;
         height: 4vh;
-        width: 15vh;
+        width: 9vh;
         display: none;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
         overflow: hidden;
+        z-index: 50;
     }
 
     .data_bar:hover .sub_optionbar {
-        display: block;
+        display: flex;
+        
     }
 
     .data_bar .optionbutton {
         position: relative;
         height: 4vh;
         width: 4vh;
-        margin-left: 1vh;
+        /*margin-left: 1vh;*/
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
@@ -640,7 +634,7 @@
         opacity: 1;
         border: none !important;
         cursor: pointer;
-        /*-webkit-appearance: none;*/
+        -webkit-appearance: none;
         width: 100%;
         border-radius: 3vh;
         height: 10vh;
@@ -648,7 +642,7 @@
 
     .colorslider::-webkit-slider-thumb {
         border-radius: 3vw;
-        /*-webkit-appearance: none;*/
+        -webkit-appearance: none;
         appearance: none;
         width: 8vw;
         height: 8vw;
@@ -1649,10 +1643,10 @@
 
     #fullscreen_tile {
         position: fixed;
-        bottom: 7vh;
-        left: 0;
-        width: 100vw;
-        height: 93vh;
+        top: 0!important;
+        left: 9vh!important;
+        width: calc(100vw - 9vh)!important;
+        height: 100vh!important;
         z-index: 500;
         display: none;
         transition: opacity 200ms, height 200ms;
@@ -1881,7 +1875,7 @@
         height: 10vh;
     }
 
-    .data_button {
+    #tablemanger,.data_button {
         position: relative;
         display: block;
         height: 4vh;
@@ -1953,10 +1947,10 @@
         transition: transform 80ms 0ms ease;
     }
 
-    .table_bar:hover .tabmenu {
+    /*.table_bar:hover .tabmenu {
         transform: translate(0, 0);
         transition: transform 300ms 80ms ease;
-    }
+    }*/
 
     .tabtion_btn {
         position: relative;
@@ -2034,27 +2028,26 @@
     .data_bar .sub_optionbar {
         /* options for databars */
         position: absolute;
-        top: 13%;
-        right: 2%;
+        top: 2%;
+        right: 0%;
         height: 4vh;
-        width: 15vh;
+        width: 9vh;
         display: none;
         overflow: hidden;
     }
 
     .data_bar:hover .sub_optionbar {
-        display: block;
+        display: flex;
     }
 
     .data_bar .optionbutton {
         position: relative;
         height: 4vh;
         width: 4vh;
-        margin-left: 1vh;
+        /*margin-left: 1vh;*/
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
-        float: left;
     }
 
     .selectbutton input {

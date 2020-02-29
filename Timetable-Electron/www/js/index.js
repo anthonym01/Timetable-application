@@ -946,8 +946,8 @@ let manage = {
         i = 0;
         var view_put = document.getElementById('view_put');
         view_put.innerHTML = "";
-        while (config.data.table_details[i] != null) { 
-            if(config.data.table_details[i].deleted!=true){ buildoption(i) }
+        while (config.data.table_details[i] != null) {
+            if (config.data.table_details[i].deleted != true) { buildoption(i) }
             i++;
         }
         document.getElementById('view_put').value = config.data.table_selected;//Value to view put
@@ -956,22 +956,22 @@ let manage = {
             option.value = config.data.table_details[i].identifier;
             option.innerHTML = config.data.table_details[i].purpose;
             view_put.appendChild(option);
-            if(config.data.table_details[i].identifier == config.data.table_selected){
-                document.getElementById('view_put_text').innerHTML=config.data.table_details[i].purpose;
+            if (config.data.table_details[i].identifier == config.data.table_selected) {
+                document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose;
             }
         }
-        document.getElementById('view_put').addEventListener('change',function(){
-            setTimeout(()=>{
+        document.getElementById('view_put').addEventListener('change', function () {
+            setTimeout(() => {
                 var vewalue = document.getElementById('view_put').value;
-                var i=0;
-                while (config.data.table_details[i] != null) { 
-                    if(config.data.table_details[i].deleted!=true && config.data.table_details[i].identifier == vewalue){ 
-                        document.getElementById('view_put_text').innerHTML=config.data.table_details[i].purpose
+                var i = 0;
+                while (config.data.table_details[i] != null) {
+                    if (config.data.table_details[i].deleted != true && config.data.table_details[i].identifier == vewalue) {
+                        document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose
                         break;//found it
-                     }
+                    }
                     i++;
                 }
-            },50)
+            }, 50)
         })
 
         //color sliders initalizer
@@ -1077,13 +1077,21 @@ let manage = {
             document.getElementById('tablespace_render').appendChild(table_bar);
 
             //make fucntion
-            tab_put.addEventListener('click', event.stopPropagation)//stop this event from trigering table select action
+            tab_put.addEventListener('click', function () { event.stopPropagation() })//stop this event from trigering table select action
             table_bar.addEventListener('click', function () {//select table fucntion
                 console.warn('Table selected by identifier : ', config.data.table_details[index].identifier)
                 config.data.table_selected = config.data.table_details[index].identifier;
                 config.save()
                 manage.initalize()
                 config.properties.changed = true
+            })
+            table_bar.addEventListener('mouseover', function () {
+                tabmenu.style.transform = "translate(0, 0)";
+            })
+            table_bar.addEventListener('mouseout', function () {
+                if (confirmimg.style.display != "block") {
+                    tabmenu.style.transform = "";
+                }
             })
             editbtn.addEventListener('click', function () {//edit button is pressed
                 event.stopPropagation();
@@ -1097,6 +1105,13 @@ let manage = {
                 tab_put.style.display = "block"
                 tab_put.value = config.data.table_details[index].purpose
                 setTimeout(() => { tab_put.focus() }, 500)
+                tab_put.addEventListener('keyup', function (event) {
+                    if (event.keyCode === 13) {//enterkey
+                        confirmimg.click();//enterkey is pressed, confirm input
+                    } else if (event.keyCode == 27) {//esckey
+                        cancelimg.click();//Cancel key is pressed, cancel input
+                    }
+                })
             })
             deletebtn.addEventListener('click', function () {//edit button is pressed
                 event.stopPropagation();
@@ -1207,16 +1222,9 @@ let manage = {
             let deletebtn = document.createElement('div');
             deletebtn.setAttribute("class", "optionbutton deletebtn");
             deletebtn.setAttribute("title", "delete");
-            let selectbutton = document.createElement('div');
-            selectbutton.setAttribute("class", "optionbutton selectbutton");
-            selectbutton.setAttribute("title", "select");
-            let selectimput = document.createElement('input');
-            selectimput.setAttribute("type", "checkbox");
 
             sub_optionbar.appendChild(editbtn)
             sub_optionbar.appendChild(deletebtn)
-            selectbutton.appendChild(selectimput)
-            sub_optionbar.appendChild(selectbutton)
             tempblock.appendChild(sub_optionbar)
 
             //time processing
@@ -1294,9 +1302,10 @@ let manage = {
                 tempblock.appendChild(sub_tab);
                 //alow editing function
                 tempblock.setAttribute('id', 'bar_' + index);
+                tempblock.addEventListener('click', function () { manage.dialogue.edit(index) });//Edit btn
                 editbtn.addEventListener('click', function () { manage.dialogue.edit(index) });//Edit btn
                 deletebtn.addEventListener('click', function () { manage.dialogue.edit(index); manage.dialogue.call_delete() })
-                selectbutton.addEventListener('click', function () { console.error('Select fucntion is incomplete') })
+
             }
             let noot = document.createElement('div');
             if (config.data.table1_db[index].show == 0) {// this dataset is homeless
@@ -1375,7 +1384,7 @@ let manage = {
             //other stuff
             document.getElementById('manage_dataspace').classList = "dataspace_compact";//switch dataspace to compact view
 
-            
+
             if (config.properties.overwrite == null) {
                 document.getElementById('savepluss_btn').style.display = 'block';
                 document.getElementById('delete_btn').style.display = 'none';
