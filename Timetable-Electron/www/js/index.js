@@ -87,6 +87,7 @@ let config = {
     },
     configlocation: "TT001_cfg",//not strict, can be anything. Think of it as a file name/path
     save: function () {//Save the config file
+        console.trace('Save function Triggered')
         if (config.baseconfig.use_alt_storage == true) {
             //save to alternate storage location
             fse.ensureDirSync(config.baseconfig.alt_location.toString())//endure the directory exists
@@ -102,7 +103,9 @@ let config = {
         console.table(this.data)
     },
     load: function () {//Load the config file into memory
-        if (localStorage.getItem("TT01_baseconfig")) {//load base config firt
+        console.trace('Configuration load triggered')
+
+        if (localStorage.getItem("TT01_baseconfig")) {//load base_config firt
             config.baseconfig = JSON.parse(localStorage.getItem("TT01_baseconfig"))
         } else {
             //first startup
@@ -139,14 +142,14 @@ let config = {
         this.validate()
     },
     selectlocation: function () {
-        var path = dialog.showOpenDialog({ properties: ['createDirectory', 'openDirectory'],/* defaultPath: config.baseconfig.alt_location*/ })
-        console.warn('Alternate configuration path :', path[0])
+        var path = dialog.showOpenDialogSync({ properties: ['createDirectory', 'openDirectory'],/* defaultPath: config.baseconfig.alt_location*/ })
+        console.log('Alternate configuration path :', path)
         config.baseconfig.use_alt_storage = true
-        config.baseconfig.alt_location = path[0]
+        config.baseconfig.alt_location = path
         localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig))//save base config
-        var fileout = fs.readFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", { encoding: 'utf8' });
-        fileout = JSON.parse(fileout)
+        var fileout = fs.readFileSync(config.baseconfig.alt_location + "/Timetableconfig.json", { encoding: 'utf8' });
         if (fileout != undefined) {
+            fileout = JSON.parse(fileout)
             if (fileout.key == "TT01") {
                 console.warn('A file exists here, prompt the user on what to keep, default is currently whats in the file')
                 config.properties.changed = true
@@ -163,8 +166,9 @@ let config = {
             config.save()//to create the file
         }
 
+
     },
-    usedefault: function () {
+    usedefault: function () {//use default config location
         config.baseconfig.use_alt_storage = false
         localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig))//save base config
     },
@@ -347,13 +351,13 @@ let config = {
         }
     },
     delete: function () {//Does not delete the file itself. Just sets it to empty
-        localStorage.clear(this.configlocation);
-        console.log('config deleted: ');
-        console.table(this.data);
+        localStorage.clear(this.configlocation)
+        localStorage.clear("TT01_baseconfig")
+        console.warn('config deleted: ');
         //overwite the file if any file exists
         notify.new('Attention', 'Configuration deleted');
         setTimeout(() => { location.reload() }, 2000);
-        this.validate();
+        //this.validate();
     },
     backup: function () {//backup configuration to file
         console.log('Configuration backup initiated')
@@ -409,7 +413,10 @@ let table = {
         let i = 0;
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
-
+            notify.new('U new here?', 'To start off, click here to add some classes', function () {
+                UI.navigate.MANAGE()
+                manage.dialogue.open()
+            }, 'click to add new class')
         } else {
             while (config.data.table1_db[i] != null || undefined) {//Get minimum time and maximum time to construct correct height
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
@@ -898,6 +905,12 @@ let manage = {
             i++
         }
 
+        //Add new button
+        document.getElementById('new_class_button').addEventListener('click', function () {
+            manage.dialogue.open();
+            console.log('Add new class button clicked')
+        })//add new btn listener
+
         document.getElementById('cancel_btn').addEventListener('click', () => {
             console.log('Cancel button clicked');
             manage.dialogue.clear();
@@ -1157,11 +1170,7 @@ let manage = {
         console.log('Manager Render starts');
         clear();
         let i = 0;
-        //Add new button
-        document.getElementById('new_class_button').addEventListener('click', function () {
-            manage.dialogue.open();
-            console.log('Add new class button clicked')
-        })//add new btn listener
+
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
             console.log('The table database is empty,manager will show first time setup');
@@ -1982,7 +1991,7 @@ let notify = {
     animate_old: true,//turn on and off old notification Animation
     current: 0,//Current is incimented every time theres a new notifyer
     resizecheck: window.addEventListener('resize', () => { notify.clearall() }),
-    new: function (title, body, fx) {
+    new: function (title, body, fx, bdytitle) {
         this.current++;//Inciment the current pisition
         style = config.data.notification_type;
         if (this.previous_type != style) { this.clearall() }
@@ -2076,14 +2085,19 @@ let notify = {
                 //yee.style.zIndex = '-999';
                 tempnotif.style.transform = 'translate(35vw,0)'
             })
+
+        }
+        if (bdytitle != undefined) {
+            tempnotif.title = bdytitle
         } else {
-            tempnotif.addEventListener('click', function () {
-                setTimeout(() => { this.style.opacity = '0.0'; }, 100)
-                //yee.style.zIndex = '-999';
-                this.style.transform = 'translate(35vw,0)'
-            })
             tempnotif.title = 'click to dismiss'
         }
+        tempnotif.addEventListener('click', function () {//close regardless of function
+            setTimeout(() => { this.style.opacity = '0.0'; }, 100)
+            //yee.style.zIndex = '-999';
+            this.style.transform = 'translate(35vw,0)'
+        })
+
     },
     clearall: function () {
         if (document.getElementById('notif' + Number(this.current))) {//nep them from latest going up

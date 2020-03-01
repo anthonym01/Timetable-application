@@ -27,7 +27,7 @@ app.on('ready', function () {
 			nodeIntegration:true,
 		}
 	});
-	mainWindow.loadURL(url.format({ pathname: path.join(__dirname, '/www/index.html'), protocol: 'file:', slashes: true, icon: path.join(__dirname, 'assets/icons/icon.ico'), }));
+	mainWindow.loadURL(url.format({ pathname: path.join(__dirname, '/www/index.html'), protocol: 'file:', slashes: true, icon: path.join(__dirname, 'assets/icons/icon.png'), }));
 	mainWindowState.manage(mainWindow);
 });
 
