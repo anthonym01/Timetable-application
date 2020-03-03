@@ -34,6 +34,7 @@ let config = {
     data: {
         key: "TT01",
         theme: "dark",//sets theme
+        color_pallet:210,//blue by default
         backgroundimg: null,
         hilight_engine: false,//hilight engine whether to run or not
         animation: true,
@@ -175,6 +176,11 @@ let config = {
     validate: function () {//validate configuration file
         console.log('Config is being validated')
         let configisvalid = true
+        if(typeof(th)){
+
+        }else{
+
+        }
         if (typeof (this.data.table1_db) !== 'undefined') {
             if (this.data.table1_db == undefined || null) {//check db existance
                 this.data.table1_db = []
@@ -410,7 +416,7 @@ let table = {
     },
     data_render: function () {
         console.log('Table render started')
-        let i = 0;
+        var i = 0;
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
             notify.new('U new here?', 'To start off, click here to add some classes', function () {
@@ -418,23 +424,19 @@ let table = {
                 manage.dialogue.open()
             }, 'click to add new class')
         } else {
-            while (config.data.table1_db[i] != null || undefined) {//Get minimum time and maximum time to construct correct height
+            for (i = 0; i < config.data.table1_db.length; i++) {//Get minimum time and maximum time to construct correct height
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
-                    let starthraw = Number(config.data.table1_db[i].start) - config.data.table1_db[i].start % 1;//removes remainder
+                    let starthraw = Number(config.data.table1_db[i].start) - config.data.table1_db[i].start % 1;// taking away the modulus 1 of itself removes the remainder
                     config.properties.min = Math.min(starthraw, config.properties.min);//find minimum time in all datu
                     config.properties.max = Math.max(config.data.table1_db[i].end, config.properties.max);//find maximum time in all datu
                 }
-                i++;
             }
-            console.warn('Table minimum found to be: ', config.properties.min);
-            console.warn('Table maximum found to be: ', config.properties.max);
-            i = 0;
-            while (config.data.table1_db[i] != null) {//construct table
+            console.log('Table minimum found to be: ', config.properties.min, ' Table maximum found to be: ', config.properties.max)
+            for (i = 0; i < config.data.table1_db.length; i++) {//construct table
                 console.log('Data run on index :', i);
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
                     build_block_db1(i);
                 }
-                i++;
             }
             validate();//Strip empty cells form top and bottom
         }
@@ -483,7 +485,6 @@ let table = {
                 doot.style.bottom = 'unset';
             }
 
-            //Put doot into the Data Bar
             //make table in doot to keep things even
             let sub_tab = document.createElement("table");
             let name_tab_row = document.createElement("tr");
@@ -610,12 +611,13 @@ let table = {
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60;//gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
-            }, 5);
+            }, 50);
 
             //click action
             tempblock.addEventListener('click', () => {
                 console.log('Triggered data cell: ', tempblock);
                 if (config.data.tiles) {//show full tile view
+                    //place data into overlay
                     tempblock.name = "off";
                     tempblock.setAttribute("class", "data_block");
                     document.getElementById('title_cell').innerText = config.data.table1_db[index].name;
@@ -640,7 +642,8 @@ let table = {
                     document.getElementById('time_cell').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
                     document.getElementById('fullscreen_tile').style.display = 'block';
                     document.getElementById('close_btn').style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
-                } else {//show the normal card flip out view
+                } else {
+                    //show the normal card flip out view
                     if (tempblock.name == "on") {
                         tempblock.name = "off";
                         tempblock.setAttribute("class", "data_block");
@@ -653,7 +656,7 @@ let table = {
             console.log('Block :', index, ' Check complete');
         }
         function validate() {
-            //Remove empty days
+            //Remove empty days with the bread crums left behing durring the initial render
             if (config.data.empty_rows == false) {
                 console.log('Validating Table');
                 let days = 7;
@@ -715,13 +718,11 @@ let table = {
                 }
 
                 //remove empty time cells
-
                 if (config.data.table1_db.length < 3) {//normalization makes life easier fror small table users
                     config.properties.min = config.properties.min - 3;
                     config.properties.max = config.properties.max + 3;
                     if (config.properties.min < 0) { config.properties.min = 0 }
                     if (config.properties.min > 23) { config.properties.min = 23 }
-                    //add a reload check here
                 }
 
                 let rows = 24;
@@ -742,7 +743,7 @@ let table = {
                 console.log('Time rows found value: ', rows);
 
                 //set font size dependent on rows value
-                switch (rows) {//Switch this to dynamic font sizing
+                switch (rows) {
                     case 1: document.getElementById('timetable').style.fontSize = '11vh'; break;
                     case 2: document.getElementById('timetable').style.fontSize = '10vh'; break;
                     case 3: document.getElementById('timetable').style.fontSize = '9vh'; break;
@@ -1273,7 +1274,7 @@ let manage = {
             }
             if (config.data.table1_db[index].deleted) {//Check deleted state
                 //populate the block with relivant data
-                tempblock.innerHTML = config.data.table1_db[index].name + '<br> Marked for delete, tap to undo';
+                tempblock.innerHTML = config.data.table1_db[index].name + '<br> Marked for delete, Click to undo';
                 tempblock.setAttribute("class", "data_bar");
                 tempblock.style.border = "0.3vh solid red";
                 //alow editing function
@@ -1344,7 +1345,7 @@ let manage = {
     dialogue: {
         edit: function (index) {//Does not edit anything, only populates feilds in the editor with data, listener found in manage.data.build_bar_db1();
             console.log('Dialogue Edit called on index: ', index);
-            this.open()//Open first to render selectors
+            
             config.properties.overwrite = index;  //Set overwrtite so save function knows to do
             document.getElementById('day_put').value = config.data.table1_db[index].day;    //set day feild
             switch (config.data.table1_db[index].day) {
@@ -1385,7 +1386,7 @@ let manage = {
                 case 3: document.getElementById('view_put_text').innerText = config.data.table_details[2].purpose; break;
                 case 4: document.getElementById('view_put_text').innerText = config.data.table_details[3].purpose; break;
             }
-            //document.getElementById('view_put_text').innerText=config.data.table_details[index].purpose;//view state text
+            this.open()//Open after
         },
         open: function () {//The listener for the add open btn is in manage.render_list() 
             console.log('Dialogue open called');
@@ -1402,7 +1403,7 @@ let manage = {
             } else {
                 document.getElementById('savepluss_btn').style.display = 'none';
                 document.getElementById('delete_btn').style.display = 'block';
-                document.getElementById('data_title').innerHTML = 'Edit';
+                document.getElementById('data_title').innerHTML = 'Edit '+config.data.table1_db[config.properties.overwrite].name;
             }
             document.getElementById('name_put').style.border = "";
             document.getElementById('start_time_put').style.border = "";

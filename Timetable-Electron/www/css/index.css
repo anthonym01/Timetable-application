@@ -57,8 +57,7 @@
         z-index: 999;
         display: block;
     }
-
-    #title {
+    #Loading #title {
         position: relative;
         margin-top: 30vh;
         height: 15vw;
@@ -68,8 +67,7 @@
         border-radius: 10vh;
         animation: pulse 2s ease infinite;
     }
-
-    #loader {
+    #Loading #loader {
         position: relative;
         margin-top: 3vh;
         margin-left: auto;
@@ -80,7 +78,6 @@
         overflow: hidden;
         animation: none;
     }
-
     #loadprogress {
         position: absolute;
         top: 0;
@@ -120,6 +117,7 @@
         text-align: center;
         text-shadow: 0vh 0vh 1vh;
         border: none;
+        z-index: 9999;
     }
 
     .menubtn,
@@ -264,11 +262,7 @@
         background-repeat: no-repeat;
     }
 
-    tr {
-        transition: background-color 250ms;
-    }
-
-    td {
+    td {/* Starts datablocks at the top of the cell instead of the middle */
         vertical-align: top;
     }
 
@@ -437,7 +431,16 @@
         white-space: nowrap;
         overflow: visible;
     }
+    #tablemanger:hover {
+        border-radius: 3vh 3vh 0vh 0vh;
+        transition: border-radius 300ms 100ms ease;
+    }
 
+    #tablemanger:hover #tablespace_render {
+        height: 40vh;
+        max-height: 40vh;
+        transition: height 300ms 100ms ease;
+    }
     #tablespace_render {
         /* Pannel which displays buttons to allow selection and editing of tables */
         position: absolute;
@@ -454,16 +457,7 @@
         cursor: default;
     }
 
-    #tablemanger:hover {
-        border-radius: 3vh 3vh 0vh 0vh;
-        transition: border-radius 300ms 100ms ease;
-    }
-
-    #tablemanger:hover #tablespace_render {
-        height: 40vh;
-        max-height: 40vh;
-        transition: height 300ms 100ms ease;
-    }
+    
 
     .table_bar {
         /* Positioning/container for individual table management buttons */
@@ -1563,7 +1557,7 @@
         text-shadow: none;
         border: none;
         background-color: #000000;
-        z-index: 500;
+        z-index: 9999;
         transition: width 80ms;
     }
 

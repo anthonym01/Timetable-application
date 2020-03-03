@@ -6,7 +6,7 @@ body{
     color:rgb(0, 0, 0);
 }
 
-#light_pallet{box-shadow: 0vh 0vh 2vh 0vh rgb(0, 180, 255)}
+#light_pallet{box-shadow: 0vh 0vh 2vh 0vh hsl(207, 100%, 42%)}
 
 /*  page darkener  */
 #page_shade{
