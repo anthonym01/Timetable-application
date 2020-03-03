@@ -34,7 +34,7 @@ let config = {
     data: {
         key: "TT01",
         theme: "dark",//sets theme
-        color_pallet:210,//blue by default
+        color_pallet: 210,//blue by default
         backgroundimg: null,
         hilight_engine: false,//hilight engine whether to run or not
         animation: true,
@@ -85,6 +85,7 @@ let config = {
         startup: true,
         colors_changed: true,//re-render color pannel when this is true
         clocking: false,// is clock ticking
+        management: false,
     },
     configlocation: "TT001_cfg",//not strict, can be anything. Think of it as a file name/path
     save: function () {//Save the config file
@@ -176,9 +177,9 @@ let config = {
     validate: function () {//validate configuration file
         console.log('Config is being validated')
         let configisvalid = true
-        if(typeof(th)){
+        if (typeof (th)) {
 
-        }else{
+        } else {
 
         }
         if (typeof (this.data.table1_db) !== 'undefined') {
@@ -905,6 +906,25 @@ let manage = {
             }
             i++
         }
+        //table manager actions
+        document.getElementById('tablemanger').addEventListener('click', function () {
+            if (config.properties.management == false) {
+                document.getElementById('tablemanger').classList = "tablemanger_active"
+                config.properties.management = true
+            } else {
+                config.properties.management = false
+                document.getElementById('tablemanger').classList = "tablemanger"
+            }
+        })
+        document.getElementById('manage_dataspace').addEventListener('click', function () {
+            if (config.properties.management == true) {
+                config.properties.management = false
+                document.getElementById('tablemanger').classList = "tablemanger"
+            }
+        })
+        document.getElementById('tablespace_render').addEventListener('click', function () {
+            event.stopPropagation()//Stop propogation to the dataspace
+        })
 
         //Add new button
         document.getElementById('new_class_button').addEventListener('click', function () {
@@ -1345,7 +1365,7 @@ let manage = {
     dialogue: {
         edit: function (index) {//Does not edit anything, only populates feilds in the editor with data, listener found in manage.data.build_bar_db1();
             console.log('Dialogue Edit called on index: ', index);
-            
+
             config.properties.overwrite = index;  //Set overwrtite so save function knows to do
             document.getElementById('day_put').value = config.data.table1_db[index].day;    //set day feild
             switch (config.data.table1_db[index].day) {
@@ -1403,7 +1423,7 @@ let manage = {
             } else {
                 document.getElementById('savepluss_btn').style.display = 'none';
                 document.getElementById('delete_btn').style.display = 'block';
-                document.getElementById('data_title').innerHTML = 'Edit '+config.data.table1_db[config.properties.overwrite].name;
+                document.getElementById('data_title').innerHTML = 'Edit ' + config.data.table1_db[config.properties.overwrite].name;
             }
             document.getElementById('name_put').style.border = "";
             document.getElementById('start_time_put').style.border = "";

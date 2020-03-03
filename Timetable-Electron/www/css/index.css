@@ -398,7 +398,7 @@
         justify-content: space-around;
     }
 
-    #tablemanger,.data_button {
+    .tablemanger,.tablemanger_active,.data_button {
         position: relative;
         display: block;
         height: 4vh;
@@ -425,23 +425,16 @@
         background-size: contain;
     }
 
-    #tablemanger {
+    .tablemanger_active {
         /*border:0.5vh solid white;*/
         transition: border-radius 80ms 0ms ease;
         white-space: nowrap;
         overflow: visible;
-    }
-    #tablemanger:hover {
         border-radius: 3vh 3vh 0vh 0vh;
         transition: border-radius 300ms 100ms ease;
     }
 
-    #tablemanger:hover #tablespace_render {
-        height: 40vh;
-        max-height: 40vh;
-        transition: height 300ms 100ms ease;
-    }
-    #tablespace_render {
+    .tablemanger #tablespace_render {
         /* Pannel which displays buttons to allow selection and editing of tables */
         position: absolute;
         bottom: 0;
@@ -456,6 +449,22 @@
         transition: height 80ms 0ms ease;
         cursor: default;
     }
+    .tablemanger_active #tablespace_render {
+        height: 40vh;
+        max-height: 40vh;
+        transition: height 300ms 100ms ease;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transform: translate(0, 100%);
+        max-height: 40vh;
+        width: 200%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        z-index: 100;
+        cursor: default;
+    }
+    
 
     
 
@@ -1869,7 +1878,7 @@
         height: 10vh;
     }
 
-    #tablemanger,.data_button {
+    .tablemanger,.tablemanger_active,.data_button {
         position: relative;
         display: block;
         height: 4vh;
@@ -1885,13 +1894,15 @@
         text-align: center;
     }
 
-    #tablemanger {
+    .tablemanger_active {
         transition: border-radius 80ms 0ms ease;
         white-space: nowrap;
         overflow: visible;
+        border-radius: 3vh 3vh 0vh 0vh;
+        transition: border-radius 300ms 100ms ease;
     }
 
-    #tablespace_render {
+    .tablemanger #tablespace_render {
         /* Pannel which displays buttons to allow selection and editing of tables */
         position: absolute;
         bottom: 0;
@@ -1909,15 +1920,21 @@
         cursor: default;
     }
 
-    #tablemanger:hover {
-        border-radius: 3vh 3vh 0vh 0vh;
-        transition: border-radius 300ms 100ms ease;
-    }
-
-    #tablemanger:hover #tablespace_render {
+    .tablemanger_active #tablespace_render {
         height: 40vh;
-        max-height: 40vh;
         transition: height 300ms 100ms ease;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transform: translate(0, 100%);
+        max-height: 40vh;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background-color: #000000;
+        box-shadow: 0vh 0vh 2vh 0vh #fff;
+        z-index: 100;
+        cursor: default;
     }
 
     .table_bar {
