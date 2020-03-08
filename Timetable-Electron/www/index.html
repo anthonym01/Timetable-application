@@ -10,12 +10,26 @@
     <link rel="icon" href="./img/icon.webp" id="favico" type="image/png" sizes="32x32">
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" id="theme" href="css/dark-theme.css">
+    <link rel="stylesheet" id="theme" href="css/dark_120.css">
     <link rel="stylesheet" id="nomation" href="">
+    
+    <script defer type="text/javascript" src="js/index.js" charset="UTF-8"></script>
     <title>Timetable</title>
 </head>
 
 <body>
+    <div class="title_bar">
+        <div class="title_icon"></div>
+        <div class="resise_constraint" id="resise_constraint"></div>
+        <div id="title_txt">Timetable</div>
+        <div class="statusbtn" id="mainx_btn" title="close"></div>
+
+        <div class="statusbtn" id="maximize_btn" title="Maximize"></div>
+
+        <div class="statusbtn" id="minimize_btn" title="Minimize"></div>
+
+        <div class="statusbtn" id="always_on_top_btn" title="toggle always on top"></div>
+    </div>
 
     <!--Loading Screen-->
     <div id="Loading">
@@ -552,9 +566,9 @@
             <div class="selectionbox" id="light_theme_selection">
                 <div class="mincropallet" id="light_pallet">
                     <div class="palletfoot">
-                        <div class="icon lightcon"></div>
-                        <div class="icon lightbook"></div>
-                        <div class="icon darkgear"></div>
+                        <div class="icon appicon" ></div>
+                        <div class="icon book"></div>
+                        <div class="icon gear_inverse"></div>
                     </div>
                     <table>
                         <tr>
@@ -622,9 +636,9 @@
             <div class="selectionbox" id="dark_theme_selection">
                 <div class="mincropallet" id="amoled_pallet">
                     <div class="palletfoot">
-                        <div class="icon darcon"></div>
-                        <div class="icon darkbook"></div>
-                        <div class="icon lightgear"></div>
+                        <div class="icon appicon_inverse"></div>
+                        <div class="icon book"></div>
+                        <div class="icon gear"></div>
                     </div>
                     <table>
                         <tr>
@@ -758,8 +772,6 @@
         <div class="Setting_title" id="about_btn" title="Copies contact info to clipboard">About</div>
         <!--<div class="Setting_title">Placeholder btn 1</div>-->
     </view>
-
-    <script type="text/javascript" src="js/index.js" charset="UTF-8"></script>
 
 </body>
 

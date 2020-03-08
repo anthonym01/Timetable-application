@@ -10,15 +10,15 @@
 
 @keyframes glowrow {
     0% {
-        background-color: rgba(43, 255, 0, 0.8)
+        background-color: hsla(120, 100%, 50%, 0.8)
     }
 
     50% {
-        background-color: rgba(24, 145, 0, 0.0)
+        background-color: hsla(120, 100%, 28%, 0)
     }
 
     100% {
-        background-color: rgba(43, 255, 0, 0.8)
+        background-color: hsla(120, 100%, 50%, 0.8)
     }
 }
 
@@ -45,6 +45,61 @@ body {
     color: #fff;
 }
 
+.title_bar {
+    background-image: linear-gradient(90deg, hsl(120, 0%, 0%), hsl(120, 100%, 30%), hsl(120, 0%, 0%));
+}
+
+.statusbtn {
+    transition: background-color 300ms;
+}
+
+.statusbtn:hover {
+    background-color: hsl(0, 0%, 41%);
+}
+
+.statusbtn_active,
+.statusbtn:active {
+    background-color: hsl(120, 100%, 30%);
+    transition: background-color 80ms;
+}
+
+#maximize_btn::after {
+    border: 1px solid white;
+    background-color: #000000;
+}
+
+#maximize_btn:hover::after {
+    background-color: hsl(0, 0%, 41%);
+}
+#maximize_btn:active::after {
+    background-color: hsl(120, 100%, 30%);
+}
+
+#maximize_btn::before {
+    border: 1px solid white;
+}
+
+#minimize_btn::after {
+    background-color: white;
+}
+
+#always_on_top_btn {
+    background-image: url('../img/window-top-512-light.webp');
+}
+
+#mainx_btn::before,
+#mainx_btn::after {
+    background-color: rgb(255, 255, 255);
+}
+
+#mainx_btn:hover::before,
+#mainx_btn:hover::after {
+    background-color: rgb(255, 0, 0);
+}
+
+.menubtn_icon {
+    background-image: url('../img/icon.webp');
+}
 
 /*  page darkener  */
 #page_shade {
@@ -63,7 +118,7 @@ body {
 }
 
 #loadprogress {
-    background-color: #2bff00;
+    background-color: hsl(120, 100%, 50%);
 }
 
 /* Main navigation buttons */
@@ -85,7 +140,7 @@ body {
 }
 
 .menubtn_active {
-    background-color: #199400 !important
+    background-color: hsl(120, 100%, 35%) !important
 }
 
 .menubtn #setting_btn_icon {
@@ -102,12 +157,12 @@ body {
 
 .menubtn #manage_btn_icon {
     /*  Manager button  (the little book) */
-    background-image: url('../img/manage-dark.webp');
+    background-image: url('../img/manage-120.webp');
     /*filter: invert(100%);*/
 }
 
 .menubtn_active #manage_btn_icon {
-    background-image: url('../img/manage-open-dark.webp');
+    background-image: url('../img/manage-open-120.webp');
 }
 
 .menubtn #table_btn_icon {
@@ -160,11 +215,13 @@ body {
     color: #000 !important;
     text-shadow: none;
 }
+
 tr {
     transition: background-color 250ms;
 }
+
 .glowrow {
-    background-color: #2bff00;
+    background-color: hsl(120, 100%, 50%);
     animation: glowrow 4s infinite;
 }
 
@@ -181,12 +238,18 @@ tr {
     color: #fff;
     transition: background-color 300ms color 300ms;
 }
+
 .data_button:active,
 .data_block:active {
     text-shadow: 0vw 0vw 0.5vw #000 !important;
     background-color: #ebebeb !important;
     color: #000 !important;
     transition-duration: 0ms;
+}
+
+.data_block:hover,
+.data_block_active:hover {
+    box-shadow: 0vh 0.5vh 2vh 0vh #ffffff;
 }
 
 .infodoot {
@@ -210,11 +273,17 @@ tr {
     color: #fff;
     transition: background-color 300ms color 300ms;
 }
-#tablespace_render{
+
+.tablemanger #tablespace_render {
     background-color: #000;
-    background-color: #000000;
-        box-shadow: 0vh 0vh 2vh 0vh #fff;
+    box-shadow: 0vh 0vh 0vh 0vh #fff;
 }
+
+.tablemanger_active #tablespace_render {
+    background-color: #000;
+    box-shadow: 0vh 0vh 1.5vh 0vh #fff;
+}
+
 
 .table_bar:hover {
     box-shadow: 0vh 0vh 1vh 0vh #fff;
@@ -226,20 +295,37 @@ tr {
     border: none;
 }
 
+.colorslider::-webkit-slider-thumb {
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1));
+}
+
+.color_doot {
+    background-color: #c9c9c9;
+    border: 0.3vh solid #aaaaaa;
+}
+
 .data_bar {
     box-shadow: 0vh 0vh 0.5vh 0vh #fff;
-    border-bottom: 1vh solid #00ff0d;
-    transition: box-shadow 50ms 0ms;
+    border-bottom: 1vh solid hsl(120, 100%, 50%);
+    background-color: #000;
+    transition: box-shadow 50ms 0ms,background-color 300ms;
 }
 
 .data_bar:hover {
     box-shadow: 0vh 0vh 1.5vh 0vh #fff;
 }
+.data_bar:active {background-color: rgb(100, 100, 100);
+    transition: background-color 0ms;
+}
 
 .sub_optionbar {
     background-color: rgb(0, 0, 0, 0.6);
+    transition: background-color 300ms;
 }
-
+.data_bar:active .sub_optionbar {
+    background-color: rgb(100, 100, 100);
+    transition: background-color 0ms;
+}
 .editbtn {
     background-image: url('../img/edit-pngrepo-com.webp');
     filter: invert(100%);
@@ -277,8 +363,9 @@ tr {
     /*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
     background-color: #000;
 }
-.colorslider:focus{
-    border: 0.3vh solid #2bff00;
+
+.colorslider:focus {
+    border: 0.3vh solid hsl(120, 100%, 50%);
 }
 
 #dataentry_screen input {
@@ -290,25 +377,15 @@ tr {
 
 #dataentry_screen input:focus {
     border: none;
-    border-bottom: 0.5vh solid #2bff00;
+    border-bottom: 0.5vh solid hsl(120, 100%, 50%);
     background-color: inherit;
     color: inherit;
     outline: none;
 }
 
-/*#dataentry_screen input::before{
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-    border-bottom:0.5vw solid #2bff00;
-    z-index: 5;
-}*/
 #dataentry_screen select:focus {
     /*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
-    border: 0.5vw solid #2bff00;
+    border: 0.5vw solid hsl(120, 100%, 50%);
 }
 
 .select_container {
@@ -388,11 +465,28 @@ tr {
 /*  Settinng things */
 
 #amoled_pallet {
-    box-shadow: 0vh 0vh 2vh 0vh #2bff00
+    box-shadow: 0vh 0vh 2vh 0vh hsl(120, 100%, 50%)
 }
 
 #dark_selection_put {
-    border: 1px solid #00ff0d;
+    border: 1px solid hsl(120, 100%, 50%);
+}
+
+.appicon {
+    background-image: url('../img/icon.webp');
+}
+.appicon_inverse{
+    background-image: url('../img/icon-inverse.webp');
+}
+.book {
+    background-image: url('../img/manage-120.webp');
+}
+.gear {
+    background-image: url('../img/setting-light.webp');
+}
+.gear_inverse{
+    background-image: url('../img/setting-light.webp');
+    filter: invert(100%);
 }
 
 #light_selection_put {
@@ -400,7 +494,7 @@ tr {
 }
 
 .selcetion_put:checked {
-    background-color: #00ff0d;
+    background-color: hsl(120, 100%, 50%);
 }
 
 .selcetion_put:checked::after {
@@ -408,7 +502,7 @@ tr {
 }
 
 .notification_pallet_active {
-    box-shadow: 0vh 0vh 2vh 0vh #2bff00
+    box-shadow: 0vh 0vh 2vh 0vh hsl(120, 100%, 50%)
 }
 
 /* Switches */
@@ -470,7 +564,7 @@ tr {
 
 .notification_style2,
 .notification_style3 {
-    border-left: 0.5vw solid #2bff00;
+    border-left: 0.5vw solid hsl(120, 100%, 50%);
     border-top: none;
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);

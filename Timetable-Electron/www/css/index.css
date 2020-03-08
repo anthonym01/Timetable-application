@@ -28,11 +28,6 @@
     }
 
     body {
-        -webkit-touch-callout: auto;
-        /* prevent callout to copy image, etc when tap to hold */
-        -webkit-text-size-adjust: auto;
-        /* prevent webkit from resizing text to fit */
-        -webkit-user-select: auto;
         /* prevent copy paste, to allow, change 'none' to 'text' */
         font-family: Lexend_Deca, Serif, Arial, Helvetica, sans-serif;
         height: 100vh;
@@ -40,6 +35,151 @@
         /* Padding to avoid the "unsafe" areas behind notches in the screen */
         padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-right, 0px);
         width: 100vw;
+        -webkit-touch-callout: none;
+        /* prevent callout to copy image, etc when tap to hold */
+        -webkit-text-size-adjust: none;
+        /* prevent webkit from resizing text to fit */
+        -webkit-user-select: none;
+        /* prevent copy paste, to allow, change 'none' to 'text' */
+    }
+
+    .title_bar {
+        position: fixed;
+        height: 30px;
+        width: 100vw;
+        top: 0;
+        right: 0;
+        z-index: 999;
+        -webkit-app-region: drag;
+        overflow: hidden;
+    }
+
+    .resise_constraint {
+        /* show and hide depending on window state */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(100% - 180px);
+        height: 5px;
+        display: block;
+        -webkit-app-region: no-drag;
+        /*background-color: red;*/
+        /* For debugging */
+    }
+
+    .title_icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 30px;
+        height: 30px;
+        background-size: 80%;
+        /*background-size: contain;*/
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: url('../img/icon.webp');
+    }
+
+    #title_txt {
+        position: absolute;
+        top: 0;
+        left: 35px;
+        width: fit-content;
+        height: 30px;
+        font-family: Lexend_Deca;
+        font-size: 20px;
+        padding-top: 2px;
+    }
+
+    .statusbtn,
+    .statusbtn_active {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 45px;
+        height: 30px;
+        -webkit-app-region: no-drag;
+        cursor: default;
+    }
+
+    #maximize_btn {
+        right: 45px;
+    }
+
+    #maximize_btn::after {
+        content: "";
+        position: absolute;
+        top: 7px;
+        right: 14px;
+        height: 13px;
+        width: 13px;
+    }
+
+    #maximize_btn::before {
+        content: "";
+        position: absolute;
+        top: 5px;
+        right: 12px;
+        height: 13px;
+        width: 13px;
+    }
+
+    #minimize_btn {
+        right: 90px;
+    }
+
+    #minimize_btn::after {
+        content: "";
+        position: absolute;
+        height: 3px;
+        width: 23px;
+        top: 14px;
+        right: 11px;
+    }
+
+    #always_on_top_btn {
+        right: 135px;
+        background-size: 55%;
+        /*background-size: contain;*/
+        background-position: center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+    }
+
+    #mainx_btn {
+        /* ignore */
+        align-content: top;
+    }
+
+    #mainx_btn::before,
+    #mainx_btn::after {
+        position: absolute;
+        top: 2px;
+        height: 26px;
+        width: 3px;
+        content: "";
+        border-radius: 4px;
+        transition: transform 300ms, box-shadow 200ms, background-color 300ms;
+    }
+
+    #mainx_btn::before {
+        /*Left */
+        right: 21px;
+        transform: rotate(-45deg);
+    }
+
+    #mainx_btn::after {
+        /*Right */
+        left: 21px;
+        transform: rotate(45deg);
+    }
+
+    #mainx_btn:hover::before {
+        transform: rotate(-230deg);
+    }
+
+    #mainx_btn:hover::after {
+        transform: rotate(230deg);
     }
 
     /*Scrollbar custom*/
@@ -50,13 +190,14 @@
     /*  Loading Screen  */
     #Loading {
         position: fixed;
-        top: 0;
+        top: 30px;
         right: 0;
-        height: 100vh;
+        height: calc(100vh - 30px);
         width: 100vw;
-        z-index: 999;
+        z-index: 500;
         display: block;
     }
+
     #Loading #title {
         position: relative;
         margin-top: 30vh;
@@ -67,6 +208,7 @@
         border-radius: 10vh;
         animation: pulse 2s ease infinite;
     }
+
     #Loading #loader {
         position: relative;
         margin-top: 3vh;
@@ -78,6 +220,7 @@
         overflow: hidden;
         animation: none;
     }
+
     #loadprogress {
         position: absolute;
         top: 0;
@@ -90,12 +233,12 @@
     /*  page darkener   */
     #page_shade {
         position: fixed;
-        top: 0;
+        top: 30px;
         right: 0;
         opacity: 0.5;
         z-index: 50;
         display: none;
-        height: 100%;
+        height: calc(100% - 30px);
         width: 100%;
         transition: opacity 500ms;
     }
@@ -117,7 +260,7 @@
         text-align: center;
         text-shadow: 0vh 0vh 1vh;
         border: none;
-        z-index: 9999;
+        z-index: 400;
     }
 
     .menubtn,
@@ -143,7 +286,6 @@
         width: 7vh;
         background-size: contain;
         background-position: center;
-        background-image: url('../img/icon.webp');
         transition: background-image 500ms;
     }
 
@@ -161,7 +303,7 @@
         bottom: 7vh;
         left: 0;
         width: 100vw;
-        height: 93vh;
+        height: calc(93vh - 30px);
         display: none;
         overflow: hidden;
     }
@@ -179,7 +321,7 @@
         bottom: 7vh;
         left: 0;
         width: 100vw;
-        height: 93vh;
+        height: calc(93vh - 30px);
         z-index: 500;
         display: none;
         transition: opacity 200ms, height 200ms;
@@ -250,7 +392,7 @@
         /*   The body of the timetable   */
         position: relative;
         margin-top: 0vh;
-        height: 91.2vh;
+        height: calc(91.2vh - 30px);
         max-height: 93vh;
         left: 0vw;
         white-space: nowrap;
@@ -262,7 +404,8 @@
         background-repeat: no-repeat;
     }
 
-    td {/* Starts datablocks at the top of the cell instead of the middle */
+    td {
+        /* Starts datablocks at the top of the cell instead of the middle */
         vertical-align: top;
     }
 
@@ -378,10 +521,10 @@
     /*  manage_view   */
     #manage_view {
         /* Adjust manage view to align with table selector at the bottom*/
-        top: 0;
+        top: 30px;
         left: 0;
-        width: 100vw;
-        height: 93vh;
+        /*width: 100vw;
+        height: 93vh;*/
         overflow-x: hidden;
         overflow-y: auto;
     }
@@ -398,7 +541,9 @@
         justify-content: space-around;
     }
 
-    .tablemanger,.tablemanger_active,.data_button {
+    .tablemanger,
+    .tablemanger_active,
+    .data_button {
         position: relative;
         display: block;
         height: 4vh;
@@ -449,6 +594,7 @@
         transition: height 80ms 0ms ease;
         cursor: default;
     }
+
     .tablemanger_active #tablespace_render {
         height: 40vh;
         max-height: 40vh;
@@ -464,9 +610,6 @@
         z-index: 100;
         cursor: default;
     }
-    
-
-    
 
     .table_bar {
         /* Positioning/container for individual table management buttons */
@@ -569,7 +712,7 @@
 
     .data_bar:hover .sub_optionbar {
         display: flex;
-        
+
     }
 
     .data_bar .optionbutton {
@@ -650,7 +793,6 @@
         width: 8vw;
         height: 8vw;
         background: none;
-        background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1));
         border-radius: 50%;
         cursor: pointer;
     }
@@ -685,22 +827,20 @@
         height: 14.5vw;
         width: 14.5vw;
         float: left;
-        background-color: #c9c9c9;
-        border: 0.5vw solid #aaaaaa;
         border-radius: 50%;
         cursor: pointer;
     }
 
     #dataentry_screen {
         position: fixed;
-        bottom: 0;
-        height: 100%;
+        top: 30px;
+        height: calc(100% - 30px);
         width: 100%;
         display: none;
         overflow-y: scroll;
         overflow-x: hidden;
         transition: transform 200ms;
-        z-index: 50;
+        z-index: 500;
 
     }
 
@@ -710,12 +850,12 @@
         margin-left: auto;
         margin-right: auto;
         width: 95%;
-        font-size: 8vw;
+        font-size: 5vh;
         margin-bottom: 10vh;
     }
 
     #dataentry_screen label {
-        font-size: 6vw;
+        font-size: 4vh;
         width: 100%;
         text-align: center;
         transform: translate(0, 9vh);
@@ -724,7 +864,7 @@
     #dataentry_screen input {
         width: 100%;
         height: 100%;
-        font-size: 8vw;
+        font-size: 5vh;
         border-radius: 1vh;
         text-align: center;
         transition: border 300ms;
@@ -920,6 +1060,8 @@
         transition: transform 500ms;
     }
 
+
+    /* Settings view */
     #setting_view {
         overflow-x: hidden;
         overflow-y: scroll;
@@ -954,11 +1096,13 @@
     }
 
     .selcetion_put {
+        position: absolute;
+        bottom:0;
+        right:0;
         -webkit-appearance: none;
         padding: 0;
         height: 3.5vh;
         width: 3.5vh;
-        float: right;
         cursor: pointer;
         border-radius: 0.5vh;
     }
@@ -988,6 +1132,9 @@
     }
 
     .mincropallet table {
+        position: absolute;
+        top:0;
+        right:0;
         height: 85%;
         width: 100%;
         border-collapse: collapse;
@@ -1036,49 +1183,21 @@
     }
 
     .mincropallet .palletfoot {
+        position: absolute;
+        bottom: 0;
+        right: 0;
         height: 15%;
         width: 100%;
+        display: flex;
+        justify-content: space-evenly;
     }
 
     .palletfoot .icon {
         height: 100%;
-        width: 25%;
-        float: left;
+        width: 33%;
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
-    }
-
-    .lightcon {
-        background-image: url('../img/icon.webp');
-    }
-
-    .lightbook {
-        background-image: url('../img/manage-light.webp');
-    }
-
-    .lightclip {
-        background-image: url('../img/Clip-light.webp');
-    }
-
-    .lightgear {
-        background-image: url('../img/setting-light.webp');
-    }
-
-    .darkgear {
-        background-image: url('../img/setting-dark.webp');
-    }
-
-    .darcon {
-        background-image: url('../img/icon-inverse.webp');
-    }
-
-    .darkbook {
-        background-image: url('../img/manage-dark.webp');
-    }
-
-    .darkclip {
-        background-image: url('../img/Clip-dark.webp');
     }
 
     .notification_pallet,
@@ -1087,6 +1206,9 @@
         float: left;
         height: 50%;
         width: 50%;
+        display: flex;
+        justify-content: center;
+        align-content: center;
     }
 
     .setting_bar {
@@ -1409,36 +1531,29 @@
         cursor: inherit;
     }
 
+/* after because overwrite */
     #notification_style1 {
         width: 40vw;
         position: relative;
-        transform: translate(0vw, 2vh);
-        margin-left: auto;
-        margin-right: auto;
+        transform: none;
     }
 
     #notification_style2 {
         width: 40vw;
         position: relative;
-        transform: translate(0vw, 4vh);
-        margin-left: auto;
-        margin-right: auto;
+        transform: none;
     }
 
     #notification_style3 {
         width: 40vw;
         position: relative;
-        transform: translate(0vw, 4vh);
-        margin-left: auto;
-        margin-right: auto;
+        transform: none;
     }
 
     #notification_style4 {
         width: 40vw;
         position: relative;
-        transform: translate(0vw, 2vh);
-        margin-left: auto;
-        margin-right: auto;
+        transform: none;
     }
 
     /* X button */
@@ -1489,6 +1604,7 @@
     SEPERATOR
 */
 
+
 /*  Landscape layout (with min-width)   */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
 
@@ -1504,7 +1620,6 @@
         right: 0;
         height: 100vh;
         width: 100vw;
-        z-index: 999;
         display: block;
     }
 
@@ -1546,7 +1661,6 @@
         top: 0;
         right: 0;
         opacity: 0.5;
-        z-index: 50;
         display: none;
         height: 100%;
         width: 100%;
@@ -1557,8 +1671,8 @@
     .Action_bar {
         /* The Menubar on the right of the screen */
         position: fixed;
-        top: 0;
-        height: 100vh;
+        top: 30px;
+        height: calc(100vh - 30px);
         left: 0;
         width: 9vh;
         border-collapse: collapse;
@@ -1566,7 +1680,6 @@
         text-shadow: none;
         border: none;
         background-color: #000000;
-        z-index: 9999;
         transition: width 80ms;
     }
 
@@ -1629,10 +1742,10 @@
     /*  Views   */
     view {
         position: absolute;
-        top: 0;
+        top: 30px;
         left: 9vh;
         width: calc(100vw - 9vh);
-        height: 100vh;
+        height: calc(100vh - 30px);
         display: none;
         overflow-y: scroll;
     }
@@ -1646,11 +1759,10 @@
 
     #fullscreen_tile {
         position: fixed;
-        top: 0!important;
-        left: 9vh!important;
-        width: calc(100vw - 9vh)!important;
-        height: 100vh!important;
-        z-index: 500;
+        top: 0 !important;
+        left: 9vh !important;
+        width: calc(100vw - 9vh) !important;
+        height: 100vh !important;
         display: none;
         transition: opacity 200ms, height 200ms;
         opacity: 1;
@@ -1778,7 +1890,6 @@
         cursor: pointer;
         overflow: visible;
         border: none;
-        z-index: 50;
         transform: translate(-0.5vh, 0vh);
         padding-left: 0.5vh;
         padding-right: 0.5vh;
@@ -1795,7 +1906,6 @@
     .data_block:hover,
     .data_block_active:hover {
         transition: box-shadow 0ms, background-color 0ms, color 0ms;
-        box-shadow: 0vh 0.5vh 2vh 0vh #ffffff;
     }
 
 
@@ -1862,10 +1972,10 @@
 
     /*  manage_view   */
     #manage_view {
-        top: 0;
+        top: 30px;
         left: 9vh;
         width: calc(100vw - 9vh);
-        height: 100vh;
+        height: calc(100vh - 30px);
         display: none;
         overflow-y: hidden;
     }
@@ -1878,7 +1988,9 @@
         height: 10vh;
     }
 
-    .tablemanger,.tablemanger_active,.data_button {
+    .tablemanger,
+    .tablemanger_active,
+    .data_button {
         position: relative;
         display: block;
         height: 4vh;
@@ -1913,16 +2025,14 @@
         width: 100%;
         overflow-x: hidden;
         overflow-y: auto;
-        background-color: #000000;
-        box-shadow: 0vh 0vh 2vh 0vh #fff;
         z-index: 100;
-        transition: height 80ms 0ms ease;
+        transition: height 80ms 0ms ease, box-shadow 300ms;
         cursor: default;
     }
 
     .tablemanger_active #tablespace_render {
         height: 40vh;
-        transition: height 300ms 100ms ease;
+        transition: height 300ms 100ms ease, box-shadow 300ms;
         position: absolute;
         bottom: 0;
         left: 0;
@@ -1931,8 +2041,6 @@
         width: 100%;
         overflow-x: hidden;
         overflow-y: auto;
-        background-color: #000000;
-        box-shadow: 0vh 0vh 2vh 0vh #fff;
         z-index: 100;
         cursor: default;
     }
@@ -2128,13 +2236,11 @@
     }
 
     .colorslider::-webkit-slider-thumb {
-        border-radius: 3vw;
         -webkit-appearance: none;
         appearance: none;
         width: 5vh !important;
         height: 5vh !important;
         background: none;
-        background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1));
         border-radius: 50%;
         cursor: pointer;
     }
@@ -2171,17 +2277,16 @@
         margin: 1vh;
         height: 8vh;
         width: 8vh;
-        background-color: #c9c9c9;
-        border: 0.3vh solid #aaaaaa;
         border-radius: 50%;
         cursor: pointer;
     }
 
     #dataentry_screen {
         position: fixed;
-        top: 10vh;
+        bottom: 0;
+        top: unset;
         right: 0;
-        height: 90vh;
+        height: calc(90vh - 30px);
         width: 70vh;
         display: none;
         overflow-y: scroll;
@@ -2553,7 +2658,6 @@
     .notification_pallet,
     .notification_pallet_active {
         position: relative;
-        float: left;
         height: 100%;
         width: 25%;
     }
@@ -2708,34 +2812,18 @@
 
     #notification_style1 {
         width: 20vw;
-        position: relative;
-        transform: translate(0vw, 2vh);
-        margin-left: auto;
-        margin-right: auto;
     }
 
     /*  isa fter because css overwrite  */
     #notification_style2 {
         width: 20vw;
-        position: relative;
-        transform: translate(0vw, 4vh);
-        margin-left: auto;
-        margin-right: auto;
     }
 
     #notification_style3 {
         width: 20vw;
-        position: relative;
-        transform: translate(0vw, 4vh);
-        margin-left: auto;
-        margin-right: auto;
     }
 
     #notification_style4 {
         width: 20vw;
-        position: relative;
-        transform: translate(0vw, 2vh);
-        margin-left: auto;
-        margin-right: auto;
     }
 }

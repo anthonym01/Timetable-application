@@ -1,8 +1,9 @@
 
-const { dialog, process } = require('electron').remote;
+const main = require('electron').remote.require('./main');//acess export functions in main
+const { dialog } = require('electron').remote;
 const fs = require('fs');
 const fse = require('fs-extra')
-const path = require('path');
+/*const path = require('path');*/
 /*const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]*/
 
 window.addEventListener('load', function () {//window loads
@@ -42,6 +43,7 @@ let config = {
         empty_rows: false,
         notification_type: 3,
         table_selected: 1,
+        always_on_top:false,
         table_details: [// Details about different tables
             { purpose: "table #1", deleted: false, identifier: 1 },
             /*{ purpose: "table #2", deleted: false, identifier: 2 },
@@ -88,16 +90,20 @@ let config = {
         management: false,
     },
     configlocation: "TT001_cfg",//not strict, can be anything. Think of it as a file name/path
-    save: function () {//Save the config file
+    save:async function () {//Save the config file
         console.trace('Save function Triggered')
         if (config.baseconfig.use_alt_storage == true) {
             //save to alternate storage location
             fse.ensureDirSync(config.baseconfig.alt_location.toString())//endure the directory exists
             //fse.ensureFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json")//Ensure the file exists
-            fs.writeFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", JSON.stringify(config.data), 'utf8', function (err) {
-                alert('File could not be saved to: ' + config.baseconfig.alt_location.toString() + "/Timetableconfig.json" + err.message);
+            fs.writeFile(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", JSON.stringify(config.data), 'utf8', function (err) {// acync incase drive being writen to is garbage
+                if(err){
+                    alert('File could not be saved to: ' + config.baseconfig.alt_location.toString() + "/Timetableconfig.json" + err.message);
+                }else{
+                    console.log('config saved to: ' + config.baseconfig.alt_location.toString())
+                }
             })
-            console.log('config saved to: ' + config.baseconfig.alt_location.toString())
+            
         } else {
             console.log('config saved to application storage')
         }
@@ -177,11 +183,30 @@ let config = {
     validate: function () {//validate configuration file
         console.log('Config is being validated')
         let configisvalid = true
-        if (typeof (th)) {
-
+        if (typeof (this.data.always_on_top) !== 'undefined') {
+            if (this.data.always_on_top == undefined || null) {//check db existance
+                this.data.always_on_top = false;
+                configisvalid = false;
+                console.log('"always_on_top" was found to be invalid and was set to default');
+            }
         } else {
-
+            this.data.always_on_top = false;
+            configisvalid = false;
+            console.log('"always_on_top" was found to not exist and was set to default');
         }
+
+        if (typeof (this.data.color_pallet) !== 'undefined') {
+            if (this.data.color_pallet == undefined || null) {//check db existance
+                this.data.color_pallet = 0;
+                configisvalid = false;
+                console.log('"color_pallet" was found to be invalid and was set to default');
+            }
+        } else {
+            this.data.color_pallet = 0;
+            configisvalid = false;
+            console.log('"color_pallet" was found to not exist and was set to default');
+        }
+
         if (typeof (this.data.table1_db) !== 'undefined') {
             if (this.data.table1_db == undefined || null) {//check db existance
                 this.data.table1_db = []
@@ -369,7 +394,7 @@ let config = {
     backup: function () {//backup configuration to file
         console.log('Configuration backup initiated')
         var date = new Date();
-        var filepath = dialog.showSaveDialog({ defaultPath: "Timetable backup " + Number(date.getMonth() + 1) + " - " + date.getDate() + " - " + date.getFullYear() + ".json", buttonLabel: null });
+        var filepath = dialog.showSaveDialogSync({ defaultPath: "Timetable backup " + Number(date.getMonth() + 1) + " - " + date.getDate() + " - " + date.getFullYear() + ".json", buttonLabel: "Save" });
         if (filepath == undefined) {//the file save dialogue was canceled my the user
             console.warn('The file dialogue was canceled by the user')
         } else {
@@ -900,9 +925,11 @@ let manage = {
             if (config.data.table_details[i].identifier == Number(config.data.table_selected) && config.data.table_details[i].deleted != true) {
                 document.getElementById('selected_table').innerText = config.data.table_details[i].purpose;
                 document.getElementById('tablemanage_txt').innerText = config.data.table_details[i].purpose;
+                document.getElementById('title_txt').innerText = config.data.table_details[i].purpose;
                 break;
             } else {
                 document.getElementById('tablemanage_txt').innerText = "Homeless tiles";
+                document.getElementById('title_txt').innerText = "Homeless tiles";
             }
             i++
         }
@@ -1664,6 +1691,48 @@ let manage = {
 let UI = {
     initalize: function () {
         console.log('UI Initalize');
+        //Remote triggers for windowstate management
+        if(config.data.always_on_top == true){
+            main.setontop()
+            document.getElementById('always_on_top_btn').classList = "statusbtn_active"
+        }else{
+            main.setnotontop()
+        }
+
+        document.getElementById('mainx_btn').addEventListener('click',function(){
+            main.closeapp()
+        })
+        document.getElementById('maximize_btn').addEventListener('click',function(){
+            var state = main.maximize_main_window()
+            if(state == true){
+                //is maximized
+                document.getElementById('resise_constraint').style.display = "none"
+            }else{
+                //is not maximized
+                document.getElementById('resise_constraint').style.display = "block"
+            }
+            console.log('Window maximized :',state);
+        })
+        document.getElementById('minimize_btn').addEventListener('click',function(){
+            main.minmize_main_window()
+        })
+        document.getElementById('always_on_top_btn').addEventListener('click',function(){
+            var state = main.togglealways_on_top()
+            if(state == true){
+                //is always on top
+                document.getElementById('always_on_top_btn').classList = "statusbtn_active"
+                config.data.always_on_top = true;
+                config.save()
+            }else{
+                //is not always on top
+                document.getElementById('always_on_top_btn').classList = "statusbtn"
+                config.data.always_on_top = false;
+                config.save()
+            }
+            console.log('Window always on top :',state);
+        })
+
+        //theme
         switch (config.data.theme) {
             case 'dark': this.setting.theme.set_dark(); break;
             case 'light': this.setting.theme.set_light(); break;
@@ -1671,11 +1740,6 @@ let UI = {
                 console.error('Theme error :', config.data.theme);
                 this.setting.theme.set_light();
         }
-        this.setting.hilight.setpostition();
-        this.setting.animation.setpostition();
-        this.setting.tiles.setpostition();
-        this.setting.Row.setpostition();
-        this.setting.wallpaper.set_wallpaper()
         document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
         document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
         document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
@@ -1746,6 +1810,12 @@ let UI = {
             config.properties.changed = true
         })
 
+
+        this.setting.hilight.setpostition();
+        this.setting.animation.setpostition();
+        this.setting.tiles.setpostition();
+        this.setting.Row.setpostition();
+        this.setting.wallpaper.set_wallpaper()
     },
     navigate: {
         BACK: function () {//Back button handle
@@ -1840,7 +1910,7 @@ let UI = {
         theme: {
             set_dark: function () {
                 console.warn('Theme set Dark');
-                document.getElementById('theme').href = "css/dark-theme.css"
+                document.getElementById('theme').href = "css/dark_120.css"
                 config.data.theme = 'dark'
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = true;
