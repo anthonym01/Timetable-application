@@ -555,10 +555,19 @@
 
     <!--Setting View-->
     <view id="setting_view">
-        <button id="defaultconfigbtn">default config</button>
-        <button id="saveconfigbtn">Save config</button>
-        <input id="pathrepresenter" value="***"></input>
-        <button id="selectconfiglocationbtn">Select config location</button>
+        <div class="config-manage-pannel">
+            <div class="config-btn-flex">
+                <button id="load-button" class="config-btn">backup config</button>
+                <button id="restore-button" class="config-btn">Restore config</button>
+            </div>
+
+            <div class="alt-location-slector">
+                <input id="pathrepresenter" value="default"></input>
+                <button clsss="config-btn">Save</button>
+                <button clsss="config-btn">default</button>
+                <button id="selectconfiglocationbtn" clsss="config-btn">Select folder</button>
+            </div>
+        </div>
 
         <div class="Setting_title">Theme</div>
         <div class="selection_container">

@@ -151,30 +151,32 @@ let config = {
     },
     selectlocation: function () {
         var path = dialog.showOpenDialogSync({ properties: ['createDirectory', 'openDirectory'],/* defaultPath: config.baseconfig.alt_location*/ })
-        console.log('Alternate configuration path :', path)
-        config.baseconfig.use_alt_storage = true
-        config.baseconfig.alt_location = path
-        localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig))//save base config
-        var fileout = fs.readFileSync(config.baseconfig.alt_location + "/Timetableconfig.json", { encoding: 'utf8' });
-        if (fileout != undefined) {
-            fileout = JSON.parse(fileout)
-            if (fileout.key == "TT01") {
-                console.warn('A file exists here, prompt the user on what to keep, default is currently whats in the file')
-                config.properties.changed = true
-                config.data = fileout
-                manage.initalize()
-                UI.initalize()
-                config.save()
+        if(path!=undefined){
+            console.log('Alternate configuration path :', path)
+            config.baseconfig.use_alt_storage = true
+            config.baseconfig.alt_location = path
+            localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig))//save base config
+            var fileout = fs.readFileSync(config.baseconfig.alt_location + "/Timetableconfig.json", { encoding: 'utf8' });
+            if (fileout != undefined) {
+                fileout = JSON.parse(fileout)
+                if (fileout.key == "TT01") {
+                    console.warn('A file exists here, prompt the user on what to keep, default is currently whats in the file')
+                    config.properties.changed = true
+                    config.data = fileout
+                    manage.initalize()
+                    UI.initalize()
+                    config.save()
+                } else {
+                    console.warn('No file exists here, config from this app is used')
+                    config.save()//to create the file
+                }
             } else {
                 console.warn('No file exists here, config from this app is used')
                 config.save()//to create the file
             }
-        } else {
-            console.warn('No file exists here, config from this app is used')
-            config.save()//to create the file
+        }else{
+            notify.new('Error','no folder selected, click to try again',function(){config.selectlocation()})
         }
-
-
     },
     usedefault: function () {//use default config location
         config.baseconfig.use_alt_storage = false
@@ -1757,13 +1759,13 @@ let UI = {
             notify.new('Debug info coppied to clipboard');
         });
 
+        //select notification 
         document.getElementById('dark_theme_selection').addEventListener('click', this.setting.theme.set_dark)
         document.getElementById('light_theme_selection').addEventListener('click', this.setting.theme.set_light)
         document.getElementById('notification_style1').addEventListener('click', this.setting.notification.set_1)
         document.getElementById('notification_style2').addEventListener('click', this.setting.notification.set_2)
         document.getElementById('notification_style3').addEventListener('click', this.setting.notification.set_3)
         document.getElementById('notification_style4').addEventListener('click', this.setting.notification.set_4)
-
         switch (config.data.notification_type) {
             case 1:
                 document.getElementById('notification_pallet1').classList = "notification_pallet_active"
@@ -1793,20 +1795,13 @@ let UI = {
 
                 break;
         }
+
         if (config.baseconfig.use_alt_storage == true) {
-            document.getElementById('selectconfiglocationbtn').innerText = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
+            document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
         }
-        document.getElementById('defaultconfigbtn').addEventListener('click', function () {//default the configuration
-            config.delete()
-            config.properties.changed = true
-        })
-        document.getElementById('saveconfigbtn').addEventListener('click', function () {//save the configuration
-            config.save()
-            config.properties.changed = true
-        })
-        document.getElementById('selectconfiglocationbtn').addEventListener('click', function () {//Select the configuration location
+        document.getElementById('pathrepresenter').addEventListener('click', function () {//Select the configuration location
             config.selectlocation()
-            document.getElementById('selectconfiglocationbtn').innerText = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
+            document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
             config.properties.changed = true
         })
 

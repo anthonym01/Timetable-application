@@ -1067,6 +1067,47 @@
         overflow-y: scroll;
     }
 
+    .config-manage-pannel{
+        position: relative;
+        width: 100%;
+        height: 6vh;
+        margin-top:1vh;
+        margin-bottom: 1vh;
+    }
+    .config-btn-flex{/* spaces and positions buttons */
+        position: absolute;
+        top:0;
+        left:0;
+        height: 6vh;
+        width: 50%;
+        display: flex;
+        justify-content: space-evenly;
+    }
+    .config-btn{
+        position: relative;
+        height: 5vh;
+        width: auto;
+        margin-top: 0.5vh;
+        white-space: nowrap;
+        font-size: 3vh;
+        border-radius: 1.5vh;
+    }
+    .alt-location-slector{
+        position: absolute;
+        top:0;
+        right:0;
+        width:50%;
+        height: 12vh;
+        display: flex;
+        justify-content: space-evenly;
+    }
+    #pathrepresenter{
+        position: absolute;
+        top:0.5vh;
+        width: 100%;
+        height:5vh;
+    }
+
     .Setting_title {
         margin-top: 1vh;
         font-size: 6vh;
@@ -1097,8 +1138,8 @@
 
     .selcetion_put {
         position: absolute;
-        bottom:0;
-        right:0;
+        bottom: 0;
+        right: 0;
         -webkit-appearance: none;
         padding: 0;
         height: 3.5vh;
@@ -1133,8 +1174,8 @@
 
     .mincropallet table {
         position: absolute;
-        top:0;
-        right:0;
+        top: 0;
+        right: 0;
         height: 85%;
         width: 100%;
         border-collapse: collapse;
@@ -1531,29 +1572,17 @@
         cursor: inherit;
     }
 
-/* after because overwrite */
-    #notification_style1 {
+    /* after because overwrite */
+    #notification_style1,#notification_style2,#notification_style3,#notification_style4 {
         width: 40vw;
-        position: relative;
+        position: absolute;
+        top: 2vh;
+        height: 15vh;
+        left: 5vw;
         transform: none;
     }
-
-    #notification_style2 {
-        width: 40vw;
-        position: relative;
-        transform: none;
-    }
-
-    #notification_style3 {
-        width: 40vw;
-        position: relative;
-        transform: none;
-    }
-
-    #notification_style4 {
-        width: 40vw;
-        position: relative;
-        transform: none;
+    #notification_style1 .notifbody,#notification_style2 .notifbody,#notification_style3 .notifbody,#notification_style4 .notifbody{
+        height: 50%;
     }
 
     /* X button */
@@ -2809,21 +2838,16 @@
         transition: transform 500ms, box-shadow 200ms, opacity 300ms;
     }
 
-
-    #notification_style1 {
+    /* after because overwrite */
+    #notification_style1,#notification_style2,#notification_style3,#notification_style4 {
         width: 20vw;
+        position: absolute;
+        top: 2.5vh;
+        height: 20vh;
+        left: 1vw;
+        transform: none;
     }
-
-    /*  isa fter because css overwrite  */
-    #notification_style2 {
-        width: 20vw;
-    }
-
-    #notification_style3 {
-        width: 20vw;
-    }
-
-    #notification_style4 {
-        width: 20vw;
+    #notification_style1 .notifbody,#notification_style2 .notifbody,#notification_style3 .notifbody,#notification_style4 .notifbody{
+        height: 65%;
     }
 }

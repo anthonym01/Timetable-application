@@ -1,5 +1,6 @@
 {
   "name": "timetable",
+  "productName": "Timetable",
   "version": "1.8.0",
   "description": "timetable app",
   "main": "main.js",
@@ -9,7 +10,7 @@
     "build": "",
     "package-mac": "electron-packager ./ --overwrite --platform=darwin --arch=x64 --icon=assets/icons/icon.icns --prune=true --out=release-builds",
     "package-win": "electron-packager ./ --overwrite --asar=true --platform=win32 --arch=x64 --icon=assets/icons/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Timetable\"",
-    "package-linux": "electron-packager ./ --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/icon.png --prune=true --out=release-builds"
+    "package-linux": "electron-packager ./ timetable-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/icon.png --prune=true --out=release-builds"
   },
   "icon": "assets/icons/icon.ico",
   "displayName": "Timetable",
@@ -19,11 +20,13 @@
   "devDependencies": {
     "asar": "^1.0.0",
     "electron": "^8.1.0",
-    "electron-packager": "^13.1.1"
+    "electron-packager": "^13.1.1",
+    "electron-winstaller": "^4.0.0"
   },
   "dependencies": {
     "electron-window-state": "^5.0.3",
     "fs-extra": "^8.1.0",
-    "fse": "^4.0.1"
+    "fse": "^4.0.1",
+    "rm": "^0.1.8"
   }
 }

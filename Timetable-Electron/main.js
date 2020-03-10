@@ -1,5 +1,5 @@
 const electron = require('electron');//includes electron dependency
-const { app, BrowserWindow,dialog } = electron//dialogue is remote
+const { app, BrowserWindow, dialog } = electron//dialogue is remote
 
 const path = require('path');//path to necessary files
 const url = require('url');//web dependency
@@ -19,7 +19,7 @@ app.on('ready', function () {
 		backgroundColor: '#000000',
 		title: 'Timetable',
 		icon: 'assets/icons/icon.ico',
-		frame: true,
+		frame: false,
 		minWidth: 400,
 		show: true,
 		webPreferences: {
@@ -35,6 +35,7 @@ app.on('ready', function () {
 	}));
 
 	mainWindowState.manage(mainWindow);
+	//require('./menu/mainmenu')
 });
 
 
@@ -44,15 +45,11 @@ app.on('window-all-closed', function () {
 	}
 });//closes all processes
 
-exports.closeapp = () => {
-	app.quit()
-}
+exports.closeapp = () => { app.quit() }
 
-exports.minmize_main_window = () => {
-	mainWindow.minimize()
-}
+exports.minmize_main_window = () => { mainWindow.minimize() }
 
-exports.maximize_main_window = function () {
+exports.maximize_main_window = () => {
 	if (mainWindow.isMaximized()) {
 		//minimize
 		mainWindow.restore()
@@ -74,10 +71,6 @@ exports.togglealways_on_top = () => {
 	}
 }
 
-exports.setontop = () => {
-	mainWindow.setAlwaysOnTop(true)
-}
+exports.setontop = () => { mainWindow.setAlwaysOnTop(true) }
 
-exports.setnotontop = () => {
-	mainWindow.setAlwaysOnTop(false)
-}
+exports.setnotontop = () => { mainWindow.setAlwaysOnTop(false) }
