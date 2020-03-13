@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" id="theme" href="css/dark_120.css">
     <link rel="stylesheet" id="nomation" href="">
-    
+
     <script defer type="text/javascript" src="js/index.js" charset="UTF-8"></script>
     <title>Timetable</title>
 </head>
@@ -555,18 +555,15 @@
 
     <!--Setting View-->
     <view id="setting_view">
+        <div class="Setting_title" id="configmngtile">Configuration manager</div>
         <div class="config-manage-pannel">
-            <div class="config-btn-flex">
-                <button id="load-button" class="config-btn">backup config</button>
-                <button id="restore-button" class="config-btn">Restore config</button>
-            </div>
-
-            <div class="alt-location-slector">
-                <input id="pathrepresenter" value="default"></input>
-                <button clsss="config-btn">Save</button>
-                <button clsss="config-btn">default</button>
-                <button id="selectconfiglocationbtn" clsss="config-btn">Select folder</button>
-            </div>
+            <input id="pathrepresenter" value="application storage"
+                title="Location where the application data is being stored"></input>
+            <button class="config_btn" title="Manually save configuration">Save</button>
+            <button class="config_btn" title="use default storage location">Default</button>
+            <button class="config_btn" id="select_btn" title="select storeage location">Select folder</button>
+            <button class="config_btn" title="Backup configration to a file">Backup config</button>
+            <button class="config_btn" title="Restore configuration from a file">Restore config</button>
         </div>
 
         <div class="Setting_title">Theme</div>
@@ -575,11 +572,11 @@
             <div class="selectionbox" id="light_theme_selection">
                 <div class="mincropallet" id="light_pallet">
                     <div class="palletfoot">
-                        <div class="icon appicon" ></div>
-                        <div class="icon book"></div>
+                        <div class="icon appicon"></div>
+                        <div class="icon bookli"></div>
                         <div class="icon gear_inverse"></div>
                     </div>
-                    <table>
+                    <table class="pallet_table">
                         <tr>
                             <td class="maincell"></td class="maincell">
                             <td class="maincell"></td class="maincell">
@@ -646,10 +643,10 @@
                 <div class="mincropallet" id="amoled_pallet">
                     <div class="palletfoot">
                         <div class="icon appicon_inverse"></div>
-                        <div class="icon book"></div>
+                        <div class="icon bookamol"></div>
                         <div class="icon gear"></div>
                     </div>
-                    <table>
+                    <table class="pallet_table">
                         <tr>
                             <td class="maincell"></td class="maincell">
                             <td class="maincell"></td class="maincell">
@@ -712,6 +709,25 @@
                 <div class="selection_title">DARK</div>
             </div>
         </div>
+
+        <div class="Setting_title">Accent color</div>
+        <div class="accent-color-selector">
+            <div class="accent-blob" id="hueinverse-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue0-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue30-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue60-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue90-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue120-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue150-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue180-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue210-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue240-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue270-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue300-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue330-selec" title="select this color"></div>
+
+        </div>
+
         <div class="Setting_title">Alert Style</div>
         <div class="selection_container" id="notification_selector">
             <!-- Container for ALert styles -->
@@ -741,6 +757,7 @@
                 </div>
             </div>
         </div>
+
         <div class="setting_bar" id="hilight_btn" title="toggle hilights">
             <!--Permanently dissabled untill fixed-->
             <div class="Bar_title">Hilights</div>

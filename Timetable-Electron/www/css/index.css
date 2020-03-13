@@ -190,9 +190,9 @@
     /*  Loading Screen  */
     #Loading {
         position: fixed;
-        top: 30px;
+        top: 0;
         right: 0;
-        height: calc(100vh - 30px);
+        height: 100vh;
         width: 100vw;
         z-index: 500;
         display: block;
@@ -1067,45 +1067,67 @@
         overflow-y: scroll;
     }
 
-    .config-manage-pannel{
+    .config-manage-pannel {
+        position: relative;
+        width: 100%;
+        height: 12vh;
+        margin-bottom: 1vh;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+
+    #configmngtile {
         position: relative;
         width: 100%;
         height: 6vh;
-        margin-top:1vh;
-        margin-bottom: 1vh;
+        padding-bottom: 2vh;
+        margin-top: 0;
+        margin-bottom: 0;
+        border: none;
     }
-    .config-btn-flex{/* spaces and positions buttons */
-        position: absolute;
-        top:0;
-        left:0;
-        height: 6vh;
-        width: 50%;
-        display: flex;
-        justify-content: space-evenly;
-    }
-    .config-btn{
+
+    .config_btn {
         position: relative;
         height: 5vh;
-        width: auto;
+        width: 20%;
+        padding: 1vh;
         margin-top: 0.5vh;
         white-space: nowrap;
         font-size: 3vh;
         border-radius: 1.5vh;
+        overflow: hidden;
+        outline: none;
+        cursor: pointer;
     }
-    .alt-location-slector{
-        position: absolute;
-        top:0;
-        right:0;
-        width:50%;
-        height: 12vh;
+
+    #pathrepresenter {
+        position: relative;
+        margin-top: 0.5vh;
+        width: 50%;
+        height: 3vh;
+        border-radius: 1.5vh;
+        padding: 1vh;
+        font-size: 3vh;
+    }
+
+    .accent-color-selector {
+        position: relative;
+        height: fit-content;
         display: flex;
-        justify-content: space-evenly;
+        flex-wrap: wrap;
+        justify-content: space-around;
     }
-    #pathrepresenter{
-        position: absolute;
-        top:0.5vh;
-        width: 100%;
-        height:5vh;
+
+    .accent-blob {
+        position: relative;
+        height: 7vh;
+        width: 7vh;
+        /* Default colors */
+        background-color: #ffffff;
+        color: black;
+        border-radius: 2vh;
+        cursor: pointer;
     }
 
     .Setting_title {
@@ -1172,7 +1194,7 @@
         transition: box-shadow 500ms;
     }
 
-    .mincropallet table {
+    .pallet_table {
         position: absolute;
         top: 0;
         right: 0;
@@ -1223,7 +1245,7 @@
         border: 1px solid #000000;
     }
 
-    .mincropallet .palletfoot {
+    .palletfoot {
         position: absolute;
         bottom: 0;
         right: 0;
@@ -1234,6 +1256,7 @@
     }
 
     .palletfoot .icon {
+        position: relative;
         height: 100%;
         width: 33%;
         background-size: contain;
@@ -1299,9 +1322,7 @@
         width: 4.6vh;
         border-radius: 50%;
         z-index: 1;
-        transform: translate(0px
-                /*-39px*/
-                , 0);
+        transform: translate(0px, 0);
         transition: transform, background-color;
         transition-duration: 300ms;
     }
@@ -1573,7 +1594,10 @@
     }
 
     /* after because overwrite */
-    #notification_style1,#notification_style2,#notification_style3,#notification_style4 {
+    #notification_style1,
+    #notification_style2,
+    #notification_style3,
+    #notification_style4 {
         width: 40vw;
         position: absolute;
         top: 2vh;
@@ -1581,7 +1605,11 @@
         left: 5vw;
         transform: none;
     }
-    #notification_style1 .notifbody,#notification_style2 .notifbody,#notification_style3 .notifbody,#notification_style4 .notifbody{
+
+    #notification_style1 .notifbody,
+    #notification_style2 .notifbody,
+    #notification_style3 .notifbody,
+    #notification_style4 .notifbody {
         height: 50%;
     }
 
@@ -1723,6 +1751,7 @@
         position: relative;
         height: 9vh;
         width: 100%;
+        float: none;
         background-size: contain;
         background-repeat: no-repeat;
         cursor: pointer;
@@ -2600,18 +2629,35 @@
         transition: box-shadow 500ms;
     }
 
-    .mincropallet .palletfoot {
+    .palletfoot {
         position: absolute;
         top: 0;
+        right: unset;
+        bottom: unset;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
         left: 0;
         height: 100%;
         width: 5vh;
     }
 
-    .mincropallet table {
+    .palletfoot .icon {
+        position: relative;
+        height: 5vh;
+        width: 5vh;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .pallet_table {
         position: absolute;
         top: 0;
-        right: 0;
+        right: 0 !important;
+        margin-left: 5vh;
+        left: unset;
+        bottom: unset;
         height: 100%;
         width: calc(100% - 5vh);
         border-collapse: collapse;
@@ -2647,14 +2693,7 @@
         border: 1px solid #000000;
     }
 
-    .palletfoot .icon {
-        position: relative;
-        height: 5vh;
-        width: 5vh;
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
+
 
     .lightcon {
         background-image: url('../img/icon.webp');
@@ -2839,7 +2878,10 @@
     }
 
     /* after because overwrite */
-    #notification_style1,#notification_style2,#notification_style3,#notification_style4 {
+    #notification_style1,
+    #notification_style2,
+    #notification_style3,
+    #notification_style4 {
         width: 20vw;
         position: absolute;
         top: 2.5vh;
@@ -2847,7 +2889,11 @@
         left: 1vw;
         transform: none;
     }
-    #notification_style1 .notifbody,#notification_style2 .notifbody,#notification_style3 .notifbody,#notification_style4 .notifbody{
+
+    #notification_style1 .notifbody,
+    #notification_style2 .notifbody,
+    #notification_style3 .notifbody,
+    #notification_style4 .notifbody {
         height: 65%;
     }
 }

@@ -1,10 +1,9 @@
 
 const main = require('electron').remote.require('./main');//acess export functions in main
 const { dialog } = require('electron').remote;
+const path = require('path');//path to necessary files
 const fs = require('fs');
-const fse = require('fs-extra')
-/*const path = require('path');*/
-/*const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]*/
+const fse = require('fs-extra');
 
 window.addEventListener('load', function () {//window loads
     console.warn('Running from:', process.resourcesPath)
@@ -35,7 +34,7 @@ let config = {
     data: {
         key: "TT01",
         theme: "dark",//sets theme
-        color_pallet: 210,//blue by default
+        colorpallet: 210,
         backgroundimg: null,
         hilight_engine: false,//hilight engine whether to run or not
         animation: true,
@@ -43,7 +42,7 @@ let config = {
         empty_rows: false,
         notification_type: 3,
         table_selected: 1,
-        always_on_top:false,
+        always_on_top: false,
         table_details: [// Details about different tables
             { purpose: "table #1", deleted: false, identifier: 1 },
             /*{ purpose: "table #2", deleted: false, identifier: 2 },
@@ -90,20 +89,20 @@ let config = {
         management: false,
     },
     configlocation: "TT001_cfg",//not strict, can be anything. Think of it as a file name/path
-    save:async function () {//Save the config file
+    save: async function () {//Save the config file
         console.trace('Save function Triggered')
         if (config.baseconfig.use_alt_storage == true) {
             //save to alternate storage location
             fse.ensureDirSync(config.baseconfig.alt_location.toString())//endure the directory exists
             //fse.ensureFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json")//Ensure the file exists
             fs.writeFile(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", JSON.stringify(config.data), 'utf8', function (err) {// acync incase drive being writen to is garbage
-                if(err){
+                if (err) {
                     alert('File could not be saved to: ' + config.baseconfig.alt_location.toString() + "/Timetableconfig.json" + err.message);
-                }else{
+                } else {
                     console.log('config saved to: ' + config.baseconfig.alt_location.toString())
                 }
             })
-            
+
         } else {
             console.log('config saved to application storage')
         }
@@ -151,7 +150,7 @@ let config = {
     },
     selectlocation: function () {
         var path = dialog.showOpenDialogSync({ properties: ['createDirectory', 'openDirectory'],/* defaultPath: config.baseconfig.alt_location*/ })
-        if(path!=undefined){
+        if (path != undefined) {
             console.log('Alternate configuration path :', path)
             config.baseconfig.use_alt_storage = true
             config.baseconfig.alt_location = path
@@ -174,8 +173,8 @@ let config = {
                 console.warn('No file exists here, config from this app is used')
                 config.save()//to create the file
             }
-        }else{
-            notify.new('Error','no folder selected, click to try again',function(){config.selectlocation()})
+        } else {
+            notify.new('Error', 'no folder selected, click to try again', function () { config.selectlocation() })
         }
     },
     usedefault: function () {//use default config location
@@ -195,18 +194,6 @@ let config = {
             this.data.always_on_top = false;
             configisvalid = false;
             console.log('"always_on_top" was found to not exist and was set to default');
-        }
-
-        if (typeof (this.data.color_pallet) !== 'undefined') {
-            if (this.data.color_pallet == undefined || null) {//check db existance
-                this.data.color_pallet = 0;
-                configisvalid = false;
-                console.log('"color_pallet" was found to be invalid and was set to default');
-            }
-        } else {
-            this.data.color_pallet = 0;
-            configisvalid = false;
-            console.log('"color_pallet" was found to not exist and was set to default');
         }
 
         if (typeof (this.data.table1_db) !== 'undefined') {
@@ -284,13 +271,13 @@ let config = {
         }
 
         if (typeof (this.data.theme) == 'undefined') {
-            this.data.theme = "light";
+            this.data.theme = "dark";
             configisvalid = false;
             console.log('"theme" was found to not exist and was set to default');
         }
         else {
             if (this.data.theme == undefined || null) {
-                this.data.theme = "light";
+                this.data.theme = "dark";
                 configisvalid = false;
                 console.log('"theme" was found to not exist and was set to default');
             }
@@ -1694,54 +1681,49 @@ let UI = {
     initalize: function () {
         console.log('UI Initalize');
         //Remote triggers for windowstate management
-        if(config.data.always_on_top == true){
+        if (config.data.always_on_top == true) {
             main.setontop()
             document.getElementById('always_on_top_btn').classList = "statusbtn_active"
-        }else{
+        } else {
             main.setnotontop()
         }
 
-        document.getElementById('mainx_btn').addEventListener('click',function(){
+        document.getElementById('mainx_btn').addEventListener('click', function () {
             main.closeapp()
         })
-        document.getElementById('maximize_btn').addEventListener('click',function(){
+
+        document.getElementById('maximize_btn').addEventListener('click', function () {
             var state = main.maximize_main_window()
-            if(state == true){
+            if (state == true) {
                 //is maximized
                 document.getElementById('resise_constraint').style.display = "none"
-            }else{
+            } else {
                 //is not maximized
                 document.getElementById('resise_constraint').style.display = "block"
             }
-            console.log('Window maximized :',state);
+            console.log('Window maximized :', state);
         })
-        document.getElementById('minimize_btn').addEventListener('click',function(){
+
+        document.getElementById('minimize_btn').addEventListener('click', function () {
             main.minmize_main_window()
         })
-        document.getElementById('always_on_top_btn').addEventListener('click',function(){
+
+        document.getElementById('always_on_top_btn').addEventListener('click', function () {
             var state = main.togglealways_on_top()
-            if(state == true){
+            if (state == true) {
                 //is always on top
                 document.getElementById('always_on_top_btn').classList = "statusbtn_active"
                 config.data.always_on_top = true;
                 config.save()
-            }else{
+            } else {
                 //is not always on top
                 document.getElementById('always_on_top_btn').classList = "statusbtn"
                 config.data.always_on_top = false;
                 config.save()
             }
-            console.log('Window always on top :',state);
+            console.log('Window always on top :', state);
         })
 
-        //theme
-        switch (config.data.theme) {
-            case 'dark': this.setting.theme.set_dark(); break;
-            case 'light': this.setting.theme.set_light(); break;
-            default:
-                console.error('Theme error :', config.data.theme);
-                this.setting.theme.set_light();
-        }
         document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
         document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
         document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
@@ -1760,8 +1742,6 @@ let UI = {
         });
 
         //select notification 
-        document.getElementById('dark_theme_selection').addEventListener('click', this.setting.theme.set_dark)
-        document.getElementById('light_theme_selection').addEventListener('click', this.setting.theme.set_light)
         document.getElementById('notification_style1').addEventListener('click', this.setting.notification.set_1)
         document.getElementById('notification_style2').addEventListener('click', this.setting.notification.set_2)
         document.getElementById('notification_style3').addEventListener('click', this.setting.notification.set_3)
@@ -1799,18 +1779,51 @@ let UI = {
         if (config.baseconfig.use_alt_storage == true) {
             document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
         }
-        document.getElementById('pathrepresenter').addEventListener('click', function () {//Select the configuration location
+
+        //Manual config handlers
+        document.getElementById('select_btn').addEventListener('click', function () {//Select the configuration location
             config.selectlocation()
-            document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
+            document.getElementById('pathrepresenter').value = path.join(config.baseconfig.alt_location.toString(), "Timetableconfig.json")
             config.properties.changed = true
         })
 
-
+        //Set switch positions
         this.setting.hilight.setpostition();
         this.setting.animation.setpostition();
         this.setting.tiles.setpostition();
         this.setting.Row.setpostition();
         this.setting.wallpaper.set_wallpaper()
+
+        //theme and pallet
+        this.setting.set_theme();
+        document.getElementById('dark_theme_selection').addEventListener('click', function () {
+            config.data.theme = "dark";
+            config.save();
+            UI.setting.set_theme();
+        })
+        document.getElementById('light_theme_selection').addEventListener('click', function () {
+            config.data.theme = "light"
+            config.save();
+            UI.setting.set_theme();
+        })
+        document.getElementById('hueinverse-selec').addEventListener('click', function () { hue_selec(-1) })
+        document.getElementById('hue0-selec').addEventListener('click', function () { hue_selec(0) })
+        document.getElementById('hue30-selec').addEventListener('click', function () { hue_selec(30) })
+        document.getElementById('hue60-selec').addEventListener('click', function () { hue_selec(60) })
+        document.getElementById('hue90-selec').addEventListener('click', function () { hue_selec(90) })
+        document.getElementById('hue120-selec').addEventListener('click', function () { hue_selec(120) })
+        document.getElementById('hue150-selec').addEventListener('click', function () { hue_selec(150) })
+        document.getElementById('hue180-selec').addEventListener('click', function () { hue_selec(180) })
+        document.getElementById('hue210-selec').addEventListener('click', function () { hue_selec(210) })
+        document.getElementById('hue240-selec').addEventListener('click', function () { hue_selec(240) })
+        document.getElementById('hue270-selec').addEventListener('click', function () { hue_selec(270) })
+        document.getElementById('hue300-selec').addEventListener('click', function () { hue_selec(300) })
+        document.getElementById('hue330-selec').addEventListener('click', function () { hue_selec(330) })
+        function hue_selec(hue) {
+            config.data.colorpallet = hue;
+            config.save()
+            UI.setting.set_theme();
+        }
     },
     navigate: {
         BACK: function () {//Back button handle
@@ -1902,21 +1915,57 @@ let UI = {
         },
     },
     setting: {
-        theme: {
-            set_dark: function () {
-                console.warn('Theme set Dark');
-                document.getElementById('theme').href = "css/dark_120.css"
-                config.data.theme = 'dark'
+        set_theme: function () {
+            if (config.data.theme == "dark") {
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = true;
-            },
-            set_light: function () {
-                console.warn('Theme set Light');
-                document.getElementById('theme').href = "css/light-theme.css"
-                config.data.theme = 'light'
+                console.warn('Theme set Dark');
+                switch (config.data.colorpallet) {
+                    case -1: document.getElementById('theme').href = "css/dark_inverse.css"; break;
+                    case 0: document.getElementById('theme').href = "css/dark_0.css"; break;
+                    case 30: document.getElementById('theme').href = "css/dark_30.css"; break;
+                    case 60: document.getElementById('theme').href = "css/dark_60.css"; break;
+                    case 90: document.getElementById('theme').href = "css/dark_90.css"; break;
+                    case 120: document.getElementById('theme').href = "css/dark_120.css"; break;
+                    case 150: document.getElementById('theme').href = "css/dark_150.css"; break;
+                    case 180: document.getElementById('theme').href = "css/dark_180.css"; break;
+                    case 210: document.getElementById('theme').href = "css/dark_210.css"; break;
+                    case 240: document.getElementById('theme').href = "css/dark_240.css"; break;
+                    case 270: document.getElementById('theme').href = "css/dark_270.css"; break;
+                    case 300: document.getElementById('theme').href = "css/dark_300.css"; break;
+                    case 330: document.getElementById('theme').href = "css/dark_330.css"; break;
+                    default:
+                        console.error('Theme error :', config.data.colorpallet);
+                        document.getElementById('theme').href = "css/dark_210.css";
+                        config.data.colorpallet = 210;
+                }
+            } else if (config.data.theme == "light") {
                 document.getElementById('light_selection_put').checked = true;
                 document.getElementById('dark_selection_put').checked = false;
-            },
+                console.warn('Theme set Light');
+                switch (config.data.colorpallet) {
+                    case -1: document.getElementById('theme').href = "css/light_inverse.css"; break;
+                    case 0: document.getElementById('theme').href = "css/light_0.css"; break;
+                    case 30: document.getElementById('theme').href = "css/light_30.css"; break;
+                    case 60: document.getElementById('theme').href = "css/light_60.css"; break;
+                    case 90: document.getElementById('theme').href = "css/light_90.css"; break;
+                    case 120: document.getElementById('theme').href = "css/light_120.css"; break;
+                    case 150: document.getElementById('theme').href = "css/light_150.css"; break;
+                    case 180: document.getElementById('theme').href = "css/light_180.css"; break;
+                    case 210: document.getElementById('theme').href = "css/light_210.css"; break;
+                    case 240: document.getElementById('theme').href = "css/light_240.css"; break;
+                    case 270: document.getElementById('theme').href = "css/light_270.css"; break;
+                    case 300: document.getElementById('theme').href = "css/light_300.css"; break;
+                    case 330: document.getElementById('theme').href = "css/light_330.css"; break;
+                    default:
+                        console.error('Theme error :', config.data.colorpallet);
+                        document.getElementById('theme').href = "css/light_210.css";
+                        config.data.colorpallet = 210;
+                }
+            } else {
+                //theme is invalid
+            }
+
         },
         notification: {
             set_1: function () {

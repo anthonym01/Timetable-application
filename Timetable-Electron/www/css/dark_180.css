@@ -10,15 +10,15 @@
 
 @keyframes glowrow {
     0% {
-        background-color: hsla(120, 100%, 50%, 0.8)
+        background-color: hsla(180, 100%, 50%, 0.8)
     }
 
     50% {
-        background-color: hsla(120, 100%, 28%, 0)
+        background-color: hsla(180, 100%, 28%, 0)
     }
 
     100% {
-        background-color: hsla(120, 100%, 50%, 0.8)
+        background-color: hsla(180, 100%, 50%, 0.8)
     }
 }
 
@@ -44,7 +44,7 @@
 
 /*scrollbar thumb*/
 ::-webkit-scrollbar-thumb:active {
-    background: hsl(120, 100%, 30%);
+    background: hsl(180, 100%, 30%);
 }
 
 body {
@@ -53,7 +53,7 @@ body {
 }
 
 .title_bar {
-    background-image: linear-gradient(90deg, hsl(120, 0%, 0%), hsl(120, 100%, 50%), hsl(120, 0%, 0%));
+    background-image: linear-gradient(90deg, hsl(180, 0%, 0%), hsl(180, 100%, 50%), hsl(180, 0%, 0%));
 }
 
 .statusbtn {
@@ -66,7 +66,7 @@ body {
 
 .statusbtn_active,
 .statusbtn:active {
-    background-color: hsl(120, 100%, 30%);
+    background-color: hsl(180, 100%, 30%);
     transition: background-color 80ms;
 }
 
@@ -80,7 +80,7 @@ body {
 }
 
 #maximize_btn:active::after {
-    background-color: hsl(120, 100%, 30%);
+    background-color: hsl(180, 100%, 30%);
 }
 
 #maximize_btn::before {
@@ -126,7 +126,7 @@ body {
 }
 
 #loadprogress {
-    background-color: hsl(120, 100%, 50%);
+    background-color: hsl(180, 100%, 50%);
 }
 
 /* Main navigation buttons */
@@ -148,7 +148,7 @@ body {
 }
 
 .menubtn_active {
-    background-color: hsl(120, 100%, 35%) !important
+    background-color: hsl(180, 100%, 35%) !important
 }
 
 .menubtn #setting_btn_icon {
@@ -165,12 +165,12 @@ body {
 
 .menubtn #manage_btn_icon {
     /*  Manager button  (the little bookli,.bookamol) */
-    background-image: url('../img/manage-120.webp');
+    background-image: url('../img/manage-180.webp');
     /*filter: invert(100%);*/
 }
 
 .menubtn_active #manage_btn_icon {
-    background-image: url('../img/manage-open-120.webp');
+    background-image: url('../img/manage-open-180.webp');
 }
 
 .menubtn #table_btn_icon {
@@ -229,7 +229,7 @@ tr {
 }
 
 .glowrow {
-    background-color: hsl(120, 100%, 50%);
+    background-color: hsl(180, 100%, 50%);
     animation: glowrow 4s infinite;
 }
 
@@ -278,7 +278,7 @@ tr {
     /*    Detailed representaion of the data to be managed    */
     background-color: #636363;
     color: #fff;
-    background-image: linear-gradient(120deg, hsl(120, 100%, 50%), hsl(120, 100%, 40%), hsl(120, 100%, 30%), hsl(120, 100%, 20%), hsl(120, 100%, 10%));
+    background-image: linear-gradient(120deg, hsl(180, 100%, 50%), hsl(180, 100%, 40%), hsl(180, 100%, 30%), hsl(180, 100%, 20%), hsl(180, 100%, 10%));
     text-shadow: 0vh 0vh 0.5vh #000;
     border: none;
     transition: background 500ms, color 300ms;
@@ -293,7 +293,7 @@ tr {
 }
 
 .data_button:active {
-    background-image: linear-gradient(120deg, hsl(120, 100%, 100%), hsl(120, 100%, 100%), hsl(120, 100%, 100%), hsl(120, 100%, 100%), hsl(120, 100%, 100%));
+    background-image: linear-gradient(120deg, hsl(180, 100%, 100%), hsl(180, 100%, 100%), hsl(180, 100%, 100%), hsl(180, 100%, 100%), hsl(180, 100%, 100%));
 }
 
 .data_button:active .plusimg {
@@ -339,7 +339,7 @@ tr {
 
 .data_bar {
     box-shadow: 0vh 0vh 0.5vh 0vh #fff;
-    border-bottom: 1vh solid hsl(120, 100%, 50%);
+    border-bottom: 1vh solid hsl(180, 100%, 50%);
     background-color: #000;
     transition: box-shadow 50ms 0ms, background-color 300ms;
 }
@@ -397,7 +397,7 @@ tr {
 }
 
 .colorslider:focus {
-    border: 0.3vh solid hsl(120, 100%, 50%);
+    border: 0.3vh solid hsl(180, 100%, 50%);
 }
 
 #dataentry_screen input {
@@ -409,7 +409,7 @@ tr {
 
 #dataentry_screen input:focus {
     border: none;
-    border-bottom: 0.5vh solid hsl(120, 100%, 50%);
+    border-bottom: 0.5vh solid hsl(180, 100%, 50%);
     background-color: inherit;
     color: inherit;
     outline: none;
@@ -417,7 +417,7 @@ tr {
 
 #dataentry_screen select:focus {
     /*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
-    border: 0.5vw solid hsl(120, 100%, 50%);
+    border: 0.5vw solid hsl(180, 100%, 50%);
 }
 
 .databtns {
@@ -486,15 +486,14 @@ tr {
 /*  Settinng things */
 .config-manage-pannel,
 #configmngtile {
-    background-color: hsl(120, 100%, 0%);
+    background-color: hsl(180, 100%, 0%);
     background-size: 300%;
     transition: background 500ms;
     text-shadow: 0vh 0vh 0.5vh #000;
 }
 
 .config_btn {
-    /*background-color: hsl(120, 100%, 30%);*/
-    background-image: linear-gradient(120deg, hsl(120, 100%, 50%), hsl(120, 100%, 40%), hsl(120, 100%, 30%), hsl(120, 100%, 20%), hsl(120, 100%, 10%));
+    background-image: linear-gradient(120deg, hsl(180, 100%, 50%), hsl(180, 100%, 40%), hsl(180, 100%, 30%), hsl(180, 100%, 20%), hsl(180, 100%, 10%));
     color: white;
     text-shadow: 0vh 0vh 0.5vh #000;
     border: none;
@@ -511,7 +510,7 @@ tr {
 }
 
 .config_btn:active {
-    background-image: linear-gradient(120deg, hsl(120, 100%, 100%), hsl(120, 100%, 100%), hsl(120, 100%, 100%), hsl(120, 100%, 100%), hsl(120, 100%, 100%));
+    background-image: linear-gradient(120deg, hsl(180, 100%, 100%), hsl(180, 100%, 100%), hsl(180, 100%, 100%), hsl(180, 100%, 100%), hsl(180, 100%, 100%));
     color: rgb(0, 0, 0);
     text-shadow: 0vh 0vh 0.5vh rgb(255, 255, 255);
     background-color: #ffffff;
@@ -520,17 +519,17 @@ tr {
 }
 
 #pathrepresenter {
-    background-color: hsl(120, 100%, 0%);
+    background-color: hsl(180, 100%, 0%);
     color: white;
     border: none;
 }
 
 #amoled_pallet {
-    box-shadow: 0vh 0vh 2vh 0vh hsl(120, 100%, 50%)
+    box-shadow: 0vh 0vh 2vh 0vh hsl(180, 100%, 50%)
 }
 
 #dark_selection_put {
-    border: 1px solid hsl(120, 100%, 50%);
+    border: 1px solid hsl(180, 100%, 50%);
 }
 
 .appicon {
@@ -542,7 +541,7 @@ tr {
 }
 
 .bookli,.bookamol {
-    background-image: url('../img/manage-120.webp');
+    background-image: url('../img/manage-180.webp');
 }
 
 .gear {
@@ -559,7 +558,7 @@ tr {
 }
 
 .selcetion_put:checked {
-    background-color: hsl(120, 100%, 50%);
+    background-color: hsl(180, 100%, 50%);
 }
 
 .selcetion_put:checked::after {
@@ -567,7 +566,7 @@ tr {
 }
 
 .notification_pallet_active {
-    box-shadow: 0vh 0vh 2vh 0vh hsl(120, 100%, 50%)
+    box-shadow: 0vh 0vh 2vh 0vh hsl(180, 100%, 50%)
 }
 
 #hue0-selec {
@@ -588,7 +587,6 @@ tr {
 
 #hue120-selec {
     background-image: linear-gradient(120deg, hsl(120, 100%, 50%), hsl(120, 100%, 20%));
-    box-shadow: 0vh 0vh 2vh 0.5vh hsl(120, 100%, 50%)
 }
 
 #hue150-selec {
@@ -596,7 +594,8 @@ tr {
 }
 
 #hue180-selec {
-    background-image: linear-gradient(120deg, hsl(180, 100%, 50%), hsl(180, 100%, 20%))
+    background-image: linear-gradient(120deg, hsl(180, 100%, 50%), hsl(180, 100%, 20%));
+    box-shadow: 0vh 0vh 2vh 0.5vh hsl(180, 100%, 50%)
 }
 
 #hue210-selec {
@@ -616,7 +615,7 @@ tr {
 }
 
 #hue330-selec {
-    background-image: linear-gradient(120deg, hsl(330, 100%, 50%), hsl(330, 100%, 20%))
+    background-image: linear-gradient(120deg, hsl(330, 100%, 50%), hsl(330, 100%, 20%));
 }
 
 /* Switches */
@@ -629,7 +628,7 @@ tr {
 }
 
 .switch_container_active .switch {
-    background-color: hsl(120, 100%, 50%)
+    background-color: hsl(180, 100%, 50%)
 }
 
 .switch_container_dissabled {
@@ -642,7 +641,7 @@ tr {
 }
 
 .switch_container_dissabled .switch {
-    background-color: hsl(120, 50%, 50%)
+    background-color: hsl(180, 50%, 50%)
 }
 
 /* Notification colors*/
@@ -678,7 +677,7 @@ tr {
 
 .notification_style2,
 .notification_style3 {
-    border-left: 0.5vw solid hsl(120, 100%, 50%);
+    border-left: 0.5vw solid hsl(180, 100%, 50%);
     border-top: none;
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
