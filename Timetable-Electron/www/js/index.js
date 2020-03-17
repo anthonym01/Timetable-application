@@ -1977,6 +1977,7 @@ let UI = {
                     set_dark();
                 }
             }
+            
             function set_dark() {
                 switch (config.data.colorpallet) {
                     case -1:
@@ -2037,6 +2038,7 @@ let UI = {
                         config.data.colorpallet = 210;
                 }
             }
+
             function set_light() {
                 switch (config.data.colorpallet) {
                     case -1:

@@ -404,7 +404,9 @@ tr {
     /*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
     background-color: #000;
 }
-
+.select_container {
+    border: 0.3vh solid #fff
+}
 .colorslider:focus {
     border: 0.3vh solid hsl(150, 100%, 50%);
 }

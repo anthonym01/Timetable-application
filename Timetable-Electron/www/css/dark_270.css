@@ -680,7 +680,7 @@ tr {
 }
 
 .notification_style1 .title::before,
-.notification_style2 .title::before.title_bar
+.notification_style2 .title::before,
 .notification_style3 .title::before,
 .notification_style4 .title::before {
     background-color: hsl(270, 100%, 50%);

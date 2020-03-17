@@ -1,5 +1,5 @@
 const electron = require('electron');//includes electron dependency
-const { app, BrowserWindow, dialog } = electron//dialogue is remote
+const { app, BrowserWindow, dialog, screen } = electron//dialogue is remote
 
 const path = require('path');//path to necessary files
 const url = require('url');//web dependency
@@ -8,7 +8,6 @@ const windowStateKeeper = require('electron-window-state');//preserves the windo
 let mainWindow;//defines the window as an abject
 
 app.on('ready', function () {
-	console.warn('app ready')
 	const { screenwidth, screenheight } = electron.screen.getPrimaryDisplay().workAreaSize //gets screen size and sets it to height and width
 	let mainWindowState = windowStateKeeper({ defaultWidth: screenwidth, defaultHeight: screenheight });
 	mainWindow = new BrowserWindow({
@@ -19,9 +18,9 @@ app.on('ready', function () {
 		backgroundColor: '#000000',
 		title: 'Timetable',
 		icon: 'assets/icons/icon.ico',
-		frame: true,
+		frame: false,
 		minWidth: 400,
-		show: true,
+		show: false,
 		webPreferences: {
 			devTools: true,
 			nodeIntegration: true,
@@ -35,8 +34,9 @@ app.on('ready', function () {
 	}));
 
 	mainWindowState.manage(mainWindow);
-	//require('./menu/mainmenu')
+
 });
+
 
 
 app.on('window-all-closed', function () {
