@@ -18,7 +18,7 @@ app.on('ready', function () {
 		backgroundColor: '#000000',
 		title: 'Timetable',
 		icon: 'assets/icons/icon.ico',
-		frame: false,
+		frame: true,
 		minWidth: 400,
 		show: false,
 		webPreferences: {

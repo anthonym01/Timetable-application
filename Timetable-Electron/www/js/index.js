@@ -1681,6 +1681,14 @@ let manage = {
 let UI = {
     initalize: function () {
         console.log('UI Initalize');
+        //Action bar handlers (look about touch triggers)
+        document.getElementById('action_bar').addEventListener('mouseover',function(){
+            document.getElementById('action_bar').className="Action_bar_active";
+        })
+        document.getElementById('action_bar').addEventListener('mouseout',function(){
+            document.getElementById('action_bar').className="Action_bar";
+        })
+
         //Remote triggers for windowstate management
         if (config.data.always_on_top == true) {
             main.setontop()
@@ -1927,7 +1935,7 @@ let UI = {
                 document.getElementById('manage_btn').className = "menubtn";
                 document.getElementById('table_btn').className = "menubtn_active";
             }
-
+            document.getElementById('action_bar').className="Action_bar";
         },
         MANAGE: function () {
             console.log('MANAGE navigation started');
@@ -1940,6 +1948,7 @@ let UI = {
             document.getElementById('setting_btn').className = "menubtn";
             document.getElementById('manage_btn').className = "menubtn_active";
             document.getElementById('table_btn').className = "menubtn";
+            document.getElementById('action_bar').className="Action_bar";
         },
         SETTING: function () {
             console.log('SETTING navigation started');
@@ -1952,6 +1961,7 @@ let UI = {
             document.getElementById('setting_btn').className = "menubtn_active";
             document.getElementById('manage_btn').className = "menubtn";
             document.getElementById('table_btn').className = "menubtn";
+            document.getElementById('action_bar').className="Action_bar";//Force menu to close
         },
     },
     setting: {

@@ -249,7 +249,7 @@
         z-index: 100;
     }
 
-    .Action_bar {
+    .Action_bar,.Action_bar_active {
         /* The body of the Footer   */
         position: fixed;
         bottom: 0;
@@ -1732,7 +1732,7 @@
     }
 
     /*  Action bar */
-    .Action_bar {
+    .Action_bar,.Action_bar_active {
         /* The Menubar on the right of the screen */
         position: fixed;
         top: 30px;
@@ -1746,9 +1746,8 @@
         background-color: #000000;
         transition: width 80ms;
     }
-
-    .Action_bar:hover {
-        width: 50vh;
+    .Action_bar_active{
+        width: 50vh!important;
         transition: width 400ms;
     }
 
@@ -1794,7 +1793,7 @@
         white-space: nowrap;
     }
 
-    .Action_bar:hover .menu_txt {
+    .Action_bar_active .menu_txt {
         display: block;
         opacity: 1;
         height: 7vh;
