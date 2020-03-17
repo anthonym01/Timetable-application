@@ -1,1 +1,6 @@
-* {transition: none!important;animation: none!important;}/* no animations important as frik */
+*/*All... everything, every eliment/tag*/ {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* no animations !important is important */

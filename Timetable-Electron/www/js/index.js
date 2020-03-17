@@ -33,8 +33,8 @@ window.addEventListener('load', function () {//window loads
 let config = {
     data: {
         key: "TT01",
-        theme: "dark",//sets theme
-        colorpallet: 210,
+        theme: "timebased",//sets theme, defaults to time based
+        themetimes: { sunrise: "", sunset: "" },
         backgroundimg: null,
         hilight_engine: false,//hilight engine whether to run or not
         animation: true,
@@ -1258,6 +1258,7 @@ let manage = {
 
             //assign a color
             tempblock.style.borderColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+            tempblock.style.boxShadow = "0vh 0vh 0.5vh 0vh hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
 
             //build menu
             let sub_optionbar = document.createElement('div');
@@ -1806,19 +1807,58 @@ let UI = {
             config.save();
             UI.setting.set_theme();
         })
-        document.getElementById('hueinverse-selec').addEventListener('click', function () { hue_selec(-1) })
-        document.getElementById('hue0-selec').addEventListener('click', function () { hue_selec(0) })
-        document.getElementById('hue30-selec').addEventListener('click', function () { hue_selec(30) })
-        document.getElementById('hue60-selec').addEventListener('click', function () { hue_selec(60) })
-        document.getElementById('hue90-selec').addEventListener('click', function () { hue_selec(90) })
-        document.getElementById('hue120-selec').addEventListener('click', function () { hue_selec(120) })
-        document.getElementById('hue150-selec').addEventListener('click', function () { hue_selec(150) })
-        document.getElementById('hue180-selec').addEventListener('click', function () { hue_selec(180) })
-        document.getElementById('hue210-selec').addEventListener('click', function () { hue_selec(210) })
-        document.getElementById('hue240-selec').addEventListener('click', function () { hue_selec(240) })
-        document.getElementById('hue270-selec').addEventListener('click', function () { hue_selec(270) })
-        document.getElementById('hue300-selec').addEventListener('click', function () { hue_selec(300) })
-        document.getElementById('hue330-selec').addEventListener('click', function () { hue_selec(330) })
+        document.getElementById('hueinverse-selec').addEventListener('click', function () {
+            hue_selec(-1)
+            console.log('hue change -1')
+        })
+        document.getElementById('hue0-selec').addEventListener('click', function () {
+            hue_selec(0)
+            console.log('%chue change 0', "color: hsl(0,100%,50%)")
+        })
+        document.getElementById('hue30-selec').addEventListener('click', function () {
+            hue_selec(30)
+            console.log('%chue change 30', "color: hsl(30,100%,50%)")
+        })
+        document.getElementById('hue60-selec').addEventListener('click', function () {
+            hue_selec(60)
+            console.log('%chue change 60', "color: hsl(60,100%,50%)")
+        })
+        document.getElementById('hue90-selec').addEventListener('click', function () {
+            hue_selec(90)
+            console.log('%chue change 90', "color: hsl(90,100%,50%)")
+        })
+        document.getElementById('hue120-selec').addEventListener('click', function () {
+            hue_selec(120)
+            console.log('%chue change 120', "color: hsl(120,100%,50%)")
+        })
+        document.getElementById('hue150-selec').addEventListener('click', function () {
+            hue_selec(150)
+            console.log('%chue change 150', "color: hsl(150,100%,50%)")
+        })
+        document.getElementById('hue180-selec').addEventListener('click', function () {
+            hue_selec(180)
+            console.log('%chue change 180', "color: hsl(180,100%,50%)")
+        })
+        document.getElementById('hue210-selec').addEventListener('click', function () {
+            hue_selec(210)
+            console.log('%chue change 210', "color: hsl(210,100%,50%)")
+        })
+        document.getElementById('hue240-selec').addEventListener('click', function () {
+            hue_selec(240)
+            console.log('%chue change 240', "color: hsl(240,100%,50%)")
+        })
+        document.getElementById('hue270-selec').addEventListener('click', function () {
+            hue_selec(270)
+            console.log('%chue change 270', "color: hsl(270,100%,50%)")
+        })
+        document.getElementById('hue300-selec').addEventListener('click', function () {
+            hue_selec(300)
+            console.log('%chue change 300', "color: hsl(300,100%,50%)")
+        })
+        document.getElementById('hue330-selec').addEventListener('click', function () {
+            hue_selec(330)
+            console.log('%chue change 330', "color: hsl(330,100%,50%)")
+        })
         function hue_selec(hue) {
             config.data.colorpallet = hue;
             config.save()
@@ -1916,56 +1956,147 @@ let UI = {
     },
     setting: {
         set_theme: function () {
+            console.log('Set theme')
             if (config.data.theme == "dark") {
+                set_dark()
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = true;
-                console.warn('Theme set Dark');
+            } else if (config.data.theme == "light") {
+                set_light()
+                document.getElementById('light_selection_put').checked = true;
+                document.getElementById('dark_selection_put').checked = false;
+            } else if (config.data.theme == "timebased") {
+                //do some quick maths and set a theme
+                var now = new Date().getHours();
+                console.warn('Time based theme', now)
+                if (now > 6 && now < 17) {
+                    //day time
+                    set_light();
+                } else if (now > 16 || now < 7) {
+                    //night time
+                    set_dark();
+                }
+            }
+            function set_dark() {
                 switch (config.data.colorpallet) {
-                    case -1: document.getElementById('theme').href = "css/dark_inverse.css"; break;
-                    case 0: document.getElementById('theme').href = "css/dark_0.css"; break;
-                    case 30: document.getElementById('theme').href = "css/dark_30.css"; break;
-                    case 60: document.getElementById('theme').href = "css/dark_60.css"; break;
-                    case 90: document.getElementById('theme').href = "css/dark_90.css"; break;
-                    case 120: document.getElementById('theme').href = "css/dark_120.css"; break;
-                    case 150: document.getElementById('theme').href = "css/dark_150.css"; break;
-                    case 180: document.getElementById('theme').href = "css/dark_180.css"; break;
-                    case 210: document.getElementById('theme').href = "css/dark_210.css"; break;
-                    case 240: document.getElementById('theme').href = "css/dark_240.css"; break;
-                    case 270: document.getElementById('theme').href = "css/dark_270.css"; break;
-                    case 300: document.getElementById('theme').href = "css/dark_300.css"; break;
-                    case 330: document.getElementById('theme').href = "css/dark_330.css"; break;
+                    case -1:
+                        document.getElementById('theme').href = "css/dark_inverse.css";
+                        console.log('Dark inverse theme');
+                        break;
+                    case 0:
+                        document.getElementById('theme').href = "css/dark_0.css";
+                        console.log('%cDark_0', "color: hsl(0,100%,50%)")
+                        break;
+                    case 30:
+                        document.getElementById('theme').href = "css/dark_30.css";
+                        console.log('%cDark_30', "color: hsl(30,100%,50%)");
+                        break;
+                    case 60:
+                        document.getElementById('theme').href = "css/dark_60.css";
+                        console.log('%cDark_60', "color: hsl(60,100%,50%)");
+                        break;
+                    case 90:
+                        document.getElementById('theme').href = "css/dark_90.css";
+                        console.log('%cDark_90', "color: hsl(90,100%,50%)");
+                        break;
+                    case 120:
+                        document.getElementById('theme').href = "css/dark_120.css";
+                        console.log('%cDark_120', "color: hsl(120,100%,50%)");
+                        break;
+                    case 150:
+                        document.getElementById('theme').href = "css/dark_150.css";
+                        console.log('%cDark_150', "color: hsl(150,100%,50%)");
+                        break;
+                    case 180:
+                        document.getElementById('theme').href = "css/dark_180.css";
+                        console.log('%cDark_180', "color: hsl(180,100%,50%)");
+                        break;
+                    case 210:
+                        document.getElementById('theme').href = "css/dark_210.css";
+                        console.log('%cDark_210', "color: hsl(210,100%,50%)");
+                        break;
+                    case 240:
+                        document.getElementById('theme').href = "css/dark_240.css";
+                        console.log('%cDark_240', "color: hsl(240,100%,50%)");
+                        break;
+                    case 270:
+                        document.getElementById('theme').href = "css/dark_270.css";
+                        console.log('%cDark_270', "color: hsl(270,100%,50%)");
+                        break;
+                    case 300:
+                        document.getElementById('theme').href = "css/dark_300.css";
+                        console.log('%cDark_300', "color: hsl(300,100%,50%)");
+                        break;
+                    case 330:
+                        document.getElementById('theme').href = "css/dark_330.css";
+                        console.log('%cDark_330', "color: hsl(330,100%,50%)");
+                        break;
                     default:
                         console.error('Theme error :', config.data.colorpallet);
                         document.getElementById('theme').href = "css/dark_210.css";
                         config.data.colorpallet = 210;
                 }
-            } else if (config.data.theme == "light") {
-                document.getElementById('light_selection_put').checked = true;
-                document.getElementById('dark_selection_put').checked = false;
-                console.warn('Theme set Light');
+            }
+            function set_light() {
                 switch (config.data.colorpallet) {
-                    case -1: document.getElementById('theme').href = "css/light_inverse.css"; break;
-                    case 0: document.getElementById('theme').href = "css/light_0.css"; break;
-                    case 30: document.getElementById('theme').href = "css/light_30.css"; break;
-                    case 60: document.getElementById('theme').href = "css/light_60.css"; break;
-                    case 90: document.getElementById('theme').href = "css/light_90.css"; break;
-                    case 120: document.getElementById('theme').href = "css/light_120.css"; break;
-                    case 150: document.getElementById('theme').href = "css/light_150.css"; break;
-                    case 180: document.getElementById('theme').href = "css/light_180.css"; break;
-                    case 210: document.getElementById('theme').href = "css/light_210.css"; break;
-                    case 240: document.getElementById('theme').href = "css/light_240.css"; break;
-                    case 270: document.getElementById('theme').href = "css/light_270.css"; break;
-                    case 300: document.getElementById('theme').href = "css/light_300.css"; break;
-                    case 330: document.getElementById('theme').href = "css/light_330.css"; break;
+                    case -1:
+                        document.getElementById('theme').href = "css/light_inverse.css";
+                        console.log('light inverse theme');
+                        break;
+                    case 0:
+                        document.getElementById('theme').href = "css/light_0.css";
+                        console.log('%clight_0', "color: hsl(0,100%,50%)")
+                        break;
+                    case 30:
+                        document.getElementById('theme').href = "css/light_30.css";
+                        console.log('%clight_30', "color: hsl(30,100%,50%)");
+                        break;
+                    case 60:
+                        document.getElementById('theme').href = "css/light_60.css";
+                        console.log('%clight_60', "color: hsl(60,100%,50%)");
+                        break;
+                    case 90:
+                        document.getElementById('theme').href = "css/light_90.css";
+                        console.log('%clight_90', "color: hsl(90,100%,50%)");
+                        break;
+                    case 120:
+                        document.getElementById('theme').href = "css/light_120.css";
+                        console.log('%clight_120', "color: hsl(120,100%,50%)");
+                        break;
+                    case 150:
+                        document.getElementById('theme').href = "css/light_150.css";
+                        console.log('%clight_150', "color: hsl(150,100%,50%)");
+                        break;
+                    case 180:
+                        document.getElementById('theme').href = "css/light_180.css";
+                        console.log('%clight_180', "color: hsl(180,100%,50%)");
+                        break;
+                    case 210:
+                        document.getElementById('theme').href = "css/light_210.css";
+                        console.log('%clight_210', "color: hsl(210,100%,50%)");
+                        break;
+                    case 240:
+                        document.getElementById('theme').href = "css/light_240.css";
+                        console.log('%clight_240', "color: hsl(240,100%,50%)");
+                        break;
+                    case 270:
+                        document.getElementById('theme').href = "css/light_270.css";
+                        console.log('%clight_270', "color: hsl(270,100%,50%)");
+                        break;
+                    case 300:
+                        document.getElementById('theme').href = "css/light_300.css";
+                        console.log('%clight_300', "color: hsl(300,100%,50%)");
+                        break;
+                    case 330:
+                        document.getElementById('theme').href = "css/light_330.css";
+                        console.log('%clight_330', "color: hsl(330,100%,50%)");
+                        break;
                     default:
                         console.error('Theme error :', config.data.colorpallet);
                         document.getElementById('theme').href = "css/light_210.css";
                         config.data.colorpallet = 210;
                 }
-            } else {
-                //theme is invalid
             }
-
         },
         notification: {
             set_1: function () {

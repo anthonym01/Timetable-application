@@ -44,7 +44,7 @@
 
 /*scrollbar thumb*/
 ::-webkit-scrollbar-thumb:active {
-    background: hsl(90, 100%, 30%);
+    background: hsl(90, 100%, 50%);
 }
 
 body {
@@ -274,11 +274,12 @@ tr {
 /*  manage_view   */
 
 .data_button,
-#tablemanger {
+.tablemanger,
+.tablemanger_active {
     /*    Detailed representaion of the data to be managed    */
     background-color: #636363;
     color: #fff;
-    background-image: linear-gradient(120deg, hsl(90, 100%, 50%), hsl(90, 100%, 40%), hsl(90, 100%, 30%), hsl(90, 100%, 20%), hsl(90, 100%, 10%));
+    background-image: linear-gradient(120deg, hsl(90, 100%, 70%), hsl(90, 100%, 60%), hsl(90, 100%, 50%), hsl(90, 100%, 40%), hsl(90, 100%, 30%));
     text-shadow: 0vh 0vh 0.5vh #000;
     border: none;
     transition: background 500ms, color 300ms;
@@ -287,15 +288,18 @@ tr {
 }
 
 .data_button:hover,
-#tablemanger:hover {
+.tablemanger:hover,
+.tablemanger_active:active {
     background-position: 0% 100%;
-    background-size: 300%;
+    background-size: 400%;
 }
-
-.data_button:active {
-    background-image: linear-gradient(120deg, hsl(90, 100%, 100%), hsl(90, 100%, 100%), hsl(90, 100%, 100%), hsl(90, 100%, 100%), hsl(90, 100%, 100%));
+.data_button:active,
+.tablemanger_active {
+    background-image: linear-gradient(120deg, hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%));
+    color: black;
+    text-shadow: 0vh 0vh 0.5vh rgb(255, 255, 255);
+    transition: background 0ms, color 0ms;
 }
-
 .data_button:active .plusimg {
     /* Little icon in the add new button */
     background-image: url('../img/plus-light.webp');
@@ -315,6 +319,7 @@ tr {
 .tablemanger_active #tablespace_render {
     background-color: #000;
     box-shadow: 0vh 0vh 1.5vh 0vh #fff;
+    color:#fff;
 }
 
 
@@ -341,18 +346,14 @@ tr {
     box-shadow: 0vh 0vh 0.5vh 0vh #fff;
     border-bottom: 1vh solid hsl(90, 100%, 50%);
     background-color: #000;
-    transition: box-shadow 50ms 0ms, background-color 300ms;
-}
-
-.data_bar:hover {
-    box-shadow: 0vh 0vh 1.5vh 0vh #fff;
+    /* Transition in index */
 }
 
 .data_bar:active {
+    box-shadow: 0vh 0vh 2vh 0vh rgb(255, 255, 255) !important;
     background-color: rgb(100, 100, 100);
     transition: background-color 0ms;
 }
-
 .sub_optionbar {
     background-color: rgb(0, 0, 0, 0.6);
     transition: background-color 300ms;
@@ -398,6 +399,10 @@ tr {
 
 .colorslider:focus {
     border: 0.3vh solid hsl(90, 100%, 50%);
+}
+
+.select_container {
+    border: 0.3vh solid #fff
 }
 
 #dataentry_screen input {
@@ -493,24 +498,22 @@ tr {
 }
 
 .config_btn {
-    background-image: linear-gradient(120deg, hsl(90, 100%, 50%), hsl(90, 100%, 40%), hsl(90, 100%, 30%), hsl(90, 100%, 20%), hsl(90, 100%, 10%));
+    background-image: linear-gradient(120deg, hsl(90, 100%, 70%), hsl(90, 100%, 60%), hsl(90, 100%, 50%), hsl(90, 100%, 40%), hsl(90, 100%, 30%));
     color: white;
     text-shadow: 0vh 0vh 0.5vh #000;
     border: none;
-    background-position: center;
-    background-size: cover;
     transition: background 500ms;
     background-position: 100% 0%;
-    background-size: 300%;
+    background-size: 400%;
 }
 
 .config_btn:hover {
     background-position: 0% 100%;
-    background-size: 300%;
+    background-size: 400%;
 }
 
 .config_btn:active {
-    background-image: linear-gradient(120deg, hsl(90, 100%, 100%), hsl(90, 100%, 100%), hsl(90, 100%, 100%), hsl(90, 100%, 100%), hsl(90, 100%, 100%));
+    background-image: linear-gradient(120deg, hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%));
     color: rgb(0, 0, 0);
     text-shadow: 0vh 0vh 0.5vh rgb(255, 255, 255);
     background-color: #ffffff;
@@ -567,6 +570,9 @@ tr {
 
 .notification_pallet_active {
     box-shadow: 0vh 0vh 2vh 0vh hsl(90, 100%, 50%)
+}
+#hueinverse-selec {
+    background-image: linear-gradient(120deg, hsl(0, 0%, 100%), hsl(0, 0%, 80%));
 }
 
 #hue0-selec {
@@ -653,7 +659,7 @@ tr {
 
 /* Notification colors*/
 .notification_style1 {
-    border-top: 0.5vh solid rgb(255, 255, 255);
+    border-top: 0.5vh solid hsl(90, 100%, 50%);
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
     box-shadow: 0vh 0vh 0.5vh 0vh #ffffff;
@@ -663,16 +669,18 @@ tr {
 .notification_style2:hover,
 .notification_style3:hover,
 .notification_style4:hover {
-    box-shadow: 0vh 0vh 2vh 0vh #ffffff;
+    box-shadow: 0vh 0vh 2vh 0vh hsl(90, 100%, 50%);
 }
 
 .notification_style1 .title {
-    border-bottom: 0.25vh solid rgb(255, 255, 255)
+    border-bottom: 0.25vh solid hsl(90, 100%, 30%);
 }
 
 .notification_style1 .title::before,
-.notification_style2 .title::before {
-    background-color: rgb(255, 255, 255)
+.notification_style2 .title::before,
+.notification_style3 .title::before,
+.notification_style4 .title::before {
+    background-color: hsl(90, 100%, 50%)
 }
 
 .notification_style2,
@@ -686,11 +694,6 @@ tr {
 
 .notification_style3 .title::after {
     background-image: url('../img/icon.webp')
-}
-
-.notification_style3 .title::before,
-.notification_style4 .title::before {
-    background-color: rgb(255, 255, 255)
 }
 
 .notification_style4 {

@@ -692,9 +692,13 @@
         margin: 1vh;
         margin-top: 2vh;
         text-align: center;
-
+        transform: translate(0vh,0vh);
+        transition: box-shadow 50ms 0ms, background-color 300ms, transform 300ms;
     }
-
+    .data_bar:hover {
+        transform: translate(0vh,-0.5vh);
+        transition: box-shadow 300ms 0ms, background-color 300ms, transform 150ms 50ms;
+    }
 
     .data_bar .sub_optionbar {
         /* options for databars */
@@ -1125,6 +1129,7 @@
         width: 7vh;
         /* Default colors */
         background-color: #ffffff;
+        margin:1vh;
         color: black;
         border-radius: 2vh;
         cursor: pointer;
