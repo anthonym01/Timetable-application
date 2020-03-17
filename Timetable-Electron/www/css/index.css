@@ -554,13 +554,15 @@
         margin-top: 2vh;
         margin-left: 3vh;
         margin-right: 3vh;
-        border-radius: 3vh;
+        border-radius: 1vh;
         cursor: pointer;
         text-align: center;
         overflow: hidden;
         white-space: nowrap;
     }
-
+    .data_button:active{
+        transform: translate(0vh,0.5vh);/* Clack */
+    }
     .plusimg {
         /* Little icon in the add new button */
         position: relative;
@@ -2064,7 +2066,7 @@
         padding: 1.2vh;
         margin-top: 2vh;
         margin-left: 3vh;
-        border-radius: 3vh;
+        border-radius: 1vh;
         cursor: pointer;
         text-align: center;
     }

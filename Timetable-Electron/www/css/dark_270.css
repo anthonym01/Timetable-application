@@ -342,7 +342,8 @@ tr {
 
 .color_doot {
     background-color: #c9c9c9;
-    border: 0.3vh solid #aaaaaa;
+    /*border: 0.3vh solid hsl(0, 100%, 50%);*/
+    box-shadow: 0vh 0vh 1.5vh 0vh hsl(270, 100%, 50%);
 }
 
 .data_bar {

@@ -1724,7 +1724,7 @@ let UI = {
             }
             console.log('Window always on top :', state);
         })
-
+        //Proto navigation
         document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
         document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
         document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
@@ -1977,7 +1977,7 @@ let UI = {
                     set_dark();
                 }
             }
-            
+
             function set_dark() {
                 switch (config.data.colorpallet) {
                     case -1:
