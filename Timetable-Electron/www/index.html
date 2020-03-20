@@ -432,6 +432,9 @@
                     <td colspan="2">
                         <label for="Lecture_put">Name</label>
                         <input id="name_put" name="class_name" type="text">
+                        <div class="autofill_container" id="name_autofill">
+
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -486,24 +489,36 @@
                     <td colspan="2">
                         <label for="room_put">Room</label>
                         <input id="room_put" name="room_name" type="text">
+                        <div class="autofill_container" id="room_autofill">
+
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         <label for="type_put">Type</label>
                         <input id="type_put" name="type_name" type="text">
+                        <div class="autofill_container" id="type_autofill">
+
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         <label for="course_code_put">Course Code</label>
                         <input id="course_code_put" name="course_code_name" type="text">
+                        <div class="autofill_container" id="course_autofill">
+
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         <label for="Lecture_put">Lecturer</label>
                         <input id="Lecture_put" name="Lecture_name" type="text">
+                        <div class="autofill_container" id="lecture_autofill">
+
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -566,8 +581,8 @@
             <button class="config_btn" title="Restore configuration from a file">Restore config</button>
         </div>
 
-        <div class="Setting_title">Theme</div>
-        <div class="selection_container">
+        <!-- Retired because im the only one who'll use this for now -->
+        <div class="selection_container" style="display: none;">
             <!-- Container for themes -->
             <div class="selectionbox" id="light_theme_selection">
                 <div class="mincropallet" id="light_pallet">

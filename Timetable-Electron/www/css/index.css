@@ -249,7 +249,8 @@
         z-index: 100;
     }
 
-    .Action_bar,.Action_bar_active {
+    .Action_bar,
+    .Action_bar_active {
         /* The body of the Footer   */
         position: fixed;
         bottom: 0;
@@ -559,10 +560,19 @@
         text-align: center;
         overflow: hidden;
         white-space: nowrap;
+        transition: background 500ms, color 300ms, border-radius 300ms;
     }
-    .data_button:active{
-        transform: translate(0vh,0.5vh);/* Clack */
+
+    .data_button:active,
+    .tablemanger_active {
+        transition: background 0ms, color 0ms, border-radius 300ms;
     }
+
+    .data_button:active {
+        transform: translate(0vh, 0.5vh);
+        /* Clack */
+    }
+
     .plusimg {
         /* Little icon in the add new button */
         position: relative;
@@ -694,11 +704,12 @@
         margin: 1vh;
         margin-top: 2vh;
         text-align: center;
-        transform: translate(0vh,0vh);
+        transform: translate(0vh, 0vh);
         transition: box-shadow 50ms 0ms, background-color 300ms, transform 300ms;
     }
+
     .data_bar:hover {
-        transform: translate(0vh,-0.5vh);
+        transform: translate(0vh, -0.5vh);
         transition: box-shadow 300ms 0ms, background-color 300ms, transform 150ms 50ms;
     }
 
@@ -875,6 +886,26 @@
         text-align: center;
         transition: border 300ms;
         position: relative;
+    }
+
+    .autofill_container,
+    .autofill_container_active {
+        position: relative;
+        height: 0vh;
+        width: 100%;
+        overflow: auto;
+        transition: height 300ms;
+    }
+
+    .autofill_container_active {
+        height: 20vh;
+        transition: height 0ms;
+    }
+
+    .fillbar {
+        position: relative;
+        width: 100%;
+        text-align: center;
     }
 
     .select_container {
@@ -1131,7 +1162,7 @@
         width: 7vh;
         /* Default colors */
         background-color: #ffffff;
-        margin:1vh;
+        margin: 1vh;
         color: black;
         border-radius: 2vh;
         cursor: pointer;
@@ -1732,7 +1763,8 @@
     }
 
     /*  Action bar */
-    .Action_bar,.Action_bar_active {
+    .Action_bar,
+    .Action_bar_active {
         /* The Menubar on the right of the screen */
         position: fixed;
         top: 30px;
@@ -1746,8 +1778,9 @@
         background-color: #000000;
         transition: width 80ms;
     }
-    .Action_bar_active{
-        width: 50vh!important;
+
+    .Action_bar_active {
+        width: 50vh !important;
         transition: width 400ms;
     }
 

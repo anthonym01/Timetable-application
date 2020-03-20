@@ -1037,6 +1037,37 @@ let manage = {
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
         }
 
+        //Autofill handlers
+        var lecture_autofill,name_autofill,room_autofill,type_autofill,course_autofill; //save for later
+        document.getElementById('name_put').addEventListener('keydown',function(){
+            console.log('Name autofill fired')
+            setTimeout(()=>{
+                if(document.getElementById('name_put').value == ""){
+                    //clear autofill
+                    document.getElementById('name_autofill').innerHTML="";
+                }else{
+                    document.getElementById('name_autofill').innerHTML="";
+                    for(i=0;i<config.data.table1_db.length;i++){
+                        if(config.data.table1_db[i].name.indexOf(document.getElementById('name_put').value.toString())!= -1){
+                            autofill_name(i)
+                        }else{
+                            //nothing found
+                        }
+                    }
+                }
+                
+            },200)
+        })
+        function autofill_name(i){
+            var fillbar = document.createElement('div');
+            var name_autofill =config.data.table1_db[i].name;
+            fillbar.setAttribute('class','fillbar');
+            fillbar.innerHTML = config.data.table1_db[i].name;
+            fillbar.addEventListener('click',function(){
+                document.getElementById('name_put').value = name_autofill;
+            });
+            document.getElementById('name_autofill').appendChild(fillbar);
+        }
     },
     render_tables: function () {
         console.log('Table management render started');
@@ -1681,6 +1712,7 @@ let manage = {
 let UI = {
     initalize: function () {
         console.log('UI Initalize');
+
         //Action bar handlers (look about touch triggers)
         document.getElementById('action_bar').addEventListener('mouseover',function(){
             document.getElementById('action_bar').className="Action_bar_active";
@@ -1732,6 +1764,7 @@ let UI = {
             }
             console.log('Window always on top :', state);
         })
+
         //Proto navigation
         document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
         document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
@@ -1741,16 +1774,12 @@ let UI = {
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
         document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
-
         document.getElementById('about_btn').addEventListener('click', function () {
-            /*
-            utility.clipboard('Phone: 876-5744-801, Email: samuelmatheson15@gmail.com');
-            notify.new('Contact info coppied to clipboard');*/
             utility.clipboard(JSON.stringify(config.data));
             notify.new('Debug info coppied to clipboard');
         });
 
-        //select notification 
+        //select notification handlers
         document.getElementById('notification_style1').addEventListener('click', this.setting.notification.set_1)
         document.getElementById('notification_style2').addEventListener('click', this.setting.notification.set_2)
         document.getElementById('notification_style3').addEventListener('click', this.setting.notification.set_3)
@@ -1785,11 +1814,11 @@ let UI = {
                 break;
         }
 
+        //Manual config handlers
         if (config.baseconfig.use_alt_storage == true) {
             document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
         }
 
-        //Manual config handlers
         document.getElementById('select_btn').addEventListener('click', function () {//Select the configuration location
             config.selectlocation()
             document.getElementById('pathrepresenter').value = path.join(config.baseconfig.alt_location.toString(), "Timetableconfig.json")

@@ -18,9 +18,9 @@ app.on('ready', function () {
 		backgroundColor: '#000000',
 		title: 'Timetable',
 		icon: 'assets/icons/icon.ico',
-		frame: true,
+		frame: false,
 		minWidth: 400,
-		show: false,
+		show: true,
 		webPreferences: {
 			devTools: true,
 			nodeIntegration: true,
@@ -36,8 +36,6 @@ app.on('ready', function () {
 	mainWindowState.manage(mainWindow);
 
 });
-
-
 
 app.on('window-all-closed', function () {
 	if (process.platform != 'darwin') {

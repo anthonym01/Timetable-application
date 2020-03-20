@@ -277,14 +277,13 @@ tr {
 .tablemanger,
 .tablemanger_active {
     /*    Detailed representaion of the data to be managed    */
-    background-color: #636363;
     color: #fff;
     background-image: linear-gradient(120deg, hsl(150, 100%,70%), hsl(150, 100%, 60%), hsl(150, 100%, 50%), hsl(150, 100%, 40%), hsl(150, 100%, 30%));
     text-shadow: 0vh 0vh 0.5vh #000;
     border: none;
-    transition: background 500ms, color 300ms;
     background-position: 100% 0%;
     background-size: 400%;
+    /*Transition in index*/
 }
 
 .data_button:hover,
@@ -299,10 +298,8 @@ tr {
     background-image: linear-gradient(120deg, hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%));
     color: black;
     text-shadow: 0vh 0vh 0.5vh rgb(255, 255, 255);
-    transition: background 0ms, color 0ms;
+    /*Transition in index*/
 }
-
-
 .data_button:active .plusimg {
     /* Little icon in the add new button */
     background-image: url('../img/plus-light.webp');

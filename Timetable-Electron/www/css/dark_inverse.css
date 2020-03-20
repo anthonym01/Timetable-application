@@ -281,9 +281,9 @@ tr {
     background-image: linear-gradient(120deg, hsl(0, 0%, 70%), hsl(0, 0%, 50%), hsl(0, 0%, 40%), hsl(0, 0%, 30%), hsl(0, 0%, 20%));
     text-shadow: 0vh 0vh 0.5vh #000;
     border: none;
-    transition: background 500ms, color 300ms;
     background-position: 100% 0%;
     background-size: 400%;
+    /*Transition in index*/
 }
 
 .data_button:hover,
@@ -295,10 +295,10 @@ tr {
 
 .data_button:active,
 .tablemanger_active {
-    background-image: linear-gradient(120deg, hsl(0, 0%, 100%), hsl(0, 0%, 100%), hsl(0, 0%, 100%), hsl(0, 0%, 100%), hsl(0, 0%, 100%));
+    background-image: linear-gradient(120deg, hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%), hsl(30, 100%, 100%));
     color: black;
     text-shadow: 0vh 0vh 0.5vh rgb(255, 255, 255);
-    transition: background 0ms, color 0ms;
+    /*Transition in index*/
 }
 
 .data_button:active .plusimg {
