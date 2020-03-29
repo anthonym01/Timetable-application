@@ -38,51 +38,79 @@ let app = {// Application Constructor
     }
 }; app.initialize();
 
-window.addEventListener('load', function () {//window loads
-    console.warn('javascript Starts')
+
+window.addEventListener('load', function () { //window loads
+
+    const loader = document.getElementById('loadprogress');
     if (localStorage.getItem(config.configlocation)) {
         config.load()
     } else {
         config.validate()
     }
+    loader.style.width = '25%'
     UI.initalize()
+    loader.style.width = '50%'
     table.initialize()
+    loader.style.width = '75%'
     manage.initalize()
+    loader.style.width = '100%'
     config.properties.startup = false
     setTimeout(() => {
+        UI.navigate.TABLE()
         console.log('Closing loading screen...')
         document.getElementById('Loading').style.display = 'none'
     }, 50)
+
 })
 
 /*  Config file handler    */
 let config = {
     data: {
-        theme: "dark",
-        hilight_engine: false,
+        key: "TT01",
+        theme: "timebased", //sets theme, defaults to time based
+        themetimes: {
+            sunrise: "",
+            sunset: ""
+        },
+        backgroundimg: null,
+        hilight_engine: false, //hilight engine whether to run or not
         animation: true,
         tiles: true,
         empty_rows: false,
+        notification_type: 3,
         table_selected: 1,
-        table_details: [// Details about different tables
-            { purpose: "table 1" },
-            { purpose: "table 2" },
-            { purpose: "table 3" },
-            { purpose: "table 4" }
+        always_on_top: false,
+        table_details: [ // Details about different tables
+            {
+                purpose: "table #1",
+                deleted: false,
+                identifier: 1
+            },
+            /*{ purpose: "table #2", deleted: false, identifier: 2 },
+            { purpose: "table #3", deleted: false, identifier: 3 },
+            { purpose: "table #4", deleted: false, identifier: 4 }*/
         ],
-        table1_db: [// Table database
-/*
-            { show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
+        table1_db: [ // Table database
+
+            /*{ show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
             { show: 4, day: 2, name: "Test 2", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 50, sat: 100, light: 50 }, start: 11.62, end: 14.57 },
             { show: 4, day: 3, name: "Test 3", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 100, sat: 100, light: 50 }, start: 8.5, end: 10.76 },
             { show: 4, day: 4, name: "Test 4", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 150, sat: 100, light: 50 }, start: 1.32, end: 4.0 },
             { show: 4, day: 5, name: "Test 5", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 200, sat: 100, light: 50 }, start: 2.0, end: 4.0 },
             { show: 4, day: 6, name: "Test 6", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 250, sat: 100, light: 50 }, start: 4.0, end: 5.4 },
-            { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },*/
+            { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
+            { show: 3, day: 7, name: "Test 8", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 7.0, end: 8.7 },
+            { show: 2, day: 7, name: "Test 9", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 8.0, end: 9.7 },
+            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },*/
         ],
         previous_colors: [],
     },
+    baseconfig: {
+        use_alt_storage: false,
+        alt_location: "",
+    },
     properties: {
+        tempdata: false,
         monday: false,
         tuesday: false,
         wednsday: false,
@@ -91,15 +119,18 @@ let config = {
         saturday: false,
         sunday: false,
         changed: false,
-        max: 0, min: 24,//Swapped because big brain, big big brain
+        max: 0,
+        min: 24, //Swapped because big brain, big big brain
         overwrite: null,
         called_from_plus: false,
-        view: "table",//defaults to table
+        view: "", //defaults to table
         exit: false,
         startup: true,
-        colors_changed: true,//re-render color pannel when this is true
+        colors_changed: true, //re-render color pannel when this is true
+        clocking: false, // is clock ticking
+        management: false,
     },
-    configlocation: "TT001_cfg",//not strict, can be anything. Think of it as a file name/path
+    configlocation: "TT001_cfg", //not strict, can be anything. Think of it as a file name/path
     save: function () {//Save the config file
         localStorage.setItem(this.configlocation, JSON.stringify(this.data))
         console.log('config saved: ')
@@ -263,99 +294,104 @@ let config = {
         setTimeout(() => { location.reload() }, 100);
         this.validate();
     },
+    backup: function () { //backup configuration to file
+        console.log('Configuration backup initiated')
+
+    },
+    restore: function () { //restore configuration from file
+        console.log('Configuration backup initiated')
+
+    }
 }
 
-/*  Table generator\manager */
+/*  Table generator */
 let table = {
     initialize: function () {
         console.log('Table initalization Begins');
-        this.data_render();
-        this.clock.start_clock();
-        setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);
+        this.data_render(); //render data
+        setTimeout(() => {
+            table.hilight_engine_go_vroom();
+        }, 50);
     },
     data_render: function () {
         console.log('Table render started')
-        let i = 0;
-        if (config.data.table_selected == 0) { config.data.table_selected = 1 }//Fix oversight
+        var i = 0;
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
-            //first_settup(1);
-            //Replace with emty table setu[/allert]
+            notify.new('U new here?', 'To start off, click here to add some classes', function () {
+                UI.navigate.MANAGE()
+                manage.dialogue.open()
+            }, 'click to add new class')
         } else {
-            while (config.data.table1_db[i] != null || undefined) {//Get minimum time and maximum time to construct correct height
+            for (i = 0; i < config.data.table1_db.length; i++) { //Get minimum time and maximum time to construct correct height
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
-                    let starthraw = Number(config.data.table1_db[i].start) - config.data.table1_db[i].start % 1;//removes remainder
-                    config.properties.min = Math.min(starthraw, config.properties.min);//find minimum time in all datu
-                    config.properties.max = Math.max(config.data.table1_db[i].end, config.properties.max);//find maximum time in all datu
+                    let starthraw = Number(config.data.table1_db[i].start) - config.data.table1_db[i].start % 1; // taking away the modulus 1 of itself removes the remainder
+                    config.properties.min = Math.min(starthraw, config.properties.min); //find minimum time in all datu
+                    config.properties.max = Math.max(config.data.table1_db[i].end, config.properties.max); //find maximum time in all datu
                 }
-                i++;
             }
-            console.warn('Table minimum found to be: ', config.properties.min);
-            console.warn('Table maximum found to be: ', config.properties.max);
-            i = 0;
-            while (config.data.table1_db[i] != null) {//construct table
+            console.log('Table minimum found to be: ', config.properties.min, ' Table maximum found to be: ', config.properties.max)
+            for (i = 0; i < config.data.table1_db.length; i++) { //construct table
                 console.log('Data run on index :', i);
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
                     build_block_db1(i);
                 }
-                i++;
             }
-            validate();//Strip empty cells form top and bottom
+            validate(); //Strip empty cells form top and bottom
         }
         console.log('Table render Completed');
-        UI.navigate.TABLE();//Starts the ticking of the clock
 
-        function build_block_db1(index) {//Builds timetable from database
+        function build_block_db1(index) { //Builds timetable from database
             console.log('Building Block :', index);
             //Create the data block
             let tempblock = document.createElement('div');
-
-            //assign a color
             tempblock.setAttribute("class", "data_block");
-            tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
-
-            //set up link transition
-            /*tempblock.setAttribute("id", "data_block"+index);
-            tempblock.setAttribute("href", "#data_block"+index);*/
 
             //time processing
             let startmeridian = 'a.m.';
             let starthr = 0;
             let startminute = Number(config.data.table1_db[index].start % 1 * 60).toFixed(0);
-            if (startminute == 0) { startminute = '00' }
+            if (startminute == 0) {
+                startminute = '00'
+            }
             let endmeridian = 'a.m.';
             let endhr = 0;
             let endminute = Number(config.data.table1_db[index].end % 1 * 60).toFixed(0);
-            if (endminute == 0) { endminute = '00' }
+            if (endminute == 0) {
+                endminute = '00'
+            }
 
             if (config.data.table1_db[index].start >= 12) {
-                startmeridian = 'p.m.';//morning or evening
-                starthr = Number(config.data.table1_db[index].start - 12) - config.data.table1_db[index].start % 1;//removes remainder
+                startmeridian = 'p.m.'; //morning or evening
+                starthr = Number(config.data.table1_db[index].start - 12) - config.data.table1_db[index].start % 1; //removes remainder
             } else {
-                starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1;//removes remainder
+                starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
             }
             if (config.data.table1_db[index].end >= 12) {
-                endmeridian = 'p.m.';//morning or evening
-                endhr = Number(config.data.table1_db[index].end - 12) - config.data.table1_db[index].end % 1;//removes remainder
+                endmeridian = 'p.m.'; //morning or evening
+                endhr = Number(config.data.table1_db[index].end - 12) - config.data.table1_db[index].end % 1; //removes remainder
             } else {
-                endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1;//removes remainder
+                endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1; //removes remainder
             }
-            if (starthr == 0) { starthr = 12 }
-            if (endhr == 0) { endhr = 12 }
+            if (starthr == 0) {
+                starthr = 12
+            }
+            if (endhr == 0) {
+                endhr = 12
+            }
 
 
             //populate the block with relivant data
-            tempblock.innerHTML = config.data.table1_db[index].name/* + '<br>' + starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian*/;
+            tempblock.innerHTML = config.data.table1_db[index].name /* + '<br>' + starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian*/;
 
             //info doots
             let doot = document.createElement('div');
             doot.setAttribute('class', 'infodoot');
-            if (config.data.table1_db[index].start < config.properties.min + 3) {//Set the doot to flip up or down depending on the pannels position
+            if (config.data.table1_db[index].start < config.properties.min + 3) { //Set the doot to flip up or down depending on the pannels position
                 doot.style.top = '0vh';
                 doot.style.bottom = 'unset';
             }
 
-            //Put doot into the Data Bar
             //make table in doot to keep things even
             let sub_tab = document.createElement("table");
             let name_tab_row = document.createElement("tr");
@@ -427,91 +463,152 @@ let table = {
             tempblock.appendChild(doot);
 
             //Decide where it does
-            let starthraw = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1;//removes remainder
+            let starthraw = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
             console.warn('Raw Time value: ', starthraw);
-            switch (config.data.table1_db[index].day) {//Day decsion
-                case 1://Monday
+            switch (config.data.table1_db[index].day) { //Day decsion
+                case 1: //Monday
                     config.properties.monday = true;
-                    if (starthraw < 10 && starthraw >= 0) { document.getElementById('1_' + starthraw.toPrecision(1)).appendChild(tempblock) }//less than 10 precision 1
-                    else if (starthraw >= 10 && starthraw < 24) { document.getElementById('1_' + starthraw.toPrecision(2)).appendChild(tempblock) }//more than 10 precision 2
-                    else { console.log('Time logic error on index :', index, ' Time code :', starthraw) } //yeet a time error cause that dont exist fam
+                    if (starthraw < 10 && starthraw >= 0) {
+                        document.getElementById('1_' + starthraw.toPrecision(1)).appendChild(tempblock)
+                    } //less than 10 precision 1
+                    else if (starthraw >= 10 && starthraw < 24) {
+                        document.getElementById('1_' + starthraw.toPrecision(2)).appendChild(tempblock)
+                    } //more than 10 precision 2
+                    else {
+                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                    } //yeet a time error cause that dont exist fam
                     break;
-                case 2://Tuesday
+                case 2: //Tuesday
                     config.properties.tuesday = true;
-                    if (starthraw < 10 && starthraw >= 0) { document.getElementById('2_' + starthraw.toPrecision(1)).appendChild(tempblock) }
-                    else if (starthraw >= 10 && starthraw < 24) { document.getElementById('2_' + starthraw.toPrecision(2)).appendChild(tempblock) }
-                    else { console.log('Time logic error on index :', index, ' Time code :', starthraw) }
+                    if (starthraw < 10 && starthraw >= 0) {
+                        document.getElementById('2_' + starthraw.toPrecision(1)).appendChild(tempblock)
+                    } else if (starthraw >= 10 && starthraw < 24) {
+                        document.getElementById('2_' + starthraw.toPrecision(2)).appendChild(tempblock)
+                    } else {
+                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                    }
                     break;
-                case 3://Wednsday
+                case 3: //Wednsday
                     config.properties.wednsday = true;
-                    if (starthraw < 10 && starthraw >= 0) { document.getElementById('3_' + starthraw.toPrecision(1)).appendChild(tempblock) }
-                    else if (starthraw >= 10 && starthraw < 24) { document.getElementById('3_' + starthraw.toPrecision(2)).appendChild(tempblock) }
-                    else { console.log('Time logic error on index :', index, ' Time code :', starthraw) }
+                    if (starthraw < 10 && starthraw >= 0) {
+                        document.getElementById('3_' + starthraw.toPrecision(1)).appendChild(tempblock)
+                    } else if (starthraw >= 10 && starthraw < 24) {
+                        document.getElementById('3_' + starthraw.toPrecision(2)).appendChild(tempblock)
+                    } else {
+                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                    }
                     break;
                 case 4:
                     config.properties.thursday = true;
-                    if (starthraw < 10 && starthraw >= 0) { document.getElementById('4_' + starthraw.toPrecision(1)).appendChild(tempblock) }
-                    else if (starthraw >= 10 && starthraw < 24) { document.getElementById('4_' + starthraw.toPrecision(2)).appendChild(tempblock) }
-                    else { console.log('Time logic error on index :', index, ' Time code :', starthraw) }
+                    if (starthraw < 10 && starthraw >= 0) {
+                        document.getElementById('4_' + starthraw.toPrecision(1)).appendChild(tempblock)
+                    } else if (starthraw >= 10 && starthraw < 24) {
+                        document.getElementById('4_' + starthraw.toPrecision(2)).appendChild(tempblock)
+                    } else {
+                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                    }
                     break;
                 case 5:
                     config.properties.friday = true;
-                    if (starthraw < 10 && starthraw >= 0) { document.getElementById('5_' + starthraw.toPrecision(1)).appendChild(tempblock) }
-                    else if (starthraw >= 10 && starthraw < 24) { document.getElementById('5_' + starthraw.toPrecision(2)).appendChild(tempblock) }
-                    else { console.log('Time logic error on index :', index, ' Time code :', starthraw) }
+                    if (starthraw < 10 && starthraw >= 0) {
+                        document.getElementById('5_' + starthraw.toPrecision(1)).appendChild(tempblock)
+                    } else if (starthraw >= 10 && starthraw < 24) {
+                        document.getElementById('5_' + starthraw.toPrecision(2)).appendChild(tempblock)
+                    } else {
+                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                    }
                     break;
                 case 6:
                     config.properties.saturday = true;
-                    if (starthraw < 10 && starthraw >= 0) { document.getElementById('6_' + starthraw.toPrecision(1)).appendChild(tempblock) }
-                    else if (starthraw >= 10 && starthraw < 24) { document.getElementById('6_' + starthraw.toPrecision(2)).appendChild(tempblock) }
-                    else { console.log('Time logic error on index :', index, ' Time code :', starthraw) }
+                    if (starthraw < 10 && starthraw >= 0) {
+                        document.getElementById('6_' + starthraw.toPrecision(1)).appendChild(tempblock)
+                    } else if (starthraw >= 10 && starthraw < 24) {
+                        document.getElementById('6_' + starthraw.toPrecision(2)).appendChild(tempblock)
+                    } else {
+                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                    }
                     break;
                 case 7:
                     config.properties.sunday = true;
-                    if (starthraw < 10 && starthraw >= 0) { document.getElementById('7_' + starthraw.toPrecision(1)).appendChild(tempblock) }
-                    else if (starthraw >= 10 && starthraw < 24) { document.getElementById('7_' + starthraw.toPrecision(2)).appendChild(tempblock) }
-                    else { console.log('Time logic error on index :', index, ' Time code :', starthraw) }
+                    if (starthraw < 10 && starthraw >= 0) {
+                        document.getElementById('7_' + starthraw.toPrecision(1)).appendChild(tempblock)
+                    } else if (starthraw >= 10 && starthraw < 24) {
+                        document.getElementById('7_' + starthraw.toPrecision(2)).appendChild(tempblock)
+                    } else {
+                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                    }
                     break;
-                default: console.log('Date positioning error on index: ', index, ' Day code: ', config.data.table1_db[index].day);
+                default:
+                    console.log('Date positioning error on index: ', index, ' Day code: ', config.data.table1_db[index].day);
             }
             //time to height calculations must be done after render
             setTimeout(() => {
                 let blockheight = Number(config.data.table1_db[index].end - config.data.table1_db[index].start) * 100;
                 console.log(config.data.table1_db[index].name, ' As assigned height of :', blockheight, '%');
+                tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
                 tempblock.style.height = blockheight + '%';
-                let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60;//gets the height of a cell in pixels and the multiples by minute percentage
+                let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
-            }, 5);
+            }, 50);
 
             //click action
             tempblock.addEventListener('click', () => {
                 console.log('Triggered data cell: ', tempblock);
-                if (config.data.tiles) {//show full tile view
+                if (config.data.tiles) { //show full tile view
+                    //place data into overlay
                     tempblock.name = "off";
                     tempblock.setAttribute("class", "data_block");
                     document.getElementById('title_cell').innerText = config.data.table1_db[index].name;
                     switch (config.data.table1_db[index].day) {
-                        case 1: document.getElementById('day_cell').innerText = "Monday"; break;
-                        case 2: document.getElementById('day_cell').innerText = "Tuesday"; break;
-                        case 3: document.getElementById('day_cell').innerText = "Wednesday"; break;
-                        case 4: document.getElementById('day_cell').innerText = "Thursday"; break;
-                        case 5: document.getElementById('day_cell').innerText = "Friday"; break;
-                        case 6: document.getElementById('day_cell').innerText = "Saturday"; break;
-                        case 7: document.getElementById('day_cell').innerText = "Sunday"; break;
-                        default: console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
+                        case 1:
+                            document.getElementById('day_cell').innerText = "Monday";
+                            break;
+                        case 2:
+                            document.getElementById('day_cell').innerText = "Tuesday";
+                            break;
+                        case 3:
+                            document.getElementById('day_cell').innerText = "Wednesday";
+                            break;
+                        case 4:
+                            document.getElementById('day_cell').innerText = "Thursday";
+                            break;
+                        case 5:
+                            document.getElementById('day_cell').innerText = "Friday";
+                            break;
+                        case 6:
+                            document.getElementById('day_cell').innerText = "Saturday";
+                            break;
+                        case 7:
+                            document.getElementById('day_cell').innerText = "Sunday";
+                            break;
+                        default:
+                            console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
                     }
-                    if (config.data.table1_db[index].room != undefined) { document.getElementById('room_cell').innerText = config.data.table1_db[index].room }
-                    else { document.getElementById('room_cell').innerText = "unknown" }
-                    if (config.data.table1_db[index].Lecturer != undefined) { document.getElementById('Lecturer_cell').innerText = config.data.table1_db[index].Lecturer }
-                    else { document.getElementById('Lecturer_cell').innerText = "unknown" }
-                    if (config.data.table1_db[index].type != undefined) { document.getElementById('type_cell').innerText = config.data.table1_db[index].type }
-                    else { document.getElementById('type_cell').innerText = "unknown" }
-                    if (config.data.table1_db[index].course_code != undefined) { document.getElementById('coursecode_cell').innerText = config.data.table1_db[index].course_code }
-                    else { document.getElementById('coursecode_cell').innerText = "unknown" }
+                    if (config.data.table1_db[index].room != undefined) {
+                        document.getElementById('room_cell').innerText = config.data.table1_db[index].room
+                    } else {
+                        document.getElementById('room_cell').innerText = "unknown"
+                    }
+                    if (config.data.table1_db[index].Lecturer != undefined) {
+                        document.getElementById('Lecturer_cell').innerText = config.data.table1_db[index].Lecturer
+                    } else {
+                        document.getElementById('Lecturer_cell').innerText = "unknown"
+                    }
+                    if (config.data.table1_db[index].type != undefined) {
+                        document.getElementById('type_cell').innerText = config.data.table1_db[index].type
+                    } else {
+                        document.getElementById('type_cell').innerText = "unknown"
+                    }
+                    if (config.data.table1_db[index].course_code != undefined) {
+                        document.getElementById('coursecode_cell').innerText = config.data.table1_db[index].course_code
+                    } else {
+                        document.getElementById('coursecode_cell').innerText = "unknown"
+                    }
                     document.getElementById('time_cell').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
-                    document.getElementById('fullscreen_tile').style.display = 'block';
+                    document.getElementById('fullscreen_tile').classList = "fullscreen_tile_active"
                     document.getElementById('close_btn').style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
-                } else {//show the normal card flip out view
+                } else {
+                    //show the normal card flip out view
                     if (tempblock.name == "on") {
                         tempblock.name = "off";
                         tempblock.setAttribute("class", "data_block");
@@ -523,20 +620,21 @@ let table = {
             });
             console.log('Block :', index, ' Check complete');
         }
+
         function validate() {
-            //Remove empty days
+            //Remove empty days with the bread crums left behing durring the initial render
             if (config.data.empty_rows == false) {
                 console.log('Validating Table');
                 let days = 7;
-                if (!config.properties.monday) {//remove monday?
-                    document.getElementById('day1').style.display = 'none';//Blank the title
-                    for (i = 0; i < 24; i++) {//Loop to blank the cells associated with that title
+                if (!config.properties.monday) { //remove monday?
+                    document.getElementById('day1').style.display = 'none'; //Blank the title
+                    for (i = 0; i < 24; i++) { //Loop to blank the cells associated with that title
                         document.getElementById('1_' + i).style.display = 'none';
                         console.log('Removing Monday time index :', i);
                     }
                     days--;
                 }
-                if (!config.properties.tuesday) {//remove tuesday?
+                if (!config.properties.tuesday) { //remove tuesday?
                     document.getElementById('day2').style.display = 'none';
                     for (i = 0; i < 24; i++) {
                         document.getElementById('2_' + i).style.display = 'none';
@@ -544,7 +642,7 @@ let table = {
                     }
                     days--;
                 }
-                if (!config.properties.wednsday) {//remove wednsday?
+                if (!config.properties.wednsday) { //remove wednsday?
                     document.getElementById('day3').style.display = 'none';
                     for (i = 0; i < 24; i++) {
                         document.getElementById('3_' + i).style.display = 'none';
@@ -552,7 +650,7 @@ let table = {
                     }
                     days--;
                 }
-                if (!config.properties.thursday) {//remove thursday?
+                if (!config.properties.thursday) { //remove thursday?
                     document.getElementById('day4').style.display = 'none';
                     for (i = 0; i < 24; i++) {
                         document.getElementById('4_' + i).style.display = 'none';
@@ -560,7 +658,7 @@ let table = {
                     }
                     days--;
                 }
-                if (!config.properties.friday) {//remove friday?
+                if (!config.properties.friday) { //remove friday?
                     document.getElementById('day5').style.display = 'none';
                     for (i = 0; i < 24; i++) {
                         document.getElementById('5_' + i).style.display = 'none';
@@ -568,7 +666,7 @@ let table = {
                     }
                     days--;
                 }
-                if (!config.properties.saturday) {//remove saturday?
+                if (!config.properties.saturday) { //remove saturday?
                     document.getElementById('day6').style.display = 'none';
                     for (i = 0; i < 24; i++) {
                         document.getElementById('6_' + i).style.display = 'none';
@@ -576,7 +674,7 @@ let table = {
                     }
                     days--;
                 }
-                if (!config.properties.sunday) {//remove sunday?
+                if (!config.properties.sunday) { //remove sunday?
                     document.getElementById('day0').style.display = 'none';
                     for (i = 0; i < 24; i++) {
                         document.getElementById('7_' + i).style.display = 'none';
@@ -586,24 +684,26 @@ let table = {
                 }
 
                 //remove empty time cells
-
-                if (config.data.table1_db.length < 3) {//normalization makes life easier fror small table users
+                if (config.data.table1_db.length < 3) { //normalization makes life easier fror small table users
                     config.properties.min = config.properties.min - 3;
                     config.properties.max = config.properties.max + 3;
-                    if (config.properties.min < 0) { config.properties.min = 0 }
-                    if (config.properties.min > 23) { config.properties.min = 23 }
-                    //add a reload check here
+                    if (config.properties.min < 0) {
+                        config.properties.min = 0
+                    }
+                    if (config.properties.min > 23) {
+                        config.properties.min = 23
+                    }
                 }
 
                 let rows = 24;
-                for (i = 0; i < config.properties.min; i++) {//knock out all below minimum start time
+                for (i = 0; i < config.properties.min; i++) { //knock out all below minimum start time
                     console.log('Called null on row: ', i);
                     if (document.getElementById('timerow_' + i)) {
                         document.getElementById('timerow_' + i).style.display = "none";
                     }
                     rows--;
                 }
-                for (i = config.properties.max.toPrecision(2); i < 24; i++) {//knock out all above maximum end time
+                for (i = config.properties.max.toPrecision(2); i < 24; i++) { //knock out all above maximum end time
                     console.log('Called null on row: ', i);
                     if (document.getElementById('timerow_' + i)) {
                         document.getElementById('timerow_' + i).style.display = "none";
@@ -613,101 +713,831 @@ let table = {
                 console.log('Time rows found value: ', rows);
 
                 //set font size dependent on rows value
-                switch (rows) {//Switch this to dynamic font sizing
-                    case 1: document.getElementById('timetable').style.fontSize = '11vh'; break;
-                    case 2: document.getElementById('timetable').style.fontSize = '10vh'; break;
-                    case 3: document.getElementById('timetable').style.fontSize = '9vh'; break;
-                    case 4: document.getElementById('timetable').style.fontSize = '8vh'; break;
-                    case 5: document.getElementById('timetable').style.fontSize = '7vh'; break;
-                    case 6: document.getElementById('timetable').style.fontSize = '6vh'; break;
-                    case 7: document.getElementById('timetable').style.fontSize = '6vh'; break;
-                    case 8: document.getElementById('timetable').style.fontSize = '5vh'; break;
-                    case 9: document.getElementById('timetable').style.fontSize = '3.4vh'; break;
-                    case 10: document.getElementById('timetable').style.fontSize = '4vh'; break;
-                    case 11: document.getElementById('timetable').style.fontSize = '4vh'; break;
-                    case 12: document.getElementById('timetable').style.fontSize = '3vh'; break;
-                    case 13: document.getElementById('timetable').style.fontSize = '3vh'; break;
-                    case 14: document.getElementById('timetable').style.fontSize = '3vh'; break;
-                    case 15: document.getElementById('timetable').style.fontSize = '3vh'; break;
-                    case 16: document.getElementById('timetable').style.fontSize = '3vh'; break;
-                    case 17: document.getElementById('timetable').style.fontSize = '2vh'; break;
-                    case 18: document.getElementById('timetable').style.fontSize = '2vh'; break;
-                    case 19: document.getElementById('timetable').style.fontSize = '2vh'; break;
-                    case 20: document.getElementById('timetable').style.fontSize = '2vh'; break;
-                    case 21: document.getElementById('timetable').style.fontSize = '2vh'; break;
-                    case 22: document.getElementById('timetable').style.fontSize = '2vh'; break;
-                    case 23: document.getElementById('timetable').style.fontSize = '2vh'; break;
-                    case 24: document.getElementById('timetable').style.fontSize = '2vh'; break;
-                    default: console.log('Row error, defaulted :', rows);
+                switch (rows) {
+                    case 1:
+                        document.getElementById('timetable').style.fontSize = '11vh';
+                        break;
+                    case 2:
+                        document.getElementById('timetable').style.fontSize = '10vh';
+                        break;
+                    case 3:
+                        document.getElementById('timetable').style.fontSize = '9vh';
+                        break;
+                    case 4:
+                        document.getElementById('timetable').style.fontSize = '8vh';
+                        break;
+                    case 5:
+                        document.getElementById('timetable').style.fontSize = '7vh';
+                        break;
+                    case 6:
+                        document.getElementById('timetable').style.fontSize = '6vh';
+                        break;
+                    case 7:
+                        document.getElementById('timetable').style.fontSize = '6vh';
+                        break;
+                    case 8:
+                        document.getElementById('timetable').style.fontSize = '5vh';
+                        break;
+                    case 9:
+                        document.getElementById('timetable').style.fontSize = '3.4vh';
+                        break;
+                    case 10:
+                        document.getElementById('timetable').style.fontSize = '4vh';
+                        break;
+                    case 11:
+                        document.getElementById('timetable').style.fontSize = '4vh';
+                        break;
+                    case 12:
+                        document.getElementById('timetable').style.fontSize = '3vh';
+                        break;
+                    case 13:
+                        document.getElementById('timetable').style.fontSize = '3vh';
+                        break;
+                    case 14:
+                        document.getElementById('timetable').style.fontSize = '3vh';
+                        break;
+                    case 15:
+                        document.getElementById('timetable').style.fontSize = '3vh';
+                        break;
+                    case 16:
+                        document.getElementById('timetable').style.fontSize = '3vh';
+                        break;
+                    case 17:
+                        document.getElementById('timetable').style.fontSize = '2vh';
+                        break;
+                    case 18:
+                        document.getElementById('timetable').style.fontSize = '2vh';
+                        break;
+                    case 19:
+                        document.getElementById('timetable').style.fontSize = '2vh';
+                        break;
+                    case 20:
+                        document.getElementById('timetable').style.fontSize = '2vh';
+                        break;
+                    case 21:
+                        document.getElementById('timetable').style.fontSize = '2vh';
+                        break;
+                    case 22:
+                        document.getElementById('timetable').style.fontSize = '2vh';
+                        break;
+                    case 23:
+                        document.getElementById('timetable').style.fontSize = '2vh';
+                        break;
+                    case 24:
+                        document.getElementById('timetable').style.fontSize = '2vh';
+                        break;
+                    default:
+                        console.log('Row error, defaulted :', rows);
                 }
                 if (days == 0 || rows == 0) {
                     //Table is empty
-                    utility.toast('Table: ' + config.data.table_selected + 'This table is empty...');
+                    notify.new('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
                 }
                 console.log('Table validated');
             }
 
         }
-        /*function first_settup(table_num) {
-            console.log('First settup called table#: ', table_num);
-            utility.toast('To start off lets add something to display');
-            document.getElementById('data_title').innerHTML = 'First Time?';
-            setTimeout(() => { manage.dialogue.open(); UI.navigate.MANAGE(); }, 100);
-            document.getElementById('Loading').style.display = 'none';
-            console.log('Closing loading screen...');
-        }*/
     },
     clock: {
-        clock_tick_trigger: null,//setInterval(()=>{table.clock.clock_tick()},1000),
+        clock_tick_trigger: null, //setInterval(()=>{table.clock.clock_tick()},1000),
         clock_tick: function () {
             console.log('Clock ticks');
             let date = new Date();
             document.getElementById('live_clock').innerHTML = date.toLocaleTimeString();
-            switch (date.getDay()) {//Date switch
-                case 0: document.getElementById('day0').style.backgroundColor = 'red'; document.getElementById('day1').style.backgroundColor = ''; document.getElementById('day2').style.backgroundColor = ''; document.getElementById('day3').style.backgroundColor = ''; document.getElementById('day4').style.backgroundColor = ''; document.getElementById('day5').style.backgroundColor = ''; document.getElementById('day6').style.backgroundColor = ''; break;
-                case 1: document.getElementById('day0').style.backgroundColor = ''; document.getElementById('day1').style.backgroundColor = 'red'; document.getElementById('day2').style.backgroundColor = ''; document.getElementById('day3').style.backgroundColor = ''; document.getElementById('day4').style.backgroundColor = ''; document.getElementById('day5').style.backgroundColor = ''; document.getElementById('day6').style.backgroundColor = ''; break;
-                case 2: document.getElementById('day0').style.backgroundColor = ''; document.getElementById('day1').style.backgroundColor = ''; document.getElementById('day2').style.backgroundColor = 'red'; document.getElementById('day3').style.backgroundColor = ''; document.getElementById('day4').style.backgroundColor = ''; document.getElementById('day5').style.backgroundColor = ''; document.getElementById('day6').style.backgroundColor = ''; break;
-                case 3: document.getElementById('day0').style.backgroundColor = ''; document.getElementById('day1').style.backgroundColor = ''; document.getElementById('day2').style.backgroundColor = ''; document.getElementById('day3').style.backgroundColor = 'red'; document.getElementById('day4').style.backgroundColor = ''; document.getElementById('day5').style.backgroundColor = ''; document.getElementById('day6').style.backgroundColor = ''; break;
-                case 4: document.getElementById('day0').style.backgroundColor = ''; document.getElementById('day1').style.backgroundColor = ''; document.getElementById('day2').style.backgroundColor = ''; document.getElementById('day3').style.backgroundColor = ''; document.getElementById('day4').style.backgroundColor = 'red'; document.getElementById('day5').style.backgroundColor = ''; document.getElementById('day6').style.backgroundColor = ''; break;
-                case 5: document.getElementById('day0').style.backgroundColor = ''; document.getElementById('day1').style.backgroundColor = ''; document.getElementById('day2').style.backgroundColor = ''; document.getElementById('day3').style.backgroundColor = ''; document.getElementById('day4').style.backgroundColor = ''; document.getElementById('day5').style.backgroundColor = 'red'; document.getElementById('day6').style.backgroundColor = ''; break;
-                case 6: document.getElementById('day0').style.backgroundColor = ''; document.getElementById('day1').style.backgroundColor = ''; document.getElementById('day2').style.backgroundColor = ''; document.getElementById('day3').style.backgroundColor = ''; document.getElementById('day4').style.backgroundColor = ''; document.getElementById('day5').style.backgroundColor = ''; document.getElementById('day6').style.backgroundColor = 'red'; break;
+            switch (date.getDay()) { //Date switch
+                case 0:
+                    document.getElementById('day0').style.backgroundColor = 'red';
+                    document.getElementById('day1').style.backgroundColor = '';
+                    document.getElementById('day2').style.backgroundColor = '';
+                    document.getElementById('day3').style.backgroundColor = '';
+                    document.getElementById('day4').style.backgroundColor = '';
+                    document.getElementById('day5').style.backgroundColor = '';
+                    document.getElementById('day6').style.backgroundColor = '';
+                    break;
+                case 1:
+                    document.getElementById('day0').style.backgroundColor = '';
+                    document.getElementById('day1').style.backgroundColor = 'red';
+                    document.getElementById('day2').style.backgroundColor = '';
+                    document.getElementById('day3').style.backgroundColor = '';
+                    document.getElementById('day4').style.backgroundColor = '';
+                    document.getElementById('day5').style.backgroundColor = '';
+                    document.getElementById('day6').style.backgroundColor = '';
+                    break;
+                case 2:
+                    document.getElementById('day0').style.backgroundColor = '';
+                    document.getElementById('day1').style.backgroundColor = '';
+                    document.getElementById('day2').style.backgroundColor = 'red';
+                    document.getElementById('day3').style.backgroundColor = '';
+                    document.getElementById('day4').style.backgroundColor = '';
+                    document.getElementById('day5').style.backgroundColor = '';
+                    document.getElementById('day6').style.backgroundColor = '';
+                    break;
+                case 3:
+                    document.getElementById('day0').style.backgroundColor = '';
+                    document.getElementById('day1').style.backgroundColor = '';
+                    document.getElementById('day2').style.backgroundColor = '';
+                    document.getElementById('day3').style.backgroundColor = 'red';
+                    document.getElementById('day4').style.backgroundColor = '';
+                    document.getElementById('day5').style.backgroundColor = '';
+                    document.getElementById('day6').style.backgroundColor = '';
+                    break;
+                case 4:
+                    document.getElementById('day0').style.backgroundColor = '';
+                    document.getElementById('day1').style.backgroundColor = '';
+                    document.getElementById('day2').style.backgroundColor = '';
+                    document.getElementById('day3').style.backgroundColor = '';
+                    document.getElementById('day4').style.backgroundColor = 'red';
+                    document.getElementById('day5').style.backgroundColor = '';
+                    document.getElementById('day6').style.backgroundColor = '';
+                    break;
+                case 5:
+                    document.getElementById('day0').style.backgroundColor = '';
+                    document.getElementById('day1').style.backgroundColor = '';
+                    document.getElementById('day2').style.backgroundColor = '';
+                    document.getElementById('day3').style.backgroundColor = '';
+                    document.getElementById('day4').style.backgroundColor = '';
+                    document.getElementById('day5').style.backgroundColor = 'red';
+                    document.getElementById('day6').style.backgroundColor = '';
+                    break;
+                case 6:
+                    document.getElementById('day0').style.backgroundColor = '';
+                    document.getElementById('day1').style.backgroundColor = '';
+                    document.getElementById('day2').style.backgroundColor = '';
+                    document.getElementById('day3').style.backgroundColor = '';
+                    document.getElementById('day4').style.backgroundColor = '';
+                    document.getElementById('day5').style.backgroundColor = '';
+                    document.getElementById('day6').style.backgroundColor = 'red';
+                    break;
             }
-            switch (date.getHours()) {//Hour switch
-                case 0: document.getElementById('timerow_0').className = 'glowrow'; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 1: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = 'glowrow'; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 2: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = 'glowrow'; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 3: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = 'glowrow'; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 4: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = 'glowrow'; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 5: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = 'glowrow'; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 6: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = 'glowrow'; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 7: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = 'glowrow'; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 8: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = 'glowrow'; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 9: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = 'glowrow'; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 10: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = 'glowrow'; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 11: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = 'glowrow'; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 12: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = 'glowrow'; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 13: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = 'glowrow'; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 14: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = 'glowrow'; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 15: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = 'glowrow'; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 16: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = 'glowrow'; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 17: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = 'glowrow'; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 18: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = 'glowrow'; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 19: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = 'glowrow'; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 20: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = 'glowrow'; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 21: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = 'glowrow'; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = ''; break;
-                case 22: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = 'glowrow'; document.getElementById('timerow_23').className = ''; break;
-                case 23: document.getElementById('timerow_0').className = ''; document.getElementById('timerow_1').className = ''; document.getElementById('timerow_2').className = ''; document.getElementById('timerow_3').className = ''; document.getElementById('timerow_4').className = ''; document.getElementById('timerow_5').className = ''; document.getElementById('timerow_6').className = ''; document.getElementById('timerow_7').className = ''; document.getElementById('timerow_8').className = ''; document.getElementById('timerow_9').className = ''; document.getElementById('timerow_10').className = ''; document.getElementById('timerow_11').className = ''; document.getElementById('timerow_12').className = ''; document.getElementById('timerow_13').className = ''; document.getElementById('timerow_14').className = ''; document.getElementById('timerow_15').className = ''; document.getElementById('timerow_16').className = ''; document.getElementById('timerow_17').className = ''; document.getElementById('timerow_18').className = ''; document.getElementById('timerow_19').className = ''; document.getElementById('timerow_20').className = ''; document.getElementById('timerow_21').className = ''; document.getElementById('timerow_22').className = ''; document.getElementById('timerow_23').className = 'glowrow'; break;
-                default: console.error('THEY CHANGED THE RULES FOR DATES NIBBA!!!');
+            switch (date.getHours()) { //Hour switch
+                case 0:
+                    document.getElementById('timerow_0').className = 'glowrow';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 1:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = 'glowrow';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 2:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = 'glowrow';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 3:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = 'glowrow';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 4:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = 'glowrow';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 5:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = 'glowrow';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 6:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = 'glowrow';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 7:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = 'glowrow';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 8:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = 'glowrow';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 9:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = 'glowrow';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 10:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = 'glowrow';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 11:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = 'glowrow';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 12:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = 'glowrow';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 13:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = 'glowrow';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 14:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = 'glowrow';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 15:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = 'glowrow';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 16:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = 'glowrow';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 17:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = 'glowrow';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 18:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = 'glowrow';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 19:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = 'glowrow';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 20:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = 'glowrow';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 21:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = 'glowrow';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 22:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = 'glowrow';
+                    document.getElementById('timerow_23').className = '';
+                    break;
+                case 23:
+                    document.getElementById('timerow_0').className = '';
+                    document.getElementById('timerow_1').className = '';
+                    document.getElementById('timerow_2').className = '';
+                    document.getElementById('timerow_3').className = '';
+                    document.getElementById('timerow_4').className = '';
+                    document.getElementById('timerow_5').className = '';
+                    document.getElementById('timerow_6').className = '';
+                    document.getElementById('timerow_7').className = '';
+                    document.getElementById('timerow_8').className = '';
+                    document.getElementById('timerow_9').className = '';
+                    document.getElementById('timerow_10').className = '';
+                    document.getElementById('timerow_11').className = '';
+                    document.getElementById('timerow_12').className = '';
+                    document.getElementById('timerow_13').className = '';
+                    document.getElementById('timerow_14').className = '';
+                    document.getElementById('timerow_15').className = '';
+                    document.getElementById('timerow_16').className = '';
+                    document.getElementById('timerow_17').className = '';
+                    document.getElementById('timerow_18').className = '';
+                    document.getElementById('timerow_19').className = '';
+                    document.getElementById('timerow_20').className = '';
+                    document.getElementById('timerow_21').className = '';
+                    document.getElementById('timerow_22').className = '';
+                    document.getElementById('timerow_23').className = 'glowrow';
+                    break;
+                default:
+                    console.error('THEY CHANGED THE RULES FOR DATES NIBBA!!!');
             }
         },
         stop_clock: function () {
             console.warn('Clock was stopped');
-            clearInterval(this.clock_tick_trigger);//stops teh clock ticking
+            clearInterval(this.clock_tick_trigger); //stops teh clock ticking
+            config.properties.clocking = false
         },
         start_clock: function () {
             console.warn('Clock has started');
             this.clock_tick();
-            setTimeout(() => { this.clock_tick_trigger = setInterval(() => { this.clock_tick() }, 1000); }, 500);// Set timeout higher if slow devices can initalize intime
+            setTimeout(() => {
+                this.clock_tick_trigger = setInterval(() => {
+                    this.clock_tick()
+                }, 1000);
+            }, 500); // Set timeout higher if slow devices can initalize intime
+            config.properties.clocking = true
+        },
+    },
+    change: {
+        changeinterval: null,
+        startcheck: function () {
+            if (config.baseconfig.use_alt_storage) {
+                this.changeinterval = setInterval(() => {
+                    this.check() //every 5 seconds checks if the file has changed
+                }, 5000);
+            }
+        },
+        check: function () {
+            //a test function comparing length of array in data to array length in file
+            console.log('A file check is being made')
+            var configarraylength = config.data.table1_db.length
+            var fileout = JSON.parse(fs.readFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", {
+                encoding: 'utf8'
+            }))
+            //before comparison files configuration needs to be validated
+            var filearraylength = fileout.table1_db.length
+            if (configarraylength != filearraylength) {
+                console.log(configarraylength, filearraylength)
+                //location.reload()//reload to re-render table, do not reload if this user is editing data
+            } else {
+                console.log('there is no change');
+            }
         },
     },
     hilight_engine_go_vroom: function () {
@@ -715,27 +1545,12 @@ let table = {
             console.log('Hilight Query state Checking..');
             let query = document.querySelectorAll(".maincell");
             let i = 0;
-            if (typeof (device) != "undefined") {
-                if (device.platform == 'Android' || 'iOS') {//mobile
-                    touchspark(query, i);
-                } else {//Desktop
-                    clickspark(query, i);
-                }
-            } else {
-                console.error('"device" plugin broke!');
-                clickspark(query, i);
-            }
-        }
-        function touchspark(query, i) {
             while (query[i] != null || query[i] != undefined) {
-                query[i].addEventListener('touchstart', () => { table.engine_spark(event) }, { passive: true });
-                i++;
-                console.log('Added event listener for hilight_query: ', i);
-            }
-        }
-        function clickspark(query, i) {
-            while (query[i] != null || query[i] != undefined) {
-                query[i].addEventListener('mouseover', () => { table.engine_spark(event) }, { passive: true });
+                query[i].addEventListener('mouseover', () => {
+                    table.engine_spark(event)
+                }, {
+                    passive: true
+                });
                 i++;
                 console.log('Added event listener for hilight_query: ', i);
             }
@@ -744,15 +1559,18 @@ let table = {
     engine_spark: function (event) {
         if (config.data.hilight_engine) {
             console.log('Hilight Engine trigger fired on :', event);
-            if (!event.target.classList.contains('data_block')) {//check if the cell is a data_block
+            if (!event.target.classList.contains('data_block')) { //check if the cell is a data_block
                 if (config.data.theme == "light") {
                     event.target.style.color = 'black';
-                    event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,70%)';//color the target
+                    event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,70%)'; //color the target
                 } else if (config.data.theme == "dark") {
                     event.target.style.color = 'black';
-                    event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,60%)';//color the target
+                    event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,60%)'; //color the target
                 }
-                setTimeout(() => { event.target.style.backgroundColor = ""; event.target.style.color = ''; }, 1000);//un-color the target
+                setTimeout(() => {
+                    event.target.style.backgroundColor = "";
+                    event.target.style.color = '';
+                }, 1000); //un-color the target
             }
         }
     }
@@ -763,7 +1581,47 @@ let manage = {
     initalize: function () {
         console.log('Manager initializes');
         this.render_list();
-        document.getElementById('cancel_btn').addEventListener('click', () => {//Click because touch start gay
+        this.render_tables();
+        //Set text feilds
+        let i = 0;
+        while (config.data.table_details[i] != null) {
+            if (config.data.table_details[i].identifier == Number(config.data.table_selected) && config.data.table_details[i].deleted != true) {
+                document.getElementById('selected_table').innerText = config.data.table_details[i].purpose;
+                document.getElementById('tablemanage_txt').innerText = config.data.table_details[i].purpose;
+                break;
+            } else {
+                document.getElementById('tablemanage_txt').innerText = "Homeless tiles";
+                document.getElementById('title_txt').innerText = "Homeless tiles";
+            }
+            i++
+        }
+        //table manager actions
+        document.getElementById('tablemanger').addEventListener('click', function () {
+            if (config.properties.management == false) {
+                document.getElementById('tablemanger').classList = "tablemanger_active"
+                config.properties.management = true
+            } else {
+                config.properties.management = false
+                document.getElementById('tablemanger').classList = "tablemanger"
+            }
+        })
+        document.getElementById('manage_dataspace').addEventListener('click', function () {
+            if (config.properties.management == true) {
+                config.properties.management = false
+                document.getElementById('tablemanger').classList = "tablemanger"
+            }
+        })
+        document.getElementById('tablespace_render').addEventListener('click', function () {
+            event.stopPropagation() //Stop propogation to the dataspace
+        })
+
+        //Add new button
+        document.getElementById('new_class_button').addEventListener('click', function () {
+            manage.dialogue.open();
+            console.log('Add new class button clicked')
+        }) //add new btn listener
+
+        document.getElementById('cancel_btn').addEventListener('click', () => {
             console.log('Cancel button clicked');
             manage.dialogue.clear();
             manage.dialogue.close();
@@ -772,9 +1630,9 @@ let manage = {
         document.getElementById('save_btn').addEventListener('click', this.dialogue.save); //Save button
         document.getElementById('savepluss_btn').addEventListener('click', this.dialogue.saveplus);
         document.getElementById('delete_btn').addEventListener('click', this.dialogue.call_delete);
-        document.getElementById('yes_btn').addEventListener('click', function () {// Delete yes button
+        document.getElementById('yes_btn').addEventListener('click', function () { // Delete yes button
             console.log('Delete Confirmation called');
-            config.data.table1_db[config.properties.overwrite].deleted = true;//pseudo delete function
+            config.data.table1_db[config.properties.overwrite].deleted = true; //pseudo delete function
             manage.dialogue.clear();
             manage.dialogue.close();
             config.properties.changed = true;
@@ -782,176 +1640,592 @@ let manage = {
             document.getElementById('delete_confirm_pannel').style.display = 'none';
             manage.render_list();
         });
-        document.getElementById('no_btn').addEventListener('click', function () {// Delete No button
+
+        document.getElementById('no_del_btn').addEventListener('click', function () { // Delete No button
             console.log('Delete denial called');
             document.getElementById('delete_confirm_pannel').style.display = 'none';
         });
         document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
 
-        // table selector
-        document.getElementById('table_selector').value = config.data.table_selected; //Set the table selectors value
-        switch (config.data.table_selected) {
-            case 0: document.getElementById('tableselector_text').innerText = "Hidden"; break;
-            case 1: document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose;; break;
-            case 2: document.getElementById('tableselector_text').innerText = config.data.table_details[1].purpose;; break;
-            case 3: document.getElementById('tableselector_text').innerText = config.data.table_details[2].purpose;; break;
-            case 4: document.getElementById('tableselector_text').innerText = config.data.table_details[3].purpose;; break;
-            case "0": document.getElementById('tableselector_text').innerText = "Hidden"; break;
-            case "1": document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose;; break;
-            case "2": document.getElementById('tableselector_text').innerText = config.data.table_details[1].purpose;; break;
-            case "3": document.getElementById('tableselector_text').innerText = config.data.table_details[2].purpose;; break;
-            case "4": document.getElementById('tableselector_text').innerText = config.data.table_details[3].purpose;; break;
-            default: document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose;
-        }
-        document.getElementById('1_selectorsub').innerHTML = config.data.table_details[0].purpose;
-        document.getElementById('1_selectormain').innerHTML = config.data.table_details[0].purpose;
-        document.getElementById('2_selectorsub').innerHTML = config.data.table_details[1].purpose;
-        document.getElementById('2_selectormain').innerHTML = config.data.table_details[1].purpose;
-        document.getElementById('3_selectorsub').innerHTML = config.data.table_details[2].purpose;
-        document.getElementById('3_selectormain').innerHTML = config.data.table_details[2].purpose;
-        document.getElementById('4_selectorsub').innerHTML = config.data.table_details[3].purpose;
-        document.getElementById('4_selectormain').innerHTML = config.data.table_details[3].purpose;
-        document.getElementById('table_selector').addEventListener('change', function () {
-            console.log('table_selector changed');
-            config.data.table_selected = document.getElementById('table_selector').value;
-            switch (document.getElementById('table_selector').value) {
-                case "0": document.getElementById('tableselector_text').innerText = "Hidden Items"; break;
-                case "1": document.getElementById('tableselector_text').innerText = config.data.table_details[0].purpose;; break;
-                case "2": document.getElementById('tableselector_text').innerText = config.data.table_details[1].purpose;; break;
-                case "3": document.getElementById('tableselector_text').innerText = config.data.table_details[2].purpose;; break;
-                case "4": document.getElementById('tableselector_text').innerText = config.data.table_details[3].purpose;; break;
-            }
-            config.properties.changed = true;
-            manage.render_list();
-            config.save();
-        });
         //Initalize day_put selector
         document.getElementById('day_put').value = "1";
         document.getElementById('day_put_text').innerText = "Monday"
-        document.getElementById('day_put').addEventListener('change', function () {/* Switches dates on change */
+        document.getElementById('day_put').addEventListener('change', function () {
+            /* Switches dates on change */
             console.log('Day put changed');
             let tmp = document.getElementById('day_put').value;
             switch (tmp) {
-                case "1": document.getElementById('day_put_text').innerText = "Monday"; break;
-                case "2": document.getElementById('day_put_text').innerText = "Tuesday"; break;
-                case "3": document.getElementById('day_put_text').innerText = "Wednsday"; break;
-                case "4": document.getElementById('day_put_text').innerText = "Thursday"; break;
-                case "5": document.getElementById('day_put_text').innerText = "Friday"; break;
-                case "6": document.getElementById('day_put_text').innerText = "Saturday"; break;
-                case "7": document.getElementById('day_put_text').innerText = "Sunday"; break;
-                default: console.error('Blyat');
+                case "1":
+                    document.getElementById('day_put_text').innerText = "Monday";
+                    break;
+                case "2":
+                    document.getElementById('day_put_text').innerText = "Tuesday";
+                    break;
+                case "3":
+                    document.getElementById('day_put_text').innerText = "Wednsday";
+                    break;
+                case "4":
+                    document.getElementById('day_put_text').innerText = "Thursday";
+                    break;
+                case "5":
+                    document.getElementById('day_put_text').innerText = "Friday";
+                    break;
+                case "6":
+                    document.getElementById('day_put_text').innerText = "Saturday";
+                    break;
+                case "7":
+                    document.getElementById('day_put_text').innerText = "Sunday";
+                    break;
+                default:
+                    console.error('Blyat');
             }
         });
-        // view put selector
-        document.getElementById('view_put').value = "1";
-        document.getElementById('view_put_text').innerText = config.data.table_details[0].purpose;
-        document.getElementById('view_put').addEventListener('change', function () {/* Switches text displayed on change */
-            console.log('View put changed');
-            switch (document.getElementById('view_put').value) {
-                case "0": document.getElementById('view_put_text').innerText = "Hidden"; break;
-                case "1": document.getElementById('view_put_text').innerText = config.data.table_details[0].purpose;/* purpose is the array with names of tables */; break;
-                case "2": document.getElementById('view_put_text').innerText = config.data.table_details[1].purpose;; break;
-                case "3": document.getElementById('view_put_text').innerText = config.data.table_details[2].purpose;; break;
-                case "4": document.getElementById('view_put_text').innerText = config.data.table_details[3].purpose;; break;
+
+        //Initalize Table put selector
+        i = 0;
+        var view_put = document.getElementById('view_put');
+        view_put.innerHTML = "";
+        while (config.data.table_details[i] != null) {
+            if (config.data.table_details[i].deleted != true) {
+                buildoption(i)
             }
-        });
+            i++;
+        }
+        document.getElementById('view_put').value = config.data.table_selected; //Value to view put
+        function buildoption(i) { //function build options
+            var option = document.createElement('option')
+            option.value = config.data.table_details[i].identifier;
+            option.innerHTML = config.data.table_details[i].purpose;
+            view_put.appendChild(option);
+            if (config.data.table_details[i].identifier == config.data.table_selected) {
+                document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose;
+            }
+        }
+        document.getElementById('view_put').addEventListener('change', function () {
+            setTimeout(() => {
+                var vewalue = document.getElementById('view_put').value;
+                var i = 0;
+                while (config.data.table_details[i] != null) {
+                    if (config.data.table_details[i].deleted != true && config.data.table_details[i].identifier == vewalue) {
+                        document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose
+                        break; //found it
+                    }
+                    i++;
+                }
+            }, 50)
+        })
+
         //color sliders initalizer
-        document.getElementById('color_put').addEventListener('touchmove', function () {
+        document.getElementById('color_put').addEventListener('touchmove', slidecolor)
+        document.getElementById('sat_put').addEventListener('touchmove', slidesat)
+        document.getElementById('color_put').addEventListener('touchmove', slidecolor)
+        document.getElementById('sat_put').addEventListener('touchmove', slidesat)
+
+        function slidecolor() {
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
             document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + document.getElementById('color_put').value + ", 100%, 50%)";
-        });
-        document.getElementById('sat_put').addEventListener('touchmove', function () {
+        }
+
+        function slidesat() {
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
-        });
+        }
+
+        //name autofill
+        var lecture_autofill, room_autofill, type_autofill, course_autofill; //save for later
+        document.getElementById('name_put').addEventListener('keydown', function () {
+            console.log('Name autofill fired')
+            setTimeout(() => {
+                if (document.getElementById('name_put').value == "") {
+                    //clear autofill
+                    document.getElementById('name_autofill').innerHTML = "";
+                    document.getElementById('name_autofill').classList = "autofill_container"
+                } else {
+                    document.getElementById('name_autofill').innerHTML = "";
+                    document.getElementById('name_autofill').classList = "autofill_container_active"
+                    for (i = 0; i < config.data.table1_db.length; i++) {
+                        if (config.data.table1_db[i].name.indexOf(document.getElementById('name_put').value.toString()) != -1) {
+                            autofill_name(i)
+                        } else {
+                            //nothing found
+                        }
+                    }
+                }
+
+            }, 200)
+        })
+
+        function autofill_name(i) {
+
+            var fillbar = document.createElement('div');
+            var name_autofill = config.data.table1_db[i].name;
+            fillbar.setAttribute('class', 'fillbar');
+            fillbar.innerHTML = config.data.table1_db[i].name;
+            fillbar.addEventListener('click', function () {
+                document.getElementById('name_autofill').classList = "autofill_container"
+                document.getElementById('name_put').value = name_autofill;
+            });
+            document.getElementById('name_autofill').appendChild(fillbar);
+        }
+
+        //room autofill
+        document.getElementById('room_put').addEventListener('keydown', function () {
+            console.log('room autofill fired')
+            setTimeout(() => {
+                if (document.getElementById('room_put').value == "") {
+                    //clear autofill
+                    document.getElementById('room_autofill').innerHTML = "";
+                    document.getElementById('room_autofill').classList = "autofill_container"
+                } else {
+                    document.getElementById('room_autofill').innerHTML = "";
+                    document.getElementById('room_autofill').classList = "autofill_container_active"
+                    for (i = 0; i < config.data.table1_db.length; i++) {
+                        if (config.data.table1_db[i].room.indexOf(document.getElementById('room_put').value.toString()) != -1) {
+                            autofill_room(i)
+                        } else {
+                            //nothing found
+                        }
+                    }
+                }
+
+            }, 200)
+        })
+
+        function autofill_room(i) {
+            var fillbar = document.createElement('div');
+            var room_autofill = config.data.table1_db[i].room;
+            fillbar.setAttribute('class', 'fillbar');
+            fillbar.innerHTML = config.data.table1_db[i].room;
+            fillbar.addEventListener('click', function () {
+                document.getElementById('room_autofill').classList = "autofill_container"
+                document.getElementById('room_put').value = room_autofill;
+            });
+            document.getElementById('room_autofill').appendChild(fillbar);
+        }
+
+        //type autofill
+        document.getElementById('type_put').addEventListener('keydown', function () {
+            console.log('type autofill fired')
+            setTimeout(() => {
+                if (document.getElementById('type_put').value == "") {
+                    //clear autofill
+                    document.getElementById('type_autofill').innerHTML = "";
+                    document.getElementById('type_autofill').classList = "autofill_container"
+                } else {
+                    document.getElementById('type_autofill').innerHTML = "";
+                    document.getElementById('type_autofill').classList = "autofill_container_active"
+                    for (i = 0; i < config.data.table1_db.length; i++) {
+                        if (config.data.table1_db[i].type.indexOf(document.getElementById('type_put').value.toString()) != -1) {
+                            autofill_type(i)
+                        } else {
+                            //nothing found
+                        }
+                    }
+                }
+
+            }, 200)
+        })
+
+        function autofill_type(i) {
+            var fillbar = document.createElement('div');
+            var type_autofill = config.data.table1_db[i].type;
+            fillbar.setAttribute('class', 'fillbar');
+            fillbar.innerHTML = config.data.table1_db[i].type;
+            fillbar.addEventListener('click', function () {
+                document.getElementById('type_autofill').classList = "autofill_container"
+                document.getElementById('type_put').value = type_autofill;
+            });
+            document.getElementById('type_autofill').appendChild(fillbar);
+        }
+
+        //course_code autofill
+        document.getElementById('course_code_put').addEventListener('keydown', function () {
+            console.log('course_code autofill fired')
+            setTimeout(() => {
+                if (document.getElementById('course_code_put').value == "") {
+                    //clear autofill
+                    document.getElementById('course_code_autofill').innerHTML = "";
+                    document.getElementById('course_code_autofill').classList = "autofill_container"
+                } else {
+                    document.getElementById('course_code_autofill').innerHTML = "";
+                    document.getElementById('course_code_autofill').classList = "autofill_container_active"
+                    for (i = 0; i < config.data.table1_db.length; i++) {
+                        if (config.data.table1_db[i].course_code.indexOf(document.getElementById('course_code_put').value.toString()) != -1) {
+                            autofill_course_code(i)
+                        } else {
+                            //nothing found
+                        }
+                    }
+                }
+
+            }, 200)
+        })
+
+        function autofill_course_code(i) {
+            var fillbar = document.createElement('div');
+            var course_code_autofill = config.data.table1_db[i].course_code;
+            fillbar.setAttribute('class', 'fillbar');
+            fillbar.innerHTML = config.data.table1_db[i].course_code;
+            fillbar.addEventListener('click', function () {
+                document.getElementById('course_code_autofill').classList = "autofill_container"
+                document.getElementById('course_code_put').value = course_code_autofill;
+            });
+            document.getElementById('course_code_autofill').appendChild(fillbar);
+        }
+
+        //Lecture autofill
+        document.getElementById('Lecture_put').addEventListener('keydown', function () {
+            console.log('Lecture autofill fired')
+            setTimeout(() => {
+                if (document.getElementById('Lecture_put').value == "") {
+                    //clear autofill
+                    document.getElementById('Lecture_autofill').innerHTML = "";
+                    document.getElementById('Lecture_autofill').classList = "autofill_container"
+                } else {
+                    document.getElementById('Lecture_autofill').innerHTML = "";
+                    document.getElementById('Lecture_autofill').classList = "autofill_container_active"
+                    for (i = 0; i < config.data.table1_db.length; i++) {
+                        if (config.data.table1_db[i].Lecturer.indexOf(document.getElementById('Lecture_put').value.toString()) != -1) {
+                            autofill_Lecture(i)
+                        } else {
+                            //nothing found
+                        }
+                    }
+                }
+
+            }, 200)
+        })
+
+        function autofill_Lecture(i) {
+            var fillbar = document.createElement('div');
+            var Lecture_autofill = config.data.table1_db[i].Lecturer;
+            fillbar.setAttribute('class', 'fillbar');
+            fillbar.innerHTML = config.data.table1_db[i].Lecturer;
+            fillbar.addEventListener('click', function () {
+                document.getElementById('Lecture_autofill').classList = "autofill_container"
+                document.getElementById('Lecture_put').value = Lecture_autofill;
+            });
+            document.getElementById('Lecture_autofill').appendChild(fillbar);
+        }
+    },
+
+    render_tables: function () {
+        console.log('Table management render started');
+        clear();
+        let i = 0;
+        while (config.data.table_details[i] != undefined || null) {
+            if (config.data.table_details[i].deleted != true) {
+                renderbar(i);
+            }
+            i++;
+        }
+
+        //button to select table 0
+        let table0_button = document.createElement('div');
+        table0_button.setAttribute("class", "table_bar");
+        let titlespan0 = document.createElement('span');
+        titlespan0.innerHTML = "Homeless tiles";
+        titlespan0.title = "Tiles not associated with any table";
+        table0_button.appendChild(titlespan0)
+        document.getElementById('tablespace_render').appendChild(table0_button);
+        table0_button.addEventListener('click', function () {
+            event.stopPropagation
+            config.data.table_selected = 0;
+            config.save();
+            manage.initalize();
+            config.properties.changed = true
+        })
+
+        //Button to add new table
+        let new_table_button = document.createElement('div');
+        new_table_button.setAttribute("class", "table_bar");
+        let titlespan = document.createElement('span');
+        titlespan.innerHTML = "Create new table";
+        titlespan.title = "Click to create new empty table";
+        new_table_button.appendChild(titlespan)
+        document.getElementById('tablespace_render').appendChild(new_table_button);
+        new_table_button.addEventListener('click', function () {
+            event.stopPropagation
+            let identifier = 1
+            let i = 0;
+            while (config.data.table_details[i] != null) {
+                if (config.data.table_details[i].deleted != true) {
+                    identifier = Math.max(config.data.table_details[i].identifier, identifier)
+                }
+                i++
+            }
+            let newtable = {
+                purpose: "new table #" + Number(identifier + 1),
+                deleted: false,
+                identifier: Number(identifier + 1)
+            }
+            config.data.table_details.push(newtable);
+            config.save();
+            console.warn('value: ', identifier)
+            manage.initalize();
+            config.properties.changed = true
+        })
+
+        function renderbar(index) {
+            console.log('Creating actionbutton for :', config.data.table_details[index]);
+            //build menu
+            let table_bar = document.createElement('div');
+            table_bar.setAttribute("class", "table_bar");
+            let titlespan = document.createElement('span');
+            titlespan.innerHTML = config.data.table_details[index].purpose;
+            let tabmenu = document.createElement('div');
+            tabmenu.setAttribute("class", "tabmenu");
+            let editbtn = document.createElement('div');
+            editbtn.style.display = "block";
+            editbtn.setAttribute("class", "tabtion_btn editbtn");
+            editbtn.setAttribute("title", "Edit " + config.data.table_details[index].purpose);
+            let deletebtn = document.createElement('div');
+            deletebtn.style.display = "block";
+            deletebtn.setAttribute("class", "tabtion_btn deletebtn");
+            deletebtn.setAttribute("title", "Delete " + config.data.table_details[index].purpose);
+            let confirmimg = document.createElement('div');
+            confirmimg.setAttribute("class", "tabtion_btn confirmimg");
+            let cancelimg = document.createElement('div');
+            cancelimg.setAttribute("class", "tabtion_btn cancelimg");
+            let tab_put = document.createElement('input');
+            tab_put.setAttribute("class", "tab_put");
+
+
+            //inject into document
+            tabmenu.appendChild(confirmimg)
+            tabmenu.appendChild(cancelimg)
+            tabmenu.appendChild(editbtn)
+            tabmenu.appendChild(deletebtn)
+            table_bar.appendChild(titlespan)
+            table_bar.appendChild(tab_put)
+            table_bar.appendChild(tabmenu)
+            document.getElementById('tablespace_render').appendChild(table_bar);
+
+            //make fucntion
+            tab_put.addEventListener('click', function () {
+                event.stopPropagation()
+            }) //stop this event from trigering table select action
+            table_bar.addEventListener('click', function () { //select table fucntion
+                console.warn('Table selected by identifier : ', config.data.table_details[index].identifier)
+                config.data.table_selected = config.data.table_details[index].identifier;
+                config.save()
+                manage.initalize()
+                config.properties.changed = true
+            })
+            table_bar.addEventListener('mouseover', function () {
+                tabmenu.style.transform = "translate(0, 0)";
+            })
+            table_bar.addEventListener('mouseout', function () {
+                if (confirmimg.style.display != "block") {
+                    tabmenu.style.transform = "";
+                }
+            })
+            editbtn.addEventListener('click', function () { //edit button is pressed
+                event.stopPropagation();
+                console.log('Edit called on table name: ' + config.data.table_details[index].purpose)
+                confirmimg.setAttribute("title", "Confirm name change")
+                cancelimg.setAttribute("title", "Do not change")
+                confirmimg.style.display = "block"
+                cancelimg.style.display = "block"
+                deletebtn.style.display = "none"
+                editbtn.style.display = "none"
+                tab_put.style.display = "block"
+                tab_put.value = config.data.table_details[index].purpose
+                setTimeout(() => {
+                    tab_put.focus()
+                }, 500)
+                tab_put.addEventListener('keyup', function (event) {
+                    if (event.keyCode === 13) { //enterkey
+                        confirmimg.click(); //enterkey is pressed, confirm input
+                    } else if (event.keyCode == 27) { //esckey
+                        cancelimg.click(); //Cancel key is pressed, cancel input
+                    }
+                })
+            })
+            deletebtn.addEventListener('click', function () { //edit button is pressed
+                event.stopPropagation();
+                console.log('Delete called on table name: ' + config.data.table_details[index].purpose)
+                confirmimg.setAttribute("title", "Confirm delete " + config.data.table_details[index].purpose);
+                cancelimg.setAttribute("title", "Do not delete " + config.data.table_details[index].purpose);
+                confirmimg.style.display = "block"
+                cancelimg.style.display = "block"
+                deletebtn.style.display = "none"
+                editbtn.style.display = "none"
+                tab_put.style.display = "none"
+            })
+            confirmimg.addEventListener('click', function () { //cancel button is pressed
+                event.stopPropagation();
+                console.log('Confirm button pressed')
+                //perform confirmation action
+                if (tab_put.style.display == "block") {
+                    console.log('save action on: ' + config.data.table_details[index])
+                    config.data.table_details[index].purpose = tab_put.value;
+                } else if (tab_put.style.display == "none") {
+                    console.log('delete action')
+                    config.data.table_details[index].deleted = true;
+                }
+                config.save()
+                manage.initalize()
+                config.properties.changed = true
+            })
+            cancelimg.addEventListener('click', function () { //cancel button is pressed
+                event.stopPropagation();
+                console.log('Cancel button pressed')
+                confirmimg.style.display = "none"
+                cancelimg.style.display = "none"
+                deletebtn.style.display = "block"
+                editbtn.style.display = "block"
+                tab_put.style.display = "none"
+            })
+        }
+
+        function clear() {
+            document.getElementById('tablespace_render').innerHTML = "";
+        }
     },
     render_list: function () {
         console.log('Manager Render starts');
         clear();
         let i = 0;
-        //Add new button
-        let tempblock = document.createElement('div');
-        tempblock.setAttribute("class", "data_bar");
-        tempblock.innerHTML = 'New Class';
-        tempblock.title = 'Add a new class';
-        document.getElementById('manage_dataspace').appendChild(tempblock);
-        let plusimg = document.createElement('div');//plus image
-        plusimg.setAttribute("class", "plusimg");
-        tempblock.appendChild(plusimg);
-        tempblock.addEventListener('click', function () { manage.dialogue.open(); console.log('Add new class button clicked') });//add new btn listener
+
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
             console.log('The table database is empty,manager will show first time setup');
         } else {
             //Construct the data
-            while (config.data.table1_db[i] != null || undefined) {
-                console.log('Data run on index :', i);
-                if (config.data.table1_db[i].show == config.data.table_selected) {
+            if (config.data.table_details[0] == null) { //there are no tables, everyone is homeless render them all
+                while (config.data.table1_db[i] != null || undefined) { //render selected tables data
+                    console.log('Data run on index :', i);
                     build_bar_db1(i);
+                    i++;
                 }
-                i++;
-            }
-            i = 0;
-            while (config.data.table1_db[i] != null || undefined) {
-                console.log('Data run on index :', i);
-                if (config.data.table1_db[i].show != config.data.table_selected) {
-                    build_bar_db1(i);
+            } else {
+                while (config.data.table1_db[i] != null || undefined) { //render selected tables data
+                    console.log('Data run on index :', i);
+                    if (config.data.table1_db[i].show == config.data.table_selected) {
+                        build_bar_db1(i);
+                    }
+                    i++;
                 }
-                i++;
+                i = 0;
+                while (config.data.table1_db[i] != null || undefined) { //render non-selected tables data
+                    console.log('Data run on index :', i);
+                    if (config.data.table1_db[i].show != config.data.table_selected) {
+                        build_bar_db1(i);
+                    }
+                    i++;
+                }
             }
+            //config.save()//save because many things get changed and shuffled durring this function
         }
         console.log('Manager Render Completed');
-        function build_bar_db1(index) {//Builds timetable from database
+
+        function build_bar_db1(index) { //Builds timetable from database
+            //check if block is homeless (has no table or its tables been deleted)
+            let i = 0
+            let homeless = true
+            while (config.data.table_details[i] != null) {
+                if (config.data.table_details[i].identifier == config.data.table1_db[index].show && config.data.table_details[i].deleted != true) {
+                    homeless = false
+                }
+                i++;
+            }
+            if (homeless) {
+                config.data.table1_db[index].show = 0;
+            }
             //Create the data block
             console.log('Building Bar: ', index);
             let tempblock = document.createElement('div');
             tempblock.title = "Click to edit";
             tempblock.setAttribute("class", "data_bar");
+
             //assign a color
-            tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+            tempblock.style.borderColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+            tempblock.style.boxShadow = "0vh 0vh 0.5vh 0vh hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+
+            //build menu
+            let sub_optionbar = document.createElement('div');
+            sub_optionbar.setAttribute("class", "sub_optionbar");
+            let editbtn = document.createElement('div');
+            editbtn.setAttribute("class", "optionbutton editbtn");
+            editbtn.setAttribute("title", "edit");
+            let deletebtn = document.createElement('div');
+            deletebtn.setAttribute("class", "optionbutton deletebtn");
+            deletebtn.setAttribute("title", "delete");
+
+            sub_optionbar.appendChild(editbtn)
+            sub_optionbar.appendChild(deletebtn)
+            tempblock.appendChild(sub_optionbar)
 
             //time processing
             let startmeridian = 'a.m.';
             let starthr = 0;
             let startminute = Number(config.data.table1_db[index].start % 1 * 60).toFixed(0);
-            if (startminute == 0) { startminute = '00' }
+            if (startminute == 0) {
+                startminute = '00'
+            }
             let endmeridian = 'a.m.';
             let endhr = 0;
             let endminute = Number(config.data.table1_db[index].end % 1 * 60).toFixed(0);
-            if (endminute == 0) { endminute = '00' }
+            if (endminute == 0) {
+                endminute = '00'
+            }
 
             if (config.data.table1_db[index].start > 12) {
-                startmeridian = 'p.m.';//morning or evening
-                starthr = Number(config.data.table1_db[index].start - 12) - config.data.table1_db[index].start % 1;//removes remainder
+                startmeridian = 'p.m.'; //morning or evening
+                starthr = Number(config.data.table1_db[index].start - 12) - config.data.table1_db[index].start % 1; //removes remainder
             } else {
-                starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1;//removes remainder
+                starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
             }
             if (config.data.table1_db[index].end > 12) {
-                endmeridian = 'p.m.';//morning or evening
-                endhr = Number(config.data.table1_db[index].end - 12) - config.data.table1_db[index].end % 1;//removes remainder
+                endmeridian = 'p.m.'; //morning or evening
+                endhr = Number(config.data.table1_db[index].end - 12) - config.data.table1_db[index].end % 1; //removes remainder
             } else {
-                endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1;//removes remainder
+                endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1; //removes remainder
             }
-            if (starthr == 0) { starthr = 12 }
-            if (endhr == 0) { endhr = 12 }
+            if (starthr == 0) {
+                starthr = 12
+            }
+            if (endhr == 0) {
+                endhr = 12
+            }
             let day;
             switch (config.data.table1_db[index].day) {
-                case 1: day = "Monday"; break;
-                case 2: day = "Tuesday"; break;
-                case 3: day = "Wednesday"; break;
-                case 4: day = "Thursday"; break;
-                case 5: day = "Friday"; break;
-                case 6: day = "Saturday"; break;
-                case 7: day = "Sunday"; break;
-                default: console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
+                case 1:
+                    day = "Monday";
+                    break;
+                case 2:
+                    day = "Tuesday";
+                    break;
+                case 3:
+                    day = "Wednesday";
+                    break;
+                case 4:
+                    day = "Thursday";
+                    break;
+                case 5:
+                    day = "Friday";
+                    break;
+                case 6:
+                    day = "Saturday";
+                    break;
+                case 7:
+                    day = "Sunday";
+                    break;
+                default:
+                    console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
             }
-            if (config.data.table1_db[index].deleted) {//Check deleted state
+            if (config.data.table1_db[index].deleted) { //Check deleted state
                 //populate the block with relivant data
-                tempblock.innerHTML = config.data.table1_db[index].name + '<br> Marked for delete, tap to undo';
+                tempblock.innerHTML = config.data.table1_db[index].name + '<br> Marked for delete, Click to undo';
                 tempblock.setAttribute("class", "data_bar");
                 tempblock.style.border = "0.3vh solid red";
                 //alow editing function
                 tempblock.setAttribute('id', 'bar_' + index);
-                tempblock.addEventListener('click', function () { config.data.table1_db[index].deleted = false; config.save(); manage.render_list(); });//un-"delete"
+                tempblock.addEventListener('click', function () {
+                    config.data.table1_db[index].deleted = false;
+                    config.save();
+                    manage.render_list();
+                }); //un-"delete"
             } else {
                 //populate the block with relivant data
                 //make table in tempblock to keep things even
@@ -984,98 +2258,159 @@ let manage = {
                 tempblock.appendChild(sub_tab);
                 //alow editing function
                 tempblock.setAttribute('id', 'bar_' + index);
-                tempblock.addEventListener('click', function () { manage.dialogue.edit(index) });//Edit btn
+                tempblock.addEventListener('click', function () {
+                    manage.dialogue.edit(index)
+                }); //Edit btn
+                editbtn.addEventListener('click', function () {
+                    manage.dialogue.edit(index)
+                }); //Edit btn
+                deletebtn.addEventListener('click', function () {
+                    manage.dialogue.edit(index);
+                    manage.dialogue.call_delete()
+                })
+
             }
             let noot = document.createElement('div');
-            if (config.data.table1_db[index].show == 0) { noot.innerHTML = '<del>' + config.data.table1_db[index].show + '</del>'; noot.style.color = 'red'; }//noot is hidden
-            else { noot.innerHTML = config.data.table1_db[index].show; }//not gets a number
+            if (config.data.table1_db[index].show == 0) { // this dataset is homeless
+                noot.innerHTML = '<del>Not in a table</del>';
+                noot.style.color = 'red';
+            } //noot is hidden
+            else {
+                let i = 0;
+                while (config.data.table_details[i] != null) {
+                    if (config.data.table_details[i].identifier == Number(config.data.table1_db[index].show) && config.data.table_details[i].deleted != true) {
+                        noot.innerHTML = config.data.table_details[i].purpose;
+                        break;
+                    }
+                    i++
+                }
+            } //not gets a number
             noot.setAttribute('class', 'data_noot');
             tempblock.appendChild(noot)
-            document.getElementById('manage_dataspace').appendChild(tempblock);//put the bar into the dukument
+            document.getElementById('manage_dataspace').appendChild(tempblock); //put the bar into the dukument
             console.log('Bar: ', index, ' Complete');
         }
+
         function clear() {
             console.log('manage_dataspace clear called');
             document.getElementById('manage_dataspace').innerHTML = '';
         }
     },
     dialogue: {
-        edit: function (index) {//Does not edit anything, only populates feilds in the editor with data, listener found in manage.data.build_bar_db1();
+        edit: function (index) { //Does not edit anything, only populates feilds in the editor with data, listener found in manage.data.build_bar_db1();
             console.log('Dialogue Edit called on index: ', index);
-            config.properties.overwrite = index;  //Set overwrtite so save function knows to do
-            document.getElementById('day_put').value = config.data.table1_db[index].day;    //set day feild
+
+            config.properties.overwrite = index; //Set overwrtite so save function knows to do
+            document.getElementById('day_put').value = config.data.table1_db[index].day; //set day feild
             switch (config.data.table1_db[index].day) {
-                case 0: document.getElementById('day_put_text').innerText = "Sunday"; break;
-                case 1: document.getElementById('day_put_text').innerText = "Monday"; break;
-                case 2: document.getElementById('day_put_text').innerText = "Tuesday"; break;
-                case 3: document.getElementById('day_put_text').innerText = "Wednsday"; break;
-                case 4: document.getElementById('day_put_text').innerText = "Thursday"; break;
-                case 5: document.getElementById('day_put_text').innerText = "Friday"; break;
-                case 6: document.getElementById('day_put_text').innerText = "Saturday"; break;
+                case 0:
+                    document.getElementById('day_put_text').innerText = "Sunday";
+                    break;
+                case 1:
+                    document.getElementById('day_put_text').innerText = "Monday";
+                    break;
+                case 2:
+                    document.getElementById('day_put_text').innerText = "Tuesday";
+                    break;
+                case 3:
+                    document.getElementById('day_put_text').innerText = "Wednsday";
+                    break;
+                case 4:
+                    document.getElementById('day_put_text').innerText = "Thursday";
+                    break;
+                case 5:
+                    document.getElementById('day_put_text').innerText = "Friday";
+                    break;
+                case 6:
+                    document.getElementById('day_put_text').innerText = "Saturday";
+                    break;
             }
-            document.getElementById('color_put').value = config.data.table1_db[index].color.hue;    //set color feild
-            document.getElementById('light_put').value = config.data.table1_db[index].color.light;    //set color feild
-            document.getElementById('sat_put').value = config.data.table1_db[index].color.sat;    //set color feild
+            document.getElementById('color_put').value = config.data.table1_db[index].color.hue; //set color feild
+            document.getElementById('light_put').value = config.data.table1_db[index].color.light; //set color feild
+            document.getElementById('sat_put').value = config.data.table1_db[index].color.sat; //set color feild
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 50%),#ffffff)";
             document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + config.data.table1_db[index].color.hue + ", 100%, 50%)";
-            document.getElementById('course_code_put').value = config.data.table1_db[index].course_code;  //set course code
-            document.getElementById('type_put').value = config.data.table1_db[index].type;  //set room type
-            document.getElementById('room_put').value = config.data.table1_db[index].room;  //set room feild
-            document.getElementById('name_put').value = config.data.table1_db[index].name;  //Set Name feild
+            document.getElementById('course_code_put').value = config.data.table1_db[index].course_code; //set course code
+            document.getElementById('type_put').value = config.data.table1_db[index].type; //set room type
+            document.getElementById('room_put').value = config.data.table1_db[index].room; //set room feild
+            document.getElementById('name_put').value = config.data.table1_db[index].name; //Set Name feild
 
             //process time
-            let starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1;//removes remainder
+            let starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
             let startminute = Number(config.data.table1_db[index].start % 1 * 60).toFixed(0);
-            if (startminute == 0) { startminute = '00' }
-            if (starthr < 10) { starthr = '0' + starthr }
-            let endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1;//removes remainder
-            let endminute = Number(config.data.table1_db[index].end % 1 * 60).toFixed(0);
-            if (endminute == 0) { endminute = '00' }
-            if (endhr < 10) { endhr = '0' + endhr }
-            document.getElementById('start_time_put').value = starthr + ':' + startminute      //Set start time feild
-            document.getElementById('end_time_put').value = endhr + ':' + endminute            //Set the end time feild
-            this.open()
-            document.getElementById('view_put').value = config.data.table1_db[index].show    //Set view state feild
-            switch (config.data.table1_db[index].show) {
-                case 0: document.getElementById('view_put_text').innerText = "Hidden"; break;
-                case 1: document.getElementById('view_put_text').innerText = config.data.table_details[0].purpose; break;
-                case 2: document.getElementById('view_put_text').innerText = config.data.table_details[1].purpose; break;
-                case 3: document.getElementById('view_put_text').innerText = config.data.table_details[2].purpose; break;
-                case 4: document.getElementById('view_put_text').innerText = config.data.table_details[3].purpose; break;
+            if (startminute == 0) {
+                startminute = '00'
             }
-            //document.getElementById('view_put_text').innerText=config.data.table_details[index].purpose;//view state text
+            if (starthr < 10) {
+                starthr = '0' + starthr
+            }
+            let endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1; //removes remainder
+            let endminute = Number(config.data.table1_db[index].end % 1 * 60).toFixed(0);
+            if (endminute == 0) {
+                endminute = '00'
+            }
+            if (endhr < 10) {
+                endhr = '0' + endhr
+            }
+            document.getElementById('start_time_put').value = starthr + ':' + startminute //Set start time feild
+            document.getElementById('end_time_put').value = endhr + ':' + endminute //Set the end time feild
+            document.getElementById('view_put').value = config.data.table1_db[index].show //Set view state feild
+            switch (config.data.table1_db[index].show) {
+                case 0:
+                    document.getElementById('view_put_text').innerText = "Hidden";
+                    break;
+                case 1:
+                    document.getElementById('view_put_text').innerText = config.data.table_details[0].purpose;
+                    break;
+                case 2:
+                    document.getElementById('view_put_text').innerText = config.data.table_details[1].purpose;
+                    break;
+                case 3:
+                    document.getElementById('view_put_text').innerText = config.data.table_details[2].purpose;
+                    break;
+                case 4:
+                    document.getElementById('view_put_text').innerText = config.data.table_details[3].purpose;
+                    break;
+            }
+            this.open() //Open after
         },
-        open: function () {//The listener for the add open btn is in manage.render_list() 
+        open: function () { //The listener for the add open btn is in manage.render_list() 
             console.log('Dialogue open called');
-            document.getElementById('view_put').value = config.data.table_selected;//if new
+
+            //other stuff
+            document.getElementById('manage_dataspace').classList = "dataspace_compact"; //switch dataspace to compact view
+
+
             if (config.properties.overwrite == null) {
                 document.getElementById('savepluss_btn').style.display = 'block';
                 document.getElementById('delete_btn').style.display = 'none';
                 document.getElementById('data_title').innerHTML = 'New Entry';
-                setTimeout(() => { document.getElementById('name_put').focus() }, 500)
+                setTimeout(() => {
+                    document.getElementById('name_put').focus()
+                }, 500)
             } else {
                 document.getElementById('savepluss_btn').style.display = 'none';
                 document.getElementById('delete_btn').style.display = 'block';
-                document.getElementById('data_title').innerHTML = 'Edit';
+                document.getElementById('data_title').innerHTML = 'Edit ' + config.data.table1_db[config.properties.overwrite].name;
             }
             document.getElementById('name_put').style.border = "";
             document.getElementById('start_time_put').style.border = "";
             document.getElementById('end_time_put').style.border = "";
             if (config.data.animation) {
-                document.getElementById('dataentry_screen').style.transform = "translate(0,100%)";//strange bug, setting this in css causes the buttons to glitch out
+                document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, setting this in css causes the buttons to glitch out
                 document.getElementById('dataentry_screen').style.display = "block";
                 setTimeout(() => {
                     document.getElementById('dataentry_screen').style.transform = "initial";
                     setTimeout(() => {
-                        document.getElementById('btn_bar').style.display = "block";
+                        document.getElementById('btn_bar').style.display = "flex";
                     }, 210);
                 }, 0);
             } else {
                 document.getElementById('dataentry_screen').style.transform = "initial";
-                document.getElementById('btn_bar').style.display = "block";
+                document.getElementById('btn_bar').style.display = "flex";
                 document.getElementById('dataentry_screen').style.display = "block";
             }
-            if (config.properties.colors_changed == true) {// render recent colors
+            if (config.properties.colors_changed == true) { // render recent colors
                 if (config.data.previous_colors[0] != null) {
                     document.getElementById('recent_colors').innerHTML = "";
                     var index = config.data.previous_colors.length - 1;
@@ -1088,6 +2423,7 @@ let manage = {
                     document.getElementById('recent_colors').innerHTML = "Recent Colors";
                 }
             }
+
             function render_color(index) {
                 console.log('Rendering recent color :', config.data.previous_colors[index], ', index:', index);
                 var color_doot = document.createElement("div");
@@ -1105,7 +2441,7 @@ let manage = {
                 });
             }
         },
-        clear: function () {//clear the input and remove the input screen
+        clear: function () { //clear the input and remove the input screen
             console.log('Dialogue clear called');
             document.getElementById('course_code_put').value = "";
             document.getElementById('Lecture_put').value = "";
@@ -1116,10 +2452,11 @@ let manage = {
             document.getElementById('end_time_put').value = "";
             document.getElementById('view_put').validate = 1;
         },
-        close: function () {//remove the input screen
+        close: function () { //remove the input screen
+            document.getElementById('manage_dataspace').classList = "dataspace";
             console.log('Dialogue close called');
             if (config.data.animation) {
-                document.getElementById('dataentry_screen').style.transform = "translate(0,100%)";//strange bug, setting this in css causes the buttons to glitch out
+                document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, setting this in css causes the buttons to glitch out
                 setTimeout(() => {
                     document.getElementById('dataentry_screen').style.display = "none";
                 }, 205);
@@ -1130,7 +2467,22 @@ let manage = {
         },
         save: function () {
             console.log('Dialogue save called');
-            let tempentry = { show: true, day: null, name: null, room: null, course_code: null, Lecturer: null, type: null, color: { hue: null, sat: null, light: null }, start: null, end: null };//Its test data
+            let tempentry = {
+                show: true,
+                day: null,
+                name: null,
+                room: null,
+                course_code: null,
+                Lecturer: null,
+                type: null,
+                color: {
+                    hue: null,
+                    sat: null,
+                    light: null
+                },
+                start: null,
+                end: null
+            }; //Its test data
             let entryisvalid = true;
 
             //get day select, no validation, because default is valid
@@ -1165,7 +2517,7 @@ let manage = {
             if (tempentry.name == "" || undefined || null) {
                 entryisvalid = false;
                 document.getElementById('name_put').style.border = "0.3vh solid #ff0000";
-                utility.toast('Please Enter a name');
+                notify.new('Please Enter a name');
             } else {
                 document.getElementById('name_put').style.border = "";
                 console.log('Name detected: ', tempentry.name);
@@ -1174,14 +2526,14 @@ let manage = {
             //Process time
             let start_time_raw = document.getElementById('start_time_put').value.toString();
             let end_time_raw = document.getElementById('end_time_put').value.toString();
-            let percentage_start = Number((start_time_raw.slice(0, 2) / 1/*I divide it by one becasue the scripting engine is drunk*/) + (start_time_raw.slice(3) / 60));
-            let percentage_end = Number((end_time_raw.slice(0, 2) / 1/*I divide it by one becasue the scripting engine is drunk*/) + (end_time_raw.slice(3) / 60));
+            let percentage_start = Number((start_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (start_time_raw.slice(3) / 60));
+            let percentage_end = Number((end_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (end_time_raw.slice(3) / 60));
             if (start_time_raw == "" || start_time_raw == null || start_time_raw == undefined) {
-                utility.toast('Start time cannot be empty');
+                notify.new('Start time cannot be empty');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (end_time_raw == "" || end_time_raw == null || end_time_raw == undefined) {
-                utility.toast('End time cannot be empty');
+                notify.new('End time cannot be empty');
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start == percentage_end) {
@@ -1189,7 +2541,7 @@ let manage = {
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start > percentage_end) {
-                utility.toast('Class cannot start after it ends');
+                notify.new('Class cannot start after it ends');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
@@ -1230,7 +2582,7 @@ let manage = {
             config.properties.called_from_plus = true;
             let entryisvalid = manage.dialogue.save();
             if (entryisvalid) {
-                utility.toast(document.getElementById('name_put').value + ' was saved, U may now add another');
+                notify.new(document.getElementById('name_put').value + ' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
                 manage.dialogue.open();
             }
@@ -1241,46 +2593,81 @@ let manage = {
             let startmeridian = 'a.m.';
             let starthr = 0;
             let startminute = Number(config.data.table1_db[config.properties.overwrite].start % 1 * 60).toFixed(0);
-            if (startminute == 0) { startminute = '00' }
+            if (startminute == 0) {
+                startminute = '00'
+            }
             let endmeridian = 'a.m.';
             let endhr = 0;
             let endminute = Number(config.data.table1_db[config.properties.overwrite].end % 1 * 60).toFixed(0);
-            if (endminute == 0) { endminute = '00' }
+            if (endminute == 0) {
+                endminute = '00'
+            }
 
             if (config.data.table1_db[config.properties.overwrite].start > 12) {
-                startmeridian = 'p.m.';//morning or evening
-                starthr = Number(config.data.table1_db[config.properties.overwrite].start - 12) - config.data.table1_db[config.properties.overwrite].start % 1;//removes remainder
+                startmeridian = 'p.m.'; //morning or evening
+                starthr = Number(config.data.table1_db[config.properties.overwrite].start - 12) - config.data.table1_db[config.properties.overwrite].start % 1; //removes remainder
             } else {
-                starthr = Number(config.data.table1_db[config.properties.overwrite].start) - config.data.table1_db[config.properties.overwrite].start % 1;//removes remainder
+                starthr = Number(config.data.table1_db[config.properties.overwrite].start) - config.data.table1_db[config.properties.overwrite].start % 1; //removes remainder
             }
             if (config.data.table1_db[config.properties.overwrite].end > 12) {
-                endmeridian = 'p.m.';//morning or evening
-                endhr = Number(config.data.table1_db[config.properties.overwrite].end - 12) - config.data.table1_db[config.properties.overwrite].end % 1;//removes remainder
+                endmeridian = 'p.m.'; //morning or evening
+                endhr = Number(config.data.table1_db[config.properties.overwrite].end - 12) - config.data.table1_db[config.properties.overwrite].end % 1; //removes remainder
             } else {
-                endhr = Number(config.data.table1_db[config.properties.overwrite].end) - config.data.table1_db[config.properties.overwrite].end % 1;//removes remainder
+                endhr = Number(config.data.table1_db[config.properties.overwrite].end) - config.data.table1_db[config.properties.overwrite].end % 1; //removes remainder
             }
-            if (starthr == 0) { starthr = 12 }
-            if (endhr == 0) { endhr = 12 }
+            if (starthr == 0) {
+                starthr = 12
+            }
+            if (endhr == 0) {
+                endhr = 12
+            }
 
             document.getElementById('title_cellp').innerText = config.data.table1_db[config.properties.overwrite].name;
             switch (config.data.table1_db[config.properties.overwrite].day) {
-                case 1: document.getElementById('day_cellp').innerText = "Monday"; break;
-                case 2: document.getElementById('day_cellp').innerText = "Tuesday"; break;
-                case 3: document.getElementById('day_cellp').innerText = "Wednesday"; break;
-                case 4: document.getElementById('day_cellp').innerText = "Thursday"; break;
-                case 5: document.getElementById('day_cellp').innerText = "Friday"; break;
-                case 6: document.getElementById('day_cellp').innerText = "Saturday"; break;
-                case 7: document.getElementById('day_cellp').innerText = "Sunday"; break;
-                default: console.log('Date error on config.properties.overwrite: ', config.properties.overwrite, ' Returned value: ', config.data.table1_db[config.properties.overwrite].day);
+                case 1:
+                    document.getElementById('day_cellp').innerText = "Monday";
+                    break;
+                case 2:
+                    document.getElementById('day_cellp').innerText = "Tuesday";
+                    break;
+                case 3:
+                    document.getElementById('day_cellp').innerText = "Wednesday";
+                    break;
+                case 4:
+                    document.getElementById('day_cellp').innerText = "Thursday";
+                    break;
+                case 5:
+                    document.getElementById('day_cellp').innerText = "Friday";
+                    break;
+                case 6:
+                    document.getElementById('day_cellp').innerText = "Saturday";
+                    break;
+                case 7:
+                    document.getElementById('day_cellp').innerText = "Sunday";
+                    break;
+                default:
+                    console.log('Date error on config.properties.overwrite: ', config.properties.overwrite, ' Returned value: ', config.data.table1_db[config.properties.overwrite].day);
             }
-            if (config.data.table1_db[config.properties.overwrite].room != undefined) { document.getElementById('room_cellp').innerText = config.data.table1_db[config.properties.overwrite].room }
-            else { document.getElementById('room_cellp').innerText = "unknown" }
-            if (config.data.table1_db[config.properties.overwrite].Lecturer != undefined) { document.getElementById('Lecturer_cellp').innerText = config.data.table1_db[config.properties.overwrite].Lecturer }
-            else { document.getElementById('Lecturer_cellp').innerText = "unknown" }
-            if (config.data.table1_db[config.properties.overwrite].type != undefined) { document.getElementById('type_cellp').innerText = config.data.table1_db[config.properties.overwrite].type }
-            else { document.getElementById('type_cellp').innerText = "unknown" }
-            if (config.data.table1_db[config.properties.overwrite].course_code != undefined) { document.getElementById('coursecode_cellp').innerText = config.data.table1_db[config.properties.overwrite].course_code }
-            else { document.getElementById('coursecode_cellp').innerText = "unknown" }
+            if (config.data.table1_db[config.properties.overwrite].room != undefined) {
+                document.getElementById('room_cellp').innerText = config.data.table1_db[config.properties.overwrite].room
+            } else {
+                document.getElementById('room_cellp').innerText = "unknown"
+            }
+            if (config.data.table1_db[config.properties.overwrite].Lecturer != undefined) {
+                document.getElementById('Lecturer_cellp').innerText = config.data.table1_db[config.properties.overwrite].Lecturer
+            } else {
+                document.getElementById('Lecturer_cellp').innerText = "unknown"
+            }
+            if (config.data.table1_db[config.properties.overwrite].type != undefined) {
+                document.getElementById('type_cellp').innerText = config.data.table1_db[config.properties.overwrite].type
+            } else {
+                document.getElementById('type_cellp').innerText = "unknown"
+            }
+            if (config.data.table1_db[config.properties.overwrite].course_code != undefined) {
+                document.getElementById('coursecode_cellp').innerText = config.data.table1_db[config.properties.overwrite].course_code
+            } else {
+                document.getElementById('coursecode_cellp').innerText = "unknown"
+            }
             document.getElementById('time_cellp').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
             document.getElementById('delete_confirm_pannel').style.display = 'block';
         }
@@ -1296,120 +2683,192 @@ let manage = {
 let UI = {
     initalize: function () {
         console.log('UI Initalize');
-        switch (config.data.theme) {
-            case 'dark': this.setting.theme.set_dark(); break;
-            case 'light': this.setting.theme.set_light(); break;
+
+        //Action bar handlers (look about touch triggers)
+        document.getElementById('action_bar').addEventListener('mouseover', function () {
+            document.getElementById('action_bar').className = "Action_bar_active";
+        })
+        document.getElementById('action_bar').addEventListener('mouseout', function () {
+            document.getElementById('action_bar').className = "Action_bar";
+        })
+
+
+        //Proto navigation
+        document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
+        document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
+        document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
+        document.getElementById('hilight_btn').addEventListener('click', UI.setting.hilight.flip)
+        document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
+        document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
+        document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
+        document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
+        document.getElementById('about_btn').addEventListener('click', function () {
+            utility.clipboard(JSON.stringify(config.data));
+            notify.new('Debug info coppied to clipboard');
+        });
+
+        //select notification handlers
+        document.getElementById('notification_style1').addEventListener('click', this.setting.notification.set_1)
+        document.getElementById('notification_style2').addEventListener('click', this.setting.notification.set_2)
+        document.getElementById('notification_style3').addEventListener('click', this.setting.notification.set_3)
+        document.getElementById('notification_style4').addEventListener('click', this.setting.notification.set_4)
+        switch (config.data.notification_type) {
+            case 1:
+                document.getElementById('notification_pallet1').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
+                break;
+            case 2:
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
+                break;
+            case 3:
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
+                break;
+            case 4:
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet_active"
+                break;
             default:
-                console.error('Theme error :', config.data.theme);
-                this.setting.theme.set_light();
+
+                break;
         }
+
+        //Manual config handlers
+
+        document.getElementById('backup_btn').addEventListener('click', function () {
+            config.backup()
+        })
+        document.getElementById('restore_btn').addEventListener('click', function () {
+            config.restore();
+        })
+
+        //Set switch positions
         this.setting.hilight.setpostition();
         this.setting.animation.setpostition();
         this.setting.tiles.setpostition();
         this.setting.Row.setpostition();
-        if (typeof (device) != "undefined") {//sometimes plugins break
-            if (device.platform == 'Android' || 'iOS') {//mobile
-                touchstart()
-            } else {//Desktop
-                clickstart()
-            }
-        } else {
-            console.error('"device" plugin broke!');
-            clickstart()
-        }
+        this.setting.wallpaper.set_wallpaper()
 
-        document.getElementById('about_btn').addEventListener('click', function () {
-            /*
-            utility.clipboard('Phone: 876-5744-801, Email: samuelmatheson15@gmail.com');
-            utility.toast('Contact info coppied to clipboard');*/
-            utility.clipboard(JSON.stringify(config.data));
-            utility.toast('Debug info coppied to clipboard');
-        });
+        //theme and pallet
+        this.setting.set_theme();
+        document.getElementById('dark_theme_selection').addEventListener('click', function () {
+            config.data.theme = "dark";
+            config.save();
+            UI.setting.set_theme();
+        })
+        document.getElementById('light_theme_selection').addEventListener('click', function () {
+            config.data.theme = "light"
+            config.save();
+            UI.setting.set_theme();
+        })
+        document.getElementById('hueinverse-selec').addEventListener('click', function () {
+            hue_selec(-1)
+            console.log('hue change -1')
+        })
+        document.getElementById('hue0-selec').addEventListener('click', function () {
+            hue_selec(0)
+            console.log('%chue change 0', "color: hsl(0,100%,50%)")
+        })
+        document.getElementById('hue30-selec').addEventListener('click', function () {
+            hue_selec(30)
+            console.log('%chue change 30', "color: hsl(30,100%,50%)")
+        })
+        document.getElementById('hue60-selec').addEventListener('click', function () {
+            hue_selec(60)
+            console.log('%chue change 60', "color: hsl(60,100%,50%)")
+        })
+        document.getElementById('hue90-selec').addEventListener('click', function () {
+            hue_selec(90)
+            console.log('%chue change 90', "color: hsl(90,100%,50%)")
+        })
+        document.getElementById('hue120-selec').addEventListener('click', function () {
+            hue_selec(120)
+            console.log('%chue change 120', "color: hsl(120,100%,50%)")
+        })
+        document.getElementById('hue150-selec').addEventListener('click', function () {
+            hue_selec(150)
+            console.log('%chue change 150', "color: hsl(150,100%,50%)")
+        })
+        document.getElementById('hue180-selec').addEventListener('click', function () {
+            hue_selec(180)
+            console.log('%chue change 180', "color: hsl(180,100%,50%)")
+        })
+        document.getElementById('hue210-selec').addEventListener('click', function () {
+            hue_selec(210)
+            console.log('%chue change 210', "color: hsl(210,100%,50%)")
+        })
+        document.getElementById('hue240-selec').addEventListener('click', function () {
+            hue_selec(240)
+            console.log('%chue change 240', "color: hsl(240,100%,50%)")
+        })
+        document.getElementById('hue270-selec').addEventListener('click', function () {
+            hue_selec(270)
+            console.log('%chue change 270', "color: hsl(270,100%,50%)")
+        })
+        document.getElementById('hue300-selec').addEventListener('click', function () {
+            hue_selec(300)
+            console.log('%chue change 300', "color: hsl(300,100%,50%)")
+        })
+        document.getElementById('hue330-selec').addEventListener('click', function () {
+            hue_selec(330)
+            console.log('%chue change 330', "color: hsl(330,100%,50%)")
+        })
 
-        document.getElementById('dark_theme_selection').addEventListener('click', this.setting.theme.set_dark)
-        document.getElementById('light_theme_selection').addEventListener('click', this.setting.theme.set_light)
-        function touchstart() {
-            document.getElementById('table_btn').addEventListener('touchstart', UI.navigate.TABLE)
-            document.getElementById('manage_btn').addEventListener('touchstart', UI.navigate.MANAGE)
-            document.getElementById('setting_btn').addEventListener('touchstart', UI.navigate.SETTING)
-            document.getElementById('hilight_btn').addEventListener('touchstart', UI.setting.hilight.flip)
-            document.getElementById('Animations_btn').addEventListener('touchstart', UI.setting.animation.flip)
-            document.getElementById('Row_btn').addEventListener('touchstart', UI.setting.Row.flip)
-            document.getElementById('tiles_btn').addEventListener('touchstart', UI.setting.tiles.flip)
-            document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
-        }
-        function clickstart() {
-            document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
-            document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
-            document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
-            document.getElementById('hilight_btn').addEventListener('click', UI.setting.hilight.flip)
-            document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
-            document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
-            document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
-            document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
+        function hue_selec(hue) {
+            config.data.colorpallet = hue;
+            config.save()
+            UI.setting.set_theme();
         }
     },
     navigate: {
-        BACK: function () {//Back button handle
+        BACK: function () { //Back button handle
             console.log('Back navigation started');
-            if (document.getElementById('dataentry_screen').style.display == "block") {
-                console.warn('Backbutton closed dataentry screen');
-                manage.dialogue.close();
-                manage.dialogue.clear();
-            } else if (document.getElementById('fullscreen_tile').style.display == 'block') {
-                console.warn('Back button closed full table tile');
-                this.close_tile();
-            } else if (config.properties.view == "table") {
-                console.warn('Backbutton triggered exit strategy')
-                this.exitstrategy();
-            } else {
-                console.warn('Backbutton Navigated to table view');
-                this.TABLE();
-            }
 
         },
         close_tile: function () {
             console.log('closed full tile function');
-            if (config.data.animation) {
-                document.getElementById('fullscreen_tile').style.opacity = "0.0";
-                document.getElementById('fullscreen_tile').style.height = "0";
-                setTimeout(() => {
-                    document.getElementById('fullscreen_tile').style.display = "none";
-                    document.getElementById('fullscreen_tile').style.opacity = "1.0";
-                    document.getElementById('fullscreen_tile').style.height = "93vh";
-                }, 200);
-            } else {
-                document.getElementById('fullscreen_tile').style.display = "none";
-                document.getElementById('fullscreen_tile').style.height = "93vh";
-                document.getElementById('fullscreen_tile').style.opacity = "1.0";
-            }
+            document.getElementById('fullscreen_tile').classList = "fullscreen_tile"
         },
         exitstrategy: function () {
-            if (config.properties.exit) { utility.close() }
-            else {
+            if (config.properties.exit) {
+                utility.close()
+            } else {
                 config.properties.exit = true;
-                setTimeout(() => { config.properties.exit = false; }, 2000);
-                utility.toast('Press back button again to exit');
+                setTimeout(() => {
+                    config.properties.exit = false;
+                }, 2000);
+                notify.new('Press back button again to exit');
             }
         },
         TABLE: function () {
             console.log('Table navigation started');
-            if (config.properties.changed) {
+            if (config.properties.changed || config.properties.view == "table") {
                 window.location.reload();
+                /*table.data_render();
+                setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
             } else {
-                if (config.properties.view != "table") {
+                if (config.properties.clocking == false || undefined) {
                     table.clock.start_clock();
                 }
                 config.properties.view = "table";
                 document.getElementById('table1').style.display = 'block';
                 document.getElementById('manage_view').style.display = 'none';
                 document.getElementById('setting_view').style.display = 'none';
-                document.getElementById('setting_btn_icon').style.transform = 'rotate(0deg)';//Rotate the button
+                document.getElementById('setting_btn_icon').style.transform = 'rotate(0deg)'; //Rotate the button
                 document.getElementById('setting_btn').className = "menubtn";
                 document.getElementById('manage_btn').className = "menubtn";
                 document.getElementById('table_btn').className = "menubtn_active";
             }
-
+            document.getElementById('action_bar').className = "Action_bar";
         },
         MANAGE: function () {
             console.log('MANAGE navigation started');
@@ -1418,10 +2877,11 @@ let UI = {
             document.getElementById('table1').style.display = 'none';
             document.getElementById('manage_view').style.display = 'block';
             document.getElementById('setting_view').style.display = 'none';
-            document.getElementById('setting_btn_icon').style.transform = 'rotate(0deg)';//Rotate the button
+            document.getElementById('setting_btn_icon').style.transform = 'rotate(0deg)'; //Rotate the button
             document.getElementById('setting_btn').className = "menubtn";
             document.getElementById('manage_btn').className = "menubtn_active";
             document.getElementById('table_btn').className = "menubtn";
+            document.getElementById('action_bar').className = "Action_bar";
         },
         SETTING: function () {
             console.log('SETTING navigation started');
@@ -1430,29 +2890,199 @@ let UI = {
             document.getElementById('table1').style.display = 'none';
             document.getElementById('manage_view').style.display = 'none';
             document.getElementById('setting_view').style.display = 'block';
-            document.getElementById('setting_btn_icon').style.transform = 'rotate(90deg)';//Rotate the button
+            document.getElementById('setting_btn_icon').style.transform = 'rotate(90deg)'; //Rotate the button
             document.getElementById('setting_btn').className = "menubtn_active";
             document.getElementById('manage_btn').className = "menubtn";
             document.getElementById('table_btn').className = "menubtn";
+            document.getElementById('action_bar').className = "Action_bar"; //Force menu to close
         },
     },
     setting: {
-        theme: {
-            set_dark: function () {
-                console.warn('Theme set Dark');
-                document.getElementById('theme').href = "css/dark-theme.css"
-                config.data.theme = 'dark'
+        set_theme: function () {
+            console.log('Set theme')
+            if (config.data.theme == "dark") {
+                set_dark()
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = true;
-                config.save();
-            },
-            set_light: function () {
-                console.warn('Theme set Light');
-                document.getElementById('theme').href = "css/light-theme.css"
-                config.data.theme = 'light'
+            } else if (config.data.theme == "light") {
+                set_light()
                 document.getElementById('light_selection_put').checked = true;
                 document.getElementById('dark_selection_put').checked = false;
+            } else if (config.data.theme == "timebased") {
+                //do some quick maths and set a theme
+                var now = new Date().getHours();
+                console.warn('Time based theme', now)
+                if (now > 6 && now < 17) {
+                    //day time
+                    set_light();
+                } else if (now > 16 || now < 7) {
+                    //night time
+                    set_dark();
+                }
+            }
+
+            function set_dark() {
+                switch (config.data.colorpallet) {
+                    case -1:
+                        document.getElementById('body').classList = "dark";
+                        console.log('Dark inverse theme');
+                        break;
+                    case 0:
+                        document.getElementById('body').classList = "dark _0";
+                        console.log('%cdark _0', "color: hsl(0,100%,50%)")
+                        break;
+                    case 30:
+                        document.getElementById('body').classList = "dark _30";
+                        console.log('%cdark _30', "color: hsl(30,100%,50%)");
+                        break;
+                    case 60:
+                        document.getElementById('body').classList = "dark _60";
+                        console.log('%cdark _60', "color: hsl(60,100%,50%)");
+                        break;
+                    case 90:
+                        document.getElementById('body').classList = "dark _90";
+                        console.log('%cdark _90', "color: hsl(90,100%,50%)");
+                        break;
+                    case 120:
+                        document.getElementById('body').classList = "dark _120";
+                        console.log('%cdark _120', "color: hsl(120,100%,50%)");
+                        break;
+                    case 150:
+                        document.getElementById('body').classList = "dark _150";
+                        console.log('%cdark _150', "color: hsl(150,100%,50%)");
+                        break;
+                    case 180:
+                        document.getElementById('body').classList = "dark _180";
+                        console.log('%cdark _180', "color: hsl(180,100%,50%)");
+                        break;
+                    case 210:
+                        document.getElementById('body').classList = "dark _210";
+                        console.log('%cdark _210', "color: hsl(210,100%,50%)");
+                        break;
+                    case 240:
+                        document.getElementById('body').classList = "dark _240";
+                        console.log('%cdark _240', "color: hsl(240,100%,50%)");
+                        break;
+                    case 270:
+                        document.getElementById('body').classList = "dark _270";
+                        console.log('%cdark _270', "color: hsl(270,100%,50%)");
+                        break;
+                    case 300:
+                        document.getElementById('body').classList = "dark _300";
+                        console.log('%cdark _300', "color: hsl(300,100%,50%)");
+                        break;
+                    case 330:
+                        document.getElementById('body').classList = "dark _330";
+                        console.log('%cdark _330', "color: hsl(330,100%,50%)");
+                        break;
+                    default:
+                        console.error('Theme error :', config.data.colorpallet);
+                        document.getElementById('body').classList = "dark _210";
+                        config.data.colorpallet = 210;
+                }
+            }
+
+            function set_light() {
+                switch (config.data.colorpallet) {
+                    case -1:
+                        document.getElementById('body').classList = "light";
+                        console.log('light inverse theme');
+                        break;
+                    case 0:
+                        document.getElementById('body').classList = "light _0";
+                        console.log('%clight_0', "color: hsl(0,100%,50%)")
+                        break;
+                    case 30:
+                        document.getElementById('body').classList = "light _30";
+                        console.log('%clight_30', "color: hsl(30,100%,50%)");
+                        break;
+                    case 60:
+                        document.getElementById('body').classList = "light _60";
+                        console.log('%clight_60', "color: hsl(60,100%,50%)");
+                        break;
+                    case 90:
+                        document.getElementById('body').classList = "light _90";
+                        console.log('%clight_90', "color: hsl(90,100%,50%)");
+                        break;
+                    case 120:
+                        document.getElementById('body').classList = "light _120";
+                        console.log('%clight_120', "color: hsl(120,100%,50%)");
+                        break;
+                    case 150:
+                        document.getElementById('body').classList = "light _150";
+                        console.log('%clight_150', "color: hsl(150,100%,50%)");
+                        break;
+                    case 180:
+                        document.getElementById('body').classList = "light _180";
+                        console.log('%clight_180', "color: hsl(180,100%,50%)");
+                        break;
+                    case 210:
+                        document.getElementById('body').classList = "light _210";
+                        console.log('%clight_210', "color: hsl(210,100%,50%)");
+                        break;
+                    case 240:
+                        document.getElementById('body').classList = "light _240";
+                        console.log('%clight_240', "color: hsl(240,100%,50%)");
+                        break;
+                    case 270:
+                        document.getElementById('body').classList = "light _270";
+                        console.log('%clight_270', "color: hsl(270,100%,50%)");
+                        break;
+                    case 300:
+                        document.getElementById('body').classList = "light _300";
+                        console.log('%clight_300', "color: hsl(300,100%,50%)");
+                        break;
+                    case 330:
+                        document.getElementById('body').classList = "light _330";
+                        console.log('%clight_330', "color: hsl(330,100%,50%)");
+                        break;
+                    default:
+                        console.error('Theme error :', config.data.colorpallet);
+                        document.getElementById('body').classList = "light _210";
+                        config.data.colorpallet = 210;
+                }
+            }
+        },
+        notification: {
+            set_1: function () {
+                console.warn('Notification type 1 selected');
+                config.data.notification_type = 1
                 config.save();
+                notify.new('Notifications', 'Notification type 1 selected');
+                document.getElementById('notification_pallet1').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
+            },
+            set_2: function () {
+                console.warn('Notification type 2 selected');
+                config.data.notification_type = 2
+                config.save();
+                notify.new('Notifications', 'Notification type 2 selected');
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
+            },
+            set_3: function () {
+                console.warn('Notification type 3 selected');
+                config.data.notification_type = 3
+                config.save();
+                notify.new('Notifications', 'Notification type 3 selected');
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet_active"
+                document.getElementById('notification_pallet4').classList = "notification_pallet"
+            },
+            set_4: function () {
+                console.warn('Notification type 4 selected');
+                config.data.notification_type = 4
+                config.save();
+                notify.new('Notifications', 'Notification type 4 selected');
+                document.getElementById('notification_pallet1').classList = "notification_pallet"
+                document.getElementById('notification_pallet2').classList = "notification_pallet"
+                document.getElementById('notification_pallet3').classList = "notification_pallet"
+                document.getElementById('notification_pallet4').classList = "notification_pallet_active"
             },
         },
         hilight: {
@@ -1461,13 +3091,13 @@ let UI = {
                 if (config.data.hilight_engine) {
                     //turn off the switch
                     config.data.hilight_engine = false;
-                    utility.toast('hilights dissabled');
+                    notify.new('hilights dissabled');
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
                     config.data.hilight_engine = true;
                     table.hilight_engine_go_vroom();
-                    utility.toast('hilights enabled');
+                    notify.new('hilights enabled');
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
                 }
@@ -1490,11 +3120,13 @@ let UI = {
                 if (config.data.animation) {
                     //turn off the switch
                     config.data.animation = false;
-                    utility.toast('animations dissabled'); console.warn('animations dissabled');
+                    notify.new('animations dissabled');
+                    console.warn('animations dissabled');
                 } else {
                     //turn on the witch
                     config.data.animation = true;
-                    utility.toast('animations enabled'); console.warn('animations enabled');
+                    notify.new('animations enabled');
+                    console.warn('animations enabled');
                 }
                 config.save();
                 UI.setting.animation.setpostition();
@@ -1505,7 +3137,7 @@ let UI = {
                     document.getElementById('nomation').href = "";
                 } else {
                     document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
-                    document.getElementById('nomation').href = "css/nomation.css";//nomation sheet removes animations
+                    document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
                 }
             },
         },
@@ -1515,11 +3147,13 @@ let UI = {
                 if (config.data.tiles) {
                     //turn off the switch
                     config.data.tiles = false;
-                    utility.toast('tiles dissabled'); console.warn('tiles dissabled');
+                    notify.new('tiles dissabled');
+                    console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
                     config.data.tiles = true;
-                    utility.toast('tiles enabled'); console.warn('tiles enabled');
+                    notify.new('tiles enabled');
+                    console.warn('tiles enabled');
                 }
                 config.save();
                 UI.setting.tiles.setpostition();
@@ -1538,12 +3172,14 @@ let UI = {
                 if (config.data.empty_rows) {
                     //turn off the switch
                     config.data.empty_rows = false;
-                    utility.toast('Empty Rows dissabled'); console.warn('Empty Rows dissabled');
+                    notify.new('Empty Rows dissabled');
+                    console.warn('Empty Rows dissabled');
                     config.properties.changed = true;
                 } else {
                     //turn on the witch
                     config.data.empty_rows = true;
-                    utility.toast('Empty Rows Enabled'); console.warn('Empty Rows Enabled');
+                    notify.new('Empty Rows Enabled');
+                    console.warn('Empty Rows Enabled');
                     config.properties.changed = true;
                 }
                 config.save();
@@ -1557,7 +3193,181 @@ let UI = {
                 }
             },
         },
+        wallpaper: {
+            set_wallpaper: function () {
+                //document.getElementById('timetable').style.backgroundImage = "url('img/usebkgrounds/test-user-background.jpg')"
+            },
+        }
     },
+}
+
+/*  Notification handler  */
+let notify = {
+    preset_height: 22, //2 more than the height in the css
+    previous_type: 1,
+    animate_old: true, //turn on and off old notification Animation
+    current: 0, //Current is incimented every time theres a new notifyer
+    resizecheck: window.addEventListener('resize', () => {
+        notify.clearall()
+    }),
+    new: function (title, body, fx, bdytitle) {
+        this.current++; //Inciment the current pisition
+        style = config.data.notification_type;
+        if (this.previous_type != style) {
+            this.clearall()
+        }
+        this.previous_type = style;
+
+        //create the notification holder
+        var tempnotif = document.createElement("div"); //create a div
+        document.body.appendChild(tempnotif); //Put the div into the body of the page
+        tempnotif.setAttribute("id", "notif" + this.current); //set an id to the div
+
+        //create the title
+        var tmptitle = document.createElement("div"); //create a div
+        tmptitle.setAttribute("class", "title"); //set the class of the div to 'title'
+        tempnotif.appendChild(tmptitle); //Put the 'title' div into the 'notification' div from before
+        tmptitle.innerHTML = title; //Puts the title text into the 'title' div
+
+        //create the body
+        var tmpbdy = document.createElement("div"); //create a div
+        tmpbdy.setAttribute("class", "notifbody"); //set the class of the div to 'notifbody'
+        tempnotif.appendChild(tmpbdy); //put the 'notifbody' div into the 'notification' div from before
+        tmpbdy.innerHTML = body; //puts body text into the 'notifbody' div
+
+        //style switch
+        switch (style) {
+            case 1:
+                tempnotif.setAttribute("class", "notification_style1"); //set the class of the div to 'notification_style1'
+                this.preset_height = 22;
+                break;
+            case 2:
+                tempnotif.setAttribute("class", "notification_style2"); //set the class of the div to 'notification_style2'
+                this.preset_height = 16;
+                break;
+            case 3:
+                tempnotif.setAttribute("class", "notification_style3"); //set the class of the div to 'notification_style2'
+                this.preset_height = 16;
+                break;
+            case 4:
+                tempnotif.setAttribute("class", "notification_style4"); //set the class of the div to 'notification_style2'
+                this.preset_height = 22;
+                break;
+            default:
+                tempnotif.setAttribute("class", "notification_style3"); //set the class of the div to 'notification_style2'
+                this.preset_height = 16;
+                break;
+        }
+
+        //Timing effects
+        setTimeout(() => {
+            tempnotif.style.transform = 'translate(0vw,0vh)'
+            //manuver old notifications out of the way
+            if (this.animate_old) {
+                if (document.getElementById('notif' + Number(this.current - 1))) { //stars at -1 because 1 less than the latest notification
+                    document.getElementById('notif' + Number(this.current - 1)).style.transform = 'translate(0vw,-' + this.preset_height + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 2))) {
+                    document.getElementById('notif' + Number(this.current - 2)).style.transform = 'translate(0vw,-' + this.preset_height * 2 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 3))) {
+                    document.getElementById('notif' + Number(this.current - 3)).style.transform = 'translate(0vw,-' + this.preset_height * 3 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 4))) {
+                    document.getElementById('notif' + Number(this.current - 4)).style.transform = 'translate(0vw,-' + this.preset_height * 4 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 5))) {
+                    document.getElementById('notif' + Number(this.current - 5)).style.transform = 'translate(0vw,-' + this.preset_height * 5 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 6))) {
+                    document.getElementById('notif' + Number(this.current - 6)).style.transform = 'translate(0vw,-' + this.preset_height * 6 + 'vh)';
+                }
+                if (document.getElementById('notif' + Number(this.current - 7))) {
+                    document.getElementById('notif' + Number(this.current - 7)).style.transform = 'translate(0vw,-' + this.preset_height * 7 + 'vh)';
+                }
+            }
+
+        }, 50); //Slide into view
+        setTimeout(() => {
+            tempnotif.style.opacity = '0.0'
+        }, 10000); //dissapear
+        setTimeout(() => {
+            document.body.removeChild(tempnotif);
+        }, 11000); //remove from document
+
+        if (typeof (fx) == 'function') { //There is a function, use X button
+            tempnotif.addEventListener('click', fx); //asign action to shutter
+
+            //Close button
+            var xbutton = document.createElement('div')
+            xbutton.setAttribute('class', 'x-button')
+            tempnotif.appendChild(xbutton)
+            xbutton.title = 'click to dismiss';
+            xbutton.addEventListener('click', function () {
+                event.stopImmediatePropagation();
+                //close app
+                setTimeout(() => {
+                    tempnotif.style.opacity = '0.0';
+                }, 100)
+                //yee.style.zIndex = '-999';
+                tempnotif.style.transform = 'translate(35vw,0)'
+            })
+
+        }
+        if (bdytitle != undefined) {
+            tempnotif.title = bdytitle
+        } else {
+            tempnotif.title = 'click to dismiss'
+        }
+        tempnotif.addEventListener('click', function () { //close regardless of function
+            setTimeout(() => {
+                this.style.opacity = '0.0';
+            }, 100)
+            //yee.style.zIndex = '-999';
+            this.style.transform = 'translate(35vw,0)'
+        })
+
+    },
+    clearall: function () {
+        if (document.getElementById('notif' + Number(this.current))) { //nep them from latest going up
+            document.getElementById('notif' + Number(this.current)).style.opacity = '0.0';
+            document.getElementById('notif' + Number(this.current)).style.transform = 'translate(0vw,0vh)'
+        }
+        if (document.getElementById('notif' + Number(this.current - 1))) {
+            document.getElementById('notif' + Number(this.current - 1)).style.opacity = '0.0';
+            document.getElementById('notif' + Number(this.current - 1)).style.transform = 'translate(0vw,0vh)'
+        }
+        if (document.getElementById('notif' + Number(this.current - 2))) {
+            document.getElementById('notif' + Number(this.current - 2)).style.opacity = '0.0';
+            document.getElementById('notif' + Number(this.current - 2)).style.transform = 'translate(0vw,0vh)'
+
+        }
+        if (document.getElementById('notif' + Number(this.current - 3))) {
+            document.getElementById('notif' + Number(this.current - 3)).style.opacity = '0.0';
+            document.getElementById('notif' + Number(this.current - 3)).style.transform = 'translate(0vw,0vh)'
+
+        }
+        if (document.getElementById('notif' + Number(this.current - 4))) {
+            document.getElementById('notif' + Number(this.current - 4)).style.opacity = '0.0';
+            document.getElementById('notif' + Number(this.current - 4)).style.transform = 'translate(0vw,0vh)'
+
+        }
+        if (document.getElementById('notif' + Number(this.current - 5))) {
+            document.getElementById('notif' + Number(this.current - 5)).style.opacity = '0.0';
+            document.getElementById('notif' + Number(this.current - 5)).style.transform = 'translate(0vw,0vh)'
+
+        }
+        if (document.getElementById('notif' + Number(this.current - 6))) {
+            document.getElementById('notif' + Number(this.current - 6)).style.opacity = '0.0';
+            document.getElementById('notif' + Number(this.current - 6)).style.transform = 'translate(0vw,0vh)'
+
+        }
+        if (document.getElementById('notif' + Number(this.current - 7))) {
+            document.getElementById('notif' + Number(this.current - 7)).style.opacity = '0.0';
+            document.getElementById('notif' + Number(this.current - 7)).style.transform = 'translate(0vw,0vh)'
+
+        }
+    }
 }
 
 let utility = {//Some usefull things
