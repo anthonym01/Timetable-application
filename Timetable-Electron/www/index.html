@@ -10,14 +10,13 @@
     <link rel="icon" href="./img/icon.webp" id="favico" type="image/png" sizes="32x32">
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" id="theme" href="css/dark_inverse.css">
     <link rel="stylesheet" id="nomation" href="">
 
     <script defer type="text/javascript" src="js/index.js" charset="UTF-8"></script>
     <title>Timetable</title>
 </head>
 
-<body>
+<body id="body" class="dark_0">
     <div class="title_bar">
         <div class="title_icon"></div>
         <div class="resise_constraint" id="resise_constraint"></div>
@@ -62,7 +61,7 @@
 
     <!--Table view-->
     <view id="table1">
-        <div id="fullscreen_tile">
+        <div id="fullscreen_tile" class="fullscreen_tile">
             <!-- Onclick title card -->
             <div id="close_btn">Close</div>
             <div id="fullscreen_tile_tab_container">
@@ -407,7 +406,6 @@
                 <div class="sub_optionbar">
                     <div class="optionbutton editbtn" title="edit"></div>
                     <div class="optionbutton deletebtn" title="delete"></div>
-                    <div class="optionbutton selectbutton" title="select"><input type="checkbox" id=""></input></div>
                 </div>
                 <table>
                     <tr>
@@ -507,7 +505,7 @@
                     <td colspan="2">
                         <label for="course_code_put">Course Code</label>
                         <input id="course_code_put" name="course_code_name" type="text">
-                        <div class="autofill_container" id="course_autofill">
+                        <div class="autofill_container" id="course_code_autofill">
 
                         </div>
                     </td>
@@ -516,7 +514,7 @@
                     <td colspan="2">
                         <label for="Lecture_put">Lecturer</label>
                         <input id="Lecture_put" name="Lecture_name" type="text">
-                        <div class="autofill_container" id="lecture_autofill">
+                        <div class="autofill_container" id="Lecture_autofill">
 
                         </div>
                     </td>
@@ -574,11 +572,11 @@
         <div class="config-manage-pannel">
             <input id="pathrepresenter" value="application storage"
                 title="Location where the application data is being stored"></input>
-            <button class="config_btn" title="Manually save configuration">Save</button>
-            <button class="config_btn" title="use default storage location">Default</button>
+            <button class="config_btn" id="save_btn" title="Manually save configuration, use if it doesnt save automatically for some reason">Save</button>
+            <button class="config_btn" id="default_btn" title="use default storage location">Default</button>
             <button class="config_btn" id="select_btn" title="select storeage location">Select folder</button>
-            <button class="config_btn" title="Backup configration to a file">Backup config</button>
-            <button class="config_btn" title="Restore configuration from a file">Restore config</button>
+            <button class="config_btn" id="backup_btn" title="Backup configration to a file">Backup config</button>
+            <button class="config_btn" id="restore_btn" title="Restore configuration from a file">Restore config</button>
         </div>
 
         <!-- Retired because im the only one who'll use this for now -->
