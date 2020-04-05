@@ -231,7 +231,7 @@
     ._0 {
         --hue_value: 0;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/0.jpg');
+        --timetable_background: url('../img/backgrounds/0.webp');
         --book_closed: url('../img/manage-0.webp');
         --light_pannel_book: url('../img/manage-0.webp');
         --dark_pannel_book: url('../img/manage-0.webp');
@@ -245,7 +245,7 @@
     ._30 {
         --hue_value: 30;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/30.jpg');
+        --timetable_background: url('../img/backgrounds/30.webp');
         --book_closed: url('../img/manage-30.webp');
         --light_pannel_book: url('../img/manage-30.webp');
         --dark_pannel_book: url('../img/manage-30.webp');
@@ -259,7 +259,7 @@
     ._60 {
         --hue_value: 60;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/60.jpg');
+        --timetable_background: url('../img/backgrounds/60.webp');
         --book_closed: url('../img/manage-60.webp');
         --light_pannel_book: url('../img/manage-60.webp');
         --dark_pannel_book: url('../img/manage-60.webp');
@@ -273,7 +273,7 @@
     ._90 {
         --hue_value: 90;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/90.jpg');
+        --timetable_background: url('../img/backgrounds/90.webp');
         --book_closed: url('../img/manage-90.webp');
         --light_pannel_book: url('../img/manage-90.webp');
         --dark_pannel_book: url('../img/manage-90.webp');
@@ -287,7 +287,7 @@
     ._120 {
         --hue_value: 120;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/120.png');
+        --timetable_background: url('../img/backgrounds/120.webp');
         --book_closed: url('../img/manage-120.webp');
         --light_pannel_book: url('../img/manage-120.webp');
         --dark_pannel_book: url('../img/manage-120.webp');
@@ -301,7 +301,7 @@
     ._150 {
         --hue_value: 150;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/150.jpg');
+        --timetable_background: url('../img/backgrounds/150.webp');
         --book_closed: url('../img/manage-150.webp');
         --light_pannel_book: url('../img/manage-150.webp');
         --dark_pannel_book: url('../img/manage-150.webp');
@@ -315,7 +315,7 @@
     ._180 {
         --hue_value: 180;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/180.jpg');
+        --timetable_background: url('../img/backgrounds/180.webp');
         --book_closed: url('../img/manage-180.webp');
         --light_pannel_book: url('../img/manage-180.webp');
         --dark_pannel_book: url('../img/manage-180.webp');
@@ -329,7 +329,7 @@
     ._210 {
         --hue_value: 210;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/210.png');
+        --timetable_background: url('../img/backgrounds/210.webp');
         --light_pannel_book: url('../img/manage-210.webp');
         --dark_pannel_book: url('../img/manage-210.webp');
         --book_closed: url('../img/manage-210.webp');
@@ -343,7 +343,7 @@
     ._240 {
         --hue_value: 240;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/240.jpg');
+        --timetable_background: url('../img/backgrounds/240.webp');
         --book_closed: url('../img/manage-240.webp');
         --light_pannel_book: url('../img/manage-240.webp');
         --dark_pannel_book: url('../img/manage-240.webp');
@@ -357,7 +357,7 @@
     ._270 {
         --hue_value: 270;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/270.jpg');
+        --timetable_background: url('../img/backgrounds/270.webp');
         --book_closed: url('../img/manage-270.webp');
         --light_pannel_book: url('../img/manage-270.webp');
         --dark_pannel_book: url('../img/manage-270.webp');
@@ -371,7 +371,7 @@
     ._300 {
         --hue_value: 300;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/300.jpg');
+        --timetable_background: url('../img/backgrounds/300.webp');
         --book_closed: url('../img/manage-300.webp');
         --light_pannel_book: url('../img/manage-300.webp');
         --dark_pannel_book: url('../img/manage-300.webp');
@@ -385,7 +385,7 @@
     ._330 {
         --hue_value: 330;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/330.jpg');
+        --timetable_background: url('../img/backgrounds/330.webp');
         --book_closed: url('../img/manage-330.webp');
         --light_pannel_book: url('../img/manage-330.webp');
         --dark_pannel_book: url('../img/manage-330.webp');
@@ -411,7 +411,6 @@
         box-shadow: none !important;
     }
 }
-
 
 body {
     /* prevent copy paste, to allow, change 'none' to 'text' */
@@ -528,7 +527,7 @@ body {
     z-index: 400;
     background-color: var(--background-color);
     box-shadow: 0vh 0vh 0vh 0vh var(--background-color);
-    z-index: 9999;
+    z-index: 600;
 }
 
 .Action_bar:hover {
@@ -739,8 +738,8 @@ view {
     /*   The body of the timetable   */
     position: relative;
     margin-top: 0vh;
-    height: 93vh;
-    max-height: 93vh;
+    height: calc(100% - 1px);
+    /*max-height: 92vh;*/
     left: 0vw;
     white-space: nowrap;
     font-size: 2.7vh;
@@ -1320,7 +1319,7 @@ td {
     overflow-y: scroll;
     overflow-x: hidden;
     transition: transform 200ms;
-    z-index: 500;
+    z-index: 700;
     background-color: var(--background-color);
 }
 
@@ -2020,14 +2019,17 @@ td {
 .notification_style1 {
     position: fixed;
     bottom: 2vh;
-    right: 1vw;
+    right: 2.5vw;
     height: 20vh;
-    width: 60vw;
-    transform: translate(20vw, 0vh);
+
     overflow: hidden;
     cursor: pointer;
     transition: transform 500ms, box-shadow 200ms, opacity 300ms;
-    z-index: 500;
+
+    width: 95vw;
+    transform: translate(98vw, 0vh);
+    z-index: 1000;
+
     border-top: 0.5vh solid var(--primary_hue);
     background-color: var(--background-color);
     color: var(--text-color);
@@ -2077,13 +2079,13 @@ td {
     bottom: 2vh;
     right: 1vw;
     height: 15vh;
-    width: 60vw;
-    transform: translate(30vw, 0vh);
+    width: 95vw;
+    transform: translate(98vw, 0vh);
     border-top: none;
     overflow: hidden;
     cursor: pointer;
     transition: transform 500ms, box-shadow 200ms, opacity 300ms;
-    z-index: 500;
+    z-index: 1000;
 }
 
 .notification_style2 .title {
@@ -2130,13 +2132,13 @@ td {
     bottom: 2vh;
     right: 1vw;
     height: 15vh;
-    width: 60vw;
-    transform: translate(30vw, 0vh);
     border-top: none;
     overflow: hidden;
     cursor: pointer;
     transition: transform 500ms, box-shadow 200ms, opacity 300ms;
-    z-index: 500;
+    width: 95vw;
+    transform: translate(98vw, 0vh);
+    z-index: 1000;
 }
 
 .notification_style3 .title {
@@ -2197,15 +2199,15 @@ td {
     bottom: 2vh;
     right: 1vw;
     height: 20vh;
-    width: 60vw;
-    transform: translate(20vw, 0vh);
     overflow: hidden;
     cursor: pointer;
     transition: transform 500ms, box-shadow 200ms, opacity 300ms;
-    z-index: 500;
     background-color: var(--shade_color);
     color: var(--text-color);
     box-shadow: 0vh 0vh 0.5vh 0vh var(--text-color);
+    width: 95vw;
+    transform: translate(98vw, 0vh);
+    z-index: 1000;
 }
 
 .notification_style4 .title {
@@ -2546,7 +2548,7 @@ td {
         bottom: 0;
         top: unset;
         right: 0;
-        height:90vh;
+        height: 90vh;
         width: 70vh;
     }
 

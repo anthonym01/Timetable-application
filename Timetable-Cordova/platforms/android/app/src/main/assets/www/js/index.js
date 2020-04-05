@@ -1,19 +1,19 @@
 
-let app = {// Application Constructor
+var app = {// Application Constructor
     initialize: function () {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-        document.addEventListener("backbutton", this.onBackKeyDown, false);
+        document.addEventListener("backbutton", this.onBackKeyDown, true);
         document.addEventListener("pause", this.onPause, false);
         document.addEventListener("resume", this.onResume, false);
     },// deviceready Event Handler
-
     onDeviceReady: function () {//device ready event
         this.receivedEvent('deviceready');
         console.log('Device Ready...');
     },
     onBackKeyDown: function () {//Back button pressed event
         console.log('"Backbtn" event triggered');
-        UI.navigate.BACK();
+        //utility.exit_strategy();
+        back()
     },
     onPause: function () {//application pause event
         console.log('"pause" event triggered');
@@ -38,10 +38,21 @@ let app = {// Application Constructor
     }
 }; app.initialize();
 
-
 window.addEventListener('load', function () { //window loads
+    setTimeout(() => {
+        if (typeof (device) != 'undefined') {//check device mode
+            if (device.platform == 'Android' || 'iOS') {//mobile
+                console.warn('Running on a mobile platform')
+            } else {
+                console.warn('Running on a Desktop platform')
+            }
+        } else {
+            console.error('Device plugin broke')
+        }
+    }, 500)
 
     const loader = document.getElementById('loadprogress');
+
     if (localStorage.getItem(config.configlocation)) {
         config.load()
     } else {
@@ -77,7 +88,6 @@ let config = {
         animation: true,
         tiles: true,
         empty_rows: false,
-        notification_type: 3,
         table_selected: 1,
         always_on_top: false,
         table_details: [ // Details about different tables
@@ -92,7 +102,7 @@ let config = {
         ],
         table1_db: [ // Table database
 
-            /*{ show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
+            { show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
             { show: 4, day: 2, name: "Test 2", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 50, sat: 100, light: 50 }, start: 11.62, end: 14.57 },
             { show: 4, day: 3, name: "Test 3", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 100, sat: 100, light: 50 }, start: 8.5, end: 10.76 },
             { show: 4, day: 4, name: "Test 4", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 150, sat: 100, light: 50 }, start: 1.32, end: 4.0 },
@@ -101,7 +111,7 @@ let config = {
             { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
             { show: 3, day: 7, name: "Test 8", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 7.0, end: 8.7 },
             { show: 2, day: 7, name: "Test 9", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 8.0, end: 9.7 },
-            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },*/
+            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },
         ],
         previous_colors: [],
     },
@@ -318,10 +328,7 @@ let table = {
         var i = 0;
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
-            notify.new('U new here?', 'To start off, click here to add some classes', function () {
-                UI.navigate.MANAGE()
-                manage.dialogue.open()
-            }, 'click to add new class')
+            utility.toast('Nothing to display');
         } else {
             for (i = 0; i < config.data.table1_db.length; i++) { //Get minimum time and maximum time to construct correct height
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
@@ -791,7 +798,7 @@ let table = {
                 }
                 if (days == 0 || rows == 0) {
                     //Table is empty
-                    notify.new('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
+                    utility.toast('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
                 }
                 console.log('Table validated');
             }
@@ -1591,7 +1598,6 @@ let manage = {
                 break;
             } else {
                 document.getElementById('tablemanage_txt').innerText = "Homeless tiles";
-                document.getElementById('title_txt').innerText = "Homeless tiles";
             }
             i++
         }
@@ -2517,7 +2523,7 @@ let manage = {
             if (tempentry.name == "" || undefined || null) {
                 entryisvalid = false;
                 document.getElementById('name_put').style.border = "0.3vh solid #ff0000";
-                notify.new('Please Enter a name');
+                utility.toast('Please Enter a name');
             } else {
                 document.getElementById('name_put').style.border = "";
                 console.log('Name detected: ', tempentry.name);
@@ -2529,11 +2535,11 @@ let manage = {
             let percentage_start = Number((start_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (start_time_raw.slice(3) / 60));
             let percentage_end = Number((end_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (end_time_raw.slice(3) / 60));
             if (start_time_raw == "" || start_time_raw == null || start_time_raw == undefined) {
-                notify.new('Start time cannot be empty');
+                utility.toast('Start time cannot be empty');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (end_time_raw == "" || end_time_raw == null || end_time_raw == undefined) {
-                notify.new('End time cannot be empty');
+                utility.toast('End time cannot be empty');
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start == percentage_end) {
@@ -2541,7 +2547,7 @@ let manage = {
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start > percentage_end) {
-                notify.new('Class cannot start after it ends');
+                utility.toast('Class cannot start after it ends');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
@@ -2582,7 +2588,7 @@ let manage = {
             config.properties.called_from_plus = true;
             let entryisvalid = manage.dialogue.save();
             if (entryisvalid) {
-                notify.new(document.getElementById('name_put').value + ' was saved, U may now add another');
+                utility.toast(document.getElementById('name_put').value + ' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
                 manage.dialogue.open();
             }
@@ -2691,22 +2697,6 @@ let UI = {
         document.getElementById('action_bar').addEventListener('mouseout', function () {
             document.getElementById('action_bar').className = "Action_bar";
         })
-
-
-        //Proto navigation
-        document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
-        document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
-        document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
-        document.getElementById('hilight_btn').addEventListener('click', UI.setting.hilight.flip)
-        document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
-        document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
-        document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
-        document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
-        document.getElementById('about_btn').addEventListener('click', function () {
-            utility.clipboard(JSON.stringify(config.data));
-            notify.new('Debug info coppied to clipboard');
-        });
-
         //select notification handlers
         document.getElementById('notification_style1').addEventListener('click', this.setting.notification.set_1)
         document.getElementById('notification_style2').addEventListener('click', this.setting.notification.set_2)
@@ -2741,6 +2731,20 @@ let UI = {
 
                 break;
         }
+
+        //Proto navigation
+        document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
+        document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
+        document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
+        document.getElementById('hilight_btn').addEventListener('click', UI.setting.hilight.flip)
+        document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
+        document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
+        document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
+        document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
+        document.getElementById('about_btn').addEventListener('click', function () {
+            utility.clipboard(JSON.stringify(config.data));
+            utility.toast('Debug info coppied to clipboard');
+        });
 
         //Manual config handlers
 
@@ -2832,22 +2836,11 @@ let UI = {
     navigate: {
         BACK: function () { //Back button handle
             console.log('Back navigation started');
-
+            utility.exit_strategy();
         },
         close_tile: function () {
             console.log('closed full tile function');
             document.getElementById('fullscreen_tile').classList = "fullscreen_tile"
-        },
-        exitstrategy: function () {
-            if (config.properties.exit) {
-                utility.close()
-            } else {
-                config.properties.exit = true;
-                setTimeout(() => {
-                    config.properties.exit = false;
-                }, 2000);
-                notify.new('Press back button again to exit');
-            }
         },
         TABLE: function () {
             console.log('Table navigation started');
@@ -2930,6 +2923,10 @@ let UI = {
                     case 0:
                         document.getElementById('body').classList = "dark _0";
                         console.log('%cdark _0', "color: hsl(0,100%,50%)")
+                        if (cordova.platformId == 'android') {
+                            StatusBar.backgroundColorByHexString("#333");
+                        }
+
                         break;
                     case 30:
                         document.getElementById('body').classList = "dark _30";
@@ -3201,6 +3198,64 @@ let UI = {
     },
 }
 
+let properties = {
+    exit: false,
+}
+
+function back() {
+    utility.exit_strategy();
+}
+
+let utility = {//Some usefull things
+    exit_strategy: function () {//Heres how to string things togther to make something usefull
+        console.warn('Exit strategy triggered')
+        if (properties.exit == true) {
+            utility.close()
+        } else {
+            properties.exit = true;
+            utility.toast("Press back button again to exit", 2000)
+            setTimeout(() => { properties.exit = false }, 2000)
+        }
+    },
+    /*  Close the app   */
+    close: function () {
+        console.trace('App closure triggered via')
+        //config_handler.save()
+        if (navigator.app) {
+            navigator.app.exitApp()
+        } else if (navigator.device) {
+            navigator.device.exitApp()
+        } else {
+            window.close()
+        }
+    },
+    /*  Produce toast messages    */
+    toast: function (text, durration_in_ms, position_top_right_left_bottom, offset_in_px) {
+        if (position_top_right_left_bottom == undefined) { position_top_right_left_bottom = 'bottom' }//default the position
+        if (durration_in_ms == undefined) { durration_in_ms = 4000 }//default the duration
+        if (offset_in_px == undefined) { offset_in_px = -160 }//default the offset
+        window.plugins.toast.showWithOptions({ message: text, duration: durration_in_ms, position: position_top_right_left_bottom, addPixelsY: offset_in_px })
+    },
+    /*  Push text to the keyboard   */
+    clipboard: function (textpush) {
+        copyText.toString()
+        var temptxtbox = document.createElement("input")
+        document.body.appendChild(temptxtbox)
+        temptxtbox.setAttribute("id", "temp_copy")
+        document.getElementById("temp_copy").value = copyText
+        temptxtbox.select()
+        document.execCommand("copy")
+        document.body.removeChild(temptxtbox)
+    },
+    /*  Produce Random numbers  */
+    rand: {
+        HEX: function () { return '#' + Math.floor(Math.random() * 16777215).toString(16) /* hex color code */ },
+        RGB: function () { return { RED: this.number(255, 0), GREEN: this.number(255, 0), BLUE: this.number(255, 0) } /* object with RGB color code */ },
+        HSL: function () { return { HUE: this.number(360, 0), SATURATION: this.number(100, 0) + '%', LIGHTENESS: this.number(100, 1) + '%' }/* HSL color code */ },
+        number(max, min) { return Math.floor(Math.random() * (max - min + 1)) + min /* Random number*/ }
+    },
+}
+
 /*  Notification handler  */
 let notify = {
     preset_height: 22, //2 more than the height in the css
@@ -3368,45 +3423,4 @@ let notify = {
 
         }
     }
-}
-
-let utility = {//Some usefull things
-    /*  Close the app   */
-    close: function () {
-        config.save();
-        if (navigator.app) {
-            navigator.app.exitApp();
-        } else if (navigator.device) {
-            navigator.device.exitApp();
-        } else {
-            window.close();
-        }
-    },
-    /*  Produce toast messages    */
-    toast: function (text, durration_in_ms, position_top_right_left_bottom, offset_in_px) {
-        if (typeof (device) != 'undefined') {
-            if (position_top_right_left_bottom == undefined) { position_top_right_left_bottom = 'bottom' }//default the position
-            if (durration_in_ms == undefined) { durration_in_ms = 4000 }//default the duration
-            if (offset_in_px == undefined) { offset_in_px = -160 }//default the offset
-            window.plugins.toast.showWithOptions({ message: text, duration: durration_in_ms, position: position_top_right_left_bottom, addPixelsY: offset_in_px });
-        } else { console.error('Device plugin broke cannot push toast') }
-    },
-    /*  Push text to the keyboard   */
-    clipboard: function (textpush) {
-        copyText.toString(); //Makes it a string so the clipboard will accept it
-        let temptxtbox = document.createElement("input"); //creates an 'input' element and assigns it to 'temptxtbox'
-        document.body.appendChild(temptxtbox); //Puts the input element into the document
-        temptxtbox.setAttribute("id", "temp_copy"); //Assigns an id to the input element
-        document.getElementById("temp_copy").value = copyText; //Puts the txt u want to copy into the input element
-        temptxtbox.select(); //Makes the curser select the text that's in the input element
-        document.execCommand("copy"); //Commands the document to copy the selected text
-        document.body.removeChild(temptxtbox); //Removes the input element from the document
-    },
-    /*  Produce Random numbers  */
-    rand: {
-        HEX: function () { return '#' + Math.floor(Math.random() * 16777215).toString(16) /* hex color code */ },
-        RGB: function () { return { RED: this.number(255, 0), GREEN: this.number(255, 0), BLUE: this.number(255, 0) } /* object with RGB color code */ },
-        HSL: function () { return { HUE: this.number(360, 0), SATURATION: this.number(100, 0) + '%', LIGHTENESS: this.number(100, 1) + '%' }/* HSL color code */ },
-        number(max, min) { return Math.floor(Math.random() * (max - min + 1)) + min /* Random number*/ }
-    },
 }

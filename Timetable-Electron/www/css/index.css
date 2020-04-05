@@ -927,8 +927,7 @@ view {
     /*   The body of the timetable   */
     position: relative;
     margin-top: 0vh;
-    height: calc(91.2vh - 30px);
-    max-height: 93vh;
+    height: calc(100% - 2px);
     left: 0vw;
     white-space: nowrap;
     font-size: 2.7vh;
