@@ -12,6 +12,7 @@ var app = {// Application Constructor
     },
     onBackKeyDown: function () {//Back button pressed event
         console.log('"Backbtn" event triggered');
+        event.preventDefault();
         //utility.exit_strategy();
         back()
     },
@@ -61,9 +62,9 @@ window.addEventListener('load', function () { //window loads
     loader.style.width = '25%'
     UI.initalize()
     loader.style.width = '50%'
-    table.initialize()
-    loader.style.width = '75%'
     manage.initalize()
+    loader.style.width = '75%'
+    table.initialize()
     loader.style.width = '100%'
     config.properties.startup = false
     setTimeout(() => {
@@ -556,7 +557,7 @@ let table = {
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
-            }, 50);
+            }, 500);
 
             //click action
             tempblock.addEventListener('click', () => {
@@ -2844,6 +2845,8 @@ let UI = {
         },
         TABLE: function () {
             console.log('Table navigation started');
+
+            document.getElementById('Loading').style.display = 'none'
             if (config.properties.changed || config.properties.view == "table") {
                 window.location.reload();
                 /*table.data_render();
@@ -2865,6 +2868,8 @@ let UI = {
         },
         MANAGE: function () {
             console.log('MANAGE navigation started');
+
+            document.getElementById('Loading').style.display = 'none'
             config.properties.view = "manage";
             table.clock.stop_clock();
             document.getElementById('table1').style.display = 'none';
@@ -2878,6 +2883,8 @@ let UI = {
         },
         SETTING: function () {
             console.log('SETTING navigation started');
+
+            document.getElementById('Loading').style.display = 'none'
             config.properties.view = "setting";
             table.clock.stop_clock();
             document.getElementById('table1').style.display = 'none';
@@ -3230,7 +3237,7 @@ let utility = {//Some usefull things
         if (position_top_right_left_bottom == undefined) { position_top_right_left_bottom = 'bottom' }//default the position
         if (durration_in_ms == undefined) { durration_in_ms = 4000 }//default the duration
         if (offset_in_px == undefined) { offset_in_px = -160 }//default the offset
-        window.plugins.toast.showWithOptions({ message: text, duration: durration_in_ms, position: position_top_right_left_bottom, addPixelsY: offset_in_px })
+        //window.plugins.toast.showWithOptions({ message: text, duration: durration_in_ms, position: position_top_right_left_bottom, addPixelsY: offset_in_px })
     },
     /*  Push text to the keyboard   */
     clipboard: function (textpush) {

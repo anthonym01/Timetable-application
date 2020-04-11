@@ -693,7 +693,7 @@ let table = {
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
-            }, 50);
+            }, 100);
 
             //click action
             tempblock.addEventListener('click', () => {

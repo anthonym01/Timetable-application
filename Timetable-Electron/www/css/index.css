@@ -996,7 +996,7 @@ td {
     transform: translate(-0.5vh, 0vh);
     padding-left: 0.5vh;
     padding-right: 0.5vh;
-    transition: box-shadow 300ms, transform 500ms linear 3000ms, background-color 300ms, color 300ms;
+    transition: box-shadow 300ms, transform 500ms, background-color 300ms, color 300ms;
     text-decoration: none;
     display: block;
     text-shadow: 0vw 0vw 0.5vw var(--background-color);
