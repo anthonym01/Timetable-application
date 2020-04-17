@@ -12,7 +12,7 @@ var app = {// Application Constructor
     },
     onBackKeyDown: function () {//Back button pressed event
         console.log('"Backbtn" event triggered');
-        event.preventDefault();
+        //event.preventDefault();
         //utility.exit_strategy();
         back()
     },
@@ -2835,10 +2835,6 @@ let UI = {
         }
     },
     navigate: {
-        BACK: function () { //Back button handle
-            console.log('Back navigation started');
-            utility.exit_strategy();
-        },
         close_tile: function () {
             console.log('closed full tile function');
             document.getElementById('fullscreen_tile').classList = "fullscreen_tile"
@@ -3201,23 +3197,28 @@ let UI = {
     },
 }
 
-let properties = {
-    exit: false,
-}
-
 function back() {
-    utility.exit_strategy();
+    console.log('Back navigation started');
+    if (document.getElementById('dataentry_screen').style.display == 'block') {
+        manage.dialogue.close()
+    } else if (document.getElementById('fullscreen_tile').classList == 'fullscreen_tile_active') {
+        UI.navigate.close_tile()
+    }else if (document.getElementById('table1').style.display != 'block') {
+        UI.navigate.TABLE()
+    } else {
+        utility.exit_strategy();
+    }
 }
 
 let utility = {//Some usefull things
     exit_strategy: function () {//Heres how to string things togther to make something usefull
         console.warn('Exit strategy triggered')
-        if (properties.exit == true) {
+        if (config.properties.edit == true) {
             utility.close()
         } else {
-            properties.exit = true;
+            config.properties.edit = true;
             utility.toast("Press back button again to exit", 2000)
-            setTimeout(() => { properties.exit = false }, 2000)
+            setTimeout(() => { config.properties.edit = false }, 2000)
         }
     },
     /*  Close the app   */
@@ -3237,7 +3238,7 @@ let utility = {//Some usefull things
         if (position_top_right_left_bottom == undefined) { position_top_right_left_bottom = 'bottom' }//default the position
         if (durration_in_ms == undefined) { durration_in_ms = 4000 }//default the duration
         if (offset_in_px == undefined) { offset_in_px = -160 }//default the offset
-        //window.plugins.toast.showWithOptions({ message: text, duration: durration_in_ms, position: position_top_right_left_bottom, addPixelsY: offset_in_px })
+        window.plugins.toast.showWithOptions({ message: text, duration: durration_in_ms, position: position_top_right_left_bottom, addPixelsY: offset_in_px })
     },
     /*  Push text to the keyboard   */
     clipboard: function (textpush) {
