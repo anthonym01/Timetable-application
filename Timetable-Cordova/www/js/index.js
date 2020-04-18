@@ -301,7 +301,7 @@ let config = {
         localStorage.clear(this.configlocation);
         console.log('config deleted: ');
         console.table(this.data);
-        utility.toast('App will now restart');
+        notify.new('Config','App will now restart');
         setTimeout(() => { location.reload() }, 100);
         this.validate();
     },
@@ -329,7 +329,10 @@ let table = {
         var i = 0;
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
-            utility.toast('Nothing to display');
+            notify.new('U new here?', 'To start off, click here to add some classes', function () {
+                UI.navigate.MANAGE()
+                manage.dialogue.open()
+            })
         } else {
             for (i = 0; i < config.data.table1_db.length; i++) { //Get minimum time and maximum time to construct correct height
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
@@ -799,7 +802,7 @@ let table = {
                 }
                 if (days == 0 || rows == 0) {
                     //Table is empty
-                    utility.toast('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
+                    notify.new('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
                 }
                 console.log('Table validated');
             }
@@ -2589,7 +2592,7 @@ let manage = {
             config.properties.called_from_plus = true;
             let entryisvalid = manage.dialogue.save();
             if (entryisvalid) {
-                utility.toast(document.getElementById('name_put').value + ' was saved, U may now add another');
+                notify.new('Confirmation',document.getElementById('name_put').value + ' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
                 manage.dialogue.open();
             }
@@ -3381,8 +3384,8 @@ let notify = {
         tempnotif.addEventListener('click', function () { //close regardless of function
             setTimeout(() => {
                 this.style.opacity = '0.0';
+                this.style.zIndex = '-999';
             }, 100)
-            //yee.style.zIndex = '-999';
             this.style.transform = 'translate(35vw,0)'
         })
 

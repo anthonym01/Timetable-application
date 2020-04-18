@@ -714,7 +714,6 @@ body {
     z-index: 400;
     background-color: var(--background-color);
     box-shadow: 0vh 0vh 0vh 0vh var(--background-color);
-    z-index: 9999;
 }
 
 .Action_bar:hover {
@@ -2548,6 +2547,7 @@ td {
     .Action_bar_active {
         width: 50vh !important;
         transition: width 400ms;
+        z-index: 9999;
     }
 
     .menubtn,
@@ -2738,7 +2738,7 @@ td {
 
     #delete_confirm_pannel {
         /*   Delete confirmation pannel  */
-        top: 30px;
+        top: unset;
         display: none;
         bottom: 0;
         right: 0;

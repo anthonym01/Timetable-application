@@ -412,7 +412,11 @@ let config = {
                     alert("An error occurred creating the file " + err.message)
                 } else {
                     console.log("The file has been successfully saved");
-                    notify.new('Sucess', 'Saved to: <a href="' + filepath.toString() + '">' + filepath.toString() + '</a> ')
+                    notify.new('Sucess', 'Saved to: '+ filepath.toString(), function () {
+                        event.preventDefault();
+                        let link = filepath.toString()
+                        require("electron").shell.openExternal(link);
+                    },'Click to open');
                 }
             })
         }
@@ -2662,7 +2666,7 @@ let manage = {
             if (tempentry.name == "" || undefined || null) {
                 entryisvalid = false;
                 document.getElementById('name_put').style.border = "0.3vh solid #ff0000";
-                notify.new('Please Enter a name');
+                notify.new('HEY!','Please Enter a name');
             } else {
                 document.getElementById('name_put').style.border = "";
                 console.log('Name detected: ', tempentry.name);
@@ -2674,11 +2678,11 @@ let manage = {
             let percentage_start = Number((start_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (start_time_raw.slice(3) / 60));
             let percentage_end = Number((end_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (end_time_raw.slice(3) / 60));
             if (start_time_raw == "" || start_time_raw == null || start_time_raw == undefined) {
-                notify.new('Start time cannot be empty');
+                notify.new('HEY!','Start time cannot be empty');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (end_time_raw == "" || end_time_raw == null || end_time_raw == undefined) {
-                notify.new('End time cannot be empty');
+                notify.new('HEY!','End time cannot be empty');
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start == percentage_end) {
@@ -2686,7 +2690,7 @@ let manage = {
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start > percentage_end) {
-                notify.new('Class cannot start after it ends');
+                notify.new('E=MC<sup>2</sup>','Class cannot start after it ends');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
@@ -2727,7 +2731,7 @@ let manage = {
             config.properties.called_from_plus = true;
             let entryisvalid = manage.dialogue.save();
             if (entryisvalid) {
-                notify.new(document.getElementById('name_put').value + ' was saved, U may now add another');
+                notify.new('Confirmation',document.getElementById('name_put').value + ' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
                 manage.dialogue.open();
             }
@@ -2892,7 +2896,7 @@ let UI = {
         document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
         document.getElementById('about_btn').addEventListener('click', function () {
             utility.clipboard(JSON.stringify(config.data));
-            notify.new('Debug info coppied to clipboard');
+            notify.new('Debug info coppied to clipboard',JSON.stringify(config.data));
         });
 
         //select notification handlers
@@ -3039,17 +3043,6 @@ let UI = {
         close_tile: function () {
             console.log('closed full tile function');
             document.getElementById('fullscreen_tile').classList = "fullscreen_tile"
-        },
-        exitstrategy: function () {
-            if (config.properties.exit) {
-                utility.close()
-            } else {
-                config.properties.exit = true;
-                setTimeout(() => {
-                    config.properties.exit = false;
-                }, 2000);
-                notify.new('Press back button again to exit');
-            }
         },
         TABLE: function () {
             console.log('Table navigation started');
@@ -3293,13 +3286,13 @@ let UI = {
                 if (config.data.hilight_engine) {
                     //turn off the switch
                     config.data.hilight_engine = false;
-                    notify.new('hilights dissabled');
+                    notify.new('Settings','hilights dissabled');
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
                     config.data.hilight_engine = true;
                     table.hilight_engine_go_vroom();
-                    notify.new('hilights enabled');
+                    notify.new('Settings','hilights enabled');
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
                 }
@@ -3322,12 +3315,12 @@ let UI = {
                 if (config.data.animation) {
                     //turn off the switch
                     config.data.animation = false;
-                    notify.new('animations dissabled');
+                    notify.new('Settings','animations dissabled');
                     console.warn('animations dissabled');
                 } else {
                     //turn on the witch
                     config.data.animation = true;
-                    notify.new('animations enabled');
+                    notify.new('Settings','animations enabled');
                     console.warn('animations enabled');
                 }
                 config.save();
@@ -3349,12 +3342,12 @@ let UI = {
                 if (config.data.tiles) {
                     //turn off the switch
                     config.data.tiles = false;
-                    notify.new('tiles dissabled');
+                    notify.new('Settings','tiles dissabled');
                     console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
                     config.data.tiles = true;
-                    notify.new('tiles enabled');
+                    notify.new('Settings','tiles enabled');
                     console.warn('tiles enabled');
                 }
                 config.save();
@@ -3374,13 +3367,13 @@ let UI = {
                 if (config.data.empty_rows) {
                     //turn off the switch
                     config.data.empty_rows = false;
-                    notify.new('Empty Rows dissabled');
+                    notify.new('Settings','Empty Rows dissabled');
                     console.warn('Empty Rows dissabled');
                     config.properties.changed = true;
                 } else {
                     //turn on the witch
                     config.data.empty_rows = true;
-                    notify.new('Empty Rows Enabled');
+                    notify.new('Settings','Empty Rows Enabled');
                     console.warn('Empty Rows Enabled');
                     config.properties.changed = true;
                 }
@@ -3524,8 +3517,8 @@ let notify = {
         tempnotif.addEventListener('click', function () { //close regardless of function
             setTimeout(() => {
                 this.style.opacity = '0.0';
+                this.style.zIndex = '-999';
             }, 100)
-            //yee.style.zIndex = '-999';
             this.style.transform = 'translate(35vw,0)'
         })
 

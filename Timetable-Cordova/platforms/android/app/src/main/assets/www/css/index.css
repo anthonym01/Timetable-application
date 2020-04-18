@@ -696,6 +696,7 @@ view {
 #fullscreen_tile_tab_container .lefter {
     text-align: right;
     width: 35%;
+    white-space: nowrap;
 }
 
 #fullscreen_tile_tab_container .righter {
@@ -2332,11 +2333,12 @@ td {
     .plusimg {
         /* Little icon in the add new button */
         position: relative;
-        float: right;
+        margin: 2vh;
+        padding: 1vh;
         height: 3.8vh;
         width: 3.8vh;
         background-size: contain;
-        display: inline;
+        display: inline-block;
     }
 
     #loader {
@@ -2428,11 +2430,15 @@ td {
     /*  manage_view   */
     #manage_view {
         top: 0;
-        left: 9vh;
-        width: calc(100vw - 9vh);
+        left: 0;
+        width: 93vw;
         height: 100vh;
         display: none;
         overflow-y: hidden;
+    }
+
+    .data_action_header {
+        height: 10vh;
     }
 
     .tablemanger,
@@ -2441,15 +2447,107 @@ td {
         width: 30vw;
         max-width: 33vw;
         min-width: 100px;
+        height: 10vh;
+        margin: 0;
+        font-size: 5vh;
     }
-
 
     .tablemanger #tablespace_render {
-        width: 100%;
+        /* Pannel which displays buttons to allow selection and editing of tables */
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transform: translate(0, 100%);
+        height: 0;
+        max-height: 40vh;
+        width: 200%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        z-index: 100;
+        transition: height 80ms 0ms ease, box-shadow 300ms;
+        cursor: default;
+        background-color: var(--background-color);
+        box-shadow: 0vh 0vh 0vh 0vh var(--text-color);
     }
-
+    
     .tablemanger_active #tablespace_render {
-        width: 100%;
+        height: 40vh;
+        max-height: 40vh;
+        transition: height 300ms 100ms ease, box-shadow 300ms;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transform: translate(0, 100%);
+        max-height: 40vh;
+        width: 200%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        z-index: 100;
+        cursor: default;
+        background-color: var(--background-color);
+        box-shadow: 0vh 0vh 1.5vh 0vh var(--text-color);
+        color: var(--text-color);
+        text-shadow: none;
+    }
+    
+    .table_bar {
+        /* Positioning/container for individual table management buttons */
+        position: relative;
+        cursor: pointer;
+        padding-top: 1vh;
+        padding-bottom: 1vh;
+        font-size: 3vw;
+        height: 4vw;
+    }
+    
+    .table_bar:hover {
+        box-shadow: 0vh 0vh 1vh 0vh var(--text-color);
+    }
+    
+    .tabmenu {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 3.2vh;
+        height: 100%;
+        width: 8vw;
+        transform: translate(8vw, 0);
+        transition: transform 80ms 0ms ease;
+    }
+    
+    .table_bar:hover .tabmenu {
+        transform: translate(0, 0);
+        transition: transform 300ms 80ms ease;
+    }
+    
+    .tabtion_btn {
+        position: relative;
+        float: left;
+        height: 100%;
+        width: 4vw;
+        /*margin-left: 0.5vh;
+        margin-right: 0.5vh;*/
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: none;
+    }
+    
+    .tab_put {
+        /* Input box to edit the table */
+        position: absolute;
+        top: 0;
+        right: 12vh;
+        font-size: 4vw;
+        height: 100%;
+        width: calc(100% - 12vh);
+        text-align: center;
+        appearance: none;
+        display: none;
+        font-family: Lexend_Deca;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        border: none;
     }
 
 
@@ -2457,14 +2555,15 @@ td {
         position: relative;
         float: left;
         height: 100%;
-        width: 5vh;
-        margin-left: 0.5vh;
-        margin-right: 0.5vh;
+        width: 4vw;
+        margin-left: 0vw;
+        margin-right: 0vw;
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
         display: none;
     }
+
 
 
     /* Where the data is rendered */
@@ -2489,9 +2588,72 @@ td {
     }
 
     .data_bar {
+        /*    Detailed representaion of the data to be managed , reused in the dataspace  */
+        position: relative;
+        display: block;
+        height: fit-content;
+        font-size: 5vh;
+        padding: 3vh;
+        cursor: pointer;
+        margin: 2vh;
+        margin-top: 2vh;
+        text-align: center;
+        transform: translate(0vh, 0vh);
+        transition: box-shadow 50ms 0ms, background-color 300ms, transform 300ms;
+        box-shadow: 0vh 0vh 0.5vh 0vh var(--text-color);
+        border-bottom: 1vh solid var(--primary_hue);
+        background-color: var(--background-color);
+        overflow: hidden;
         width: 28%;
         min-width: 100px;
         border-radius: 1vh;
+    }
+
+    .data_bar:hover {
+        transform: translate(0vh, -0.5vh);
+        transition: box-shadow 300ms 0ms, background-color 300ms, transform 150ms 50ms;
+    }
+
+    .data_bar:active {
+        box-shadow: 0vh 0vh 2vh 0vh var(--text-color) !important;
+        background-color: var(--grey) !important;
+        transition: background-color 0ms;
+    }
+
+    .data_bar .sub_optionbar {
+        /* options for databars */
+        position: absolute;
+        top: 2%;
+        right: 0%;
+        height: 7vh;
+        width: 14vh;
+        display: none;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+        overflow: hidden;
+        z-index: 50;
+        background-color: var(--cell_color);
+        transition: background-color 300ms;
+    }
+
+    .data_bar:hover .sub_optionbar {
+        display: flex;
+    }
+
+    .data_bar:active .sub_optionbar {
+        background-color: var(--grey);
+        transition: background-color 0ms;
+    }
+
+    .data_bar .optionbutton {
+        position: relative;
+        height: 7vh;
+        width: 7vh;
+        /*margin-left: 1vh;*/
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        float: left;
     }
 
 
@@ -2499,68 +2661,396 @@ td {
         position: absolute;
         top: 0;
         right: 0;
-        font-size: 2vh;
-        height: 2vh;
+        font-size: 3vh;
+        height: 4vh;
         width: auto;
         padding: 0.5vh;
         /*border-radius: 4vh;*/
         /*transform: translate(1vh, -1.5vh);*/
     }
 
-    /* Dataentry screen */
 
 
+/* Dataentry screen */
+.colorslider {
+    outline: none;
+    opacity: 1;
+    border: none !important;
+    cursor: pointer;
+    -webkit-appearance: none;
+    width: 100%;
+    border-radius: 2vh;
+    height: 4vw !important;
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1));
+}
 
-    #dataentry_screen {
-        bottom: 0;
-        top: unset;
-        right: 0;
-        height: 90vh;
-        width: 70vh;
-    }
+.colorslider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 4vw !important;
+    height: 4vw !important;
+    background: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: var(--primary_hue);
+    border: 0.5vw solid var(--text-color)
+}
 
-    #btn_bar {
-        width: 70vh;
-        height: 9vh;
-    }
+.colorslider:focus {
+    border: 0.5vw solid var(--primary_hue);
+}
 
-    .databtns {
-        /*    Buttons at the bottom of #dataentry_screen  */
-        width: 20vh;
-    }
+#color_put {
+    /*  Input slider   */
+    background: linear-gradient(90deg, hsl(0, 100%, 50%), hsl(10, 100%, 50%), hsl(20, 100%, 50%), hsl(30, 100%, 50%), hsl(40, 100%, 50%), hsl(50, 100%, 50%), hsl(60, 100%, 50%), hsl(70, 100%, 50%), hsl(80, 100%, 50%), hsl(90, 100%, 50%), hsl(100, 100%, 50%), hsl(110, 100%, 50%), hsl(120, 100%, 50%), hsl(130, 100%, 50%), hsl(140, 100%, 50%), hsl(150, 100%, 50%), hsl(160, 100%, 50%), hsl(170, 100%, 50%), hsl(180, 100%, 50%), hsl(190, 100%, 50%), hsl(200, 100%, 50%), hsl(210, 100%, 50%), hsl(220, 100%, 50%), hsl(230, 100%, 50%), hsl(240, 100%, 50%), hsl(250, 100%, 50%), hsl(260, 100%, 50%), hsl(270, 100%, 50%), hsl(280, 100%, 50%), hsl(290, 100%, 50%), hsl(300, 100%, 50%), hsl(310, 100%, 50%), hsl(320, 100%, 50%), hsl(330, 100%, 50%), hsl(340, 100%, 50%), hsl(350, 100%, 50%), hsl(360, 100%, 50%));
+}
 
-    #delete_confirm_pannel {
-        /*   Delete confirmation pannel  */
-        top: 0;
-        display: none;
-        bottom: 0;
-        right: 0;
-        left: unset;
-        height: 90vh;
-        width: 70vh;
-    }
+#sat_put {
+    background: linear-gradient(90deg, rgb(128, 128, 128), hsl(172, 100%, 50%));
+    transition: background 300ms;
+}
 
-    #yes_btn {
-        width: 30%;
-    }
+#light_put {
+    background: linear-gradient(90deg, #000000, hsl(172, 100%, 50%), #ffffff);
+    transition: background 300ms;
+}
 
-    #no_del_btn {
+.color_container {
+    /* Contains recent colors */
+    position: relative;
+    width: 100%;
+    height: 20vw;
+    overflow-y: scroll;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
 
-        width: 30%;
+.color_doot {
+    position: relative;
+    margin: 1vh;
+    height: 7vw;
+    width: 7vw;
+    border-radius: 50%;
+    cursor: pointer;
+    /*border: 0.3vh solid hsl(0, 100%, 50%);*/
+    box-shadow: 0vh 0vh 1.5vh 0vh var(--primary_hue);
+}
 
-    }
+#dataentry_screen {
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: none;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    transition: transform 200ms;
+    z-index: 700;
+    background-color: var(--background-color);
+}
 
-    #erraser {
-        /* Clear inputs    */
-        position: absolute;
-        top: 2vh;
-        right: 2vh;
-        height: 9vh;
-        width: 9vh;
-        background-size: contain;
-        cursor: pointer;
-        transition: transform 500ms;
-    }
+#dataentry_screen table {
+    /*  TEMPORARY   */
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
+    font-size: 4vw;
+    margin-bottom: 10vh;
+}
+
+#dataentry_screen label {
+    font-size: 3.5vw;
+    width: 100%;
+    text-align: center;
+    transform: translate(0, 4vw);
+}
+
+#dataentry_screen input {
+    width: 100%;
+    height: 100%;
+    font-size: 4vw;
+    border-radius: 1vh;
+    text-align: center;
+    transition: border 300ms;
+    position: relative;
+    border: none;
+    border-bottom: 0.4vh solid var(--text-color);
+    background-color: inherit;
+    color: inherit;
+}
+
+#dataentry_screen input:focus {
+    border: none;
+    border-bottom: 0.4vh solid var(--primary_hue);
+    background-color: inherit;
+    color: inherit;
+    outline: none;
+}
+
+#dataentry_screen select:focus {
+    /*    Place where data is entered or edited, Temporary solution, design needs to be re-worked   */
+    border: 0.4vh solid var(--primary_hue);
+}
+
+.autofill_container,
+.autofill_container_active {
+    position: relative;
+    height: 0vw;
+    width: 100%;
+    overflow: auto;
+    transition: height 300ms;
+}
+
+.autofill_container_active {
+    height: 15vw;
+    transition: height 0ms;
+}
+
+.fillbar {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+
+.fillbar:hover {
+    box-shadow: 0vh 0vh 0.5vh 0vh var(--text-color);
+}
+
+.fillbar:active {
+    color: var(--background-color);
+    background-color: var(--text-color);
+}
+
+.select_container {
+    /*  Select boxes made to be more effective on mobile  */
+    position: relative;
+    height: 5vw;
+    width: calc(100% - 0.8vh);
+    overflow: hidden;
+    border-radius: 1vh;
+    -webkit-touch-callout: none;
+    margin-top: 1vh;
+    transition: background-color 300ms, color 300ms;
+    border: 0.3vh solid var(--text-color);
+}
+
+.select_container:active {
+    transition: background-color 0ms, color 0ms;
+}
+
+.select_container select {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 4vw;
+    width: 100%;
+    height: 100%;
+    -webkit-appearance: none;
+    text-align: center;
+    opacity: 0;
+}
+
+.select_container .select_text {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 1;
+    font-size: 4vw;
+    width: 100%;
+    text-align: center;
+    background: none;
+}
+
+
+#btn_bar {
+    position: fixed;
+    bottom: 0vh;
+    width: 100vw;
+    height: 10vh;
+    display: none;
+    background: none;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+}
+
+.databtns {
+    /*    Buttons at the bottom of #dataentry_screen  */
+    position: relative;
+    font-size: 6vh;
+    height: 7vh;
+    padding: 1vh;
+    text-align: center;
+    width: 25vw;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 2vh;
+    -webkit-touch-callout: none;
+    /* prevent callout to copy image, etc when tap to hold */
+    transition: background-color 300ms;
+    background-color: var(--background-color);
+    border: 0.7vh solid var(--text-color);
+}
+
+.databtns:active {
+    transition: background-color 0ms;
+}
+
+#cancel_btn:active {
+    /*cancel button*/
+    background-color: #ff5656;
+    border: 0.3vh solid #912e2e;
+}
+
+#save_btn:active {
+    /*Save button*/
+    background-color: #00c3ff;
+    border: 0.3vh solid #178caf;
+}
+
+#savepluss_btn:active {
+    /*Save and add new entry button*/
+    background-color: #44ff1e;
+    border: 0.3vh solid #30b914;
+}
+
+#delete_btn:active {
+    /*Save and add new entry button*/
+    background-color: #ff5656;
+    border: 0.3vh solid #912e2e;
+}
+
+#delete_confirm_pannel {
+    /*   Delete confirmation pannel  */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 30;
+    display: none;
+    background-color: var(--shade_color);
+}
+
+#yes_btn {
+    background-color: #3ad61a;
+    border: 0.3vh solid #248d0f;
+}
+
+#yes_btn:active {
+    background-color: #44ff1e;
+    border: 0.3vh solid #3ad61a;
+}
+
+#no_del_btn {
+    background-color: #ff5656;
+    border: 0.3vh solid #912e2e;
+}
+
+#no_del_btn:active {
+    background-color: #ff3434;
+    border: 0.3vh solid #b33e3e;
+}
+
+#delete_confirm_pannel .title {
+    margin-top: 2vh;
+    width: 100%;
+    text-align: center;
+    font-size: 6vh;
+}
+
+#delete_confirm_pannel #pseudo_container {
+    position: absolute;
+    top: 15vh;
+    right: 0;
+    height: auto;
+    width: 100%;
+}
+
+#pseudo_container table {
+    width: 100%;
+    margin: 0;
+    font-size: 4vh;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+#pseudo_container_table tr:nth-child(even) {
+    background-color: var(--cell_color);
+}
+
+#pseudo_container th {
+    padding: 3px;
+    padding-bottom: 1vh;
+}
+
+#pseudo_container .puff {
+    padding-bottom: 1vh;
+}
+
+#pseudo_container td {
+    padding: 3px;
+    padding-bottom: 1vh;
+    vertical-align: middle;
+    align-content: center;
+}
+
+#pseudo_container .lefter {
+    text-align: right;
+    width: 35%;
+}
+
+#pseudo_container .righter {
+    text-align: center;
+    width: 65%;
+}
+
+#yes_btn {
+    position: absolute;
+    outline: none;
+    bottom: 3vh;
+    right: 2vw;
+    width: 45%;
+    font-size: 5vh;
+    border-radius: 2vh;
+    cursor: pointer;
+    transition: background-color 300ms, border 300ms;
+}
+
+#yes_btn:active {
+    transition: background-color 0ms;
+}
+
+#no_del_btn {
+    position: absolute;
+    outline: none;
+    bottom: 3vh;
+    left: 2vw;
+    width: 45%;
+    font-size: 5vh;
+    border-radius: 2vh;
+    cursor: pointer;
+    transition: background-color 300ms, border 300ms;
+}
+
+#no_del_btn:active {
+    transition: background-color 0ms;
+}
+
+#erraser {
+    /* Clear inputs    */
+    position: absolute;
+    top: 2vh;
+    right: 2vh;
+    height: 9vh;
+    width: 9vh;
+    background-size: contain;
+    cursor: pointer;
+    transition: transform 500ms;
+}
 
     /* Setting View */
 
