@@ -102,7 +102,7 @@ let config = {
             { purpose: "table #4", deleted: false, identifier: 4 }*/
         ],
         table1_db: [ // Table database
-
+/*
             { show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
             { show: 4, day: 2, name: "Test 2", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 50, sat: 100, light: 50 }, start: 11.62, end: 14.57 },
             { show: 4, day: 3, name: "Test 3", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 100, sat: 100, light: 50 }, start: 8.5, end: 10.76 },
@@ -112,7 +112,7 @@ let config = {
             { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
             { show: 3, day: 7, name: "Test 8", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 7.0, end: 8.7 },
             { show: 2, day: 7, name: "Test 9", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 8.0, end: 9.7 },
-            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },
+            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },*/
         ],
         previous_colors: [],
     },
@@ -3090,13 +3090,13 @@ let UI = {
                 if (config.data.hilight_engine) {
                     //turn off the switch
                     config.data.hilight_engine = false;
-                    notify.new('hilights dissabled');
+                    notify.new('Settings','hilights dissabled');
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
                     config.data.hilight_engine = true;
                     table.hilight_engine_go_vroom();
-                    notify.new('hilights enabled');
+                    notify.new('Settings','hilights enabled');
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
                 }
@@ -3119,12 +3119,12 @@ let UI = {
                 if (config.data.animation) {
                     //turn off the switch
                     config.data.animation = false;
-                    notify.new('animations dissabled');
+                    notify.new('Settings','animations dissabled');
                     console.warn('animations dissabled');
                 } else {
                     //turn on the witch
                     config.data.animation = true;
-                    notify.new('animations enabled');
+                    notify.new('Settings','animations enabled');
                     console.warn('animations enabled');
                 }
                 config.save();
@@ -3146,12 +3146,12 @@ let UI = {
                 if (config.data.tiles) {
                     //turn off the switch
                     config.data.tiles = false;
-                    notify.new('tiles dissabled');
+                    notify.new('Settings','tiles dissabled');
                     console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
                     config.data.tiles = true;
-                    notify.new('tiles enabled');
+                    notify.new('Settings','tiles enabled');
                     console.warn('tiles enabled');
                 }
                 config.save();
@@ -3171,13 +3171,13 @@ let UI = {
                 if (config.data.empty_rows) {
                     //turn off the switch
                     config.data.empty_rows = false;
-                    notify.new('Empty Rows dissabled');
+                    notify.new('Settings','Empty Rows dissabled');
                     console.warn('Empty Rows dissabled');
                     config.properties.changed = true;
                 } else {
                     //turn on the witch
                     config.data.empty_rows = true;
-                    notify.new('Empty Rows Enabled');
+                    notify.new('Settings','Empty Rows Enabled');
                     console.warn('Empty Rows Enabled');
                     config.properties.changed = true;
                 }

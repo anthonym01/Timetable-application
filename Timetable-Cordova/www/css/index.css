@@ -2021,7 +2021,7 @@ td {
     width: 95vw;
     transform: translate(98vw, 0vh);
     z-index: 1000;
-
+    text-align: center;
     border-top: 0.5vh solid var(--primary_hue);
     background-color: var(--background-color);
     color: var(--text-color);
@@ -2035,7 +2035,6 @@ td {
     width: 100%;
     height: 5.5vh;
     font-size: 4.5vh;
-    text-align: center;
     white-space: nowrap;
     cursor: inherit;
     border-bottom: 0.25vh solid var(--primary_hue_active)
@@ -2077,7 +2076,7 @@ td {
     overflow: hidden;
     cursor: pointer;
     transition: transform 500ms, box-shadow 200ms, opacity 300ms;
-    z-index: 1000;
+    z-index: 1000;text-align: center;
 }
 
 .notification_style2 .title {
@@ -2088,7 +2087,6 @@ td {
     height: 5.5vh;
     font-size: 4.5vh;
     padding-left: 1vw;
-    text-align: left;
     white-space: nowrap;
     cursor: inherit;
 }
@@ -2130,7 +2128,7 @@ td {
     transition: transform 500ms, box-shadow 200ms, opacity 300ms;
     width: 95vw;
     transform: translate(98vw, 0vh);
-    z-index: 1000;
+    z-index: 1000;text-align: center;
 }
 
 .notification_style3 .title {
@@ -2141,7 +2139,6 @@ td {
     height: 5.5vh;
     font-size: 4.5vh;
     padding-right: 1vw;
-    text-align: right;
     white-space: nowrap;
     cursor: inherit;
 }
@@ -2199,7 +2196,7 @@ td {
     box-shadow: 0vh 0vh 0.5vh 0vh var(--text-color);
     width: 95vw;
     transform: translate(98vw, 0vh);
-    z-index: 1000;
+    z-index: 1000;text-align: center;
 }
 
 .notification_style4 .title {

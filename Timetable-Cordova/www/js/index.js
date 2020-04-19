@@ -3090,13 +3090,13 @@ let UI = {
                 if (config.data.hilight_engine) {
                     //turn off the switch
                     config.data.hilight_engine = false;
-                    notify.new('hilights dissabled');
+                    notify.new('Settings','hilights dissabled');
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
                     config.data.hilight_engine = true;
                     table.hilight_engine_go_vroom();
-                    notify.new('hilights enabled');
+                    notify.new('Settings','hilights enabled');
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
                 }
@@ -3119,12 +3119,12 @@ let UI = {
                 if (config.data.animation) {
                     //turn off the switch
                     config.data.animation = false;
-                    notify.new('animations dissabled');
+                    notify.new('Settings','animations dissabled');
                     console.warn('animations dissabled');
                 } else {
                     //turn on the witch
                     config.data.animation = true;
-                    notify.new('animations enabled');
+                    notify.new('Settings','animations enabled');
                     console.warn('animations enabled');
                 }
                 config.save();
@@ -3146,12 +3146,12 @@ let UI = {
                 if (config.data.tiles) {
                     //turn off the switch
                     config.data.tiles = false;
-                    notify.new('tiles dissabled');
+                    notify.new('Settings','tiles dissabled');
                     console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
                     config.data.tiles = true;
-                    notify.new('tiles enabled');
+                    notify.new('Settings','tiles enabled');
                     console.warn('tiles enabled');
                 }
                 config.save();
@@ -3171,13 +3171,13 @@ let UI = {
                 if (config.data.empty_rows) {
                     //turn off the switch
                     config.data.empty_rows = false;
-                    notify.new('Empty Rows dissabled');
+                    notify.new('Settings','Empty Rows dissabled');
                     console.warn('Empty Rows dissabled');
                     config.properties.changed = true;
                 } else {
                     //turn on the witch
                     config.data.empty_rows = true;
-                    notify.new('Empty Rows Enabled');
+                    notify.new('Settings','Empty Rows Enabled');
                     console.warn('Empty Rows Enabled');
                     config.properties.changed = true;
                 }
