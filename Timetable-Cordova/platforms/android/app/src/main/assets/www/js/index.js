@@ -52,25 +52,27 @@ window.addEventListener('load', function () { //window loads
         }
     }, 500)
 
-    const loader = document.getElementById('loadprogress');
+    //const loader = document.getElementById('loadprogress');
 
     if (localStorage.getItem(config.configlocation)) {
         config.load()
     } else {
         config.validate()
     }
-    loader.style.width = '25%'
+    //loader.style.width = '25%'
     UI.initalize()
-    loader.style.width = '50%'
+    //loader.style.width = '50%'
     manage.initalize()
-    loader.style.width = '75%'
+    //loader.style.width = '75%'
     table.initialize()
-    loader.style.width = '100%'
+    //loader.style.width = '100%'
     config.properties.startup = false
     setTimeout(() => {
         UI.navigate.TABLE()
         console.log('Closing loading screen...')
-        document.getElementById('Loading').style.display = 'none'
+        //document.getElementById('Loading').style.display = 'none'
+        navigator.splashscreen.hide();
+
     }, 50)
 
 })
@@ -2737,14 +2739,14 @@ let UI = {
         }
 
         //Proto navigation
-        document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
-        document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
-        document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
+        document.getElementById('table_btn').addEventListener('touchstart', UI.navigate.TABLE)
+        document.getElementById('manage_btn').addEventListener('touchstart', UI.navigate.MANAGE)
+        document.getElementById('setting_btn').addEventListener('touchstart', UI.navigate.SETTING)
         document.getElementById('hilight_btn').addEventListener('click', UI.setting.hilight.flip)
         document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
-        document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
+        document.getElementById('close_btn').addEventListener('touchstart', UI.navigate.close_tile);
         document.getElementById('about_btn').addEventListener('click', function () {
             utility.clipboard(JSON.stringify(config.data));
             utility.toast('Debug info coppied to clipboard');
@@ -2846,7 +2848,7 @@ let UI = {
             console.log('Table navigation started');
 
             document.getElementById('Loading').style.display = 'none'
-            if (config.properties.changed || config.properties.view == "table") {
+            if (config.properties.changed) {
                 window.location.reload();
                 /*table.data_render();
                 setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
