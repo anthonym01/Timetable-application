@@ -2695,6 +2695,23 @@ let manage = {
 let UI = {
     initalize: function () {
         console.log('UI Initalize');
+        window.plugins.screensize.get(function (result) {//Check device screen size
+            console.log(result);
+            if (result.diameter > 5.9) {
+                //tablet size screen
+                document.getElementById('stylesheet').href = "css/index-tablet.css"
+                console.warn('Set tablet screen scale with size: ', result.diameter);
+            } else {
+                //phone size screen
+                document.getElementById('stylesheet').href = "css/index-phone.css"
+                console.warn('Set phone screen scale with size: ', result.diameter);
+            }
+        }, function (err) {
+            console.log(err)
+            //error default to phone size
+            document.getElementById('stylesheet').href = "css/index-phone.css"
+            console.error('defaulted to phone screen scale');
+        });
 
         //Action bar handlers (look about touch triggers)
         document.getElementById('action_bar').addEventListener('mouseover', function () {
@@ -2746,7 +2763,7 @@ let UI = {
         document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
-        document.getElementById('close_btn').addEventListener('touchstart', UI.navigate.close_tile);
+        document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
         document.getElementById('about_btn').addEventListener('click', function () {
             utility.clipboard(JSON.stringify(config.data));
             utility.toast('Debug info coppied to clipboard');

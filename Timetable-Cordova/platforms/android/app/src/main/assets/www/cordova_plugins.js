@@ -23,12 +23,21 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "navigator.splashscreen"
       ]
+    },
+    {
+      "id": "cordova-plugin-screensize.screensize",
+      "file": "plugins/cordova-plugin-screensize/www/screensize.js",
+      "pluginId": "cordova-plugin-screensize",
+      "clobbers": [
+        "window.plugins.screensize"
+      ]
     }
   ];
   module.exports.metadata = {
     "cordova-plugin-x-toast": "2.7.2",
     "cordova-plugin-device": "2.0.3",
     "cordova-plugin-whitelist": "1.3.4",
-    "cordova-plugin-splashscreen": "5.0.3"
+    "cordova-plugin-splashscreen": "5.0.3",
+    "cordova-plugin-screensize": "1.3.1"
   };
 });
