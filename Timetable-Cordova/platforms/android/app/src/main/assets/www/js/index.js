@@ -2695,23 +2695,25 @@ let manage = {
 let UI = {
     initalize: function () {
         console.log('UI Initalize');
-        window.plugins.screensize.get(function (result) {//Check device screen size
-            console.log(result);
-            if (result.diameter > 5.9) {
-                //tablet size screen
-                document.getElementById('stylesheet').href = "css/index-tablet.css"
-                console.warn('Set tablet screen scale with size: ', result.diameter);
-            } else {
-                //phone size screen
+        setTimeout(() => {
+            window.plugins.screensize.get(function (result) {//Check device screen size
+                console.log(result);
+                if (result.diameter > 5.9) {
+                    //tablet size screen
+                    document.getElementById('stylesheet').href = "css/index-tablet.css"
+                    console.warn('Set tablet screen scale with size: ', result.diameter);
+                } else {
+                    //phone size screen
+                    document.getElementById('stylesheet').href = "css/index-phone.css"
+                    console.warn('Set phone screen scale with size: ', result.diameter);
+                }
+            }, function (err) {
+                console.log(err)
+                //error default to phone size
                 document.getElementById('stylesheet').href = "css/index-phone.css"
-                console.warn('Set phone screen scale with size: ', result.diameter);
-            }
-        }, function (err) {
-            console.log(err)
-            //error default to phone size
-            document.getElementById('stylesheet').href = "css/index-phone.css"
-            console.error('defaulted to phone screen scale');
-        });
+                console.error('defaulted to phone screen scale');
+            });
+        }, 500);
 
         //Action bar handlers (look about touch triggers)
         document.getElementById('action_bar').addEventListener('mouseover', function () {
