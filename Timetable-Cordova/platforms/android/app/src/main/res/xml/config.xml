@@ -10,10 +10,6 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
-    <feature name="SplashScreen">
-        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
-        <param name="onload" value="true" />
-    </feature>
     <feature name="ScreenSize">
         <param name="android-package" value="com.pbakondy.ScreenSize" />
     </feature>
@@ -34,12 +30,7 @@
     <allow-intent href="geo:*" />
     <allow-intent href="market:*" />
     <icon src="res/icon/icon.png" />
-    <splash src="res/splashscreen/base.png" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="AndroidLaunchMode" value="singleTop" />
     <preference name="android-minSdkVersion" value="19" />
-    <preference name="AutoHideSplashScreen" value="true" />
-    <preference name="SplashScreenDelay" value="5000" />
-    <preference name="ShowSplashScreenSpinner" value="false" />
-    <preference name="SplashScreenSpinnerColor" value="white" />
 </widget>

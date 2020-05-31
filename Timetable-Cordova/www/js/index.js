@@ -19,7 +19,6 @@ var app = {// Application Constructor
     onPause: function () {//application pause event
         console.log('"pause" event triggered');
         table.clock.stop_clock();//Stop ze clock
-        config.save();
     },
     onResume: function () {
         console.log('"Resume" event triggered');
@@ -71,7 +70,7 @@ window.addEventListener('load', function () { //window loads
         UI.navigate.TABLE()
         console.log('Closing loading screen...')
         //document.getElementById('Loading').style.display = 'none'
-        navigator.splashscreen.hide();
+        /*navigator.splashscreen.hide();*/
 
     }, 50)
 
@@ -3238,6 +3237,7 @@ let utility = {//Some usefull things
     exit_strategy: function () {//Heres how to string things togther to make something usefull
         console.warn('Exit strategy triggered')
         if (config.properties.edit == true) {
+            table.clock.stop_clock();
             utility.close()
         } else {
             config.properties.edit = true;

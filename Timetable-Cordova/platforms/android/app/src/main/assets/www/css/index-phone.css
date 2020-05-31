@@ -1347,14 +1347,14 @@ td {
     transition: border 300ms;
     position: relative;
     border: none;
-    border-bottom: 0.7vh solid var(--text-color);
+    border-bottom: 0.7vh solid var(--primary_hue);
     background-color: inherit;
     color: inherit;
 }
 
 #dataentry_screen input:focus {
     border: none;
-    border-bottom: 0.7vh solid var(--primary_hue);
+    border-bottom: 0.7vh solid var(--text-color);
     background-color: inherit;
     color: inherit;
     outline: none;
@@ -2777,14 +2777,14 @@ td {
         transition: border 300ms;
         position: relative;
         border: none;
-        border-bottom: 0.4vh solid var(--text-color);
+        border-bottom: 0.4vh solid var(--primary_hue);
         background-color: inherit;
         color: inherit;
     }
 
     #dataentry_screen input:focus {
         border: none;
-        border-bottom: 0.4vh solid var(--primary_hue);
+        border-bottom: 0.4vh solid var(--text-color);
         background-color: inherit;
         color: inherit;
         outline: none;

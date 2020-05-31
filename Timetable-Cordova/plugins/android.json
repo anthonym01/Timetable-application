@@ -16,9 +16,6 @@
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.ANTHONYM.APPNAME"
     },
-    "cordova-plugin-splashscreen": {
-      "PACKAGE_NAME": "com.ANTHONYM.timetable"
-    },
     "cordova-plugin-screensize": {
       "PACKAGE_NAME": "com.ANTHONYM.timetable"
     }
