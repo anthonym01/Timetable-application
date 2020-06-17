@@ -561,6 +561,11 @@ let table = {
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
+                if(config.data.table1_db[index].color.light < 49){
+                    tempblock.style.color = "white"
+                }else{
+                    tempblock.style.color = "black"
+                }
             }, 500);
 
             //click action

@@ -696,7 +696,13 @@ let table = {
                 tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
-                tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
+                tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")"
+                    if(config.data.table1_db[index].color.light < 49){
+                        tempblock.style.color = "white"
+                    }else{
+                        tempblock.style.color = "black"
+                    }
+
             }, 100);
 
             //click action
@@ -1707,7 +1713,7 @@ let table = {
     engine_spark: function (event) {
         if (config.data.hilight_engine) {
             console.log('Hilight Engine trigger fired on :', event);
-            if (!event.target.classList.contains('data_block')) { //check if the cell is a data_block
+            if (!event.target.classList.contains('data_block') && !event.target.classList.contains('data_block_active')) { //check if the cell is a data_block
                 if (config.data.theme == "light") {
                     event.target.style.color = 'black';
                     event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,70%)'; //color the target
