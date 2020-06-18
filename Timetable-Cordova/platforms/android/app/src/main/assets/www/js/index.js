@@ -103,17 +103,17 @@ let config = {
             { purpose: "table #4", deleted: false, identifier: 4 }*/
         ],
         table1_db: [ // Table database
-/*
-            { show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
-            { show: 4, day: 2, name: "Test 2", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 50, sat: 100, light: 50 }, start: 11.62, end: 14.57 },
-            { show: 4, day: 3, name: "Test 3", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 100, sat: 100, light: 50 }, start: 8.5, end: 10.76 },
-            { show: 4, day: 4, name: "Test 4", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 150, sat: 100, light: 50 }, start: 1.32, end: 4.0 },
-            { show: 4, day: 5, name: "Test 5", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 200, sat: 100, light: 50 }, start: 2.0, end: 4.0 },
-            { show: 4, day: 6, name: "Test 6", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 250, sat: 100, light: 50 }, start: 4.0, end: 5.4 },
-            { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
-            { show: 3, day: 7, name: "Test 8", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 7.0, end: 8.7 },
-            { show: 2, day: 7, name: "Test 9", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 8.0, end: 9.7 },
-            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },*/
+            /*
+                        { show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
+                        { show: 4, day: 2, name: "Test 2", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 50, sat: 100, light: 50 }, start: 11.62, end: 14.57 },
+                        { show: 4, day: 3, name: "Test 3", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 100, sat: 100, light: 50 }, start: 8.5, end: 10.76 },
+                        { show: 4, day: 4, name: "Test 4", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 150, sat: 100, light: 50 }, start: 1.32, end: 4.0 },
+                        { show: 4, day: 5, name: "Test 5", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 200, sat: 100, light: 50 }, start: 2.0, end: 4.0 },
+                        { show: 4, day: 6, name: "Test 6", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 250, sat: 100, light: 50 }, start: 4.0, end: 5.4 },
+                        { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
+                        { show: 3, day: 7, name: "Test 8", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 7.0, end: 8.7 },
+                        { show: 2, day: 7, name: "Test 9", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 8.0, end: 9.7 },
+                        { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },*/
         ],
         previous_colors: [],
     },
@@ -302,7 +302,7 @@ let config = {
         localStorage.clear(this.configlocation);
         console.log('config deleted: ');
         console.table(this.data);
-        notify.new('Config','App will now restart');
+        notify.new('Config', 'App will now restart');
         setTimeout(() => { location.reload() }, 100);
         this.validate();
     },
@@ -561,9 +561,9 @@ let table = {
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
-                if(config.data.table1_db[index].color.light < 49){
+                if (config.data.table1_db[index].color.light < 49) {
                     tempblock.style.color = "white"
-                }else{
+                } else {
                     tempblock.style.color = "black"
                 }
             }, 500);
@@ -624,6 +624,11 @@ let table = {
                     document.getElementById('time_cell').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
                     document.getElementById('fullscreen_tile').classList = "fullscreen_tile_active"
                     document.getElementById('close_btn').style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+                    if (config.data.table1_db[index].color.light > 49) {
+                        document.getElementById('close_btn').style.color = "black"
+                    } else {
+                        document.getElementById('close_btn').style.color = "white"
+                    }
                 } else {
                     //show the normal card flip out view
                     if (tempblock.name == "on") {
@@ -1576,7 +1581,7 @@ let table = {
     engine_spark: function (event) {
         if (config.data.hilight_engine) {
             console.log('Hilight Engine trigger fired on :', event);
-            if (!event.target.classList.contains('data_block')) { //check if the cell is a data_block
+            if (!event.target.classList.contains('data_block') && !event.target.classList.contains('data_block_active')) { //check if the cell is a data_block
                 if (config.data.theme == "light") {
                     event.target.style.color = 'black';
                     event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,70%)'; //color the target
@@ -2598,7 +2603,7 @@ let manage = {
             config.properties.called_from_plus = true;
             let entryisvalid = manage.dialogue.save();
             if (entryisvalid) {
-                notify.new('Confirmation',document.getElementById('name_put').value + ' was saved, U may now add another');
+                notify.new('Confirmation', document.getElementById('name_put').value + ' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
                 manage.dialogue.open();
             }
@@ -3115,13 +3120,13 @@ let UI = {
                 if (config.data.hilight_engine) {
                     //turn off the switch
                     config.data.hilight_engine = false;
-                    notify.new('Settings','hilights dissabled');
+                    notify.new('Settings', 'hilights dissabled');
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
                     config.data.hilight_engine = true;
                     table.hilight_engine_go_vroom();
-                    notify.new('Settings','hilights enabled');
+                    notify.new('Settings', 'hilights enabled');
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
                 }
@@ -3144,12 +3149,12 @@ let UI = {
                 if (config.data.animation) {
                     //turn off the switch
                     config.data.animation = false;
-                    notify.new('Settings','animations dissabled');
+                    notify.new('Settings', 'animations dissabled');
                     console.warn('animations dissabled');
                 } else {
                     //turn on the witch
                     config.data.animation = true;
-                    notify.new('Settings','animations enabled');
+                    notify.new('Settings', 'animations enabled');
                     console.warn('animations enabled');
                 }
                 config.save();
@@ -3171,12 +3176,12 @@ let UI = {
                 if (config.data.tiles) {
                     //turn off the switch
                     config.data.tiles = false;
-                    notify.new('Settings','tiles dissabled');
+                    notify.new('Settings', 'tiles dissabled');
                     console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
                     config.data.tiles = true;
-                    notify.new('Settings','tiles enabled');
+                    notify.new('Settings', 'tiles enabled');
                     console.warn('tiles enabled');
                 }
                 config.save();
@@ -3196,13 +3201,13 @@ let UI = {
                 if (config.data.empty_rows) {
                     //turn off the switch
                     config.data.empty_rows = false;
-                    notify.new('Settings','Empty Rows dissabled');
+                    notify.new('Settings', 'Empty Rows dissabled');
                     console.warn('Empty Rows dissabled');
                     config.properties.changed = true;
                 } else {
                     //turn on the witch
                     config.data.empty_rows = true;
-                    notify.new('Settings','Empty Rows Enabled');
+                    notify.new('Settings', 'Empty Rows Enabled');
                     console.warn('Empty Rows Enabled');
                     config.properties.changed = true;
                 }
@@ -3231,7 +3236,7 @@ function back() {
         manage.dialogue.close()
     } else if (document.getElementById('fullscreen_tile').classList == 'fullscreen_tile_active') {
         UI.navigate.close_tile()
-    }else if (document.getElementById('table1').style.display != 'block') {
+    } else if (document.getElementById('table1').style.display != 'block') {
         UI.navigate.TABLE()
     } else {
         utility.exit_strategy();
