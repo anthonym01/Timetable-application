@@ -563,8 +563,10 @@ let table = {
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
                 if (config.data.table1_db[index].color.light < 49) {
                     tempblock.style.color = "white"
+                    tempblock.style.textShadow = " 0vh 0vh 2vh black";
                 } else {
                     tempblock.style.color = "black"
+                    tempblock.style.textShadow = " 0vh 0vh 2vh white";
                 }
             }, 500);
 
@@ -3224,7 +3226,9 @@ let UI = {
         },
         wallpaper: {
             set_wallpaper: function () {
-                //document.getElementById('timetable').style.backgroundImage = "url('img/usebkgrounds/test-user-background.jpg')"
+                if (false) {
+                    document.getElementById('timetable').style.backgroundImage = "url('img/usebkgrounds/test-user-background.jpg')"
+                }
             },
         }
     },

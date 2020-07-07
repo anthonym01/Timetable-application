@@ -5,9 +5,13 @@ const path = require('path');//path to necessary files
 const url = require('url');//web dependency
 const windowStateKeeper = require('electron-window-state');//preserves the window state
 
-let mainWindow;//defines the window as an abject
+let mainWindow = null;//defines the window as an abject
 
-app.on('ready', function () {
+app.on('ready', function () { create_main_window() })
+
+
+function create_main_window() {
+	mainWindow = null
 	const { screenwidth, screenheight } = electron.screen.getPrimaryDisplay().workAreaSize //gets screen size and sets it to height and width
 	let mainWindowState = windowStateKeeper({ defaultWidth: screenwidth, defaultHeight: screenheight });
 	mainWindow = new BrowserWindow({
@@ -17,7 +21,7 @@ app.on('ready', function () {
 		height: mainWindowState.height,
 		backgroundColor: '#000000',
 		title: 'Timetable',
-		icon: 'assets/icons/icon.ico',
+		/*icon: 'assets/icons/icon.ico',*/
 		frame: false,
 		minWidth: 400,
 		show: true,
@@ -35,13 +39,7 @@ app.on('ready', function () {
 
 	mainWindowState.manage(mainWindow);
 
-});
-
-app.on('window-all-closed', function () {
-	if (process.platform != 'darwin') {
-		app.quit();
-	}
-});//closes all processes
+}
 
 exports.closeapp = () => { app.quit() }
 

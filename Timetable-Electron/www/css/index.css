@@ -56,361 +56,346 @@
     }
 }
 
+.dark {
+    --hue_value: 0;
+    --saturat: 0%;
+    --background-color: black;
+    --text-color: white;
+    --grey: rgb(100, 100, 100);
+    --dark-grey: rgb(50, 50, 50);
+    --icon: url('../img/icon.webp');
+    --inversion_factor: 0%;
+    --cell_color: rgba(0, 0, 0, 0.1);
+    --shade_color: rgba(0, 0, 0, 0.6);
+    /*overwrites*/
+    --timetable_background: url('../img/blyatground.webp');
+    --book_closed: url('../img/manage-white.webp');
+    --dark_pannel_book: url('../img/manage-white.webp');
+    --light_pannel_book: url('../img/manage-dark.webp');
+    --book_open: url('../img/manage-open-white.webp');
+    --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 70%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 30%));
+    --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
+    --primary_hue_active: hsl(var(--hue_value), var(--saturat), 40%);
 
-/* Adamptive color theme */
-@media screen {
+}
 
-    .dark {
-        --hue_value: 0;
-        --saturat: 0%;
-        --background-color: black;
-        --text-color: white;
-        --grey: rgb(100, 100, 100);
-        --dark-grey: rgb(50, 50, 50);
-        --icon: url('../img/icon.webp');
-        --inversion_factor: 0%;
-        --cell_color: rgba(0, 0, 0, 0.1);
-        --shade_color: rgba(0, 0, 0, 0.6);
-        /*overwrites*/
-        --timetable_background: url('../img/backgrounds/blyatground.webp');
-        --book_closed: url('../img/manage-white.webp');
-        --dark_pannel_book: url('../img/manage-white.webp');
-        --light_pannel_book: url('../img/manage-dark.webp');
-        --book_open: url('../img/manage-open-white.webp');
-        --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 70%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 30%));
-        --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
-        --primary_hue_active: hsl(var(--hue_value), var(--saturat), 40%);
+.dark #hueinverse-selec {
+    background-image: linear-gradient(120deg, hsl(0, 0%, 100%), hsl(0, 0%, 80%));
+    box-shadow: 0vh 0vh 3vh 0vh rgb(255, 255, 255);
+}
 
-    }
+.dark #hue0-selec {
+    background-image: linear-gradient(120deg, hsl(0, 100%, 50%), hsl(0, 100%, 20%));
+}
 
-    .dark #hueinverse-selec {
-        background-image: linear-gradient(120deg, hsl(0, 0%, 100%), hsl(0, 0%, 80%));
-        box-shadow: 0vh 0vh 3vh 0vh rgb(255, 255, 255);
-    }
+.dark #hue30-selec {
+    background-image: linear-gradient(120deg, hsl(30, 100%, 50%), hsl(30, 100%, 20%))
+}
 
-    .dark #hue0-selec {
-        background-image: linear-gradient(120deg, hsl(0, 100%, 50%), hsl(0, 100%, 20%));
-    }
+.dark #hue60-selec {
+    background-image: linear-gradient(120deg, hsl(60, 100%, 50%), hsl(60, 100%, 20%))
+}
 
-    .dark #hue30-selec {
-        background-image: linear-gradient(120deg, hsl(30, 100%, 50%), hsl(30, 100%, 20%))
-    }
+.dark #hue90-selec {
+    background-image: linear-gradient(120deg, hsl(90, 100%, 50%), hsl(90, 100%, 20%))
+}
 
-    .dark #hue60-selec {
-        background-image: linear-gradient(120deg, hsl(60, 100%, 50%), hsl(60, 100%, 20%))
-    }
+.dark #hue120-selec {
+    background-image: linear-gradient(120deg, hsl(120, 100%, 50%), hsl(120, 100%, 20%));
+}
 
-    .dark #hue90-selec {
-        background-image: linear-gradient(120deg, hsl(90, 100%, 50%), hsl(90, 100%, 20%))
-    }
+.dark #hue150-selec {
+    background-image: linear-gradient(120deg, hsl(150, 100%, 50%), hsl(150, 100%, 20%))
+}
 
-    .dark #hue120-selec {
-        background-image: linear-gradient(120deg, hsl(120, 100%, 50%), hsl(120, 100%, 20%));
-    }
+.dark #hue180-selec {
+    background-image: linear-gradient(120deg, hsl(180, 100%, 50%), hsl(180, 100%, 20%))
+}
 
-    .dark #hue150-selec {
-        background-image: linear-gradient(120deg, hsl(150, 100%, 50%), hsl(150, 100%, 20%))
-    }
+.dark #hue210-selec {
+    background-image: linear-gradient(120deg, hsl(210, 100%, 50%), hsl(210, 100%, 20%))
+}
 
-    .dark #hue180-selec {
-        background-image: linear-gradient(120deg, hsl(180, 100%, 50%), hsl(180, 100%, 20%))
-    }
+.dark #hue240-selec {
+    background-image: linear-gradient(120deg, hsl(240, 100%, 50%), hsl(240, 100%, 20%))
+}
 
-    .dark #hue210-selec {
-        background-image: linear-gradient(120deg, hsl(210, 100%, 50%), hsl(210, 100%, 20%))
-    }
+.dark #hue270-selec {
+    background-image: linear-gradient(120deg, hsl(270, 100%, 50%), hsl(270, 100%, 20%))
+}
 
-    .dark #hue240-selec {
-        background-image: linear-gradient(120deg, hsl(240, 100%, 50%), hsl(240, 100%, 20%))
-    }
+.dark #hue300-selec {
+    background-image: linear-gradient(120deg, hsl(300, 100%, 50%), hsl(300, 100%, 20%))
+}
 
-    .dark #hue270-selec {
-        background-image: linear-gradient(120deg, hsl(270, 100%, 50%), hsl(270, 100%, 20%))
-    }
+.dark #hue330-selec {
+    background-image: linear-gradient(120deg, hsl(330, 100%, 50%), hsl(330, 100%, 20%))
+}
 
-    .dark #hue300-selec {
-        background-image: linear-gradient(120deg, hsl(300, 100%, 50%), hsl(300, 100%, 20%))
-    }
+.dark #light_pallet,
+.dark #amoled_pallet {
+    --cell_color: rgba(0, 0, 0, 0);
+}
 
-    .dark #hue330-selec {
-        background-image: linear-gradient(120deg, hsl(330, 100%, 50%), hsl(330, 100%, 20%))
-    }
+.dark #amoled_pallet {
+    box-shadow: 0vh 0vh 2.5vh 0vh var(--primary_hue);
+}
 
-    .dark #light_pallet,
-    .dark #amoled_pallet {
-        --cell_color: rgba(0, 0, 0, 0);
-    }
+.light {
+    --hue_value: 0;
+    --saturat: 0%;
+    --background-color: rgb(255, 255, 255);
+    --text-color: rgb(0, 0, 0);
+    --grey: rgb(185, 185, 185);
+    --dark-grey: rgb(221, 221, 221);
+    --icon: url('../img/icon-inverse.webp');
+    --inversion_factor: 100%;
+    --cell_color: rgba(255, 255, 255, 0.1);
+    --shade_color: rgba(255, 255, 255, 0.6);
+    /*overwrites*/
+    --timetable_background: url('../img/whiteground.webp')
+        /*!important*/
+    ;
+    --book_closed: url('../img/manage-dark.webp');
+    --dark_pannel_book: url('../img/manage-white.webp');
+    --light_pannel_book: url('../img/manage-dark.webp');
+    --book_open: url('../img/manage-open-white.webp');
+    --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 30%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 70%));
+    --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
+    --primary_hue_active: hsl(var(--hue_value), var(--saturat), 60%);
+}
 
-    .dark #amoled_pallet {
-        box-shadow: 0vh 0vh 2.5vh 0vh var(--primary_hue);
-    }
+.light #hueinverse-selec {
+    background-image: linear-gradient(120deg, hsl(0, 0%, 0%), rgb(68, 68, 68));
+    box-shadow: 0vh 0vh 3vh 0vh rgb(0, 0, 0);
+}
 
-    .light {
-        --hue_value: 0;
-        --saturat: 0%;
-        --background-color: rgb(255, 255, 255);
-        --text-color: rgb(0, 0, 0);
-        --grey: rgb(185, 185, 185);
-        --dark-grey: rgb(221, 221, 221);
-        --icon: url('../img/icon-inverse.webp');
-        --inversion_factor: 100%;
-        --cell_color: rgba(255, 255, 255, 0.3);
-        --shade_color: rgba(255, 255, 255, 0.6);
-        /*overwrites*/
-        --timetable_background: url('../img/backgrounds/whiteground.webp') !important;
-        --book_closed: url('../img/manage-dark.webp');
-        --dark_pannel_book: url('../img/manage-white.webp');
-        --light_pannel_book: url('../img/manage-dark.webp');
-        --book_open: url('../img/manage-open-white.webp');
-        --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 30%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 70%));
-        --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
-        --primary_hue_active: hsl(var(--hue_value), var(--saturat), 60%);
-    }
+.light #hue0-selec {
+    background-image: linear-gradient(120deg, hsl(0, 100%, 50%), hsl(0, 100%, 70%));
+}
 
-    .light #hueinverse-selec {
-        background-image: linear-gradient(120deg, hsl(0, 0%, 0%), rgb(68, 68, 68));
-        box-shadow: 0vh 0vh 3vh 0vh rgb(0, 0, 0);
-    }
+.light #hue30-selec {
+    background-image: linear-gradient(120deg, hsl(30, 100%, 50%), hsl(30, 100%, 70%))
+}
 
-    .light #hue0-selec {
-        background-image: linear-gradient(120deg, hsl(0, 100%, 50%), hsl(0, 100%, 70%));
-    }
+.light #hue60-selec {
+    background-image: linear-gradient(120deg, hsl(60, 100%, 50%), hsl(60, 100%, 70%))
+}
 
-    .light #hue30-selec {
-        background-image: linear-gradient(120deg, hsl(30, 100%, 50%), hsl(30, 100%, 70%))
-    }
+.light #hue90-selec {
+    background-image: linear-gradient(120deg, hsl(90, 100%, 50%), hsl(90, 100%, 70%))
+}
 
-    .light #hue60-selec {
-        background-image: linear-gradient(120deg, hsl(60, 100%, 50%), hsl(60, 100%, 70%))
-    }
+.light #hue120-selec {
+    background-image: linear-gradient(120deg, hsl(120, 100%, 50%), hsl(120, 100%, 70%));
+}
 
-    .light #hue90-selec {
-        background-image: linear-gradient(120deg, hsl(90, 100%, 50%), hsl(90, 100%, 70%))
-    }
+.light #hue150-selec {
+    background-image: linear-gradient(120deg, hsl(150, 100%, 50%), hsl(150, 100%, 70%))
+}
 
-    .light #hue120-selec {
-        background-image: linear-gradient(120deg, hsl(120, 100%, 50%), hsl(120, 100%, 70%));
-    }
+.light #hue180-selec {
+    background-image: linear-gradient(120deg, hsl(180, 100%, 50%), hsl(180, 100%, 70%))
+}
 
-    .light #hue150-selec {
-        background-image: linear-gradient(120deg, hsl(150, 100%, 50%), hsl(150, 100%, 70%))
-    }
+.light #hue210-selec {
+    background-image: linear-gradient(120deg, hsl(210, 100%, 50%), hsl(210, 100%, 70%))
+}
 
-    .light #hue180-selec {
-        background-image: linear-gradient(120deg, hsl(180, 100%, 50%), hsl(180, 100%, 70%))
-    }
+.light #hue240-selec {
+    background-image: linear-gradient(120deg, hsl(240, 100%, 50%), hsl(240, 100%, 70%))
+}
 
-    .light #hue210-selec {
-        background-image: linear-gradient(120deg, hsl(210, 100%, 50%), hsl(210, 100%, 70%))
-    }
+.light #hue270-selec {
+    background-image: linear-gradient(120deg, hsl(270, 100%, 50%), hsl(270, 100%, 70%))
+}
 
-    .light #hue240-selec {
-        background-image: linear-gradient(120deg, hsl(240, 100%, 50%), hsl(240, 100%, 70%))
-    }
+.light #hue300-selec {
+    background-image: linear-gradient(120deg, hsl(300, 100%, 50%), hsl(300, 100%, 70%))
+}
 
-    .light #hue270-selec {
-        background-image: linear-gradient(120deg, hsl(270, 100%, 50%), hsl(270, 100%, 70%))
-    }
+.light #hue330-selec {
+    background-image: linear-gradient(120deg, hsl(330, 100%, 50%), hsl(330, 100%, 70%))
+}
 
-    .light #hue300-selec {
-        background-image: linear-gradient(120deg, hsl(300, 100%, 50%), hsl(300, 100%, 70%))
-    }
+.light #light_pallet,
+.light #amoled_pallet {
+    --cell_color: rgba(0, 0, 0, 0);
+}
 
-    .light #hue330-selec {
-        background-image: linear-gradient(120deg, hsl(330, 100%, 50%), hsl(330, 100%, 70%))
-    }
+.light #light_pallet {
+    box-shadow: 0vh 0vh 2.5vh 0vh var(--primary_hue);
+}
 
-    .light #light_pallet,
-    .light #amoled_pallet {
-        --cell_color: rgba(0, 0, 0, 0);
-    }
+._0 {
+    --hue_value: 0;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-0.webp');
+    --light_pannel_book: url('../img/manage-0.webp');
+    --dark_pannel_book: url('../img/manage-0.webp');
+    --book_open: url('../img/manage-open-0.webp');
+}
 
-    .light #light_pallet {
-        box-shadow: 0vh 0vh 2.5vh 0vh var(--primary_hue);
-    }
+._0 #hue0-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._0 {
-        --hue_value: 0;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/0.jpg');
-        --book_closed: url('../img/manage-0.webp');
-        --light_pannel_book: url('../img/manage-0.webp');
-        --dark_pannel_book: url('../img/manage-0.webp');
-        --book_open: url('../img/manage-open-0.webp');
-    }
+._30 {
+    --hue_value: 30;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-30.webp');
+    --light_pannel_book: url('../img/manage-30.webp');
+    --dark_pannel_book: url('../img/manage-30.webp');
+    --book_open: url('../img/manage-open-30.webp');
+}
 
-    ._0 #hue0-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._30 #hue30-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._30 {
-        --hue_value: 30;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/30.jpg');
-        --book_closed: url('../img/manage-30.webp');
-        --light_pannel_book: url('../img/manage-30.webp');
-        --dark_pannel_book: url('../img/manage-30.webp');
-        --book_open: url('../img/manage-open-30.webp');
-    }
+._60 {
+    --hue_value: 60;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-60.webp');
+    --light_pannel_book: url('../img/manage-60.webp');
+    --dark_pannel_book: url('../img/manage-60.webp');
+    --book_open: url('../img/manage-open-60.webp');
+}
 
-    ._30 #hue30-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._60 #hue60-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._60 {
-        --hue_value: 60;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/60.jpg');
-        --book_closed: url('../img/manage-60.webp');
-        --light_pannel_book: url('../img/manage-60.webp');
-        --dark_pannel_book: url('../img/manage-60.webp');
-        --book_open: url('../img/manage-open-60.webp');
-    }
+._90 {
+    --hue_value: 90;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-90.webp');
+    --light_pannel_book: url('../img/manage-90.webp');
+    --dark_pannel_book: url('../img/manage-90.webp');
+    --book_open: url('../img/manage-open-90.webp');
+}
 
-    ._60 #hue60-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._90 #hue90-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._90 {
-        --hue_value: 90;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/90.jpg');
-        --book_closed: url('../img/manage-90.webp');
-        --light_pannel_book: url('../img/manage-90.webp');
-        --dark_pannel_book: url('../img/manage-90.webp');
-        --book_open: url('../img/manage-open-90.webp');
-    }
+._120 {
+    --hue_value: 120;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-120.webp');
+    --light_pannel_book: url('../img/manage-120.webp');
+    --dark_pannel_book: url('../img/manage-120.webp');
+    --book_open: url('../img/manage-open-120.webp');
+}
 
-    ._90 #hue90-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._120 #hue120-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._120 {
-        --hue_value: 120;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/120.png');
-        --book_closed: url('../img/manage-120.webp');
-        --light_pannel_book: url('../img/manage-120.webp');
-        --dark_pannel_book: url('../img/manage-120.webp');
-        --book_open: url('../img/manage-open-120.webp');
-    }
+._150 {
+    --hue_value: 150;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-150.webp');
+    --light_pannel_book: url('../img/manage-150.webp');
+    --dark_pannel_book: url('../img/manage-150.webp');
+    --book_open: url('../img/manage-open-150.webp');
+}
 
-    ._120 #hue120-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._150 #hue150-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._150 {
-        --hue_value: 150;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/150.jpg');
-        --book_closed: url('../img/manage-150.webp');
-        --light_pannel_book: url('../img/manage-150.webp');
-        --dark_pannel_book: url('../img/manage-150.webp');
-        --book_open: url('../img/manage-open-150.webp');
-    }
+._180 {
+    --hue_value: 180;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-180.webp');
+    --light_pannel_book: url('../img/manage-180.webp');
+    --dark_pannel_book: url('../img/manage-180.webp');
+    --book_open: url('../img/manage-open-180.webp');
+}
 
-    ._150 #hue150-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._180 #hue180-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._180 {
-        --hue_value: 180;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/180.jpg');
-        --book_closed: url('../img/manage-180.webp');
-        --light_pannel_book: url('../img/manage-180.webp');
-        --dark_pannel_book: url('../img/manage-180.webp');
-        --book_open: url('../img/manage-open-180.webp');
-    }
+._210 {
+    --hue_value: 210;
+    --saturat: 100%;
+    --light_pannel_book: url('../img/manage-210.webp');
+    --dark_pannel_book: url('../img/manage-210.webp');
+    --book_closed: url('../img/manage-210.webp');
+    --book_open: url('../img/manage-open-210.webp');
+}
 
-    ._180 #hue180-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._210 #hue210-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._210 {
-        --hue_value: 210;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/210.png');
-        --light_pannel_book: url('../img/manage-210.webp');
-        --dark_pannel_book: url('../img/manage-210.webp');
-        --book_closed: url('../img/manage-210.webp');
-        --book_open: url('../img/manage-open-210.webp');
-    }
+._240 {
+    --hue_value: 240;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-240.webp');
+    --light_pannel_book: url('../img/manage-240.webp');
+    --dark_pannel_book: url('../img/manage-240.webp');
+    --book_open: url('../img/manage-open-240.webp');
+}
 
-    ._210 #hue210-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._240 #hue240-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._240 {
-        --hue_value: 240;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/240.jpg');
-        --book_closed: url('../img/manage-240.webp');
-        --light_pannel_book: url('../img/manage-240.webp');
-        --dark_pannel_book: url('../img/manage-240.webp');
-        --book_open: url('../img/manage-open-240.webp');
-    }
+._270 {
+    --hue_value: 270;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-270.webp');
+    --light_pannel_book: url('../img/manage-270.webp');
+    --dark_pannel_book: url('../img/manage-270.webp');
+    --book_open: url('../img/manage-open-270.webp');
+}
 
-    ._240 #hue240-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._270 #hue270-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._270 {
-        --hue_value: 270;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/270.jpg');
-        --book_closed: url('../img/manage-270.webp');
-        --light_pannel_book: url('../img/manage-270.webp');
-        --dark_pannel_book: url('../img/manage-270.webp');
-        --book_open: url('../img/manage-open-270.webp');
-    }
+._300 {
+    --hue_value: 300;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-300.webp');
+    --light_pannel_book: url('../img/manage-300.webp');
+    --dark_pannel_book: url('../img/manage-300.webp');
+    --book_open: url('../img/manage-open-300.webp');
+}
 
-    ._270 #hue270-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._300 #hue300-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._300 {
-        --hue_value: 300;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/300.jpg');
-        --book_closed: url('../img/manage-300.webp');
-        --light_pannel_book: url('../img/manage-300.webp');
-        --dark_pannel_book: url('../img/manage-300.webp');
-        --book_open: url('../img/manage-open-300.webp');
-    }
+._330 {
+    --hue_value: 330;
+    --saturat: 100%;
+    --book_closed: url('../img/manage-330.webp');
+    --light_pannel_book: url('../img/manage-330.webp');
+    --dark_pannel_book: url('../img/manage-330.webp');
+    --book_open: url('../img/manage-open-330.webp');
+}
 
-    ._300 #hue300-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
+._330 #hue330-selec {
+    box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
+}
 
-    ._330 {
-        --hue_value: 330;
-        --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/330.jpg');
-        --book_closed: url('../img/manage-330.webp');
-        --light_pannel_book: url('../img/manage-330.webp');
-        --dark_pannel_book: url('../img/manage-330.webp');
-        --book_open: url('../img/manage-open-330.webp');
-    }
-
-    ._330 #hue330-selec {
-        box-shadow: 0vh 0vh 3vh 0vh var(--primary_hue);
-    }
-
-    ._0 #hueinverse-selec,
-    ._30 #hueinverse-selec,
-    ._60 #hueinverse-selec,
-    ._90 #hueinverse-selec,
-    ._120 #hueinverse-selec,
-    ._150 #hueinverse-selec,
-    ._180 #hueinverse-selec,
-    ._210 #hueinverse-selec,
-    ._240 #hueinverse-selec,
-    ._270 #hueinverse-selec,
-    ._300 #hueinverse-selec,
-    ._330 #hueinverse-selec {
-        box-shadow: none !important;
-    }
+._0 #hueinverse-selec,
+._30 #hueinverse-selec,
+._60 #hueinverse-selec,
+._90 #hueinverse-selec,
+._120 #hueinverse-selec,
+._150 #hueinverse-selec,
+._180 #hueinverse-selec,
+._210 #hueinverse-selec,
+._240 #hueinverse-selec,
+._270 #hueinverse-selec,
+._300 #hueinverse-selec,
+._330 #hueinverse-selec {
+    box-shadow: none !important;
 }
 
 body {
@@ -437,7 +422,7 @@ body {
     width: 100vw;
     top: 0;
     right: 0;
-    z-index: 999;
+    z-index: 1000;
     -webkit-app-region: drag;
     overflow: hidden;
     background-image: linear-gradient(90deg, var(--background-color), var(--primary_hue), var(--background-color));
@@ -562,6 +547,28 @@ body {
     background-repeat: no-repeat;
     cursor: pointer;
     background-image: url('../img/window-top-512-light.webp');
+    filter: invert(var(--inversion_factor));
+}
+
+#Setting_btn {
+    right: 180px;
+    background-size: 55%;
+    /*background-size: contain;*/
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    background-image: url('../img/setting-light.webp');
+    filter: invert(var(--inversion_factor));
+}
+
+#Manage_button_btn {
+    right: 225px;
+    background-size: 55%;
+    /*background-size: contain;*/
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    background-image: var(--book_closed);
     filter: invert(var(--inversion_factor));
 }
 
@@ -699,122 +706,13 @@ body {
     background-color: var(--background-color);
 }
 
-.Action_bar,
-.Action_bar_active {
-    /* The body of the Footer   */
-    position: fixed;
-    bottom: 0;
-    height: 7vh;
-    left: 0;
-    width: 100vw;
-    border-collapse: collapse;
-    text-align: center;
-    text-shadow: 0vh 0vh 1vh;
-    border: none;
-    z-index: 400;
-    background-color: var(--background-color);
-    box-shadow: 0vh 0vh 0vh 0vh var(--background-color);
-}
-
-.Action_bar:hover {
-    box-shadow: 1vh 0vh 10vh 0vh var(--background-color);
-}
-
-.menubtn,
-.menubtn_active {
-    /*  menu buttons  */
-    position: relative;
-    float: left;
-    height: 7vh;
-    width: 33%;
-    background-size: contain;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    /*margin-right:0.5vw;*/
-    border-radius: 2vh;
-    transition: background-color 500ms;
-}
-
-.menubtn:hover {
-    background-color: var(--dark-grey);
-    transition: background-color 0ms;
-}
-
-.menubtn_active {
-    background-color: var(--primary_hue_active) !important;
-}
-
-.menubtn_active:hover {
-    background-color: var(--primary_hue) !important;
-    transition: background-color 0ms;
-}
-
-.menubtn_icon {
-    position: relative;
-    margin-right: auto;
-    margin-left: auto;
-    height: 7vh;
-    width: 7vh;
-    background-size: contain;
-    background-position: center;
-    transition: background-image 500ms;
-    background-image: var(--icon);
-}
-
-.menubtn #setting_btn_icon,
-.menubtn_active #setting_btn_icon {
-    transform: rotate(0deg);
-    transition: transform 500ms;
-    background-image: url('../img/setting-light.webp');
-    filter: invert(var(--inversion_factor));
-}
-
-.menubtn_active #setting_btn_icon {
-    transform: rotate(90deg);
-}
-
-
-.menubtn #manage_btn_icon {
-    /*  Manager button  (the little bookli,.bookamol) */
-    background-image: var(--book_closed);
-    /*filter: invert(100%);*/
-}
-
-.menubtn_active #manage_btn_icon {
-    background-image: var(--book_open);
-}
-
-.menubtn #table_btn_icon {
-    /* The button with the logo, that switches back to the main table   */
-    background-image: url('../img/icon-inverse.webp');
-}
-
-.menubtn_active #table_btn_icon {
-    background-image: url('../img/icon.webp');
-}
-
-.menubtn #task_btn_icon {
-    /*  task button    */
-    background-image: url('../img/Clip-dark-closes.webp');
-}
-
-.menubtn_active #task_btn_icon {
-    background-image: url('../img/Clip-dark.webp');
-}
-
-.menu_txt {
-    display: none;
-}
-
-#setting_btn_icon {}
-
 /*  Views   */
 view {
     position: absolute;
-    bottom: 7vh;
+    bottom: 0;
     left: 0;
     width: 100vw;
-    height: calc(93vh - 30px);
+    height: calc(100vh - 30px);
     display: none;
     overflow: hidden;
 }
@@ -1022,7 +920,6 @@ td {
     transition-duration: 0ms;
 }
 
-
 .infodoot {
     /*  Facilitates flip out effect  */
     background-color: inherit;
@@ -1037,9 +934,9 @@ td {
     padding: 1vh;
     border-radius: 1vh 1vh 1vh 1vh;
     transition: box-shadow 500ms, transform 300ms, background-color 500ms, color 500ms, opacity 500ms, width 500ms, right 500ms;
-    color: var(--text-color);
+    color: inherit;
     background-color: inherit;
-    text-shadow: none
+    text-shadow: inherit;
 }
 
 .infodoot:active {
@@ -1053,7 +950,7 @@ td {
     z-index: 400;
     transform: rotate3d(1, 0, 0, 0deg) translate(1vh, 0);
     width: 200%;
-    right: -50%;
+    right: 5%;
 }
 
 .infodoot table {
@@ -1087,6 +984,32 @@ td {
 }
 
 /*  manage_view   */
+#manage_trigger {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 3vw;
+    height: 100%;
+    /*background-color: var(--primary_hue);*/
+    cursor: pointer;
+}
+
+#manage_shadow {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    box-shadow: 0vw 0vw 0vw 0vw #000000;
+    z-index: 1000;
+    transition: box-shadow 300ms;
+}
+
+#manage_trigger:hover #manage_shadow {
+
+    box-shadow: 0vw 0vw 3vw 2vw #000000;
+}
+
 #manage_view {
     /* Adjust manage view to align with table selector at the bottom*/
     top: 30px;
@@ -1095,6 +1018,8 @@ td {
         height: 93vh;*/
     overflow-x: hidden;
     overflow-y: auto;
+    background-color: var(--shade_color);
+    z-index: 2000;
 }
 
 .data_action_header {
@@ -1134,6 +1059,7 @@ td {
     border: none;
     background-position: 100% 0%;
     background-size: 400%;
+    z-index: 600;
 }
 
 .data_button:hover,
@@ -1505,8 +1431,8 @@ td {
     overflow-y: scroll;
     overflow-x: hidden;
     transition: transform 200ms;
-    z-index: 500;
     background-color: var(--background-color);
+    z-index: 500;
 }
 
 #dataentry_screen table {
@@ -1594,6 +1520,7 @@ td {
     margin-top: 1vh;
     transition: background-color 300ms, color 300ms;
     border: 0.3vh solid var(--text-color);
+    background-color: var(--background-color);
 }
 
 .select_container:active {
@@ -1821,12 +1748,14 @@ td {
 #setting_view {
     overflow-x: hidden;
     overflow-y: scroll;
+    background-color: var(--shade_color);
+    z-index: 999
 }
 
 .config-manage-pannel {
     position: relative;
     width: 100%;
-    height: 12vh;
+    height: fit-content;
     margin-bottom: 1vh;
     display: flex;
     justify-content: space-evenly;
@@ -1836,7 +1765,7 @@ td {
 #configmngtile {
     position: relative;
     width: 100%;
-    height: 6vh;
+    height: fit-content;
     padding-bottom: 2vh;
     margin-top: 0;
     margin-bottom: 0;
@@ -1845,7 +1774,6 @@ td {
 
 .config-manage-pannel,
 #configmngtile {
-    background-color: var(--background-color);
     background-size: 300%;
     transition: background 500ms;
     text-shadow: 0vh 0vh 0.5vh var(--background-color);
@@ -1889,7 +1817,8 @@ td {
     transition: background 50ms;
 }
 
-#pathrepresenter {
+#pathrepresenter,
+#wallpaper_pathrepresenter {
     position: relative;
     margin-top: 0.5vh;
     width: 50%;
@@ -1900,6 +1829,7 @@ td {
     background-color: var(--background-color);
     color: var(--text-color);
     border: none;
+    text-align: center;
 }
 
 .accent-color-selector {
@@ -1924,9 +1854,10 @@ td {
 
 .Setting_title {
     margin-top: 1vh;
-    font-size: 6vh;
+    font-size: 5.5vh;
     position: relative;
     text-align: center;
+    height: fit-content;
 }
 
 .selection_container {
@@ -1993,9 +1924,9 @@ td {
 
 .pallet_table {
     position: absolute;
-    top: 0;
+    bottom: 0;
     right: 0;
-    height: 85%;
+    height: 93%;
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
@@ -2014,7 +1945,7 @@ td {
 }
 
 #amoled_pallet table {
-    background-image: var(--timetable_background);
+    background-image: url('../img/blyatground.webp');
 }
 
 #amoled_pallet td {
@@ -2027,7 +1958,7 @@ td {
 }
 
 #light_pallet table {
-    background-image: url('../img/backgrounds/whiteground.webp');
+    background-image: url('../img/whiteground.webp');
 }
 
 #light_pallet td {
@@ -2036,61 +1967,18 @@ td {
 
 .palletfoot {
     position: absolute;
-    bottom: 0;
+    top: 0;
     right: 0;
-    height: 15%;
+    height: 7%;
     width: 100%;
-    display: flex;
-    justify-content: space-evenly;
 }
 
-.palletfoot .icon {
-    position: relative;
-    height: 100%;
-    width: 33%;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+#dark_theme_selection .palletfoot {
+    background-image: linear-gradient(90deg, #000000, var(--primary_hue), #000000);
 }
 
-.appicon {
-    background-image: url('../img/icon.webp');
-}
-
-.bookli {
-    background-image: var(--light_pannel_book);
-}
-
-.bookamol {
-    background-image: var(--dark_pannel_book);
-}
-
-.gear {
-    background-image: url('../img/setting-light.webp');
-}
-
-.gear_inverse {
-    background-image: url('../img/setting-light.webp');
-    filter: invert(100%);
-}
-
-.appicon_inverse {
-    background-image: url('../img/icon-inverse.webp');
-}
-
-.notification_pallet,
-.notification_pallet_active {
-    position: relative;
-    float: left;
-    height: 50%;
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-}
-
-.notification_pallet_active {
-    box-shadow: 0vh 0vh 2vh 0vh var(--primary_hue);
+#light_theme_selection .palletfoot {
+    background-image: linear-gradient(90deg, #ffffff, var(--primary_hue), #ffffff);
 }
 
 .setting_bar {
@@ -2201,179 +2089,6 @@ td {
     }
 }
 
-/*   Type 1 notification   */
-.notification_style1 {
-    position: fixed;
-    bottom: 2vh;
-    right: 1vw;
-    height: 20vh;
-    width: 60vw;
-    transform: translate(20vw, 0vh);
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 500ms, box-shadow 200ms, opacity 300ms;
-    z-index: 500;
-    border-top: 0.5vh solid var(--primary_hue);
-    background-color: var(--background-color);
-    color: var(--text-color);
-    box-shadow: 0vh 0vh 0.5vh 0vh var(--text-color);
-    text-align: center;
-}
-
-.notification_style1 .title {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 5.5vh;
-    font-size: 4.5vh;
-    white-space: nowrap;
-    cursor: inherit;
-    border-bottom: 0.25vh solid var(--primary_hue_active)
-}
-
-.notification_style1 .title::before {
-    position: absolute;
-    transform: translate(0, 100%);
-    bottom: 0;
-    left: 0;
-    z-index: 99;
-    height: 0.5vh;
-    animation: stretch 11000ms;
-    content: "";
-    cursor: inherit;
-}
-
-.notification_style1 .notifbody {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 95%;
-    padding: 0.5vh 0.5vw;
-    height: 13vh;
-    font-size: 2.5vh;
-    overflow: hidden;
-    cursor: inherit;
-}
-
-/*   Type 2 notification   */
-.notification_style2 {
-    position: fixed;
-    bottom: 2vh;
-    right: 1vw;
-    height: 15vh;
-    width: 60vw;
-    transform: translate(30vw, 0vh);
-    border-top: none;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 500ms, box-shadow 200ms, opacity 300ms;
-    z-index: 500;text-align: center;
-}
-
-.notification_style2 .title {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5.5vh;
-    font-size: 4.5vh;
-    padding-left: 1vw;
-    white-space: nowrap;
-    cursor: inherit;
-}
-
-.notification_style2 .title::before {
-    position: absolute;
-    transform: translate(0, 100%);
-    bottom: 0;
-    left: 0;
-    z-index: 99;
-    height: 0.5vh;
-    animation: stretch 11000ms;
-    content: "";
-    cursor: inherit;
-}
-
-
-.notification_style2 .notifbody {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 95%;
-    padding: 0.5vh 0.5vw;
-    height: 8.5vh;
-    font-size: 2.5vh;
-    overflow: hidden;
-    cursor: inherit;
-}
-
-/*   Type 3 notification   */
-.notification_style3 {
-    position: fixed;
-    bottom: 2vh;
-    right: 1vw;
-    height: 15vh;
-    width: 60vw;
-    transform: translate(30vw, 0vh);
-    border-top: none;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 500ms, box-shadow 200ms, opacity 300ms;
-    z-index: 500;text-align: center;
-}
-
-.notification_style3 .title {
-    position: absolute;
-    top: 0;
-    right: 4vh;
-    width: calc(100% - 4vh);
-    height: 5.5vh;
-    font-size: 4.5vh;
-    padding-right: 1vw;
-    white-space: nowrap;
-    cursor: inherit;
-}
-
-.notification_style3 .title::after {
-    /* imgae */
-    position: absolute;
-    top: 0;
-    left: 1.2vw;
-    height: 5.5vh;
-    width: 5.5vh;
-    background-size: contain;
-    background-repeat: no-repeat;
-    content: "";
-    cursor: inherit;
-    background-image: url('../img/icon.webp')
-}
-
-.notification_style3 .title::before {
-    /*prograss bar*/
-    position: absolute;
-    transform: translate(0, 100%);
-    bottom: 0;
-    left: 0;
-    z-index: 99;
-    height: 0.5vh;
-    animation: stretch 11000ms;
-    content: "";
-    cursor: inherit;
-}
-
-.notification_style3 .notifbody {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 95%;
-    padding: 0.5vh 0.5vw;
-    height: 8.5vh;
-    font-size: 2.5vh;
-    overflow: hidden;
-    cursor: inherit;
-}
-
 /*   Type 4 notification   */
 .notification_style4 {
     position: fixed;
@@ -2385,10 +2100,17 @@ td {
     overflow: hidden;
     cursor: pointer;
     transition: transform 500ms, box-shadow 200ms, opacity 300ms;
-    z-index: 500;
+    z-index: 99999;
     background-color: var(--shade_color);
     color: var(--text-color);
-    box-shadow: 0vh 0vh 0.5vh 0vh var(--text-color);text-align: center;
+    box-shadow: 0vh 0vh 0.5vh 0vh var(--text-color);
+    text-align: center;
+    height: 20vh;
+    width: 40vh;
+}
+
+.notification_style4:hover {
+    box-shadow: 0vh 0vh 2vh 0vh var(--primary_hue);
 }
 
 .notification_style4 .title {
@@ -2412,6 +2134,7 @@ td {
     animation: stretch 11000ms;
     content: "";
     cursor: inherit;
+    background-color: var(--primary_hue);
 }
 
 .notification_style4 .notifbody {
@@ -2433,41 +2156,6 @@ td {
     background-color: var(--background-color);
     color: var(--text-color);
     box-shadow: 0vh 0vh 0.5vh 0vh var(--text-color);
-}
-
-.notification_style1 .title::before,
-.notification_style2 .title::before,
-.notification_style3 .title::before,
-.notification_style4 .title::before {
-    background-color: var(--primary_hue);
-}
-
-.notification_style1:hover,
-.notification_style2:hover,
-.notification_style3:hover,
-.notification_style4:hover {
-    box-shadow: 0vh 0vh 2vh 0vh var(--primary_hue);
-}
-
-
-/* after because overwrite */
-#notification_style1,
-#notification_style2,
-#notification_style3,
-#notification_style4 {
-    width: 40vw;
-    position: absolute;
-    top: 2vh;
-    height: 15vh;
-    left: 5vw;
-    transform: none;
-}
-
-#notification_style1 .notifbody,
-#notification_style2 .notifbody,
-#notification_style3 .notifbody,
-#notification_style4 .notifbody {
-    height: 50%;
 }
 
 /* notification X button */
@@ -2529,71 +2217,11 @@ td {
         height: 100%;
     }
 
-    /*  Action bar */
-    .Action_bar,
-    .Action_bar_active {
-        /* The Menubar on the right of the screen */
-        bottom: unset;
-        top: 30px;
-        height: calc(100vh - 30px);
-        left: 0;
-        width: 9vh;
-        transition: width 80ms;
-    }
-
-    .Action_bar_active {
-        width: 50vh !important;
-        transition: width 400ms;
-        z-index: 9999;
-    }
-
-    .menubtn,
-    .menubtn_active {
-        /*  menu buttons  */
-        height: 9vh;
-        width: 100%;
-        float: none;
-    }
-
-    .menubtn_icon {
-        position: absolute;
-        height: 9vh;
-        width: 9vh;
-    }
-
-    .menu_txt {
-        /* Menu text */
-        position: relative;
-        display: block;
-        font-size: 5vh;
-        text-align: center;
-        opacity: 0;
-        transition: opacity 0ms 300ms ease, display 0ms 300ms ease;
-        height: 0;
-        padding-top: 0;
-        width: 0;
-        margin-left: 0;
-        display: none;
-        white-space: nowrap;
-        text-shadow: none;
-    }
-
-    .Action_bar_active .menu_txt {
-        /* Menu text */
-        display: block;
-        opacity: 1;
-        height: 7vh;
-        padding-top: 1.5vh;
-        width: calc(100% - 9vh);
-        margin-left: 9vh;
-        transition: opacity 500ms 300ms ease, display 500ms 300ms ease;
-    }
-
     /*  Views   */
     view {
         top: 30px;
-        left: 9vh;
-        width: calc(100vw - 9vh);
+        left: 0;
+        width: 100vw;
         height: calc(100vh - 30px);
         overflow-y: scroll;
     }
@@ -2632,11 +2260,12 @@ td {
     /*  manage_view   */
     #manage_view {
         top: 30px;
-        left: 9vh;
-        width: calc(100vw - 9vh);
+        left: 0;
+        width: 100vw;
         height: calc(100vh - 30px);
         display: none;
         overflow-y: hidden;
+        z-index: 2000;
     }
 
     .tablemanger,
@@ -2721,6 +2350,8 @@ td {
         right: 0;
         height: calc(90vh - 30px);
         width: 70vh;
+        z-index: 500;
+        background-color: rgba(0, 0, 0, 0);
     }
 
     #btn_bar {
@@ -2766,90 +2397,5 @@ td {
         transition: transform 500ms;
     }
 
-    /* Setting View */
 
-    .selcetion_put {
-
-        float: right;
-
-    }
-
-    .palletfoot {
-        top: 0;
-        right: unset;
-        bottom: unset;
-        flex-wrap: wrap;
-        justify-content: start;
-        left: 0;
-        height: 100%;
-        width: 5vh;
-    }
-
-    .palletfoot .icon {
-        height: 5vh;
-        width: 5vh;
-    }
-
-    .pallet_table {
-        margin-left: 5vh;
-        height: 100%;
-        width: calc(100% - 5vh);
-    }
-
-
-
-    #notification_selector {
-        height: 25vh;
-    }
-
-    .notification_pallet,
-    .notification_pallet_active {
-        height: 100%;
-        width: 25%;
-    }
-
-    /* Switches */
-
-
-    /* Notifications */
-    /*   Type 1 notification   */
-    .notification_style1 {
-        width: 40vh;
-    }
-
-    /*   Type 2 notification   */
-    .notification_style2 {
-        width: 40vh;
-    }
-
-    /*   Type 3 notification   */
-    .notification_style3 {
-        width: 40vh;
-    }
-
-    /*   Type 4 notification   */
-    .notification_style4 {
-        height: 20vh;
-        width: 40vh;
-    }
-
-    /* after because overwrite */
-    #notification_style1,
-    #notification_style2,
-    #notification_style3,
-    #notification_style4 {
-        width: 20vw;
-        position: absolute;
-        top: 2.5vh;
-        height: 20vh;
-        left: 1vw;
-        transform: none;
-    }
-
-    #notification_style1 .notifbody,
-    #notification_style2 .notifbody,
-    #notification_style3 .notifbody,
-    #notification_style4 .notifbody {
-        height: 65%;
-    }
 }

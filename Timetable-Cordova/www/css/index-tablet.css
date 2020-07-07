@@ -852,9 +852,9 @@ td {
     padding: 1vh;
     border-radius: 1vh 1vh 1vh 1vh;
     transition: box-shadow 500ms, transform 300ms, background-color 500ms, color 500ms, opacity 500ms, width 500ms, right 500ms;
-    color: var(--text-color);
+    color: inherit;
     background-color: inherit;
-    text-shadow: 0vw 0vw 0.5vw var(--background-color);
+    text-shadow: inherit;
 }
 
 .infodoot:active {

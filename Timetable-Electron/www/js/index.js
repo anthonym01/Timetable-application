@@ -1,48 +1,93 @@
 const main = require('electron').remote.require('./main'); //acess export functions in main
-const { dialog } = require('electron').remote;
-const path = require('path'); //path to necessary files
+const { dialog, Menu, MenuItem, shell, systemPreferences, nativeTheme } = require('electron').remote;
+const path = require('path');
 const fs = require('fs');
-const fse = require('fs-extra');
+const wallpaper = require('wallpaper');
+const text_box_menu = new Menu.buildFromTemplate([
+    { role: 'cut' },
+    { role: 'copy' },
+    { role: 'paste' },
+    { role: 'selectAll' },
+    { role: 'undo' },
+    { role: 'redo' },
+])
 
 window.addEventListener('load', function () { //window loads
-    console.warn('Running from:', process.resourcesPath)
-    const loader = document.getElementById('loadprogress');
-    if (localStorage.getItem(config.configlocation)) {
+    console.log('Running from:', process.resourcesPath)
+    console.log(process)
+
+    body_menu();
+    textboxmenu();
+    maininitalizer();
+    UI.initalize()
+    table.hilight_engine_go_vroom();
+    table.clock.start_clock()
+})
+
+function maininitalizer() {
+    if (localStorage.getItem("TT001_cfg")) {
         config.load()
     } else {
         config.validate()
     }
-    loader.style.width = '25%'
-    UI.initalize()
-    loader.style.width = '50%'
-    table.initialize()
-    loader.style.width = '75%'
+
+    table.data_render(); //render data
     manage.initalize()
-    loader.style.width = '100%'
-    config.properties.startup = false
+    config.properties.changed = false;
     setTimeout(() => {
-        UI.navigate.TABLE()
+
         console.log('Closing loading screen...')
         document.getElementById('Loading').style.display = 'none'
-    }, 50)
 
-})
+    }, 500)
+}
+
+function body_menu() {
+    //build menu
+    const menu_body = new Menu()
+    menu_body.append(new MenuItem({ label: 'Force refresh UI', click() { maininitalizer() } }))
+    menu_body.append(new MenuItem({ type: 'separator' }))
+    menu_body.append(new MenuItem({
+        label: 'Contact developer', click() {
+            shell.openExternal('https://anthonym01.github.io/Portfolio/?contact=me')
+        }
+    }))
+    menu_body.append(new MenuItem({ role: 'toggledevtools' }))
+
+    window.addEventListener('contextmenu', (event) => {//opens menu on auxilery click
+        event.preventDefault()
+        menu_body.popup({ window: require('electron').remote.getCurrentWindow() })//popup menu
+    }, false)
+}
+
+function textboxmenu() {
+
+    document.getElementById('name_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    document.getElementById('room_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    document.getElementById('type_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    document.getElementById('course_code_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    document.getElementById('Lecture_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    document.getElementById('wallpaper_pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    document.getElementById('pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+
+    function popupmenu(event) {
+        event.preventDefault()
+        event.stopPropagation()
+        text_box_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+    }
+}
 
 /*  Config file handler    */
 let config = {
     data: {
         key: "TT01",
-        theme: "timebased", //sets theme, defaults to time based
-        themetimes: {
-            sunrise: "",
-            sunset: ""
-        },
-        backgroundimg: null,
+        theme: "device", //sets theme, defaults to time based
+        backgroundimg: 'default',
         hilight_engine: false, //hilight engine whether to run or not
+        colorpallet: 'default',
         animation: true,
         tiles: true,
         empty_rows: false,
-        notification_type: 3,
         table_selected: 1,
         always_on_top: false,
         table_details: [ // Details about different tables
@@ -95,122 +140,86 @@ let config = {
         clocking: false, // is clock ticking
         management: false,
     },
-    configlocation: "TT001_cfg", //not strict, can be anything. Think of it as a file name/path
-    save: async function () { //Save the config file
-        console.trace('Save function Triggered')
-        if (config.baseconfig.use_alt_storage == true) {
-            //save to alternate storage location
-            fse.ensureDirSync(config.baseconfig.alt_location.toString()) //endure the directory exists
-            //fse.ensureFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json")//Ensure the file exists
-            fs.writeFile(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", JSON.stringify(config.data), 'utf8', function (err) { // acync incase drive being writen to is garbage
-                if (err) {
-                    alert('File could not be saved to: ' + config.baseconfig.alt_location.toString() + "/Timetableconfig.json" + err.message);
-                } else {
-                    console.log('config saved to: ' + config.baseconfig.alt_location.toString())
+    save: async function () {//Save the config file
+        console.table('Configuration is being saved', config.data)
+        var save_sucess;
+        ToStorageAPI();//save to application storage reguardless incase the file gets removed by the user, because users are kinda dumb
+        if (config.baseconfig.use_alt_storage == true) {//save to alternate storage location
+            ToFileSystem();
+        }
+
+        function ToFileSystem() {//save config to directory defined by the user
+            console.log('saving to File system: ', config.baseconfig.alt_location.toString())
+            fs.writeFile(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json", JSON.stringify(config.data), 'utf8', (err) => {//write to file
+                if (err) {//error
+                    alert("An error occurred creating the file, please select a new location to save app data " + err.message)
+                    config.selectlocation();
+                    return save_sucess = false;
+                } else {//sucessfull
+                    console.log('config saved to: ', config.baseconfig.alt_location.toString())
+                    return save_sucess = true;
                 }
             })
-
-        } else {
-            console.log('config saved to application storage')
         }
-        localStorage.setItem(this.configlocation, JSON.stringify(this.data))
-        console.table(this.data)
-    },
-    load: function () { //Load the config file into memory
-        console.trace('Configuration load triggered')
 
-        if (localStorage.getItem("TT01_baseconfig")) { //load base_config firt
-            config.baseconfig = JSON.parse(localStorage.getItem("TT01_baseconfig"))
+        function ToStorageAPI() {//Html5 storage API
+            console.log('config saved to application storage')
+            localStorage.setItem("TT001_cfg", JSON.stringify(config.data))
+        }
+
+
+    },
+    load: function () {//Load the config file
+        console.warn('Configuration is being loaded')
+
+        if (localStorage.getItem("TT001_cfg_baseconfig")) {//load base config
+            config.baseconfig = JSON.parse(localStorage.getItem("TT001_cfg_baseconfig"))
         } else {
             //first startup
-            localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig))
+            localStorage.setItem("TT001_cfg_baseconfig", JSON.stringify(config.baseconfig))
         }
 
-        if (config.baseconfig.use_alt_storage == true) {
+        if (config.baseconfig.use_alt_storage == true) {//Load from alt location
             //load from alternate storage location
-            if (fs.existsSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json")) { //Directory exists
-                var fileout = fs.readFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", {
-                    encoding: 'utf8'
-                }, (ctx) => {
-                    console.error('The file directory was not found, ', ctx);
-                });
-                console.log('config Loaded from: ' + config.baseconfig.alt_location.toString())
-                console.warn('Data from fs read operation: ', fileout)
-                fileout = JSON.parse(fileout)
-                if (fileout.key == "TT01") {
+            if (fs.existsSync(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json")) {//Directory exists
+                var fileout = fs.readFileSync(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json", { encoding: 'utf8' })//Read from file with charset utf8
+                console.warn('config Loaded from: ', config.baseconfig.alt_location.toString(), 'Data from fs read operation: ', fileout)
+                fileout = JSON.parse(fileout)//parse the json
+                if (fileout.key == "TT01") {//check if file has key
                     config.data = fileout;
                     console.warn('configuration applied from file')
-                } else {
+                } else {//no key, not correct file, load from application storage
                     console.warn('The file is not a config file, internal configuration will be used')
-                    this.data = JSON.parse(localStorage.getItem(this.configlocation))
+                    config.data = JSON.parse(localStorage.getItem("TT001_cfg"))
                 }
-            } else { //file does not exist, was moved, deleted or is inaccesible
-                this.data = JSON.parse(localStorage.getItem(this.configlocation))
-                config.save() //save to recreate the file
+            } else {//file does not exist, was moved, deleted or is inaccesible
+                config.data = JSON.parse(localStorage.getItem("TT001_cfg"))
+                alert("file does not exist, was moved, deleted or is otherwise inaccesible, please select a new location to save app data ")
+                config.selectlocation();
             }
-        } else {
-            //load from application storage
-            this.data = JSON.parse(localStorage.getItem(this.configlocation))
+        } else {//load from application storage
+            config.data = JSON.parse(localStorage.getItem("TT001_cfg"))
             console.log('config Loaded from application storage')
         }
 
-        console.table(this.data)
+        console.table(config.data)
         this.validate()
-    },
-    selectlocation: function () {
-        var path = dialog.showOpenDialogSync({
-            properties: ['createDirectory', 'openDirectory'],
-            /* defaultPath: config.baseconfig.alt_location*/
-        })
-        if (path != undefined) {
-            console.log('Alternate configuration path :', path)
-            config.baseconfig.use_alt_storage = true
-            config.baseconfig.alt_location = path
-            localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig)) //save base config
-            var fileout = fs.readFileSync(config.baseconfig.alt_location + "/Timetableconfig.json", {
-                encoding: 'utf8'
-            });
-            if (fileout != undefined) {
-                fileout = JSON.parse(fileout)
-                if (fileout.key == "TT01") {
-                    console.warn('A file exists here, prompt the user on what to keep, default is currently whats in the file')
-                    config.properties.changed = true
-                    config.data = fileout
-                    manage.initalize()
-                    UI.initalize()
-                    config.save()
-                } else {
-                    console.warn('No file exists here, config from this app is used')
-                    config.save() //to create the file
-                }
-            } else {
-                console.warn('No file exists here, config from this app is used')
-                config.save() //to create the file
-            }
-        } else {
-            notify.new('Error', 'no folder selected, click to try again', function () {
-                config.selectlocation()
-            })
-        }
-    },
-    usedefault: function () { //use default config location
-        config.baseconfig.use_alt_storage = false
-        localStorage.setItem("TT01_baseconfig", JSON.stringify(config.baseconfig)) //save base config
-        document.getElementById('pathrepresenter').value = "application storage"
     },
     validate: function () { //validate configuration file
         console.log('Config is being validated')
         let configisvalid = true
+
+
+        if (typeof (this.data.backgroundimg) == 'undefined') {
+            this.data.backgroundimg = 'default';
+            configisvalid = false;
+            console.log('"backgroundimg" was found to be invalid and was set to default');
+        }
+
         if (typeof (this.data.always_on_top) !== 'undefined') {
-            if (this.data.always_on_top == undefined || null) { //check db existance
-                this.data.always_on_top = false;
-                configisvalid = false;
-                console.log('"always_on_top" was found to be invalid and was set to default');
-            }
-        } else {
             this.data.always_on_top = false;
             configisvalid = false;
-            console.log('"always_on_top" was found to not exist and was set to default');
+            console.log('"always_on_top" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.table1_db) !== 'undefined') {
@@ -279,88 +288,46 @@ let config = {
             }
         }
 
-        if (typeof (this.data.previous_colors) !== 'undefined') {
-            if (this.data.previous_colors == undefined || null) { //check db existance
-                this.data.previous_colors = [];
-                configisvalid = false;
-                console.log('"previous_colors" was found to be invalid and was set to default');
-            }
-        } else {
+        if (typeof (this.data.previous_colors) == 'undefined') {
             this.data.previous_colors = [];
             configisvalid = false;
-            console.log('"previous_colors" was found to not exist and was set to default');
+            console.log('"previous_colors" was found to be invalid and was set to default');
+        }
+
+        if (typeof (this.data.colorpallet) == 'undefined') {
+            this.data.colorpallet = -1;
+            configisvalid = false;
+            console.log('"colorpallet" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.theme) == 'undefined') {
             this.data.theme = "dark";
             configisvalid = false;
             console.log('"theme" was found to not exist and was set to default');
-        } else {
-            if (this.data.theme == undefined || null) {
-                this.data.theme = "dark";
-                configisvalid = false;
-                console.log('"theme" was found to not exist and was set to default');
-            }
         }
 
         if (typeof (this.data.hilight_engine) == 'undefined') {
             this.data.hilight_engine = true;
             configisvalid = false;
             console.log('"hilight_engine" was found to be invalid and was set to default');
-        } else {
-            if (this.data.hilight_engine != true && this.data.hilight_engine != false) {
-                this.data.hilight_engine = true;
-                configisvalid = false;
-                console.log('"hilight_engine" was found to not exist and was set to default');
-            }
         }
 
         if (typeof (this.data.empty_rows) == 'undefined') {
             this.data.empty_rows = true;
             configisvalid = false;
             console.log('"empty_rows" was found to be invalid and was set to default');
-        } else {
-            if (this.data.empty_rows != true && this.data.empty_rows != false) {
-                this.data.empty_rows = true;
-                configisvalid = false;
-                console.log('"empty_rows" was found to not exist and was set to default');
-            }
         }
 
         if (typeof (this.data.animation) == 'undefined') {
             this.data.animation = true;
             configisvalid = false;
             console.log('"animation" was found to be invalid and was set to default');
-        } else {
-            if (this.data.animation != true && this.data.animation != false) {
-                this.data.animation = true;
-                configisvalid = false;
-                console.log('"animation" was found to not exist and was set to default');
-            }
         }
 
         if (typeof (this.data.tiles) == 'undefined') {
             this.data.tiles = false;
             configisvalid = false;
             console.log('"tiles" was found to be invalid and was set to default');
-        } else {
-            if (this.data.tiles != true && this.data.tiles != false) {
-                this.data.tiles = false;
-                configisvalid = false;
-                console.log('"tiles" was found to not exist and was set to default');
-            }
-        }
-
-        if (typeof (this.data.notification_type) == 'undefined') {
-            this.data.notification_type = 3;
-            configisvalid = false;
-            console.log('"notification_type" was found to be invalid and was set to default');
-        } else {
-            if (this.data.notification_type != 1 && this.data.notification_type != 2 && this.data.notification_type != 3 && this.data.notification_type != 4) {
-                this.data.notification_type = 3;
-                configisvalid = false;
-                console.log('"notification_type" was found to not exist and was set to default');
-            }
         }
 
         if (typeof (this.data.previous_colors) == 'undefined') {
@@ -386,83 +353,133 @@ let config = {
             console.log('config was found to be valid');
         }
     },
-    delete: function () { //Does not delete the file itself. Just sets it to empty
-        localStorage.clear(this.configlocation)
-        localStorage.clear("TT01_baseconfig")
-        console.warn('config deleted: ');
-        //overwite the file if any file exists
-        notify.new('Attention', 'Configuration deleted');
-        setTimeout(() => {
-            location.reload()
-        }, 2000);
-        //this.validate();
+    delete: function () {//Wjipe stowage
+        localStorage.clear("TT001_cfg")//yeet storage key
+        config.usedefault();//use default location
+        console.log('config deleted: ')
+        console.table(config.data)
+        this.validate()
     },
-    backup: function () { //backup configuration to file
-        console.log('Configuration backup initiated')
+    backup: async function () {//backup configuration to a file
+        console.warn('Configuration backup initiated')
+
         var date = new Date();
-        var filepath = dialog.showSaveDialogSync({
-            defaultPath: "Timetable backup " + Number(date.getMonth() + 1) + " - " + date.getDate() + " - " + date.getFullYear() + ".json",
+        var filepath = dialog.showSaveDialog({//electron file save dialogue
+            defaultPath: "TT001_cfg backup " + Number(date.getMonth() + 1) + " - " + date.getDay() + " - " + date.getFullYear() + ".json",
             buttonLabel: "Save"
         });
-        if (filepath == undefined) { //the file save dialogue was canceled my the user
-            console.warn('The file dialogue was canceled by the user')
-        } else {
-            fs.writeFile(filepath, JSON.stringify(config.data), (error) => {
-                if (error) {
-                    alert("An error occurred creating the file " + err.message)
-                } else {
-                    console.log("The file has been successfully saved");
-                    notify.new('Sucess', 'Saved to: ' + filepath.toString(), function () {
-                        event.preventDefault();
-                        let link = filepath.toString()
-                        require("electron").shell.openExternal(link);
-                    }, 'Click to open');
-                }
-            })
-        }
-    },
-    restore: function () { //restore configuration from file
-        console.log('Configuration backup initiated')
-        var filepath = dialog.showOpenDialog({
-            buttonLabel: "open"
-        })
-        console.log(filepath)
-        if (filepath == undefined) {
-            console.log("No file selected");
-        } else {
-            fs.readFile(filepath[0], 'utf-8', (err, data) => {
-                if (err) {
-                    alert("An error ocurred reading the file :" + err.message)
-                }
-                console.log("The file content is : " + data);
-                var fileout = JSON.parse(data)
-                if (fileout.key == "TT01") { //check if this file is a timetable backup file
-                    config.data = fileout
-                    config.save();
-                    notify.new('Sucess', 'Backup restored')
-                    setTimeout(() => {
-                        location.reload()
-                    }, 2000)
-                } else {
-                    notify.new('Error', filepath[0] + ' is not a backup file')
-                }
 
-            })
+        await filepath.then((filepath) => {//resolve filepath promise
+            console.log(filepath)
+            if (filepath.canceled == true) {//the file save dialogue was canceled my the user
+                console.warn('The file dialogue was canceled by the user')
+            } else {
+                fs.writeFile(filepath.filePath, JSON.stringify(config.data), 'utf8', (err) => {//write config to file as json
+                    if (err) {
+                        alert("An error occurred creating the file " + err.message)
+                    } else {
+                        console.log("The file has been successfully saved to: ", filepath.filePath);
+                    }
+                })
+            }
+        }).catch((err) => {//catch error
+            alert('An error occured ', err.message);
+        })
+    },
+    restore: async function () {//restore configuration from a file
+        console.warn('Configuration restoration initiated')
+
+        dialog.showOpenDialog({
+            buttonLabel: "open", filters: [
+                { name: 'Custom File Type', extensions: ['json'] },
+                { name: 'All Files', extensions: ['*'] }
+            ]
+        }).then((filepath) => {
+            console.log(filepath)
+            if (filepath.canceled == true) {//diologue ccanceled
+                console.log("diologue ccanceled");
+            } else {
+                fs.readFile(filepath.filePaths[0], 'utf-8', (err, data) => {//load data from file
+                    if (err) {
+                        alert("An error ocurred reading the file :" + err.message)
+                    } else {
+                        console.log("The file content is : " + data);
+                        var fileout = JSON.parse(data)
+                        if (fileout.key == "TT01") {//check if this file is a timetable backup file
+                            config.data = fileout
+                            config.save();
+                            maininitalizer()
+                        } else {
+                            console.warn(filepath.filePaths[0] + ' is not a backup file')
+                        }
+                    }
+                })
+            }
+        }).catch((err) => {
+            alert('An error occured, ', err)
+        })
+    },
+    selectlocation: async function () {//select location for configuration storage
+        console.log('Select config location')
+        if (config.baseconfig.alt_location != undefined) {
+            var path = dialog.showOpenDialog({ properties: ['createDirectory', 'openDirectory'], defaultPath: config.baseconfig.alt_location.toString() })
+        } else {
+            var path = dialog.showOpenDialog({ properties: ['createDirectory', 'openDirectory'], defaultPath: null })
         }
-    }
+
+        await path.then((path) => {
+            if (path.canceled == true) {//user canceled dialogue
+                //user canceled file dialogue
+                //config.usedefault()
+            } else {
+                console.warn('Alternate configuration path :', path.filePaths[0])
+
+                config.baseconfig.use_alt_storage = true
+                config.baseconfig.alt_location = path.filePaths[0]
+                localStorage.setItem("TT001_cfg_baseconfig", JSON.stringify(config.baseconfig))//save base config
+
+                if (fs.existsSync(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json")) {//config file already exist there
+                    config.load()
+                } else {//no config file exist there
+                    config.save();
+                }
+            }
+        }).catch((err) => {
+            config.usedefault()
+            alert('An error occured ', err.message)
+        })
+    },
+    usedefault: function () {//use default storage location
+        config.baseconfig.use_alt_storage = false
+        localStorage.setItem("TT001_cfg_baseconfig", JSON.stringify(config.baseconfig))//save base config
+        maininitalizer()
+    },
 }
 
 /*  Table generator */
 let table = {
-    initialize: function () {
-        console.log('Table initalization Begins');
-        this.data_render(); //render data
-        setTimeout(() => {
-            table.hilight_engine_go_vroom();
-        }, 50);
-    },
     data_render: function () {
         console.log('Table render started')
+        //wjipe main cells
+        var jkx = document.querySelectorAll(".jkx")
+        for (i = 0; i < jkx.length; i++) {
+            jkx[i].innerHTML = ""
+            jkx[i].style.display = ""
+        }
+
+        document.getElementById('day0').style.display = '';
+        document.getElementById('day1').style.display = '';
+        document.getElementById('day2').style.display = '';
+        document.getElementById('day3').style.display = '';
+        document.getElementById('day4').style.display = '';
+        document.getElementById('day5').style.display = '';
+        document.getElementById('day6').style.display = '';
+        for (i = 0; i < 24; i++) {
+            document.getElementById('timerow_' + i).style.display = "";
+        }
+
+        config.properties.max = 0
+        config.properties.min = 24
         var i = 0;
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
@@ -485,6 +502,9 @@ let table = {
                     build_block_db1(i);
                 }
             }
+            /*setTimeout(() => {
+                validate(); //Strip empty cells form top and bottom    
+            }, 300);*/
             validate(); //Strip empty cells form top and bottom
         }
         console.log('Table render Completed');
@@ -697,11 +717,13 @@ let table = {
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")"
-                    if(config.data.table1_db[index].color.light < 49){
-                        tempblock.style.color = "white"
-                    }else{
-                        tempblock.style.color = "black"
-                    }
+                if (config.data.table1_db[index].color.light < 49) {
+                    tempblock.style.color = "white"
+                    tempblock.style.textShadow = " 0vh 0vh 2vh black";
+                } else {
+                    tempblock.style.color = "black"
+                    tempblock.style.textShadow = " 0vh 0vh 2vh white";
+                }
 
             }, 100);
 
@@ -772,6 +794,22 @@ let table = {
                     }
                 }
             });
+
+            let context_menu = new Menu()
+            context_menu.append(new MenuItem({
+                label: 'edit', click() {
+                    manage.dialogue.edit(index)
+                    manage.dialogue.open()
+                    UI.manage_toggle()
+                }
+            }))
+
+            tempblock.addEventListener('contextmenu', function (e) {
+                e.stopPropagation();
+                e.preventDefault()
+                context_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+                console.log('COntext meny on :', tempblock);
+            })
             console.log('Block :', index, ' Check complete');
         }
 
@@ -1668,32 +1706,6 @@ let table = {
             config.properties.clocking = true
         },
     },
-    change: {
-        changeinterval: null,
-        startcheck: function () {
-            if (config.baseconfig.use_alt_storage) {
-                this.changeinterval = setInterval(() => {
-                    this.check() //every 5 seconds checks if the file has changed
-                }, 5000);
-            }
-        },
-        check: function () {
-            //a test function comparing length of array in data to array length in file
-            console.log('A file check is being made')
-            var configarraylength = config.data.table1_db.length
-            var fileout = JSON.parse(fs.readFileSync(config.baseconfig.alt_location.toString() + "/Timetableconfig.json", {
-                encoding: 'utf8'
-            }))
-            //before comparison files configuration needs to be validated
-            var filearraylength = fileout.table1_db.length
-            if (configarraylength != filearraylength) {
-                console.log(configarraylength, filearraylength)
-                //location.reload()//reload to re-render table, do not reload if this user is editing data
-            } else {
-                console.log('there is no change');
-            }
-        },
-    },
     hilight_engine_go_vroom: function () {
         if (config.data.hilight_engine) {
             console.log('Hilight Query state Checking..');
@@ -1736,11 +1748,11 @@ let manage = {
         console.log('Manager initializes');
         this.render_list();
         this.render_tables();
+
         //Set text feilds
         let i = 0;
         while (config.data.table_details[i] != null) {
             if (config.data.table_details[i].identifier == Number(config.data.table_selected) && config.data.table_details[i].deleted != true) {
-                document.getElementById('selected_table').innerText = config.data.table_details[i].purpose;
                 document.getElementById('tablemanage_txt').innerText = config.data.table_details[i].purpose;
                 document.getElementById('title_txt').innerText = config.data.table_details[i].purpose;
                 break;
@@ -1750,92 +1762,6 @@ let manage = {
             }
             i++
         }
-        //table manager actions
-        document.getElementById('tablemanger').addEventListener('click', function () {
-            if (config.properties.management == false) {
-                document.getElementById('tablemanger').classList = "tablemanger_active"
-                config.properties.management = true
-            } else {
-                config.properties.management = false
-                document.getElementById('tablemanger').classList = "tablemanger"
-            }
-        })
-        document.getElementById('manage_dataspace').addEventListener('click', function () {
-            if (config.properties.management == true) {
-                config.properties.management = false
-                document.getElementById('tablemanger').classList = "tablemanger"
-            }
-        })
-        document.getElementById('tablespace_render').addEventListener('click', function () {
-            event.stopPropagation() //Stop propogation to the dataspace
-        })
-
-        //Add new button
-        document.getElementById('new_class_button').addEventListener('click', function () {
-            manage.dialogue.open();
-            console.log('Add new class button clicked')
-        }) //add new btn listener
-
-        document.getElementById('cancel_btn').addEventListener('click', () => {
-            console.log('Cancel button clicked');
-            manage.dialogue.clear();
-            manage.dialogue.close();
-            config.properties.overwrite = null;
-        });
-        document.getElementById('save_btn').addEventListener('click', this.dialogue.save); //Save button
-        document.getElementById('savepluss_btn').addEventListener('click', this.dialogue.saveplus);
-        document.getElementById('delete_btn').addEventListener('click', this.dialogue.call_delete);
-        document.getElementById('yes_btn').addEventListener('click', function () { // Delete yes button
-            console.log('Delete Confirmation called');
-            config.data.table1_db[config.properties.overwrite].deleted = true; //pseudo delete function
-            manage.dialogue.clear();
-            manage.dialogue.close();
-            config.properties.changed = true;
-            config.save();
-            document.getElementById('delete_confirm_pannel').style.display = 'none';
-            manage.render_list();
-        });
-
-        document.getElementById('no_del_btn').addEventListener('click', function () { // Delete No button
-            console.log('Delete denial called');
-            document.getElementById('delete_confirm_pannel').style.display = 'none';
-        });
-        document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
-
-        //Initalize day_put selector
-        document.getElementById('day_put').value = "1";
-        document.getElementById('day_put_text').innerText = "Monday"
-        document.getElementById('day_put').addEventListener('change', function () {
-            /* Switches dates on change */
-            console.log('Day put changed');
-            let tmp = document.getElementById('day_put').value;
-            switch (tmp) {
-                case "1":
-                    document.getElementById('day_put_text').innerText = "Monday";
-                    break;
-                case "2":
-                    document.getElementById('day_put_text').innerText = "Tuesday";
-                    break;
-                case "3":
-                    document.getElementById('day_put_text').innerText = "Wednsday";
-                    break;
-                case "4":
-                    document.getElementById('day_put_text').innerText = "Thursday";
-                    break;
-                case "5":
-                    document.getElementById('day_put_text').innerText = "Friday";
-                    break;
-                case "6":
-                    document.getElementById('day_put_text').innerText = "Saturday";
-                    break;
-                case "7":
-                    document.getElementById('day_put_text').innerText = "Sunday";
-                    break;
-                default:
-                    console.error('Blyat');
-            }
-        });
-
         //Initalize Table put selector
         i = 0;
         var view_put = document.getElementById('view_put');
@@ -1856,19 +1782,6 @@ let manage = {
                 document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose;
             }
         }
-        document.getElementById('view_put').addEventListener('change', function () {
-            setTimeout(() => {
-                var vewalue = document.getElementById('view_put').value;
-                var i = 0;
-                while (config.data.table_details[i] != null) {
-                    if (config.data.table_details[i].deleted != true && config.data.table_details[i].identifier == vewalue) {
-                        document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose
-                        break; //found it
-                    }
-                    i++;
-                }
-            }, 50)
-        })
 
         //color sliders initalizer
         document.getElementById('color_put').addEventListener('change', slidecolor)
@@ -1885,181 +1798,45 @@ let manage = {
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
         }
 
-        //name autofill
-        var lecture_autofill, room_autofill, type_autofill, course_autofill; //save for later
-        document.getElementById('name_put').addEventListener('keydown', function () {
-            console.log('Name autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('name_put').value == "") {
-                    //clear autofill
-                    document.getElementById('name_autofill').innerHTML = "";
-                    document.getElementById('name_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('name_autofill').innerHTML = "";
-                    document.getElementById('name_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].name.indexOf(document.getElementById('name_put').value.toString()) != -1) {
-                            autofill_name(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
+        //fill autofill
+        document.getElementById('name_autofill').innerHTML = ""
+        for (i = 0; i < config.data.table1_db.length; i++) {
+            autofill_name(i)
+            autofill_room(i)
+            autofill_type(i)
+            autofill_course_code(i)
+            autofill_Lecture(i)
+        }
 
         function autofill_name(i) {
-
-            var fillbar = document.createElement('div');
-            var name_autofill = config.data.table1_db[i].name;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].name;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('name_autofill').classList = "autofill_container"
-                document.getElementById('name_put').value = name_autofill;
-            });
-            document.getElementById('name_autofill').appendChild(fillbar);
+            var option = document.createElement('option');
+            option.value = config.data.table1_db[i].name;
+            document.getElementById('name_autofill').appendChild(option);
         }
-
-        //room autofill
-        document.getElementById('room_put').addEventListener('keydown', function () {
-            console.log('room autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('room_put').value == "") {
-                    //clear autofill
-                    document.getElementById('room_autofill').innerHTML = "";
-                    document.getElementById('room_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('room_autofill').innerHTML = "";
-                    document.getElementById('room_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].room.indexOf(document.getElementById('room_put').value.toString()) != -1) {
-                            autofill_room(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
 
         function autofill_room(i) {
-            var fillbar = document.createElement('div');
-            var room_autofill = config.data.table1_db[i].room;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].room;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('room_autofill').classList = "autofill_container"
-                document.getElementById('room_put').value = room_autofill;
-            });
-            document.getElementById('room_autofill').appendChild(fillbar);
+            var option = document.createElement('option');
+            option.value = config.data.table1_db[i].room;
+            document.getElementById('room_autofill').appendChild(option);
         }
-
-        //type autofill
-        document.getElementById('type_put').addEventListener('keydown', function () {
-            console.log('type autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('type_put').value == "") {
-                    //clear autofill
-                    document.getElementById('type_autofill').innerHTML = "";
-                    document.getElementById('type_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('type_autofill').innerHTML = "";
-                    document.getElementById('type_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].type.indexOf(document.getElementById('type_put').value.toString()) != -1) {
-                            autofill_type(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
 
         function autofill_type(i) {
-            var fillbar = document.createElement('div');
-            var type_autofill = config.data.table1_db[i].type;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].type;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('type_autofill').classList = "autofill_container"
-                document.getElementById('type_put').value = type_autofill;
-            });
-            document.getElementById('type_autofill').appendChild(fillbar);
+            var option = document.createElement('option');
+            option.value = config.data.table1_db[i].type;
+            document.getElementById('type_autofill').appendChild(option);
         }
-
-        //course_code autofill
-        document.getElementById('course_code_put').addEventListener('keydown', function () {
-            console.log('course_code autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('course_code_put').value == "") {
-                    //clear autofill
-                    document.getElementById('course_code_autofill').innerHTML = "";
-                    document.getElementById('course_code_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('course_code_autofill').innerHTML = "";
-                    document.getElementById('course_code_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].course_code.indexOf(document.getElementById('course_code_put').value.toString()) != -1) {
-                            autofill_course_code(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
 
         function autofill_course_code(i) {
-            var fillbar = document.createElement('div');
-            var course_code_autofill = config.data.table1_db[i].course_code;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].course_code;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('course_code_autofill').classList = "autofill_container"
-                document.getElementById('course_code_put').value = course_code_autofill;
-            });
-            document.getElementById('course_code_autofill').appendChild(fillbar);
+
+            var option = document.createElement('option');
+            option.value = config.data.table1_db[i].course_code;
+            document.getElementById('course_code_autofill').appendChild(option);
         }
 
-        //Lecture autofill
-        document.getElementById('Lecture_put').addEventListener('keydown', function () {
-            console.log('Lecture autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('Lecture_put').value == "") {
-                    //clear autofill
-                    document.getElementById('Lecture_autofill').innerHTML = "";
-                    document.getElementById('Lecture_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('Lecture_autofill').innerHTML = "";
-                    document.getElementById('Lecture_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].Lecturer.indexOf(document.getElementById('Lecture_put').value.toString()) != -1) {
-                            autofill_Lecture(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
-
         function autofill_Lecture(i) {
-            var fillbar = document.createElement('div');
-            var Lecture_autofill = config.data.table1_db[i].Lecturer;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].Lecturer;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('Lecture_autofill').classList = "autofill_container"
-                document.getElementById('Lecture_put').value = Lecture_autofill;
-            });
-            document.getElementById('Lecture_autofill').appendChild(fillbar);
+            var option = document.createElement('option');
+            option.value = config.data.table1_db[i].Lecturer;
+            document.getElementById('Lecture_autofill').appendChild(option);
         }
     },
 
@@ -2083,10 +1860,10 @@ let manage = {
         table0_button.appendChild(titlespan0)
         document.getElementById('tablespace_render').appendChild(table0_button);
         table0_button.addEventListener('click', function () {
-            event.stopPropagation
+            event.stopPropagation()
             config.data.table_selected = 0;
             config.save();
-            manage.initalize();
+            maininitalizer();
             config.properties.changed = true
         })
 
@@ -2099,7 +1876,7 @@ let manage = {
         new_table_button.appendChild(titlespan)
         document.getElementById('tablespace_render').appendChild(new_table_button);
         new_table_button.addEventListener('click', function () {
-            event.stopPropagation
+            event.stopPropagation()//stop manager from closing
             let identifier = 1
             let i = 0;
             while (config.data.table_details[i] != null) {
@@ -2115,8 +1892,8 @@ let manage = {
             }
             config.data.table_details.push(newtable);
             config.save();
-            console.warn('value: ', identifier)
-            manage.initalize();
+            console.warn('Indentifier value: ', identifier)
+            maininitalizer();
             config.properties.changed = true
         })
 
@@ -2156,20 +1933,24 @@ let manage = {
             document.getElementById('tablespace_render').appendChild(table_bar);
 
             //make fucntion
-            tab_put.addEventListener('click', function () {
+            tab_put.addEventListener('click', function () { event.stopPropagation() }) //stop this event from trigering table select action
+            tab_put.addEventListener('contextmenu', function (event) {
+                event.preventDefault()
                 event.stopPropagation()
-            }) //stop this event from trigering table select action
+                text_box_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+            }, false)
+
             table_bar.addEventListener('click', function () { //select table fucntion
                 console.warn('Table selected by identifier : ', config.data.table_details[index].identifier)
                 config.data.table_selected = config.data.table_details[index].identifier;
                 config.save()
-                manage.initalize()
+                maininitalizer();
                 config.properties.changed = true
             })
-            table_bar.addEventListener('mouseover', function () {
+            table_bar.addEventListener('mouseover', function () {//show quick action menu
                 tabmenu.style.transform = "translate(0, 0)";
             })
-            table_bar.addEventListener('mouseout', function () {
+            table_bar.addEventListener('mouseout', function () {//hide quick action menu
                 if (confirmimg.style.display != "block") {
                     tabmenu.style.transform = "";
                 }
@@ -2187,7 +1968,7 @@ let manage = {
                 tab_put.value = config.data.table_details[index].purpose
                 setTimeout(() => {
                     tab_put.focus()
-                }, 500)
+                }, 200)
                 tab_put.addEventListener('keyup', function (event) {
                     if (event.keyCode === 13) { //enterkey
                         confirmimg.click(); //enterkey is pressed, confirm input
@@ -2219,7 +2000,7 @@ let manage = {
                     config.data.table_details[index].deleted = true;
                 }
                 config.save()
-                manage.initalize()
+                maininitalizer();
                 config.properties.changed = true
             })
             cancelimg.addEventListener('click', function () { //cancel button is pressed
@@ -2279,12 +2060,12 @@ let manage = {
             let i = 0
             let homeless = true
             while (config.data.table_details[i] != null) {
-                if (config.data.table_details[i].identifier == config.data.table1_db[index].show && config.data.table_details[i].deleted != true) {
+                if (config.data.table_details[i].identifier == config.data.table1_db[index].show && config.data.table_details[i].deleted != true) {//compare this instence to indentifiers of other tables
                     homeless = false
                 }
                 i++;
             }
-            if (homeless) {
+            if (homeless) {//ya bois homeless, put him in the homeless table
                 config.data.table1_db[index].show = 0;
             }
             //Create the data block
@@ -2420,10 +2201,44 @@ let manage = {
                     manage.dialogue.edit(index)
                 }); //Edit btn
                 deletebtn.addEventListener('click', function () {
-                    manage.dialogue.edit(index);
-                    manage.dialogue.call_delete()
+                    config.data.table1_db[index].deleted = true
+                    config.save()
+                    manage.render_list()
                 })
 
+                let context_menu = new Menu()
+                context_menu.append(new MenuItem({
+                    label: 'edit', click() {
+                        manage.dialogue.edit(index)
+                        manage.dialogue.open()
+                    }
+                }))
+                context_menu.append(new MenuItem({
+                    label: 'delete', click() {
+                        config.data.table1_db[index].deleted = true
+                        config.properties.changed = true;
+                        config.save()
+                        manage.render_list()
+                    }
+                }))
+                context_menu.append(new MenuItem({
+                    type: 'separator'
+                }))
+                context_menu.append(new MenuItem({
+                    label: 'Duplicate', click() {
+                        config.data.table1_db.push(config.data.table1_db[index])
+                        config.properties.changed = true;
+                        config.save()
+                        manage.render_list()
+                    }
+                }))
+
+                tempblock.addEventListener('contextmenu', function (e) {
+                    e.stopPropagation();
+                    e.preventDefault()
+                    context_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+                    console.log('COntext meny on :', tempblock);
+                })
             }
             let noot = document.createElement('div');
             if (config.data.table1_db[index].show == 0) { // this dataset is homeless
@@ -2721,7 +2536,7 @@ let manage = {
                     console.log('Overwrite on index: ', config.properties.overwrite);
                 }
                 config.save();
-                manage.initalize();
+                maininitalizer()
                 if (config.properties.called_from_plus) {
                     config.properties.called_from_plus = false;
                 } else {
@@ -2742,95 +2557,7 @@ let manage = {
                 manage.dialogue.open();
             }
         },
-        call_delete: function () {
-            console.log('Delete pseudo function called');
-            //time processing
-            let startmeridian = 'a.m.';
-            let starthr = 0;
-            let startminute = Number(config.data.table1_db[config.properties.overwrite].start % 1 * 60).toFixed(0);
-            if (startminute == 0) {
-                startminute = '00'
-            }
-            let endmeridian = 'a.m.';
-            let endhr = 0;
-            let endminute = Number(config.data.table1_db[config.properties.overwrite].end % 1 * 60).toFixed(0);
-            if (endminute == 0) {
-                endminute = '00'
-            }
 
-            if (config.data.table1_db[config.properties.overwrite].start > 12) {
-                startmeridian = 'p.m.'; //morning or evening
-                starthr = Number(config.data.table1_db[config.properties.overwrite].start - 12) - config.data.table1_db[config.properties.overwrite].start % 1; //removes remainder
-            } else {
-                starthr = Number(config.data.table1_db[config.properties.overwrite].start) - config.data.table1_db[config.properties.overwrite].start % 1; //removes remainder
-            }
-            if (config.data.table1_db[config.properties.overwrite].end > 12) {
-                endmeridian = 'p.m.'; //morning or evening
-                endhr = Number(config.data.table1_db[config.properties.overwrite].end - 12) - config.data.table1_db[config.properties.overwrite].end % 1; //removes remainder
-            } else {
-                endhr = Number(config.data.table1_db[config.properties.overwrite].end) - config.data.table1_db[config.properties.overwrite].end % 1; //removes remainder
-            }
-            if (starthr == 0) {
-                starthr = 12
-            }
-            if (endhr == 0) {
-                endhr = 12
-            }
-
-            document.getElementById('title_cellp').innerText = config.data.table1_db[config.properties.overwrite].name;
-            switch (config.data.table1_db[config.properties.overwrite].day) {
-                case 1:
-                    document.getElementById('day_cellp').innerText = "Monday";
-                    break;
-                case 2:
-                    document.getElementById('day_cellp').innerText = "Tuesday";
-                    break;
-                case 3:
-                    document.getElementById('day_cellp').innerText = "Wednesday";
-                    break;
-                case 4:
-                    document.getElementById('day_cellp').innerText = "Thursday";
-                    break;
-                case 5:
-                    document.getElementById('day_cellp').innerText = "Friday";
-                    break;
-                case 6:
-                    document.getElementById('day_cellp').innerText = "Saturday";
-                    break;
-                case 7:
-                    document.getElementById('day_cellp').innerText = "Sunday";
-                    break;
-                default:
-                    console.log('Date error on config.properties.overwrite: ', config.properties.overwrite, ' Returned value: ', config.data.table1_db[config.properties.overwrite].day);
-            }
-            if (config.data.table1_db[config.properties.overwrite].room != undefined) {
-                document.getElementById('room_cellp').innerText = config.data.table1_db[config.properties.overwrite].room
-            } else {
-                document.getElementById('room_cellp').innerText = "unknown"
-            }
-            if (config.data.table1_db[config.properties.overwrite].Lecturer != undefined) {
-                document.getElementById('Lecturer_cellp').innerText = config.data.table1_db[config.properties.overwrite].Lecturer
-            } else {
-                document.getElementById('Lecturer_cellp').innerText = "unknown"
-            }
-            if (config.data.table1_db[config.properties.overwrite].type != undefined) {
-                document.getElementById('type_cellp').innerText = config.data.table1_db[config.properties.overwrite].type
-            } else {
-                document.getElementById('type_cellp').innerText = "unknown"
-            }
-            if (config.data.table1_db[config.properties.overwrite].course_code != undefined) {
-                document.getElementById('coursecode_cellp').innerText = config.data.table1_db[config.properties.overwrite].course_code
-            } else {
-                document.getElementById('coursecode_cellp').innerText = "unknown"
-            }
-            document.getElementById('time_cellp').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
-            document.getElementById('delete_confirm_pannel').style.display = 'block';
-        }
-    },
-    batch_delete: {
-        detect: function () {
-            //Query select all the bar ids or mark them durring their creation
-        },
     }
 }
 
@@ -2839,15 +2566,120 @@ let UI = {
     initalize: function () {
         console.log('UI Initalize');
 
-        //Action bar handlers (look about touch triggers)
-        document.getElementById('action_bar').addEventListener('mouseover', function () {
-            document.getElementById('action_bar').className = "Action_bar_active";
+        //esc trigger
+        document.getElementById('body').addEventListener('keyup', function (e) {
+            console.log('keycode: ', e.keyCode)
+            if (e.keyCode == 27) {//esc key mashed
+                if (document.getElementById('dataentry_screen').style.display == "block") {
+                    manage.dialogue.close()
+                } else if (document.getElementById('manage_view').style.display == "block") {
+                    UI.manage_toggle()
+                } else if (document.getElementById('setting_view').style.display == "block") {
+                    UI.setting_toggle()
+                }
+            }
+
         })
-        document.getElementById('action_bar').addEventListener('mouseout', function () {
-            document.getElementById('action_bar').className = "Action_bar";
+        //Handlers datamanger
+        document.getElementById('view_put').addEventListener('change', function () {// on view put change
+            setTimeout(() => {
+                var vewalue = document.getElementById('view_put').value;
+                var i = 0;
+                while (config.data.table_details[i] != null) {//Loop data brothgar
+                    if (config.data.table_details[i].deleted != true && config.data.table_details[i].identifier == vewalue) {//check view put value against saved table details
+                        document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose
+                        break; //found it
+                    }
+                    i++;
+                }
+            }, 50)
         })
 
-        //Remote triggers for windowstate management
+        //table manager actions
+        document.getElementById('tablemanger').addEventListener('click', function () {
+            if (config.properties.management == false) {
+                document.getElementById('tablemanger').classList = "tablemanger_active"
+                config.properties.management = true
+            } else {
+                config.properties.management = false
+                document.getElementById('tablemanger').classList = "tablemanger"
+            }
+        })
+        document.getElementById('manage_dataspace').addEventListener('click', function () {
+            if (config.properties.management == true) {
+                config.properties.management = false
+                document.getElementById('tablemanger').classList = "tablemanger"
+            }
+        })
+        document.getElementById('tablespace_render').addEventListener('click', function () {
+            event.stopPropagation() //Stop propogation to the dataspace
+        })
+
+        //Add new button
+        document.getElementById('new_class_button').addEventListener('click', function () {
+            manage.dialogue.open();
+            console.log('Add new class button clicked')
+        }) //add new btn listener
+
+        document.getElementById('cancel_btn').addEventListener('click', () => {
+            console.log('Cancel button clicked');
+            manage.dialogue.clear();
+            manage.dialogue.close();
+            config.properties.overwrite = null;
+        });
+        document.getElementById('save_btn').addEventListener('click', manage.dialogue.save); //Save button
+        document.getElementById('savepluss_btn').addEventListener('click', manage.dialogue.saveplus);
+        document.getElementById('delete_btn').addEventListener('click', function () {
+            console.log('Delete called');
+            config.data.table1_db[config.properties.overwrite].deleted = true;
+            manage.dialogue.close();
+            manage.dialogue.clear();
+            manage.render_list();
+        });
+        document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
+
+        //Initalize day_put selector
+        document.getElementById('day_put').value = "1";
+        document.getElementById('day_put_text').innerText = "Monday"
+        document.getElementById('day_put').addEventListener('change', function () {
+            /* Switches dates on change */
+            console.log('Day put changed');
+            let tmp = document.getElementById('day_put').value;
+            switch (tmp) {
+                case "1":
+                    document.getElementById('day_put_text').innerText = "Monday";
+                    break;
+                case "2":
+                    document.getElementById('day_put_text').innerText = "Tuesday";
+                    break;
+                case "3":
+                    document.getElementById('day_put_text').innerText = "Wednsday";
+                    break;
+                case "4":
+                    document.getElementById('day_put_text').innerText = "Thursday";
+                    break;
+                case "5":
+                    document.getElementById('day_put_text').innerText = "Friday";
+                    break;
+                case "6":
+                    document.getElementById('day_put_text').innerText = "Saturday";
+                    break;
+                case "7":
+                    document.getElementById('day_put_text').innerText = "Sunday";
+                    break;
+                default:
+                    console.error('Blyat');
+            }
+        });
+
+        //Set switch positions
+        UI.setting.hilight.setpostition();
+        UI.setting.animation.setpostition();
+        UI.setting.tiles.setpostition();
+        UI.setting.Row.setpostition();
+        UI.setting.wallpaper.set_wallpaper()
+        UI.setting.set_theme();
+
         if (config.data.always_on_top == true) {
             main.setontop()
             document.getElementById('always_on_top_btn').classList = "statusbtn_active"
@@ -2855,123 +2687,43 @@ let UI = {
             main.setnotontop()
         }
 
-        document.getElementById('mainx_btn').addEventListener('click', function () {
-            main.closeapp()
-        })
+        if (config.baseconfig.use_alt_storage == true && config.baseconfig.use_alt_storage != undefined) {
+            document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString()
+            document.getElementById('pathrepresenter').readonly = true;//unlock path input
+        } else {
+            document.getElementById('pathrepresenter').value = "application storage"
+            document.getElementById('pathrepresenter').readonly = true;//unlock path input
+        }
 
-        document.getElementById('maximize_btn').addEventListener('click', function () {
-            var state = main.maximize_main_window()
-            if (state == true) {
-                //is maximized
-                document.getElementById('resise_constraint').style.display = "none"
-            } else {
-                //is not maximized
-                document.getElementById('resise_constraint').style.display = "block"
-            }
-            console.log('Window maximized :', state);
-        })
+        document.getElementById('mainx_btn').addEventListener('click', function () { main.closeapp() })//X button close app
 
-        document.getElementById('minimize_btn').addEventListener('click', function () {
-            main.minmize_main_window()
-        })
+        document.getElementById('maximize_btn').addEventListener('click', UI.minimize_maximize)
 
-        document.getElementById('always_on_top_btn').addEventListener('click', function () {
-            var state = main.togglealways_on_top()
-            if (state == true) {
-                //is always on top
-                document.getElementById('always_on_top_btn').classList = "statusbtn_active"
-                config.data.always_on_top = true;
-                config.save()
-            } else {
-                //is not always on top
-                document.getElementById('always_on_top_btn').classList = "statusbtn"
-                config.data.always_on_top = false;
-                config.save()
-            }
-            console.log('Window always on top :', state);
-        })
+        document.getElementById('minimize_btn').addEventListener('click', function () { main.minmize_main_window })
 
-        //Proto navigation
-        document.getElementById('table_btn').addEventListener('click', UI.navigate.TABLE)
-        document.getElementById('manage_btn').addEventListener('click', UI.navigate.MANAGE)
-        document.getElementById('setting_btn').addEventListener('click', UI.navigate.SETTING)
+        document.getElementById('always_on_top_btn').addEventListener('click', UI.toggle_alwaysontop)
+
+        document.getElementById('Setting_btn').addEventListener('click', UI.setting_toggle)
+        document.getElementById('Manage_button_btn').addEventListener('click', UI.manage_toggle)
+
+        //Switch triggers
         document.getElementById('hilight_btn').addEventListener('click', UI.setting.hilight.flip)
         document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
-        document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
-        document.getElementById('about_btn').addEventListener('click', function () {
-            utility.clipboard(JSON.stringify(config.data));
-            notify.new('Debug info coppied to clipboard', JSON.stringify(config.data));
-        });
-
-        //select notification handlers
-        document.getElementById('notification_style1').addEventListener('click', this.setting.notification.set_1)
-        document.getElementById('notification_style2').addEventListener('click', this.setting.notification.set_2)
-        document.getElementById('notification_style3').addEventListener('click', this.setting.notification.set_3)
-        document.getElementById('notification_style4').addEventListener('click', this.setting.notification.set_4)
-        switch (config.data.notification_type) {
-            case 1:
-                document.getElementById('notification_pallet1').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-                break;
-            case 2:
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-                break;
-            case 3:
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-                break;
-            case 4:
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet_active"
-                break;
-            default:
-
-                break;
-        }
-
-        //Manual config handlers
-        if (config.baseconfig.use_alt_storage == true) {
-            document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString() + "/Timetableconfig.json"
-        }
+        document.getElementById('close_btn').addEventListener('click', UI.close_tile)
 
         document.getElementById('select_btn').addEventListener('click', function () { //Select the configuration location
             config.selectlocation()
             document.getElementById('pathrepresenter').value = path.join(config.baseconfig.alt_location.toString(), "Timetableconfig.json")
             config.properties.changed = true
         })
-        document.getElementById('save_btn').addEventListener('click', function () {
-            config.save()
-        })
-        document.getElementById('default_btn').addEventListener('click', function () {
-            config.usedefault()
-        })
-        document.getElementById('backup_btn').addEventListener('click', function () {
-            config.backup()
-        })
-        document.getElementById('restore_btn').addEventListener('click', function () {
-            config.restore();
-        })
+        document.getElementById('save_conf_btn').addEventListener('click', config.save)
+        document.getElementById('default_btn').addEventListener('click', config.usedefault)
+        document.getElementById('backup_btn').addEventListener('click', config.backup)
+        document.getElementById('restore_btn').addEventListener('click', config.restore)
 
-        //Set switch positions
-        this.setting.hilight.setpostition();
-        this.setting.animation.setpostition();
-        this.setting.tiles.setpostition();
-        this.setting.Row.setpostition();
-        this.setting.wallpaper.set_wallpaper()
 
-        //theme and pallet
-        this.setting.set_theme();
         document.getElementById('dark_theme_selection').addEventListener('click', function () {
             config.data.theme = "dark";
             config.save();
@@ -2982,121 +2734,103 @@ let UI = {
             config.save();
             UI.setting.set_theme();
         })
-        document.getElementById('hueinverse-selec').addEventListener('click', function () {
-            hue_selec(-1)
-            console.log('hue change -1')
-        })
-        document.getElementById('hue0-selec').addEventListener('click', function () {
-            hue_selec(0)
-            console.log('%chue change 0', "color: hsl(0,100%,50%)")
-        })
-        document.getElementById('hue30-selec').addEventListener('click', function () {
-            hue_selec(30)
-            console.log('%chue change 30', "color: hsl(30,100%,50%)")
-        })
-        document.getElementById('hue60-selec').addEventListener('click', function () {
-            hue_selec(60)
-            console.log('%chue change 60', "color: hsl(60,100%,50%)")
-        })
-        document.getElementById('hue90-selec').addEventListener('click', function () {
-            hue_selec(90)
-            console.log('%chue change 90', "color: hsl(90,100%,50%)")
-        })
-        document.getElementById('hue120-selec').addEventListener('click', function () {
-            hue_selec(120)
-            console.log('%chue change 120', "color: hsl(120,100%,50%)")
-        })
-        document.getElementById('hue150-selec').addEventListener('click', function () {
-            hue_selec(150)
-            console.log('%chue change 150', "color: hsl(150,100%,50%)")
-        })
-        document.getElementById('hue180-selec').addEventListener('click', function () {
-            hue_selec(180)
-            console.log('%chue change 180', "color: hsl(180,100%,50%)")
-        })
-        document.getElementById('hue210-selec').addEventListener('click', function () {
-            hue_selec(210)
-            console.log('%chue change 210', "color: hsl(210,100%,50%)")
-        })
-        document.getElementById('hue240-selec').addEventListener('click', function () {
-            hue_selec(240)
-            console.log('%chue change 240', "color: hsl(240,100%,50%)")
-        })
-        document.getElementById('hue270-selec').addEventListener('click', function () {
-            hue_selec(270)
-            console.log('%chue change 270', "color: hsl(270,100%,50%)")
-        })
-        document.getElementById('hue300-selec').addEventListener('click', function () {
-            hue_selec(300)
-            console.log('%chue change 300', "color: hsl(300,100%,50%)")
-        })
-        document.getElementById('hue330-selec').addEventListener('click', function () {
-            hue_selec(330)
-            console.log('%chue change 330', "color: hsl(330,100%,50%)")
+
+        //hue selecton buttons
+        document.getElementById('hueinverse-selec').addEventListener('click', function () { UI.hue_selec(-1) })
+        document.getElementById('hue0-selec').addEventListener('click', function () { UI.hue_selec(0) })
+        document.getElementById('hue30-selec').addEventListener('click', function () { UI.hue_selec(30) })
+        document.getElementById('hue60-selec').addEventListener('click', function () { UI.hue_selec(60) })
+        document.getElementById('hue90-selec').addEventListener('click', function () { UI.hue_selec(90) })
+        document.getElementById('hue120-selec').addEventListener('click', function () { UI.hue_selec(120) })
+        document.getElementById('hue150-selec').addEventListener('click', function () { UI.hue_selec(150) })
+        document.getElementById('hue180-selec').addEventListener('click', function () { UI.hue_selec(180) })
+        document.getElementById('hue210-selec').addEventListener('click', function () { UI.hue_selec(210) })
+        document.getElementById('hue240-selec').addEventListener('click', function () { UI.hue_selec(240) })
+        document.getElementById('hue270-selec').addEventListener('click', function () { UI.hue_selec(270) })
+        document.getElementById('hue300-selec').addEventListener('click', function () { UI.hue_selec(300) })
+        document.getElementById('hue330-selec').addEventListener('click', function () { UI.hue_selec(330) })
+
+        //wallpaper
+        document.getElementById('select_wallpaper_btn').addEventListener('click', UI.setting.wallpaper.select_wallpaper)
+        document.getElementById('default_wallpaper_btn').addEventListener('click', function () {
+            config.data.backgroundimg = "default"
+            UI.setting.wallpaper.set_wallpaper()
+            config.save()
         })
 
-        function hue_selec(hue) {
-            config.data.colorpallet = hue;
+
+    },
+    hue_selec: function (hue) {
+        config.data.colorpallet = hue;
+        config.save()
+        UI.setting.set_theme();
+    },
+    toggle_alwaysontop: function () {
+        var state = main.togglealways_on_top()
+        if (state == true) {
+            //is always on top
+            document.getElementById('always_on_top_btn').classList = "statusbtn_active"
+            config.data.always_on_top = true;
             config.save()
-            UI.setting.set_theme();
+        } else {
+            //is not always on top
+            document.getElementById('always_on_top_btn').classList = "statusbtn"
+            config.data.always_on_top = false;
+            config.save()
+        }
+        console.log('Window always on top :', state);
+    },
+    setting_toggle: function () {
+        if (document.getElementById('manage_view').style.display == "block") {
+            //close
+            document.getElementById('Manage_button_btn').classList = "statusbtn"
+            document.getElementById('manage_view').style.display = ""
+        }
+
+        if (document.getElementById('setting_view').style.display == "block") {
+            //close
+            document.getElementById('Setting_btn').classList = "statusbtn"
+            document.getElementById('setting_view').style.display = ""
+        } else {
+            //open
+            document.getElementById('Setting_btn').classList = "statusbtn_active"
+            document.getElementById('setting_view').style.display = "block"
         }
     },
-    navigate: {
-        BACK: function () { //Back button handle
-            console.log('Back navigation started');
+    manage_toggle: function () {
+        if (document.getElementById('setting_view').style.display == "block") {
+            //close
+            document.getElementById('Setting_btn').classList = "statusbtn"
+            document.getElementById('setting_view').style.display = ""
+        }
 
-        },
-        close_tile: function () {
-            console.log('closed full tile function');
-            document.getElementById('fullscreen_tile').classList = "fullscreen_tile"
-        },
-        TABLE: function () {
-            console.log('Table navigation started');
-            if (config.properties.changed || config.properties.view == "table") {
-                window.location.reload();
-                /*table.data_render();
-                setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
-            } else {
-                if (config.properties.clocking == false || undefined) {
-                    table.clock.start_clock();
-                }
-                config.properties.view = "table";
-                document.getElementById('table1').style.display = 'block';
-                document.getElementById('manage_view').style.display = 'none';
-                document.getElementById('setting_view').style.display = 'none';
-                document.getElementById('setting_btn_icon').style.transform = 'rotate(0deg)'; //Rotate the button
-                document.getElementById('setting_btn').className = "menubtn";
-                document.getElementById('manage_btn').className = "menubtn";
-                document.getElementById('table_btn').className = "menubtn_active";
+        if (document.getElementById('manage_view').style.display == "block") {
+            //close
+            document.getElementById('Manage_button_btn').classList = "statusbtn"
+            document.getElementById('manage_view').style.display = ""
+            if (config.properties.changed == true) {
+                maininitalizer();//Efficiency goes VROOOOM
             }
-            document.getElementById('action_bar').className = "Action_bar";
-        },
-        MANAGE: function () {
-            console.log('MANAGE navigation started');
-            config.properties.view = "manage";
-            table.clock.stop_clock();
-            document.getElementById('table1').style.display = 'none';
-            document.getElementById('manage_view').style.display = 'block';
-            document.getElementById('setting_view').style.display = 'none';
-            document.getElementById('setting_btn_icon').style.transform = 'rotate(0deg)'; //Rotate the button
-            document.getElementById('setting_btn').className = "menubtn";
-            document.getElementById('manage_btn').className = "menubtn_active";
-            document.getElementById('table_btn').className = "menubtn";
-            document.getElementById('action_bar').className = "Action_bar";
-        },
-        SETTING: function () {
-            console.log('SETTING navigation started');
-            config.properties.view = "setting";
-            table.clock.stop_clock();
-            document.getElementById('table1').style.display = 'none';
-            document.getElementById('manage_view').style.display = 'none';
-            document.getElementById('setting_view').style.display = 'block';
-            document.getElementById('setting_btn_icon').style.transform = 'rotate(90deg)'; //Rotate the button
-            document.getElementById('setting_btn').className = "menubtn_active";
-            document.getElementById('manage_btn').className = "menubtn";
-            document.getElementById('table_btn').className = "menubtn";
-            document.getElementById('action_bar').className = "Action_bar"; //Force menu to close
-        },
+        } else {
+            //open
+            document.getElementById('Manage_button_btn').classList = "statusbtn_active"
+            document.getElementById('manage_view').style.display = "block"
+        }
+    },
+    close_tile: function () {
+        console.log('closed full tile function');
+        document.getElementById('fullscreen_tile').classList = "fullscreen_tile"
+    },
+    minimize_maximize: function () {
+        var state = main.maximize_main_window()
+        if (state == true) {
+            //is maximized
+            document.getElementById('resise_constraint').style.display = "none"
+        } else {
+            //is not maximized
+            document.getElementById('resise_constraint').style.display = "block"
+        }
+        console.log('Window maximized :', state);
     },
     setting: {
         set_theme: function () {
@@ -3109,17 +2843,11 @@ let UI = {
                 set_light()
                 document.getElementById('light_selection_put').checked = true;
                 document.getElementById('dark_selection_put').checked = false;
-            } else if (config.data.theme == "timebased") {
-                //do some quick maths and set a theme
-                var now = new Date().getHours();
-                console.warn('Time based theme', now)
-                if (now > 6 && now < 17) {
-                    //day time
-                    set_light();
-                } else if (now > 16 || now < 7) {
-                    //night time
-                    set_dark();
-                }
+            } else {
+                config.data.theme = "dark"
+                document.getElementById('light_selection_put').checked = false;
+                document.getElementById('dark_selection_put').checked = true;
+                set_dark()
             }
 
             function set_dark() {
@@ -3329,14 +3057,25 @@ let UI = {
                     notify.new('Settings', 'animations enabled');
                     console.warn('animations enabled');
                 }
+
+                if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == false) {//animations preffered by system
+                    notify.new('System', 'Animations dissabled by Current Users animation preferences');
+                }
+
                 config.save();
                 UI.setting.animation.setpostition();
             },
             setpostition: function () {
-                if (config.data.animation) {
-                    document.getElementById('Animations_switch_container').className = 'switch_container_active';
-                    document.getElementById('nomation').href = "";
-                } else {
+                if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == true) {//animations preffered by system
+                    if (config.data.animation) {
+                        document.getElementById('Animations_switch_container').className = 'switch_container_active';
+                        document.getElementById('nomation').href = "";
+                    } else {
+                        document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
+                        document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
+                    }
+                } else {//system preffers no animations
+
                     document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
                     document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
                 }
@@ -3395,8 +3134,69 @@ let UI = {
             },
         },
         wallpaper: {
-            set_wallpaper: function () {
-                //document.getElementById('timetable').style.backgroundImage = "url('img/usebkgrounds/test-user-background.jpg')"
+            set_wallpaper: async function () {
+                if (config.data.backgroundimg != null || undefined) {
+                    if (config.data.backgroundimg == "default") {
+                        wallpaper.get().then((wallpaperpath) => {//get desktop wallpaper
+                            var parsedwallpaperpath = path.parse(wallpaperpath);
+                            if (parsedwallpaperpath.ext !== undefined) {//check for windows
+                                //use desktop wallpaper
+                                for (i = 0; i <= wallpaperpath.length; i++) {
+                                    console.log(wallpaperpath)
+                                    wallpaperpath = wallpaperpath.replace('\\', '/');
+                                }
+                                document.getElementById('timetable').style.backgroundImage = "";
+                                document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                document.getElementById('wallpaper_pathrepresenter').value = wallpaperpath;
+                            } else {//default to css wallpaper
+                                document.getElementById('timetable').style.backgroundImage = "";
+                                document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
+                            }
+                        })
+                    } else {//use user selected wallpaper
+                        //Convert path to form css can understand
+                        var resaucepath = process.resourcesPath
+                        for (i = 0; i <= resaucepath.length; i++) {
+                            console.log(resaucepath)
+                            resaucepath = resaucepath.replace('\\', '/');
+                        }
+                        //document.getElementById('timetable').style.backgroundImage = "";
+                        document.getElementById('timetable').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
+                        document.getElementById('light_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
+                        document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
+                        document.getElementById('wallpaper_pathrepresenter').value = resaucepath + "/backgroundimg" + config.data.backgroundimg.ext;
+                    }
+                } else {//no wallperper, clear and use css wallpaper
+                    document.getElementById('timetable').style.backgroundImage = "";
+                    document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
+                }
+            },
+            select_wallpaper: async function () {
+                dialog.showOpenDialog({
+                    buttonLabel: "open", filters: [
+                        { name: 'Images', extensions: ['jpg', 'png', 'gif'] },
+                        { name: 'All Files', extensions: ['*'] }
+                    ]
+                }).then((filestuff) => {
+                    if (filestuff.canceled == true) {//user canceled file dialogue
+                        console.log('User canceled file dialogue')
+                    } else {
+                        var parsed_path = path.parse(filestuff.filePaths[0])
+                        fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "\\backgroundimg" + parsed_path.ext, function () {
+                            console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "\\backgroundimg" + parsed_path.ext)
+                            config.data.backgroundimg = parsed_path
+                            console.log('Set background img as :', config.data.backgroundimg)
+                            config.save()
+                            setTimeout(() => {
+                                UI.setting.wallpaper.set_wallpaper()
+                            }, 500);
+                        })
+                    }
+                }).catch((error) => {
+                    alert('An error occured, ', error.message)
+                })
             },
         }
     },
@@ -3413,11 +3213,6 @@ let notify = {
     }),
     new: function (title, body, fx, bdytitle) {
         this.current++; //Inciment the current pisition
-        style = config.data.notification_type;
-        if (this.previous_type != style) {
-            this.clearall()
-        }
-        this.previous_type = style;
 
         //create the notification holder
         var tempnotif = document.createElement("div"); //create a div
@@ -3436,29 +3231,7 @@ let notify = {
         tempnotif.appendChild(tmpbdy); //put the 'notifbody' div into the 'notification' div from before
         tmpbdy.innerHTML = body; //puts body text into the 'notifbody' div
 
-        //style switch
-        switch (style) {
-            case 1:
-                tempnotif.setAttribute("class", "notification_style1"); //set the class of the div to 'notification_style1'
-                this.preset_height = 22;
-                break;
-            case 2:
-                tempnotif.setAttribute("class", "notification_style2"); //set the class of the div to 'notification_style2'
-                this.preset_height = 16;
-                break;
-            case 3:
-                tempnotif.setAttribute("class", "notification_style3"); //set the class of the div to 'notification_style2'
-                this.preset_height = 16;
-                break;
-            case 4:
-                tempnotif.setAttribute("class", "notification_style4"); //set the class of the div to 'notification_style2'
-                this.preset_height = 22;
-                break;
-            default:
-                tempnotif.setAttribute("class", "notification_style3"); //set the class of the div to 'notification_style2'
-                this.preset_height = 16;
-                break;
-        }
+        tempnotif.setAttribute("class", "notification_style4"); //set the class of the div to 'notification_style2'
 
         //Timing effects
         setTimeout(() => {

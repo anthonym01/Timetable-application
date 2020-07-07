@@ -71,7 +71,7 @@
         --cell_color: rgba(0, 0, 0, 0.1);
         --shade_color: rgba(0, 0, 0, 0.6);
         /*overwrites*/
-        --timetable_background: url('../img/backgrounds/blyatground.webp');
+        --default_wallpaper: url('../img/082758wiuu2usbllqs1qsl.webp');
         --book_closed: url('../img/manage-white.webp');
         --dark_pannel_book: url('../img/manage-white.webp');
         --light_pannel_book: url('../img/manage-dark.webp');
@@ -156,7 +156,7 @@
         --cell_color: rgba(255, 255, 255, 0.3);
         --shade_color: rgba(255, 255, 255, 0.6);
         /*overwrites*/
-        --timetable_background: url('../img/backgrounds/whiteground.webp') !important;
+        --default_wallpaper: url('../img/Whatsapp-Wallpaper-102.webp');
         --book_closed: url('../img/manage-dark.webp');
         --dark_pannel_book: url('../img/manage-white.webp');
         --light_pannel_book: url('../img/manage-dark.webp');
@@ -231,7 +231,6 @@
     ._0 {
         --hue_value: 0;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/0.webp');
         --book_closed: url('../img/manage-0.webp');
         --light_pannel_book: url('../img/manage-0.webp');
         --dark_pannel_book: url('../img/manage-0.webp');
@@ -245,7 +244,6 @@
     ._30 {
         --hue_value: 30;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/30.webp');
         --book_closed: url('../img/manage-30.webp');
         --light_pannel_book: url('../img/manage-30.webp');
         --dark_pannel_book: url('../img/manage-30.webp');
@@ -259,7 +257,6 @@
     ._60 {
         --hue_value: 60;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/60.webp');
         --book_closed: url('../img/manage-60.webp');
         --light_pannel_book: url('../img/manage-60.webp');
         --dark_pannel_book: url('../img/manage-60.webp');
@@ -273,7 +270,6 @@
     ._90 {
         --hue_value: 90;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/90.webp');
         --book_closed: url('../img/manage-90.webp');
         --light_pannel_book: url('../img/manage-90.webp');
         --dark_pannel_book: url('../img/manage-90.webp');
@@ -287,7 +283,6 @@
     ._120 {
         --hue_value: 120;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/120.webp');
         --book_closed: url('../img/manage-120.webp');
         --light_pannel_book: url('../img/manage-120.webp');
         --dark_pannel_book: url('../img/manage-120.webp');
@@ -301,7 +296,6 @@
     ._150 {
         --hue_value: 150;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/150.webp');
         --book_closed: url('../img/manage-150.webp');
         --light_pannel_book: url('../img/manage-150.webp');
         --dark_pannel_book: url('../img/manage-150.webp');
@@ -315,7 +309,6 @@
     ._180 {
         --hue_value: 180;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/180.webp');
         --book_closed: url('../img/manage-180.webp');
         --light_pannel_book: url('../img/manage-180.webp');
         --dark_pannel_book: url('../img/manage-180.webp');
@@ -329,7 +322,6 @@
     ._210 {
         --hue_value: 210;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/210.webp');
         --light_pannel_book: url('../img/manage-210.webp');
         --dark_pannel_book: url('../img/manage-210.webp');
         --book_closed: url('../img/manage-210.webp');
@@ -343,7 +335,6 @@
     ._240 {
         --hue_value: 240;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/240.webp');
         --book_closed: url('../img/manage-240.webp');
         --light_pannel_book: url('../img/manage-240.webp');
         --dark_pannel_book: url('../img/manage-240.webp');
@@ -357,7 +348,6 @@
     ._270 {
         --hue_value: 270;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/270.webp');
         --book_closed: url('../img/manage-270.webp');
         --light_pannel_book: url('../img/manage-270.webp');
         --dark_pannel_book: url('../img/manage-270.webp');
@@ -371,7 +361,6 @@
     ._300 {
         --hue_value: 300;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/300.webp');
         --book_closed: url('../img/manage-300.webp');
         --light_pannel_book: url('../img/manage-300.webp');
         --dark_pannel_book: url('../img/manage-300.webp');
@@ -385,7 +374,6 @@
     ._330 {
         --hue_value: 330;
         --saturat: 100%;
-        --timetable_background: url('../img/backgrounds/330.webp');
         --book_closed: url('../img/manage-330.webp');
         --light_pannel_book: url('../img/manage-330.webp');
         --dark_pannel_book: url('../img/manage-330.webp');
@@ -743,7 +731,7 @@ view {
     table-layout: fixed;
     background-size: cover;
     background-repeat: no-repeat;
-    background-image: var(--timetable_background);
+    background-image: var(--default_wallpaper);
     text-shadow: 0vh 0vh 0.5vh var(--background-color);
     background-position: center;
 }
@@ -847,6 +835,7 @@ td {
     transition: box-shadow 500ms, transform 300ms, background-color 500ms, color 500ms, opacity 500ms, width 500ms, right 500ms;
     color: inherit;
     background-color: inherit;
+    text-shadow: inherit;
 }
 
 .infodoot:active {
@@ -1802,7 +1791,6 @@ td {
     border-collapse: collapse;
     table-layout: fixed;
     background-size: cover;
-    /*background-image: var(--timetable_background);*/
 }
 
 .mincropallet td {
@@ -1816,7 +1804,7 @@ td {
 }
 
 #amoled_pallet table {
-    background-image: var(--timetable_background);
+    background-image: url('../img/082758wiuu2usbllqs1qsl.webp');
 }
 
 #amoled_pallet td {
@@ -1829,7 +1817,7 @@ td {
 }
 
 #light_pallet table {
-    background-image: url('../img/backgrounds/whiteground.webp');
+    background-image: url('../img/Whatsapp-Wallpaper-102.webp');
 }
 
 #light_pallet td {
