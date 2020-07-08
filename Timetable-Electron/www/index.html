@@ -36,23 +36,10 @@
                         <td class="righter" id="day_cell"></td>
                     </tr>
                     <tr>
-                        <td class="lefter">Room :</td>
-                        <td class="righter" id="room_cell"></td>
-                    </tr>
-                    <tr>
-                        <td class="lefter">Lecturer :</td>
-                        <td class="righter" id="Lecturer_cell"></td>
-                    </tr>
-                    <tr>
-                        <td class="lefter">Type :</td>
-                        <td class="righter" id="type_cell"></td>
-                    </tr>
-                    <tr>
-                        <td class="lefter">Code :</td>
-                        <td class="righter" id="coursecode_cell"></td>
-                    </tr>
-                    <tr>
                         <td colspan="2" id="time_cell"></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2" id="detail_cell"></td>
                     </tr>
                 </table>
             </div>
@@ -616,7 +603,8 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input id="name_put" list="name_autofill" name="class_name" type="text" autocomplete="on" placeholder="Name">
+                        <input id="name_put" list="name_autofill" name="class_name" type="text" autocomplete="on"
+                            placeholder="Name">
                         <datalist id="name_autofill">
                             <option value="example#1">
                             <option value="example#2">
@@ -676,41 +664,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <textarea id="detail_put" name="detail_name" placeholder="Details" list="detail_autofill"
-                            type="text"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <label for="room_put">Room</label>
-                        <input id="room_put" name="room_name" list="room_autofill" type="text">
-                        <datalist id="room_autofill">
-                        </datalist>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <label for="type_put">Type</label>
-                        <input id="type_put" name="type_name" list="type_autofill" type="text">
-                        <datalist id="type_autofill">
-                        </datalist>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <label for="course_code_put">Code</label>
-                        <input id="course_code_put" name="course_code_name" list="course_code_autofill" type="text">
-                        <datalist id="course_code_autofill">
-                        </datalist>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <label for="Lecture_put">Lecturer</label>
-                        <input id="Lecture_put" name="Lecture_name" placeholder="Lecturer" list="Lecture_autofill"
-                            type="text">
-                        <datalist id="Lecture_autofill">
-                        </datalist>
+                        <textarea id="detail_put" name="detail_name" placeholder="Details" type="text"></textarea>
                     </td>
                 </tr>
             </table>

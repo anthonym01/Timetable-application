@@ -63,8 +63,6 @@ function body_menu() {
 function textboxmenu() {
 
     document.getElementById('name_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
-    document.getElementById('course_code_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
-    document.getElementById('Lecture_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('wallpaper_pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('detail_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
@@ -571,7 +569,7 @@ let table = {
             let sub_tab = document.createElement("table");
             let name_tab_row = document.createElement("tr");
             let name_tab_content = document.createElement("th");
-            name_tab_content.classList="nowrap"
+            name_tab_content.classList = "nowrap"
             name_tab_content.innerHTML = config.data.table1_db[index].name;
             //name_tab_content.setAttribute("colspan", 2);
             name_tab_row.appendChild(name_tab_content);
@@ -579,7 +577,7 @@ let table = {
             doot.appendChild(sub_tab);
             let time_tab_row = document.createElement("tr");
             let time_tab = document.createElement("td");
-            time_tab.classList="nowrap"
+            time_tab.classList = "nowrap"
             //time_tab.setAttribute("colspan", 2);
             time_tab.innerHTML = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
             time_tab_row.appendChild(time_tab);
@@ -726,25 +724,10 @@ let table = {
                         default:
                             console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
                     }
-                    if (config.data.table1_db[index].room != undefined) {
-                        document.getElementById('room_cell').innerText = config.data.table1_db[index].room
+                    if (config.data.table1_db[index].detail != undefined) {
+                        document.getElementById('detail_cell').innerText = config.data.table1_db[index].detail;
                     } else {
-                        document.getElementById('room_cell').innerText = "unknown"
-                    }
-                    if (config.data.table1_db[index].Lecturer != undefined) {
-                        document.getElementById('Lecturer_cell').innerText = config.data.table1_db[index].Lecturer
-                    } else {
-                        document.getElementById('Lecturer_cell').innerText = "unknown"
-                    }
-                    if (config.data.table1_db[index].type != undefined) {
-                        document.getElementById('type_cell').innerText = config.data.table1_db[index].type
-                    } else {
-                        document.getElementById('type_cell').innerText = "unknown"
-                    }
-                    if (config.data.table1_db[index].course_code != undefined) {
-                        document.getElementById('coursecode_cell').innerText = config.data.table1_db[index].course_code
-                    } else {
-                        document.getElementById('coursecode_cell').innerText = "unknown"
+                        document.getElementById('detail_cell').innerText = "No details"
                     }
                     document.getElementById('time_cell').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
                     document.getElementById('fullscreen_tile').classList = "fullscreen_tile_active"
@@ -1768,10 +1751,6 @@ let manage = {
         document.getElementById('name_autofill').innerHTML = ""
         for (i = 0; i < config.data.table1_db.length; i++) {
             autofill_name(i)
-            autofill_room(i)
-            autofill_type(i)
-            autofill_course_code(i)
-            autofill_Lecture(i)
         }
 
         function autofill_name(i) {
@@ -1780,30 +1759,6 @@ let manage = {
             document.getElementById('name_autofill').appendChild(option);
         }
 
-        function autofill_room(i) {
-            var option = document.createElement('option');
-            option.value = config.data.table1_db[i].room;
-            document.getElementById('room_autofill').appendChild(option);
-        }
-
-        function autofill_type(i) {
-            var option = document.createElement('option');
-            option.value = config.data.table1_db[i].type;
-            document.getElementById('type_autofill').appendChild(option);
-        }
-
-        function autofill_course_code(i) {
-
-            var option = document.createElement('option');
-            option.value = config.data.table1_db[i].course_code;
-            document.getElementById('course_code_autofill').appendChild(option);
-        }
-
-        function autofill_Lecture(i) {
-            var option = document.createElement('option');
-            option.value = config.data.table1_db[i].Lecturer;
-            document.getElementById('Lecture_autofill').appendChild(option);
-        }
     },
 
     render_tables: function () {
@@ -2376,11 +2331,8 @@ let manage = {
             }
         },
         clear: function () { //clear the input and remove the input screen
-            console.log('Dialogue clear called');
-            document.getElementById('course_code_put').value = "";
-            document.getElementById('Lecture_put').value = "";
-            document.getElementById('type_put').value = "";
-            document.getElementById('room_put').value = "";
+            console.log('Dialogue clear called')
+            document.getElementById('detail_put').value = "";
             document.getElementById('name_put').value = "";
             document.getElementById('start_time_put').value = "";
             document.getElementById('end_time_put').value = "";
@@ -2651,7 +2603,7 @@ let UI = {
 
         document.getElementById('maximize_btn').addEventListener('click', UI.minimize_maximize)
 
-        document.getElementById('minimize_btn').addEventListener('click', function () { main.minmize_main_window })
+        document.getElementById('minimize_btn').addEventListener('click', function () { main.minmize_main_window() })
 
         document.getElementById('always_on_top_btn').addEventListener('click', UI.toggle_alwaysontop)
 
@@ -2923,48 +2875,6 @@ let UI = {
                         config.data.colorpallet = 210;
                 }
             }
-        },
-        notification: {
-            set_1: function () {
-                console.warn('Notification type 1 selected');
-                config.data.notification_type = 1
-                config.save();
-                notify.new('Notifications', 'Notification type 1 selected');
-                document.getElementById('notification_pallet1').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-            },
-            set_2: function () {
-                console.warn('Notification type 2 selected');
-                config.data.notification_type = 2
-                config.save();
-                notify.new('Notifications', 'Notification type 2 selected');
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-            },
-            set_3: function () {
-                console.warn('Notification type 3 selected');
-                config.data.notification_type = 3
-                config.save();
-                notify.new('Notifications', 'Notification type 3 selected');
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-            },
-            set_4: function () {
-                console.warn('Notification type 4 selected');
-                config.data.notification_type = 4
-                config.save();
-                notify.new('Notifications', 'Notification type 4 selected');
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet_active"
-            },
         },
         hilight: {
             flip: function () {
