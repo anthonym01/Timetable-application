@@ -63,12 +63,11 @@ function body_menu() {
 function textboxmenu() {
 
     document.getElementById('name_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
-    document.getElementById('room_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
-    document.getElementById('type_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('course_code_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('Lecture_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('wallpaper_pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    document.getElementById('detail_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
 
     function popupmenu(event) {
         event.preventDefault()
@@ -480,6 +479,14 @@ let table = {
 
         config.properties.max = 0
         config.properties.min = 24
+        config.properties.monday = false
+        config.properties.tuesday = false
+        config.properties.wednsday = false
+        config.properties.thursday = false
+        config.properties.friday = false
+        config.properties.saturday = false
+        config.properties.sunday = false
+
         var i = 0;
         if (config.data.table1_db[i] == null || undefined) {
             //show first time setup screen
@@ -564,71 +571,30 @@ let table = {
             let sub_tab = document.createElement("table");
             let name_tab_row = document.createElement("tr");
             let name_tab_content = document.createElement("th");
+            name_tab_content.classList="nowrap"
             name_tab_content.innerHTML = config.data.table1_db[index].name;
-            name_tab_content.setAttribute("colspan", 2);
+            //name_tab_content.setAttribute("colspan", 2);
             name_tab_row.appendChild(name_tab_content);
             sub_tab.appendChild(name_tab_row);
             doot.appendChild(sub_tab);
-            if (config.data.table1_db[index].room != "" && config.data.table1_db[index].room != undefined) {
-                let room_tab_row = document.createElement("tr");
-                let room_tab_head = document.createElement("td");
-                let room_tab_content = document.createElement("td");
-                room_tab_head.setAttribute("class", "lefter");
-                room_tab_content.setAttribute("class", "righter");
-                room_tab_head.innerHTML = 'Room : ';
-                room_tab_content.innerHTML = config.data.table1_db[index].room;
-                room_tab_row.appendChild(room_tab_head);
-                room_tab_row.appendChild(room_tab_content);
-                sub_tab.appendChild(room_tab_row);
-                doot.appendChild(sub_tab);
-            }
-            if (config.data.table1_db[index].course_code != "" && config.data.table1_db[index].course_code != undefined) {
-                let course_code_tab_row = document.createElement("tr");
-                let course_code_tab_head = document.createElement("td");
-                let course_code_tab_content = document.createElement("td");
-                course_code_tab_head.setAttribute("class", "lefter");
-                course_code_tab_content.setAttribute("class", "righter");
-                course_code_tab_head.innerHTML = 'Code : ';
-                course_code_tab_content.innerHTML = config.data.table1_db[index].course_code;
-                course_code_tab_row.appendChild(course_code_tab_head);
-                course_code_tab_row.appendChild(course_code_tab_content);
-                sub_tab.appendChild(course_code_tab_row);
-                doot.appendChild(sub_tab);
-            }
-            if (config.data.table1_db[index].Lecturer != "" && config.data.table1_db[index].Lecturer != undefined) {
-                let Lecturer_tab_row = document.createElement("tr");
-                let Lecturer_tab_head = document.createElement("td");
-                let Lecturer_tab_content = document.createElement("td");
-                Lecturer_tab_head.setAttribute("class", "lefter");
-                Lecturer_tab_content.setAttribute("class", "righter");
-                Lecturer_tab_head.innerHTML = 'Lecturer : ';
-                Lecturer_tab_content.innerHTML = config.data.table1_db[index].Lecturer;
-                Lecturer_tab_row.appendChild(Lecturer_tab_head);
-                Lecturer_tab_row.appendChild(Lecturer_tab_content);
-                sub_tab.appendChild(Lecturer_tab_row);
-                doot.appendChild(sub_tab);
-            }
-            if (config.data.table1_db[index].type != "" && config.data.table1_db[index].type != undefined) {
-                let type_tab_row = document.createElement("tr");
-                let type_tab_head = document.createElement("td");
-                let type_tab_content = document.createElement("td");
-                type_tab_head.setAttribute("class", "lefter");
-                type_tab_content.setAttribute("class", "righter");
-                type_tab_head.innerHTML = 'Type : ';
-                type_tab_content.innerHTML = config.data.table1_db[index].type;
-                type_tab_row.appendChild(type_tab_head);
-                type_tab_row.appendChild(type_tab_content);
-                sub_tab.appendChild(type_tab_row);
-                doot.appendChild(sub_tab);
-            }
             let time_tab_row = document.createElement("tr");
             let time_tab = document.createElement("td");
-            time_tab.setAttribute("colspan", 2);
+            time_tab.classList="nowrap"
+            //time_tab.setAttribute("colspan", 2);
             time_tab.innerHTML = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
             time_tab_row.appendChild(time_tab);
             sub_tab.appendChild(time_tab_row);
             doot.appendChild(sub_tab);
             tempblock.appendChild(doot);
+            if (config.data.table1_db[index].detail != "" && config.data.table1_db[index].detail != undefined) {
+                let detail_row = document.createElement("tr");
+                let detail_content = document.createElement("td");
+                //detail_content.setAttribute("colspan", 2);
+                detail_content.innerText = config.data.table1_db[index].detail;
+                detail_row.appendChild(detail_content);
+                sub_tab.appendChild(detail_row);
+                doot.appendChild(sub_tab);
+            }
 
             //Decide where it does
             let starthraw = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
@@ -2300,9 +2266,7 @@ let manage = {
             document.getElementById('sat_put').value = config.data.table1_db[index].color.sat; //set color feild
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 50%),#ffffff)";
             document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + config.data.table1_db[index].color.hue + ", 100%, 50%)";
-            document.getElementById('course_code_put').value = config.data.table1_db[index].course_code; //set course code
-            document.getElementById('type_put').value = config.data.table1_db[index].type; //set room type
-            document.getElementById('room_put').value = config.data.table1_db[index].room; //set room feild
+            document.getElementById('detail_put').value = config.data.table1_db[index].detail; //set detail
             document.getElementById('name_put').value = config.data.table1_db[index].name; //Set Name feild
 
             //process time
@@ -2441,10 +2405,7 @@ let manage = {
                 show: true,
                 day: null,
                 name: null,
-                room: null,
-                course_code: null,
-                Lecturer: null,
-                type: null,
+                detail: null,
                 color: {
                     hue: null,
                     sat: null,
@@ -2471,16 +2432,7 @@ let manage = {
             config.data.previous_colors.push(tempentry.color);
             config.properties.colors_changed = true;
             //Course Code is not required and can be anything, even nothing
-            tempentry.course_code = document.getElementById('course_code_put').value;
-
-            //Lecturer can be anything
-            tempentry.Lecturer = document.getElementById('Lecture_put').value;
-
-            //type is not required and can be anything, even nothing
-            tempentry.type = document.getElementById('type_put').value;
-
-            //Room is not required and can be anything, even nothing
-            tempentry.room = document.getElementById('room_put').value;
+            tempentry.detail = document.getElementById('detail_put').value;
 
             //Get Name feild
             tempentry.name = document.getElementById('name_put').value;
@@ -2511,7 +2463,7 @@ let manage = {
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start > percentage_end) {
-                notify.new('E=MC<sup>2</sup>', 'Class cannot start after it ends');
+                notify.new('Event', 'Class cannot start after it ends');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
