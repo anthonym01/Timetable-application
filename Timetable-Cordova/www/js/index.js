@@ -7,6 +7,7 @@ var app = {// Application Constructor
         document.addEventListener("resume", this.onResume, false);
     },// deviceready Event Handler
     onDeviceReady: function () {//device ready event
+        maininitalizer()
         this.receivedEvent('deviceready');
         console.log('Device Ready...');
     },
@@ -38,20 +39,10 @@ var app = {// Application Constructor
     }
 }; app.initialize();
 
-window.addEventListener('load', function () { //window loads
-    setTimeout(() => {
-        if (typeof (device) != 'undefined') {//check device mode
-            if (device.platform == 'Android' || 'iOS') {//mobile
-                console.warn('Running on a mobile platform')
-            } else {
-                console.warn('Running on a Desktop platform')
-            }
-        } else {
-            console.error('Device plugin broke')
-        }
-    }, 500)
-
-    //const loader = document.getElementById('loadprogress');
+function maininitalizer() {
+    console.log(cordova.platformId)
+    console.log(cordova.file)
+    //console.log(window.resolveLocalFileSystemURL(cordova.file.applicationStorageDirectory))
 
     if (localStorage.getItem(config.configlocation)) {
         config.load()
@@ -67,14 +58,15 @@ window.addEventListener('load', function () { //window loads
     //loader.style.width = '100%'
     config.properties.startup = false
     setTimeout(() => {
-        UI.navigate.TABLE()
+        //UI.navigate.TABLE()
         console.log('Closing loading screen...')
+        table.hilight_engine_go_vroom()
+        table.clock.start_clock()
         //document.getElementById('Loading').style.display = 'none'
         /*navigator.splashscreen.hide();*/
 
     }, 50)
-
-})
+}
 
 /*  Config file handler    */
 let config = {
@@ -116,10 +108,6 @@ let config = {
                         { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },*/
         ],
         previous_colors: [],
-    },
-    baseconfig: {
-        use_alt_storage: false,
-        alt_location: "",
     },
     properties: {
         tempdata: false,
@@ -321,14 +309,41 @@ let table = {
     initialize: function () {
         console.log('Table initalization Begins');
         this.data_render(); //render data
-        setTimeout(() => {
-            table.hilight_engine_go_vroom();
-        }, 50);
+        config.properties.changed = false;
     },
     data_render: function () {
         console.log('Table render started')
         var i = 0;
-        if (config.data.table1_db[i] == null || undefined) {
+
+        //wjipe main cells
+        var jkx = document.querySelectorAll(".jkx")
+        for (i = 0; i < jkx.length; i++) {
+            jkx[i].innerHTML = ""
+            jkx[i].style.display = ""
+        }
+
+        document.getElementById('day0').style.display = '';
+        document.getElementById('day1').style.display = '';
+        document.getElementById('day2').style.display = '';
+        document.getElementById('day3').style.display = '';
+        document.getElementById('day4').style.display = '';
+        document.getElementById('day5').style.display = '';
+        document.getElementById('day6').style.display = '';
+        for (i = 0; i < 24; i++) {
+            document.getElementById('timerow_' + i).style.display = "";
+        }
+
+        config.properties.max = 0
+        config.properties.min = 24
+        config.properties.monday = false
+        config.properties.tuesday = false
+        config.properties.wednsday = false
+        config.properties.thursday = false
+        config.properties.friday = false
+        config.properties.saturday = false
+        config.properties.sunday = false
+
+        if (config.data.table1_db[0] == null || undefined) {
             //show first time setup screen
             notify.new('U new here?', 'To start off, click here to add some classes', function () {
                 UI.navigate.MANAGE()
@@ -408,71 +423,31 @@ let table = {
             let sub_tab = document.createElement("table");
             let name_tab_row = document.createElement("tr");
             let name_tab_content = document.createElement("th");
+            name_tab_content.classList = "nowrap"
             name_tab_content.innerHTML = config.data.table1_db[index].name;
-            name_tab_content.setAttribute("colspan", 2);
+            //name_tab_content.setAttribute("colspan", 2);
             name_tab_row.appendChild(name_tab_content);
             sub_tab.appendChild(name_tab_row);
             doot.appendChild(sub_tab);
-            if (config.data.table1_db[index].room != "" && config.data.table1_db[index].room != undefined) {
-                let room_tab_row = document.createElement("tr");
-                let room_tab_head = document.createElement("td");
-                let room_tab_content = document.createElement("td");
-                room_tab_head.setAttribute("class", "lefter");
-                room_tab_content.setAttribute("class", "righter");
-                room_tab_head.innerHTML = 'Room : ';
-                room_tab_content.innerHTML = config.data.table1_db[index].room;
-                room_tab_row.appendChild(room_tab_head);
-                room_tab_row.appendChild(room_tab_content);
-                sub_tab.appendChild(room_tab_row);
-                doot.appendChild(sub_tab);
-            }
-            if (config.data.table1_db[index].course_code != "" && config.data.table1_db[index].course_code != undefined) {
-                let course_code_tab_row = document.createElement("tr");
-                let course_code_tab_head = document.createElement("td");
-                let course_code_tab_content = document.createElement("td");
-                course_code_tab_head.setAttribute("class", "lefter");
-                course_code_tab_content.setAttribute("class", "righter");
-                course_code_tab_head.innerHTML = 'Code : ';
-                course_code_tab_content.innerHTML = config.data.table1_db[index].course_code;
-                course_code_tab_row.appendChild(course_code_tab_head);
-                course_code_tab_row.appendChild(course_code_tab_content);
-                sub_tab.appendChild(course_code_tab_row);
-                doot.appendChild(sub_tab);
-            }
-            if (config.data.table1_db[index].Lecturer != "" && config.data.table1_db[index].Lecturer != undefined) {
-                let Lecturer_tab_row = document.createElement("tr");
-                let Lecturer_tab_head = document.createElement("td");
-                let Lecturer_tab_content = document.createElement("td");
-                Lecturer_tab_head.setAttribute("class", "lefter");
-                Lecturer_tab_content.setAttribute("class", "righter");
-                Lecturer_tab_head.innerHTML = 'Lecturer : ';
-                Lecturer_tab_content.innerHTML = config.data.table1_db[index].Lecturer;
-                Lecturer_tab_row.appendChild(Lecturer_tab_head);
-                Lecturer_tab_row.appendChild(Lecturer_tab_content);
-                sub_tab.appendChild(Lecturer_tab_row);
-                doot.appendChild(sub_tab);
-            }
-            if (config.data.table1_db[index].type != "" && config.data.table1_db[index].type != undefined) {
-                let type_tab_row = document.createElement("tr");
-                let type_tab_head = document.createElement("td");
-                let type_tab_content = document.createElement("td");
-                type_tab_head.setAttribute("class", "lefter");
-                type_tab_content.setAttribute("class", "righter");
-                type_tab_head.innerHTML = 'Type : ';
-                type_tab_content.innerHTML = config.data.table1_db[index].type;
-                type_tab_row.appendChild(type_tab_head);
-                type_tab_row.appendChild(type_tab_content);
-                sub_tab.appendChild(type_tab_row);
-                doot.appendChild(sub_tab);
-            }
             let time_tab_row = document.createElement("tr");
             let time_tab = document.createElement("td");
-            time_tab.setAttribute("colspan", 2);
+            time_tab.classList = "nowrap"
+            //time_tab.setAttribute("colspan", 2);
             time_tab.innerHTML = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
             time_tab_row.appendChild(time_tab);
             sub_tab.appendChild(time_tab_row);
             doot.appendChild(sub_tab);
             tempblock.appendChild(doot);
+            if (config.data.table1_db[index].detail != "" && config.data.table1_db[index].detail != undefined) {
+                let detail_row = document.createElement("tr");
+                let detail_content = document.createElement("td");
+                //detail_content.setAttribute("colspan", 2);
+                detail_content.innerText = config.data.table1_db[index].detail;
+                detail_row.appendChild(detail_content);
+                sub_tab.appendChild(detail_row);
+                doot.appendChild(sub_tab);
+            }
+
 
             //Decide where it does
             let starthraw = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
@@ -603,25 +578,10 @@ let table = {
                         default:
                             console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
                     }
-                    if (config.data.table1_db[index].room != undefined) {
-                        document.getElementById('room_cell').innerText = config.data.table1_db[index].room
+                    if (config.data.table1_db[index].detail != undefined) {
+                        document.getElementById('detail_cell').innerText = config.data.table1_db[index].detail;
                     } else {
-                        document.getElementById('room_cell').innerText = "unknown"
-                    }
-                    if (config.data.table1_db[index].Lecturer != undefined) {
-                        document.getElementById('Lecturer_cell').innerText = config.data.table1_db[index].Lecturer
-                    } else {
-                        document.getElementById('Lecturer_cell').innerText = "unknown"
-                    }
-                    if (config.data.table1_db[index].type != undefined) {
-                        document.getElementById('type_cell').innerText = config.data.table1_db[index].type
-                    } else {
-                        document.getElementById('type_cell').innerText = "unknown"
-                    }
-                    if (config.data.table1_db[index].course_code != undefined) {
-                        document.getElementById('coursecode_cell').innerText = config.data.table1_db[index].course_code
-                    } else {
-                        document.getElementById('coursecode_cell').innerText = "unknown"
+                        document.getElementById('detail_cell').innerText = "No details"
                     }
                     document.getElementById('time_cell').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
                     document.getElementById('fullscreen_tile').classList = "fullscreen_tile_active"
@@ -815,7 +775,7 @@ let table = {
                 }
                 if (days == 0 || rows == 0) {
                     //Table is empty
-                    notify.new('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
+                    utility.toast('Table: ' + config.data.table_details[config.data.table_selected].purpose + ' is empty')
                 }
                 console.log('Table validated');
             }
@@ -1618,91 +1578,9 @@ let manage = {
             }
             i++
         }
-        //table manager actions
-        document.getElementById('tablemanger').addEventListener('click', function () {
-            if (config.properties.management == false) {
-                document.getElementById('tablemanger').classList = "tablemanger_active"
-                config.properties.management = true
-            } else {
-                config.properties.management = false
-                document.getElementById('tablemanger').classList = "tablemanger"
-            }
-        })
-        document.getElementById('manage_dataspace').addEventListener('click', function () {
-            if (config.properties.management == true) {
-                config.properties.management = false
-                document.getElementById('tablemanger').classList = "tablemanger"
-            }
-        })
-        document.getElementById('tablespace_render').addEventListener('click', function () {
-            event.stopPropagation() //Stop propogation to the dataspace
-        })
-
-        //Add new button
-        document.getElementById('new_class_button').addEventListener('click', function () {
-            manage.dialogue.open();
-            console.log('Add new class button clicked')
-        }) //add new btn listener
-
-        document.getElementById('cancel_btn').addEventListener('click', () => {
-            console.log('Cancel button clicked');
-            manage.dialogue.clear();
-            manage.dialogue.close();
-            config.properties.overwrite = null;
-        });
-        document.getElementById('save_btn').addEventListener('click', this.dialogue.save); //Save button
-        document.getElementById('savepluss_btn').addEventListener('click', this.dialogue.saveplus);
-        document.getElementById('delete_btn').addEventListener('click', this.dialogue.call_delete);
-        document.getElementById('yes_btn').addEventListener('click', function () { // Delete yes button
-            console.log('Delete Confirmation called');
-            config.data.table1_db[config.properties.overwrite].deleted = true; //pseudo delete function
-            manage.dialogue.clear();
-            manage.dialogue.close();
-            config.properties.changed = true;
-            config.save();
-            document.getElementById('delete_confirm_pannel').style.display = 'none';
-            manage.render_list();
-        });
-
-        document.getElementById('no_del_btn').addEventListener('click', function () { // Delete No button
-            console.log('Delete denial called');
-            document.getElementById('delete_confirm_pannel').style.display = 'none';
-        });
-        document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
-
         //Initalize day_put selector
         document.getElementById('day_put').value = "1";
         document.getElementById('day_put_text').innerText = "Monday"
-        document.getElementById('day_put').addEventListener('change', function () {
-            /* Switches dates on change */
-            console.log('Day put changed');
-            let tmp = document.getElementById('day_put').value;
-            switch (tmp) {
-                case "1":
-                    document.getElementById('day_put_text').innerText = "Monday";
-                    break;
-                case "2":
-                    document.getElementById('day_put_text').innerText = "Tuesday";
-                    break;
-                case "3":
-                    document.getElementById('day_put_text').innerText = "Wednsday";
-                    break;
-                case "4":
-                    document.getElementById('day_put_text').innerText = "Thursday";
-                    break;
-                case "5":
-                    document.getElementById('day_put_text').innerText = "Friday";
-                    break;
-                case "6":
-                    document.getElementById('day_put_text').innerText = "Saturday";
-                    break;
-                case "7":
-                    document.getElementById('day_put_text').innerText = "Sunday";
-                    break;
-                default:
-                    console.error('Blyat');
-            }
-        });
 
         //Initalize Table put selector
         i = 0;
@@ -1753,187 +1631,14 @@ let manage = {
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
         }
 
-        //name autofill
-        var lecture_autofill, room_autofill, type_autofill, course_autofill; //save for later
-        document.getElementById('name_put').addEventListener('keydown', function () {
-            console.log('Name autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('name_put').value == "") {
-                    //clear autofill
-                    document.getElementById('name_autofill').innerHTML = "";
-                    document.getElementById('name_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('name_autofill').innerHTML = "";
-                    document.getElementById('name_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].name.indexOf(document.getElementById('name_put').value.toString()) != -1) {
-                            autofill_name(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
-
-        function autofill_name(i) {
-
-            var fillbar = document.createElement('div');
-            var name_autofill = config.data.table1_db[i].name;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].name;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('name_autofill').classList = "autofill_container"
-                document.getElementById('name_put').value = name_autofill;
-            });
-            document.getElementById('name_autofill').appendChild(fillbar);
-        }
-
-        //room autofill
-        document.getElementById('room_put').addEventListener('keydown', function () {
-            console.log('room autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('room_put').value == "") {
-                    //clear autofill
-                    document.getElementById('room_autofill').innerHTML = "";
-                    document.getElementById('room_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('room_autofill').innerHTML = "";
-                    document.getElementById('room_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].room.indexOf(document.getElementById('room_put').value.toString()) != -1) {
-                            autofill_room(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
-
-        function autofill_room(i) {
-            var fillbar = document.createElement('div');
-            var room_autofill = config.data.table1_db[i].room;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].room;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('room_autofill').classList = "autofill_container"
-                document.getElementById('room_put').value = room_autofill;
-            });
-            document.getElementById('room_autofill').appendChild(fillbar);
-        }
-
-        //type autofill
-        document.getElementById('type_put').addEventListener('keydown', function () {
-            console.log('type autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('type_put').value == "") {
-                    //clear autofill
-                    document.getElementById('type_autofill').innerHTML = "";
-                    document.getElementById('type_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('type_autofill').innerHTML = "";
-                    document.getElementById('type_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].type.indexOf(document.getElementById('type_put').value.toString()) != -1) {
-                            autofill_type(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
-
-        function autofill_type(i) {
-            var fillbar = document.createElement('div');
-            var type_autofill = config.data.table1_db[i].type;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].type;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('type_autofill').classList = "autofill_container"
-                document.getElementById('type_put').value = type_autofill;
-            });
-            document.getElementById('type_autofill').appendChild(fillbar);
-        }
-
-        //course_code autofill
-        document.getElementById('course_code_put').addEventListener('keydown', function () {
-            console.log('course_code autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('course_code_put').value == "") {
-                    //clear autofill
-                    document.getElementById('course_code_autofill').innerHTML = "";
-                    document.getElementById('course_code_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('course_code_autofill').innerHTML = "";
-                    document.getElementById('course_code_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].course_code.indexOf(document.getElementById('course_code_put').value.toString()) != -1) {
-                            autofill_course_code(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
-
-        function autofill_course_code(i) {
-            var fillbar = document.createElement('div');
-            var course_code_autofill = config.data.table1_db[i].course_code;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].course_code;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('course_code_autofill').classList = "autofill_container"
-                document.getElementById('course_code_put').value = course_code_autofill;
-            });
-            document.getElementById('course_code_autofill').appendChild(fillbar);
-        }
-
-        //Lecture autofill
-        document.getElementById('Lecture_put').addEventListener('keydown', function () {
-            console.log('Lecture autofill fired')
-            setTimeout(() => {
-                if (document.getElementById('Lecture_put').value == "") {
-                    //clear autofill
-                    document.getElementById('Lecture_autofill').innerHTML = "";
-                    document.getElementById('Lecture_autofill').classList = "autofill_container"
-                } else {
-                    document.getElementById('Lecture_autofill').innerHTML = "";
-                    document.getElementById('Lecture_autofill').classList = "autofill_container_active"
-                    for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].Lecturer.indexOf(document.getElementById('Lecture_put').value.toString()) != -1) {
-                            autofill_Lecture(i)
-                        } else {
-                            //nothing found
-                        }
-                    }
-                }
-
-            }, 200)
-        })
-
-        function autofill_Lecture(i) {
-            var fillbar = document.createElement('div');
-            var Lecture_autofill = config.data.table1_db[i].Lecturer;
-            fillbar.setAttribute('class', 'fillbar');
-            fillbar.innerHTML = config.data.table1_db[i].Lecturer;
-            fillbar.addEventListener('click', function () {
-                document.getElementById('Lecture_autofill').classList = "autofill_container"
-                document.getElementById('Lecture_put').value = Lecture_autofill;
-            });
-            document.getElementById('Lecture_autofill').appendChild(fillbar);
-        }
     },
 
     render_tables: function () {
         console.log('Table management render started');
         clear();
+
+
+
         let i = 0;
         while (config.data.table_details[i] != undefined || null) {
             if (config.data.table_details[i].deleted != true) {
@@ -2115,7 +1820,7 @@ let manage = {
             console.log('The table database is empty,manager will show first time setup');
         } else {
             //Construct the data
-            if (config.data.table_details[0] == null) { //there are no tables, everyone is homeless render them all
+            if (config.data.table_details[0] == null) { //there are no tables or everyone is homeless render them all
                 while (config.data.table1_db[i] != null || undefined) { //render selected tables data
                     console.log('Data run on index :', i);
                     build_bar_db1(i);
@@ -2288,8 +1993,9 @@ let manage = {
                     manage.dialogue.edit(index)
                 }); //Edit btn
                 deletebtn.addEventListener('click', function () {
-                    manage.dialogue.edit(index);
-                    manage.dialogue.call_delete()
+                    config.data.table1_db[index].deleted = true
+                    config.save()
+                    manage.render_list()
                 })
 
             }
@@ -2353,9 +2059,7 @@ let manage = {
             document.getElementById('sat_put').value = config.data.table1_db[index].color.sat; //set color feild
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 50%),#ffffff)";
             document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + config.data.table1_db[index].color.hue + ", 100%, 50%)";
-            document.getElementById('course_code_put').value = config.data.table1_db[index].course_code; //set course code
-            document.getElementById('type_put').value = config.data.table1_db[index].type; //set room type
-            document.getElementById('room_put').value = config.data.table1_db[index].room; //set room feild
+            document.getElementById('detail_put').value = config.data.table1_db[index].detail; //set detail
             document.getElementById('name_put').value = config.data.table1_db[index].name; //Set Name feild
 
             //process time
@@ -2466,10 +2170,7 @@ let manage = {
         },
         clear: function () { //clear the input and remove the input screen
             console.log('Dialogue clear called');
-            document.getElementById('course_code_put').value = "";
-            document.getElementById('Lecture_put').value = "";
-            document.getElementById('type_put').value = "";
-            document.getElementById('room_put').value = "";
+            document.getElementById('detail_put').value = "";
             document.getElementById('name_put').value = "";
             document.getElementById('start_time_put').value = "";
             document.getElementById('end_time_put').value = "";
@@ -2494,10 +2195,7 @@ let manage = {
                 show: true,
                 day: null,
                 name: null,
-                room: null,
-                course_code: null,
-                Lecturer: null,
-                type: null,
+                detail: null,
                 color: {
                     hue: null,
                     sat: null,
@@ -2524,23 +2222,14 @@ let manage = {
             config.data.previous_colors.push(tempentry.color);
             config.properties.colors_changed = true;
             //Course Code is not required and can be anything, even nothing
-            tempentry.course_code = document.getElementById('course_code_put').value;
-
-            //Lecturer can be anything
-            tempentry.Lecturer = document.getElementById('Lecture_put').value;
-
-            //type is not required and can be anything, even nothing
-            tempentry.type = document.getElementById('type_put').value;
-
-            //Room is not required and can be anything, even nothing
-            tempentry.room = document.getElementById('room_put').value;
+            tempentry.detail = document.getElementById('detail_put').value;
 
             //Get Name feild
             tempentry.name = document.getElementById('name_put').value;
             if (tempentry.name == "" || undefined || null) {
                 entryisvalid = false;
                 document.getElementById('name_put').style.border = "0.3vh solid #ff0000";
-                utility.toast('Please Enter a name');
+                utility.toast('Cannot save without A name')
             } else {
                 document.getElementById('name_put').style.border = "";
                 console.log('Name detected: ', tempentry.name);
@@ -2552,11 +2241,11 @@ let manage = {
             let percentage_start = Number((start_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (start_time_raw.slice(3) / 60));
             let percentage_end = Number((end_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (end_time_raw.slice(3) / 60));
             if (start_time_raw == "" || start_time_raw == null || start_time_raw == undefined) {
-                utility.toast('Start time cannot be empty');
+                utility.toast('Need to set a start time')
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (end_time_raw == "" || end_time_raw == null || end_time_raw == undefined) {
-                utility.toast('End time cannot be empty');
+                utility.toast('Need to set an end time')
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start == percentage_end) {
@@ -2564,7 +2253,7 @@ let manage = {
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start > percentage_end) {
-                utility.toast('Class cannot start after it ends');
+                utility.toast('Event cant start after it ends')
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
@@ -2589,7 +2278,7 @@ let manage = {
                     console.log('Overwrite on index: ', config.properties.overwrite);
                 }
                 config.save();
-                manage.initalize();
+                manage.initalize()
                 if (config.properties.called_from_plus) {
                     config.properties.called_from_plus = false;
                 } else {
@@ -2605,107 +2294,145 @@ let manage = {
             config.properties.called_from_plus = true;
             let entryisvalid = manage.dialogue.save();
             if (entryisvalid) {
-                notify.new('Confirmation', document.getElementById('name_put').value + ' was saved, U may now add another');
+                utility.toast('Confirmation ', document.getElementById('name_put').value + ' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
                 manage.dialogue.open();
             }
         },
-        call_delete: function () {
-            console.log('Delete pseudo function called');
-            //time processing
-            let startmeridian = 'a.m.';
-            let starthr = 0;
-            let startminute = Number(config.data.table1_db[config.properties.overwrite].start % 1 * 60).toFixed(0);
-            if (startminute == 0) {
-                startminute = '00'
-            }
-            let endmeridian = 'a.m.';
-            let endhr = 0;
-            let endminute = Number(config.data.table1_db[config.properties.overwrite].end % 1 * 60).toFixed(0);
-            if (endminute == 0) {
-                endminute = '00'
-            }
-
-            if (config.data.table1_db[config.properties.overwrite].start > 12) {
-                startmeridian = 'p.m.'; //morning or evening
-                starthr = Number(config.data.table1_db[config.properties.overwrite].start - 12) - config.data.table1_db[config.properties.overwrite].start % 1; //removes remainder
-            } else {
-                starthr = Number(config.data.table1_db[config.properties.overwrite].start) - config.data.table1_db[config.properties.overwrite].start % 1; //removes remainder
-            }
-            if (config.data.table1_db[config.properties.overwrite].end > 12) {
-                endmeridian = 'p.m.'; //morning or evening
-                endhr = Number(config.data.table1_db[config.properties.overwrite].end - 12) - config.data.table1_db[config.properties.overwrite].end % 1; //removes remainder
-            } else {
-                endhr = Number(config.data.table1_db[config.properties.overwrite].end) - config.data.table1_db[config.properties.overwrite].end % 1; //removes remainder
-            }
-            if (starthr == 0) {
-                starthr = 12
-            }
-            if (endhr == 0) {
-                endhr = 12
-            }
-
-            document.getElementById('title_cellp').innerText = config.data.table1_db[config.properties.overwrite].name;
-            switch (config.data.table1_db[config.properties.overwrite].day) {
-                case 1:
-                    document.getElementById('day_cellp').innerText = "Monday";
-                    break;
-                case 2:
-                    document.getElementById('day_cellp').innerText = "Tuesday";
-                    break;
-                case 3:
-                    document.getElementById('day_cellp').innerText = "Wednesday";
-                    break;
-                case 4:
-                    document.getElementById('day_cellp').innerText = "Thursday";
-                    break;
-                case 5:
-                    document.getElementById('day_cellp').innerText = "Friday";
-                    break;
-                case 6:
-                    document.getElementById('day_cellp').innerText = "Saturday";
-                    break;
-                case 7:
-                    document.getElementById('day_cellp').innerText = "Sunday";
-                    break;
-                default:
-                    console.log('Date error on config.properties.overwrite: ', config.properties.overwrite, ' Returned value: ', config.data.table1_db[config.properties.overwrite].day);
-            }
-            if (config.data.table1_db[config.properties.overwrite].room != undefined) {
-                document.getElementById('room_cellp').innerText = config.data.table1_db[config.properties.overwrite].room
-            } else {
-                document.getElementById('room_cellp').innerText = "unknown"
-            }
-            if (config.data.table1_db[config.properties.overwrite].Lecturer != undefined) {
-                document.getElementById('Lecturer_cellp').innerText = config.data.table1_db[config.properties.overwrite].Lecturer
-            } else {
-                document.getElementById('Lecturer_cellp').innerText = "unknown"
-            }
-            if (config.data.table1_db[config.properties.overwrite].type != undefined) {
-                document.getElementById('type_cellp').innerText = config.data.table1_db[config.properties.overwrite].type
-            } else {
-                document.getElementById('type_cellp').innerText = "unknown"
-            }
-            if (config.data.table1_db[config.properties.overwrite].course_code != undefined) {
-                document.getElementById('coursecode_cellp').innerText = config.data.table1_db[config.properties.overwrite].course_code
-            } else {
-                document.getElementById('coursecode_cellp').innerText = "unknown"
-            }
-            document.getElementById('time_cellp').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
-            document.getElementById('delete_confirm_pannel').style.display = 'block';
-        }
     },
-    batch_delete: {
-        detect: function () {
-            //Query select all the bar ids or mark them durring their creation
-        },
-    }
+
 }
 
 /*  UI trickery */
 let UI = {
     initalize: function () {
         console.log('UI Initalize');
+        //name autofill
+        document.getElementById('name_put').addEventListener('keydown', function () {
+            console.log('Name autofill fired')
+            setTimeout(() => {
+                if (document.getElementById('name_put').value == "") {
+                    //clear autofill
+                    document.getElementById('name_autofill').innerHTML = "";
+                    document.getElementById('name_autofill').classList = "autofill_container"
+                } else {
+                    document.getElementById('name_autofill').innerHTML = "";
+                    document.getElementById('name_autofill').classList = "autofill_container_active"
+                    for (i = 0; i < config.data.table1_db.length; i++) {
+                        if (config.data.table1_db[i].name.indexOf(document.getElementById('name_put').value.toString()) != -1) {
+                            autofill_name(i)
+                        } else {
+                            //nothing found
+                        }
+                    }
+                }
+
+            }, 200)
+        })
+
+        function autofill_name(i) {
+
+            var fillbar = document.createElement('div');
+            var name_autofill = config.data.table1_db[i].name;
+            fillbar.setAttribute('class', 'fillbar');
+            fillbar.innerHTML = config.data.table1_db[i].name;
+            fillbar.addEventListener('click', function () {
+                document.getElementById('name_autofill').classList = "autofill_container"
+                document.getElementById('name_put').value = name_autofill;
+            });
+            document.getElementById('name_autofill').appendChild(fillbar);
+        }
+
+        document.getElementById('day_put').addEventListener('change', function () {
+            /* Switches dates on change */
+            console.log('Day put changed');
+            let tmp = document.getElementById('day_put').value;
+            switch (tmp) {
+                case "1":
+                    document.getElementById('day_put_text').innerText = "Monday";
+                    break;
+                case "2":
+                    document.getElementById('day_put_text').innerText = "Tuesday";
+                    break;
+                case "3":
+                    document.getElementById('day_put_text').innerText = "Wednsday";
+                    break;
+                case "4":
+                    document.getElementById('day_put_text').innerText = "Thursday";
+                    break;
+                case "5":
+                    document.getElementById('day_put_text').innerText = "Friday";
+                    break;
+                case "6":
+                    document.getElementById('day_put_text').innerText = "Saturday";
+                    break;
+                case "7":
+                    document.getElementById('day_put_text').innerText = "Sunday";
+                    break;
+                default:
+                    console.error('Blyat');
+            }
+        });
+        //table manager actions
+        document.getElementById('tablemanger').addEventListener('click', function () {
+            if (config.properties.management == false) {
+                document.getElementById('tablemanger').classList = "tablemanger_active"
+                config.properties.management = true
+            } else {
+                config.properties.management = false
+                document.getElementById('tablemanger').classList = "tablemanger"
+            }
+        })
+        document.getElementById('manage_dataspace').addEventListener('click', function () {
+            if (config.properties.management == true) {
+                config.properties.management = false
+                document.getElementById('tablemanger').classList = "tablemanger"
+            }
+        })
+        document.getElementById('tablespace_render').addEventListener('click', function () {
+            event.stopPropagation() //Stop propogation to the dataspace
+        })
+
+        //Add new button
+        document.getElementById('new_class_button').addEventListener('click', function () {
+            manage.dialogue.open();
+            console.log('Add new class button clicked')
+        }) //add new btn listener
+
+        document.getElementById('cancel_btn').addEventListener('click', () => {
+            console.log('Cancel button clicked');
+            manage.dialogue.clear();
+            manage.dialogue.close();
+            config.properties.overwrite = null;
+        });
+        document.getElementById('save_btn').addEventListener('click', manage.dialogue.save); //Save button
+        document.getElementById('savepluss_btn').addEventListener('click', manage.dialogue.saveplus);
+        document.getElementById('delete_btn').addEventListener('click', function () {
+            console.log('Delete called');
+            config.data.table1_db[config.properties.overwrite].deleted = true;
+            config.properties.changed = true
+            manage.dialogue.close();
+            manage.dialogue.clear();
+            manage.render_list();
+        });
+        document.getElementById('yes_btn').addEventListener('click', function () { // Delete yes button
+            console.log('Delete Confirmation called');
+            config.data.table1_db[config.properties.overwrite].deleted = true; //pseudo delete function
+            manage.dialogue.clear();
+            manage.dialogue.close();
+            config.properties.changed = true;
+            config.save();
+            document.getElementById('delete_confirm_pannel').style.display = 'none';
+            manage.render_list();
+        });
+
+        document.getElementById('no_del_btn').addEventListener('click', function () { // Delete No button
+            console.log('Delete denial called');
+            document.getElementById('delete_confirm_pannel').style.display = 'none';
+        });
+        document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
+
+
         setTimeout(() => {
             window.plugins.screensize.get(function (result) {//Check device screen size
                 console.log(result);
@@ -2733,41 +2460,6 @@ let UI = {
         document.getElementById('action_bar').addEventListener('mouseout', function () {
             document.getElementById('action_bar').className = "Action_bar";
         })
-        //select notification handlers
-        document.getElementById('notification_style1').addEventListener('click', this.setting.notification.set_1)
-        document.getElementById('notification_style2').addEventListener('click', this.setting.notification.set_2)
-        document.getElementById('notification_style3').addEventListener('click', this.setting.notification.set_3)
-        document.getElementById('notification_style4').addEventListener('click', this.setting.notification.set_4)
-        switch (config.data.notification_type) {
-            case 1:
-                document.getElementById('notification_pallet1').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-                break;
-            case 2:
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-                break;
-            case 3:
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-                break;
-            case 4:
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet_active"
-                break;
-            default:
-
-                break;
-        }
-
         //Proto navigation
         document.getElementById('table_btn').addEventListener('touchstart', UI.navigate.TABLE)
         document.getElementById('manage_btn').addEventListener('touchstart', UI.navigate.MANAGE)
@@ -2879,22 +2571,21 @@ let UI = {
 
             document.getElementById('Loading').style.display = 'none'
             if (config.properties.changed) {
-                window.location.reload();
+                table.initialize();
                 /*table.data_render();
                 setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
-            } else {
-                if (config.properties.clocking == false || undefined) {
-                    table.clock.start_clock();
-                }
-                config.properties.view = "table";
-                document.getElementById('table1').style.display = 'block';
-                document.getElementById('manage_view').style.display = 'none';
-                document.getElementById('setting_view').style.display = 'none';
-                document.getElementById('setting_btn_icon').style.transform = 'rotate(0deg)'; //Rotate the button
-                document.getElementById('setting_btn').className = "menubtn";
-                document.getElementById('manage_btn').className = "menubtn";
-                document.getElementById('table_btn').className = "menubtn_active";
             }
+            if (config.properties.clocking == false || undefined) {
+                table.clock.start_clock();
+            }
+            config.properties.view = "table";
+            document.getElementById('table1').style.display = 'block';
+            document.getElementById('manage_view').style.display = 'none';
+            document.getElementById('setting_view').style.display = 'none';
+            document.getElementById('setting_btn_icon').style.transform = 'rotate(0deg)'; //Rotate the button
+            document.getElementById('setting_btn').className = "menubtn";
+            document.getElementById('manage_btn').className = "menubtn";
+            document.getElementById('table_btn').className = "menubtn_active";
             document.getElementById('action_bar').className = "Action_bar";
         },
         MANAGE: function () {
@@ -3074,61 +2765,19 @@ let UI = {
                 }
             }
         },
-        notification: {
-            set_1: function () {
-                console.warn('Notification type 1 selected');
-                config.data.notification_type = 1
-                config.save();
-                notify.new('Notifications', 'Notification type 1 selected');
-                document.getElementById('notification_pallet1').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-            },
-            set_2: function () {
-                console.warn('Notification type 2 selected');
-                config.data.notification_type = 2
-                config.save();
-                notify.new('Notifications', 'Notification type 2 selected');
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-            },
-            set_3: function () {
-                console.warn('Notification type 3 selected');
-                config.data.notification_type = 3
-                config.save();
-                notify.new('Notifications', 'Notification type 3 selected');
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet_active"
-                document.getElementById('notification_pallet4').classList = "notification_pallet"
-            },
-            set_4: function () {
-                console.warn('Notification type 4 selected');
-                config.data.notification_type = 4
-                config.save();
-                notify.new('Notifications', 'Notification type 4 selected');
-                document.getElementById('notification_pallet1').classList = "notification_pallet"
-                document.getElementById('notification_pallet2').classList = "notification_pallet"
-                document.getElementById('notification_pallet3').classList = "notification_pallet"
-                document.getElementById('notification_pallet4').classList = "notification_pallet_active"
-            },
-        },
         hilight: {
             flip: function () {
                 console.log('switch triggered');
                 if (config.data.hilight_engine) {
                     //turn off the switch
                     config.data.hilight_engine = false;
-                    notify.new('Settings', 'hilights dissabled');
+                    utility.toast('hilights dissabled')
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
                     config.data.hilight_engine = true;
                     table.hilight_engine_go_vroom();
-                    notify.new('Settings', 'hilights enabled');
+                    utility.toast('hilights enabled')
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
                 }
@@ -3151,12 +2800,12 @@ let UI = {
                 if (config.data.animation) {
                     //turn off the switch
                     config.data.animation = false;
-                    notify.new('Settings', 'animations dissabled');
+                    utility.toast('animations dissabled')
                     console.warn('animations dissabled');
                 } else {
                     //turn on the witch
                     config.data.animation = true;
-                    notify.new('Settings', 'animations enabled');
+                    utility.toast('animations enabled')
                     console.warn('animations enabled');
                 }
                 config.save();
@@ -3178,12 +2827,12 @@ let UI = {
                 if (config.data.tiles) {
                     //turn off the switch
                     config.data.tiles = false;
-                    notify.new('Settings', 'tiles dissabled');
+                    utility.toast('tiles dissabled')
                     console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
                     config.data.tiles = true;
-                    notify.new('Settings', 'tiles enabled');
+                    utility.toast('tiles enabled')
                     console.warn('tiles enabled');
                 }
                 config.save();
@@ -3203,13 +2852,13 @@ let UI = {
                 if (config.data.empty_rows) {
                     //turn off the switch
                     config.data.empty_rows = false;
-                    notify.new('Settings', 'Empty Rows dissabled');
+                    utility.toast('Empty Rows dissabled')
                     console.warn('Empty Rows dissabled');
                     config.properties.changed = true;
                 } else {
                     //turn on the witch
                     config.data.empty_rows = true;
-                    notify.new('Settings', 'Empty Rows Enabled');
+                    utility.toast('Empty Rows Enabled')
                     console.warn('Empty Rows Enabled');
                     config.properties.changed = true;
                 }
@@ -3227,7 +2876,7 @@ let UI = {
         wallpaper: {
             set_wallpaper: function () {
                 if (false) {
-                    document.getElementById('timetable').style.backgroundImage = "url('img/usebkgrounds/test-user-background.jpg')"
+                    document.getElementById('timetable').style.backgroundImage = "url()"
                 }
             },
         }
@@ -3309,11 +2958,6 @@ let notify = {
     }),
     new: function (title, body, fx, bdytitle) {
         this.current++; //Inciment the current pisition
-        style = config.data.notification_type;
-        if (this.previous_type != style) {
-            this.clearall()
-        }
-        this.previous_type = style;
 
         //create the notification holder
         var tempnotif = document.createElement("div"); //create a div
@@ -3332,29 +2976,7 @@ let notify = {
         tempnotif.appendChild(tmpbdy); //put the 'notifbody' div into the 'notification' div from before
         tmpbdy.innerHTML = body; //puts body text into the 'notifbody' div
 
-        //style switch
-        switch (style) {
-            case 1:
-                tempnotif.setAttribute("class", "notification_style1"); //set the class of the div to 'notification_style1'
-                this.preset_height = 22;
-                break;
-            case 2:
-                tempnotif.setAttribute("class", "notification_style2"); //set the class of the div to 'notification_style2'
-                this.preset_height = 16;
-                break;
-            case 3:
-                tempnotif.setAttribute("class", "notification_style3"); //set the class of the div to 'notification_style2'
-                this.preset_height = 16;
-                break;
-            case 4:
-                tempnotif.setAttribute("class", "notification_style4"); //set the class of the div to 'notification_style2'
-                this.preset_height = 22;
-                break;
-            default:
-                tempnotif.setAttribute("class", "notification_style3"); //set the class of the div to 'notification_style2'
-                this.preset_height = 16;
-                break;
-        }
+        tempnotif.setAttribute("class", "notification_style4"); //set the class of the div to 'notification_style2'
 
         //Timing effects
         setTimeout(() => {

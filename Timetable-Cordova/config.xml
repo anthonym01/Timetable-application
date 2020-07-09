@@ -21,5 +21,6 @@
         <icon src="res/icon/icon.png" />
         <preference name="AndroidLaunchMode" value="singleTop"/>
         <preference name="android-minSdkVersion" value="19" />
+        <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     </platform>
 </widget>

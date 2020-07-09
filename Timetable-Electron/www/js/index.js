@@ -3,6 +3,7 @@ const { dialog, Menu, MenuItem, shell, systemPreferences, nativeTheme } = requir
 const path = require('path');
 const fs = require('fs');
 const wallpaper = require('wallpaper');
+
 const text_box_menu = new Menu.buildFromTemplate([
     { role: 'cut' },
     { role: 'copy' },
@@ -2536,6 +2537,7 @@ let UI = {
         document.getElementById('delete_btn').addEventListener('click', function () {
             console.log('Delete called');
             config.data.table1_db[config.properties.overwrite].deleted = true;
+            config.properties.changed = true
             manage.dialogue.close();
             manage.dialogue.clear();
             manage.render_list();

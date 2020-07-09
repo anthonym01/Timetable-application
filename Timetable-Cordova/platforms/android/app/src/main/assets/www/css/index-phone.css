@@ -1336,7 +1336,27 @@ td {
     background-color: inherit;
     color: inherit;
 }
+#detail_put {
+    width: calc(100% - 1vh);
+    height: 30vh;
+    font-size: 8vw;
+    border-radius: 1vh;
+    text-align: center;
+    transition: border 300ms;
+    position: relative;
+    /*    border: none;*/
+    border: 0.5vh solid var(--text-color);
+    /*background-color: inherit;*/
+    color: inherit;
+    background-color: var(--shade_color);
+    font-family: Lexend_Deca;
+    margin-top: 1vh;
+}
 
+#detail_put:focus {
+    border: 0.5vh solid var(--primary_hue);
+    outline: none;
+}
 #dataentry_screen input:focus {
     border: none;
     border-bottom: 0.7vh solid var(--text-color);
@@ -2766,6 +2786,27 @@ td {
         color: inherit;
     }
 
+    #detail_put {
+        width: calc(100% - 1vh);
+        height: 30vh;
+        font-size: 4vw;
+        border-radius: 1vh;
+        text-align: center;
+        transition: border 300ms;
+        position: relative;
+        /*    border: none;*/
+        border: 0.5vh solid var(--text-color);
+        /*background-color: inherit;*/
+        color: inherit;
+        background-color: var(--shade_color);
+        font-family: Lexend_Deca;
+        margin-top: 1vh;
+    }
+    
+    #detail_put:focus {
+        border: 0.5vh solid var(--primary_hue);
+        outline: none;
+    }
     #dataentry_screen input:focus {
         border: none;
         border-bottom: 0.4vh solid var(--text-color);

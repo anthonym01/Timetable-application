@@ -18,6 +18,9 @@
     },
     "cordova-plugin-screensize": {
       "PACKAGE_NAME": "com.ANTHONYM.timetable"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.ANTHONYM.timetable"
     }
   },
   "dependent_plugins": {}
