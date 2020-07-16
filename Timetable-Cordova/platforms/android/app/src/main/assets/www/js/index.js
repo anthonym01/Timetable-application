@@ -68,6 +68,10 @@ function maininitalizer() {
     }, 50)
 }
 
+function reinitalizer() {
+
+}
+
 /*  Config file handler    */
 let config = {
     data: {
@@ -294,13 +298,88 @@ let config = {
         setTimeout(() => { location.reload() }, 100);
         this.validate();
     },
-    backup: function () { //backup configuration to file
+    backup: function (filepath) { //backup configuration to file
         console.log('Configuration backup initiated')
 
+        filepath = '/timetable_backup.json'
+
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {//Request access to file system
+
+            fs.root.getFile(filepath, { create: true, exclusive: false }, function (fileEntry) {//Creates fileentry relitive to the root directory on android /storage/emulated/0/
+                console.log("fileEntry is file :" + fileEntry.isFile.toString())// is file a file?
+                fileEntry.createWriter(function (fileWriter) {//creates file writer from file entry
+
+                    fileWriter.write(JSON.stringify(config.data))//write to file
+
+                    fileWriter.onwriteend = function () {//file writing complete
+                        console.log("Successful file write: ", fileEntry.fullPath)
+                        utility.toast("Saved to: " + fileEntry.fullPath)
+                    }
+
+                    fileWriter.onerror = function (e) {//error
+                        console.log("Failed file write: " + e.toString())
+                        utility.toast("Failed file write: " + e.toString())
+                    }
+                })
+
+            }, function () {//file entry fails
+                console.log('failed to create file entry')
+                utility.toast('failed to create file entry, app may not have file permissions')
+            })
+        }, function () {//No file permission given
+            console.error('Failed to get file permissions')
+            utility.toast('Failed to get file permissions')
+        })
     },
-    restore: function () { //restore configuration from file
-        console.log('Configuration backup initiated')
+    restore: function (filepath) { //restore configuration from file
+        console.log('Configuration restore initiated')
 
+        filepath = '/testfile.json'//filepath
+
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {//Request access to file system
+
+            fs.root.getFile(filepath, { create: false, exclusive: false }, function (fileEntry) {//Creates fileentry relitive to the root directory on android /storage/emulated/0/
+                console.log("fileEntry is file :" + fileEntry.isFile.toString())// is file a file?
+
+                fileEntry.file(function (file) {
+                    var reader = new FileReader();
+
+                    reader.onloadend = function () {
+                        console.log("file loadend event output: " + this.result);
+                        var parsed_data = this.result;
+                        parsed_data = JSON.parse(parsed_data);
+                        if (parsed_data.key == "TT01") {
+                            console.log('This is a config file, load its ass')
+                            utility.toast('Loaded configuration from: '+filepath)
+
+                            config.data = parsed_data;
+                            config.save()
+                            UI.setting.hilight.setpostition()
+                            UI.setting.animation.setpostition()
+                            UI.setting.tiles.setpostition()
+                            UI.setting.Row.setpostition()
+                            UI.setting.wallpaper.set_wallpaper()
+                            UI.setting.set_theme()
+                            table.data_render()
+                            manage.initalize()
+                        } else {
+                            console.log('This is not a config file for this app')
+                            utility.toast('This is not a config file for this app')
+                        }
+                    }
+                    console.log('File reader output text: ', reader.readAsText(file))//reader.readASText required
+                }, function () {
+                    console.log('file error')
+                });
+
+            }, function () {//file entry fails
+                console.log('failed to create file entry')
+                utility.toast('failed to create file entry, app may not have file permissions')
+            })
+        }, function () {//No file permission given
+            console.error('Failed to get file permissions')
+            utility.toast('Failed to get file permissions')
+        })
     }
 }
 
@@ -2307,6 +2386,15 @@ let manage = {
 let UI = {
     initalize: function () {
         console.log('UI Initalize');
+
+        //Manual config handlers
+        document.getElementById('backup_btn').addEventListener('click', function () {
+            config.backup('/')
+        })
+        document.getElementById('restore_btn').addEventListener('click', function () {
+            config.restore();
+        })
+
         //name autofill
         document.getElementById('name_put').addEventListener('keydown', function () {
             console.log('Name autofill fired')
@@ -2469,19 +2557,7 @@ let UI = {
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
         document.getElementById('close_btn').addEventListener('click', UI.navigate.close_tile);
-        document.getElementById('about_btn').addEventListener('click', function () {
-            utility.clipboard(JSON.stringify(config.data));
-            utility.toast('Debug info coppied to clipboard');
-        });
 
-        //Manual config handlers
-
-        document.getElementById('backup_btn').addEventListener('click', function () {
-            config.backup()
-        })
-        document.getElementById('restore_btn').addEventListener('click', function () {
-            config.restore();
-        })
 
         //Set switch positions
         this.setting.hilight.setpostition();
@@ -2875,8 +2951,8 @@ let UI = {
         },
         wallpaper: {
             set_wallpaper: function () {
-                if (true) {
-                    document.getElementById('timetable').style.backgroundImage = "url("+ window.resolveLocalFileSystemURI('file:///storage/emulated/0/test_img.png')+")"
+                if (false) {
+                    document.getElementById('timetable').style.backgroundImage = "url()"
                 }
             },
         }

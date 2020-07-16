@@ -4,6 +4,7 @@ const { app, BrowserWindow, dialog, screen } = electron//dialogue is remote
 const path = require('path');//path to necessary files
 const url = require('url');//web dependency
 const windowStateKeeper = require('electron-window-state');//preserves the window state
+const fs = require('fs');
 
 let mainWindow = null;//defines the window as an abject
 
@@ -21,7 +22,7 @@ function create_main_window() {
 		height: mainWindowState.height,
 		backgroundColor: '#000000',
 		title: 'Timetable',
-		/*icon: 'assets/icons/icon.ico',*/
+		//icon: 'assets/icons/icon.ico',
 		frame: false,
 		minWidth: 400,
 		show: true,
@@ -30,6 +31,7 @@ function create_main_window() {
 			nodeIntegration: true,
 		}
 	});
+
 	mainWindow.loadURL(url.format({
 		pathname: path.join(__dirname, '/www/index.html'),
 		protocol: 'file:',
@@ -41,6 +43,18 @@ function create_main_window() {
 
 }
 
+async function write_file(filepath, buffer_data) {
+	console.log('Wrote file', filepath, buffer_data)
+	fs.writeFile(filepath, buffer_data, 'utf8', (err) => {//write config to file as json
+		if (err) {
+			alert("An error occurred creating the file" + err.message)
+		} else {
+			console.log("The file has been successfully saved to: ", filepath);
+		}
+	})
+}
+
+exports.write_object_json_out = (filepath, buffer_data) => { write_file(filepath, buffer_data) }
 exports.closeapp = () => { app.quit() }
 
 exports.minmize_main_window = () => { mainWindow.minimize() }

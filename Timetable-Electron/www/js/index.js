@@ -19,6 +19,12 @@ window.addEventListener('load', function () { //window loads
 
     body_menu();
     textboxmenu();
+
+    if (localStorage.getItem("TT001_cfg")) {
+        config.load()
+    } else {
+        config.validate()
+    }
     maininitalizer();
     UI.initalize()
     table.hilight_engine_go_vroom();
@@ -26,11 +32,6 @@ window.addEventListener('load', function () { //window loads
 })
 
 function maininitalizer() {
-    if (localStorage.getItem("TT001_cfg")) {
-        config.load()
-    } else {
-        config.validate()
-    }
 
     table.data_render(); //render data
     manage.initalize()
@@ -140,27 +141,17 @@ let config = {
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
-        var save_sucess;
         ToStorageAPI();//save to application storage reguardless incase the file gets removed by the user, because users are kinda dumb
-        if (config.baseconfig.use_alt_storage == true) {//save to alternate storage location
+        if (config.baseconfig.use_alt_storage == true && typeof(config.data)=='object') {//save to alternate storage location
             ToFileSystem();
         }
 
-        function ToFileSystem() {//save config to directory defined by the user
-            console.log('saving to File system: ', config.baseconfig.alt_location.toString())
-            fs.writeFile(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json", JSON.stringify(config.data), 'utf8', (err) => {//write to file
-                if (err) {//error
-                    alert("An error occurred creating the file, please select a new location to save app data " + err.message)
-                    config.selectlocation();
-                    return save_sucess = false;
-                } else {//sucessfull
-                    console.log('config saved to: ', config.baseconfig.alt_location.toString())
-                    return save_sucess = true;
-                }
-            })
+        async function ToFileSystem() {//save config to directory defined by the user
+            console.log('saving to File system: ', config.baseconfig.alt_location)
+            main.write_object_json_out(config.baseconfig.alt_location + "/TT001_cfg config.json", JSON.stringify(config.data))//hand off writing the file to main process
         }
 
-        function ToStorageAPI() {//Html5 storage API
+        async function ToStorageAPI() {//Html5 storage API
             console.log('config saved to application storage')
             localStorage.setItem("TT001_cfg", JSON.stringify(config.data))
         }
@@ -214,7 +205,7 @@ let config = {
             console.log('"backgroundimg" was found to be invalid and was set to default');
         }
 
-        if (typeof (this.data.always_on_top) !== 'undefined') {
+        if (typeof (this.data.always_on_top) == 'undefined') {
             this.data.always_on_top = false;
             configisvalid = false;
             console.log('"always_on_top" was found to be invalid and was set to default');
@@ -372,13 +363,7 @@ let config = {
             if (filepath.canceled == true) {//the file save dialogue was canceled my the user
                 console.warn('The file dialogue was canceled by the user')
             } else {
-                fs.writeFile(filepath.filePath, JSON.stringify(config.data), 'utf8', (err) => {//write config to file as json
-                    if (err) {
-                        alert("An error occurred creating the file " + err.message)
-                    } else {
-                        console.log("The file has been successfully saved to: ", filepath.filePath);
-                    }
-                })
+                main.write_object_json_out(filepath.filePath, JSON.stringify(config.data))//hand off writing the file to main process
             }
         }).catch((err) => {//catch error
             alert('An error occured ', err.message);
