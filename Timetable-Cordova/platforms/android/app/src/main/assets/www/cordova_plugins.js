@@ -196,6 +196,22 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
         "cordova"
       ],
       "runs": true
+    },
+    {
+      "id": "cordova-plugin-statusbar.statusbar",
+      "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
+      "pluginId": "cordova-plugin-statusbar",
+      "clobbers": [
+        "window.StatusBar"
+      ]
+    },
+    {
+      "id": "cordova-plugin-simple-file-chooser.Chooser",
+      "file": "plugins/cordova-plugin-simple-file-chooser/www/chooser.js",
+      "pluginId": "cordova-plugin-simple-file-chooser",
+      "clobbers": [
+        "chooser"
+      ]
     }
   ];
   module.exports.metadata = {
@@ -203,6 +219,8 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-device": "2.0.3",
     "cordova-plugin-whitelist": "1.3.4",
     "cordova-plugin-screensize": "1.3.1",
-    "cordova-plugin-file": "6.0.2"
+    "cordova-plugin-file": "6.0.2",
+    "cordova-plugin-statusbar": "2.4.3",
+    "cordova-plugin-simple-file-chooser": "2.2.1"
   };
 });

@@ -331,54 +331,65 @@ let config = {
             utility.toast('Failed to get file permissions')
         })
     },
-    restore: function (filepath) { //restore configuration from file
+    restore: async function () { //restore configuration from file
         console.log('Configuration restore initiated')
 
-        filepath = '/testfile.json'//filepath
+        //filepath = '/testfile.json'//filepath
+        var file = chooser.getFile()
 
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {//Request access to file system
+        await file.then((file) => {
+            console.log('FIle chosen: ', file)
+            window.resolveLocalFileSystemURL(file[0].uri, function (Entry) {
+                console.log('Resolved uri: ', Entry.fullPath)//got file path, but needs to be resolved
+                var experimentalpath = Entry.fullPath.replace('/com.android.providers.downloads.documents/document/raw:/storage/emulated/0','')
+                var experimentalpath = experimentalpath.replace('/com.android.externalstorage.documents/document/primary:','/')
+                cordova.file.
+                console.log(experimentalpath)
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {//Request access to file system
+                    fs.root.getFile(experimentalpath, { create: false, exclusive: true }, function (fileEntry) {//Creates fileentry relitive to the root directory on android /storage/emulated/0/
+                        console.log("fileEntry is file :" + fileEntry.isFile.toString())// is file a file?
 
-            fs.root.getFile(filepath, { create: false, exclusive: false }, function (fileEntry) {//Creates fileentry relitive to the root directory on android /storage/emulated/0/
-                console.log("fileEntry is file :" + fileEntry.isFile.toString())// is file a file?
+                        fileEntry.file(function (file) {
+                            var reader = new FileReader();
 
-                fileEntry.file(function (file) {
-                    var reader = new FileReader();
+                            reader.onloadend = function () {
+                                console.log("file loadend event output: " + this.result);
+                                var parsed_data = this.result;
+                                parsed_data = JSON.parse(parsed_data);
+                                if (parsed_data.key == "TT01") {
+                                    console.log('This is a config file, load its ass')
+                                    utility.toast('Loaded configuration from: ' + experimentalpath)
 
-                    reader.onloadend = function () {
-                        console.log("file loadend event output: " + this.result);
-                        var parsed_data = this.result;
-                        parsed_data = JSON.parse(parsed_data);
-                        if (parsed_data.key == "TT01") {
-                            console.log('This is a config file, load its ass')
-                            utility.toast('Loaded configuration from: '+filepath)
+                                    config.data = parsed_data;
+                                    config.save()
+                                    UI.setting.hilight.setpostition()
+                                    UI.setting.animation.setpostition()
+                                    UI.setting.tiles.setpostition()
+                                    UI.setting.Row.setpostition()
+                                    UI.setting.wallpaper.set_wallpaper()
+                                    UI.setting.set_theme()
+                                    table.data_render()
+                                    manage.initalize()
+                                } else {
+                                    console.log('This is not a config file for this app')
+                                    utility.toast('This is not a config file for this app')
+                                }
+                            }
+                            console.log('File reader output text: ', reader.readAsText(file))//reader.readASText required
+                        }, function () {
+                            console.log('file error')
+                        });
 
-                            config.data = parsed_data;
-                            config.save()
-                            UI.setting.hilight.setpostition()
-                            UI.setting.animation.setpostition()
-                            UI.setting.tiles.setpostition()
-                            UI.setting.Row.setpostition()
-                            UI.setting.wallpaper.set_wallpaper()
-                            UI.setting.set_theme()
-                            table.data_render()
-                            manage.initalize()
-                        } else {
-                            console.log('This is not a config file for this app')
-                            utility.toast('This is not a config file for this app')
-                        }
-                    }
-                    console.log('File reader output text: ', reader.readAsText(file))//reader.readASText required
-                }, function () {
-                    console.log('file error')
-                });
+                    }, function () {//file entry fails
+                        console.log('failed to create file entry')
+                        utility.toast('failed to create file entry, app may not have file permissions')
+                    })
+                }, function () {//No file permission given
+                    console.error('Failed to get file permissions')
+                    utility.toast('Failed to get file permissions')
+                })
 
-            }, function () {//file entry fails
-                console.log('failed to create file entry')
-                utility.toast('failed to create file entry, app may not have file permissions')
-            })
-        }, function () {//No file permission given
-            console.error('Failed to get file permissions')
-            utility.toast('Failed to get file permissions')
+            }, function () { console.error('Failed to resolve URI') })
         })
     }
 }
@@ -3163,4 +3174,11 @@ let notify = {
 
         }
     }
+}
+
+async function chose_a_file() {
+    chooser.getFile().then((file) => {
+        console.log(file)
+        return file;
+    });
 }

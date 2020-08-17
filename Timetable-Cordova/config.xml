@@ -16,6 +16,8 @@
     <allow-intent href="mailto:samuelmatheson15@gmail.com" />
     <allow-intent href="geo:*" />
     <icon src="res/icon/icon.png" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="StatusBarBackgroundColor" value="#000000" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon src="res/icon/icon.png" />
