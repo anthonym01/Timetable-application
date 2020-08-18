@@ -11,6 +11,7 @@ window.addEventListener('load', function () { //window loads
 
     body_menu()
     textboxmenu()
+    application_menu()
 
     console.log(nativeTheme)
     if (localStorage.getItem("TT001_cfg")) {
@@ -24,6 +25,13 @@ window.addEventListener('load', function () { //window loads
     table.hilight_engine_go_vroom()
     table.quick_add()
     table.clock.start_clock()
+
+    setTimeout(() => {
+
+        console.log('Closing loading screen...')
+        document.getElementById('Loading').style.display = 'none'
+
+    }, 500)
 })
 
 function maininitalizer() {
@@ -31,12 +39,6 @@ function maininitalizer() {
     table.data_render(); //render data
     manage.initalize()
     config.properties.changed = false;
-    setTimeout(() => {
-
-        console.log('Closing loading screen...')
-        document.getElementById('Loading').style.display = 'none'
-
-    }, 500)
 }
 
 function body_menu() {
@@ -73,6 +75,27 @@ function textboxmenu() {
         event.stopPropagation()
         text_box_menu.popup({ window: require('electron').remote.getCurrentWindow() })
     }
+}
+
+function application_menu() {
+    const appmenu = Menu.buildFromTemplate([
+        {
+            id: 'table', label: 'Table'
+            , click() {
+                document.getElementById('setting_view').style.display = ""
+                document.getElementById('manage_view').style.display = ""
+            }
+        },
+        {
+            id: 'manage', label: 'Manage'
+            , click() { UI.manage_toggle() }
+        }, {
+            id: 'setting', label: 'Settings'
+            , click() { UI.setting_toggle() }
+        },
+        { role: 'Quit' },//quit app
+    ])
+    Menu.setApplicationMenu(appmenu)//Change application menu
 }
 
 /*  Config file handler    */
@@ -2782,10 +2805,12 @@ let manage = {
             if (config.data.table_details[i].identifier == Number(config.data.table_selected) && config.data.table_details[i].deleted != true) {
                 document.getElementById('tablemanage_txt').innerText = config.data.table_details[i].purpose;
                 document.getElementById('title_txt').innerText = config.data.table_details[i].purpose;
+                document.getElementById('pg_title').innerText = config.data.table_details[i].purpose;
                 break;
             } else {
                 document.getElementById('tablemanage_txt').innerText = "Homeless tiles";
                 document.getElementById('title_txt').innerText = "Homeless tiles";
+                document.getElementById('pg_title').innerText = "Homeless tiles";
             }
             i++
         }
@@ -2969,6 +2994,7 @@ let manage = {
                     tab_put.focus()
                 }, 200)
                 tab_put.addEventListener('keyup', function (event) {
+                    event.stopPropagation()
                     if (event.keyCode === 13) { //enterkey
                         confirmimg.click(); //enterkey is pressed, confirm input
                     } else if (event.keyCode == 27) { //esckey
@@ -3558,6 +3584,8 @@ let UI = {
                     UI.manage_toggle()
                 } else if (document.getElementById('setting_view').style.display == "block") {
                     UI.setting_toggle()
+                } else if (document.getElementById('fullscreen_tile').classList == "fullscreen_tile_active") {
+                    UI.close_tile()
                 }
             }
 
@@ -3662,6 +3690,7 @@ let UI = {
         UI.setting.Row.setpostition();
         UI.setting.wallpaper.set_wallpaper()
         UI.setting.set_theme();
+        UI.setting.frame.setpostition();
 
         if (config.data.always_on_top == true) {
             main.setontop()
@@ -3694,6 +3723,7 @@ let UI = {
         document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
+        document.getElementById('frame_btn').addEventListener('click', UI.setting.frame.flip)
         document.getElementById('close_btn').addEventListener('click', UI.close_tile)
 
         document.getElementById('select_btn').addEventListener('click', function () { //Select the configuration location
@@ -3741,6 +3771,11 @@ let UI = {
             config.save()
         })
 
+        document.getElementById('fullscreen_tile').addEventListener('contextmenu', function () {
+            event.stopPropagation()
+            event.preventDefault()
+            UI.close_tile()
+        })
 
     },
     hue_selec: function (hue) {
@@ -3764,6 +3799,7 @@ let UI = {
         console.log('Window always on top :', state);
     },
     setting_toggle: function () {
+        UI.close_tile()
         if (document.getElementById('manage_view').style.display == "block") {
             //close
             document.getElementById('Manage_button_btn').classList = "statusbtn"
@@ -3774,6 +3810,9 @@ let UI = {
             //close
             document.getElementById('Setting_btn').classList = "statusbtn"
             document.getElementById('setting_view').style.display = ""
+            if (config.properties.changed == true) {
+                maininitalizer();//Efficiency goes VROOOOM
+            }
         } else {
             //open
             document.getElementById('Setting_btn').classList = "statusbtn_active"
@@ -3781,6 +3820,7 @@ let UI = {
         }
     },
     manage_toggle: function () {
+        UI.close_tile()
         if (document.getElementById('setting_view').style.display == "block") {
             //close
             document.getElementById('Setting_btn').classList = "statusbtn"
@@ -4007,18 +4047,30 @@ let UI = {
                 UI.setting.animation.setpostition();
             },
             setpostition: function () {
-                if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == true) {//animations preffered by system
-                    if (config.data.animation) {
-                        document.getElementById('Animations_switch_container').className = 'switch_container_active';
-                        document.getElementById('nomation').href = "";
-                    } else {
-                        document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
-                        document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
-                    }
-                } else {//system preffers no animations
+                switch (process.platform) {
+                    case "linux"://Linux && free BSD
+                        if (config.data.animation) {
+                            document.getElementById('Animations_switch_container').className = 'switch_container_active';
+                            document.getElementById('nomation').href = "";
+                        } else {
+                            document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
+                            document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
+                        }
+                        break;
+                    default://Mac OS && windows
+                        if (systemPreferences.getAnimationSettings().shouldRenderRichAnimation == true) {//animations preffered by system only works on windows and wackOS
+                            if (config.data.animation) {
+                                document.getElementById('Animations_switch_container').className = 'switch_container_active';
+                                document.getElementById('nomation').href = "";
+                            } else {
+                                document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
+                                document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
+                            }
+                        } else {//system preffers no animations
 
-                    document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
-                    document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
+                            document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
+                            document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
+                        }
                 }
             },
         },
@@ -4071,6 +4123,29 @@ let UI = {
                     document.getElementById('Row_switch_container').className = 'switch_container_active';
                 } else {
                     document.getElementById('Row_switch_container').className = 'switch_container_dissabled';
+                }
+            },
+        },
+        frame: {
+            flip: function () {
+                console.log('frame switch triggered');
+                var framestate = main.framestate()
+                if (framestate == true) {
+                    //turn off the switch
+                    main.setframe(false)
+                } else {
+                    //turn on the witch
+                    main.setframe(true)
+                }
+            },
+            setpostition: function () {
+                var framestate = main.framestate()
+                if (framestate == true) {
+                    document.getElementById('index_css').href = "css/index-frameon.css"
+                    document.getElementById('frame_switch_container').className = 'switch_container_active';
+                } else {
+                    document.getElementById('index_css').href = "css/index-frameoff.css"
+                    document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
                 }
             },
         },

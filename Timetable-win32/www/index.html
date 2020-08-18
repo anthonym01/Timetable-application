@@ -11,21 +11,20 @@
     <meta name="msapplication-tap-highlight" content="no">
     <link rel="icon" href="./img/icon.webp" id="favico" type="image/png" sizes="32x32">
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" id="index_css" href="css/index-frameoff.css">
     <link rel="stylesheet" id="nomation" href="">
 
     <script defer type="text/javascript" src="js/index.js" charset="UTF-8"></script>
-    <title>Timetable</title>
-
+    <title id="pg_title">Timetable</title>
 </head>
 
 <body id="body" class="dark">
 
     <!--Table view-->
     <view id="table1" style="display: block;">
-        <div id="fullscreen_tile" class="fullscreen_tile">
-            <!-- Onclick title card -->     
-            <div id="close_btn">Close</div>
+        <div id="fullscreen_tile" class="fullscreen_tile" title="Right click to close">
+            <!-- Onclick title card -->
+            <div id="close_btn" title="Close">Close</div>
             <div id="fullscreen_tile_tab_container">
                 <table id="tile_table">
                     <tr>
@@ -520,15 +519,6 @@
             </div>
         </div>
 
-        <div class="setting_bar" id="Animations_btn" title="toggle Animations">
-            <div class="Bar_title">Animations</div>
-            <div class="switch_container_active" id="Animations_switch_container">
-                <div class="switchbdy" id="Animations_switchbdy">
-                    <div class="switch"></div>
-                </div>
-            </div>
-        </div>
-
         <div class="setting_bar" id="tiles_btn" title="toggle fullscreen tiles">
             <div class="Bar_title">Full Tiles</div>
             <div class="switch_container_active" id="tiles_switch_container">
@@ -538,10 +528,28 @@
             </div>
         </div>
 
+        <div class="setting_bar" id="Animations_btn" title="toggle Animations">
+            <div class="Bar_title">Animations</div>
+            <div class="switch_container_active" id="Animations_switch_container">
+                <div class="switchbdy" id="Animations_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
         <div class="setting_bar" id="Row_btn" title="toggle Empty cells">
             <div class="Bar_title">Empty Rows</div>
             <div class="switch_container_active" id="Row_switch_container">
                 <div class="switchbdy" id="Row_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="frame_btn" title="toggle Empty cells">
+            <div class="Bar_title">Window Frame</div>
+            <div class="switch_container_active" id="frame_switch_container">
+                <div class="switchbdy" id="frame_switchbdy">
                     <div class="switch"></div>
                 </div>
             </div>
@@ -730,11 +738,11 @@
     </div>
 
     <!--Loading Screen-->
-    <div id="Loading" style="display: none;">
+    <div id="Loading">
         <div id="title">Timetable</div>
         <!--Title-->
         <div id="loader">
-            <div id="loadprogress"></div>
+            <div id="loadimate"></div>
         </div>
         <!--Spinny boi in protrait, progressbar in landscape-->
     </div>
