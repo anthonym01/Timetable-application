@@ -773,9 +773,9 @@ view {
     table-layout: fixed;
 }
 
-#fullscreen_tile_tab_container tr:nth-child(even) {
+/*#fullscreen_tile_tab_container tr:nth-child(even) {
     background-color: var(--cell_color)
-}
+}*/
 
 #fullscreen_tile_tab_container table {
     height: 100%;
@@ -1714,9 +1714,9 @@ td {
     text-align: center;
 }
 
-#pseudo_container_table tr:nth-child(even) {
+/*#pseudo_container_table tr:nth-child(even) {
     background-color: var(--cell_color);
-}
+}*/
 
 #pseudo_container th {
     padding: 3px;

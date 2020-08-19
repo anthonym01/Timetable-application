@@ -426,6 +426,7 @@ body {
     -webkit-app-region: drag;
     overflow: hidden;
     background-image: linear-gradient(90deg, var(--background-color), var(--primary_hue), var(--background-color));
+    display: none!important;
 }
 
 .resise_constraint {
@@ -652,7 +653,7 @@ body {
     right: 0;
     height: 100vh;
     width: 100vw;
-    z-index: 500;
+    z-index: 5000;
     display: block;
     box-shadow: var(--text-color);
     background-color: var(--background-color);
@@ -682,14 +683,29 @@ body {
     border: 0.5vh solid var(--text-color);
 }
 
-#loadprogress {
+@keyframes loadimate {
+    0% {
+        left: 0%;
+    }
+
+    50% {
+        left: 80%;
+    }
+
+    100% {
+        left: 0%;
+    }
+}
+
+#loadimate {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 0%;
     height: 100%;
-    width: 0%;
-    transition: width 50ms;
+    width: 20%;
     background-color: var(--primary_hue);
+    border-radius: 2vh;
+    animation: loadimate 2s ease-in-out infinite;
 }
 
 /*  page darkener   */
@@ -700,7 +716,7 @@ body {
     opacity: 0.5;
     z-index: 50;
     display: none;
-    height: calc(100% - 30px);
+    height: 100%;
     width: 100%;
     transition: opacity 500ms;
     background-color: var(--background-color);
@@ -712,7 +728,7 @@ view {
     bottom: 0;
     left: 0;
     width: 100vw;
-    height: calc(100vh - 30px);
+    height: 100vh;
     display: none;
     overflow: hidden;
 }
@@ -728,7 +744,7 @@ view {
 .fullscreen_tile,
 .fullscreen_tile_active {
     position: fixed;
-    bottom: 7vh;
+    bottom: 0;
     left: 0;
     width: 100vw;
     height: 0px;
@@ -742,7 +758,7 @@ view {
 
 .fullscreen_tile_active {
     display: block;
-    height: calc(100vh - 30px);
+    height: 100vh;
     opacity: 1;
     transform: translate(0vh);
 }
@@ -758,9 +774,9 @@ view {
     table-layout: fixed;
 }
 
-#fullscreen_tile_tab_container tr:nth-child(even) {
+/*#fullscreen_tile_tab_container tr:nth-child(even) {
     background-color: var(--cell_color)
-}
+}*/
 
 #fullscreen_tile_tab_container table {
     height: 100%;
@@ -1018,11 +1034,7 @@ td {
 }
 
 #manage_view {
-    /* Adjust manage view to align with table selector at the bottom*/
-    top: 30px;
     left: 0;
-    /*width: 100vw;
-        height: 93vh;*/
     overflow-x: hidden;
     overflow-y: auto;
     background-color: var(--shade_color);
@@ -1431,8 +1443,8 @@ td {
 
 #dataentry_screen {
     position: fixed;
-    top: 30px;
-    height: calc(100% - 30px);
+    top: 0;
+    height: 100%;
     width: 100%;
     display: none;
     overflow-y: scroll;
@@ -1699,9 +1711,9 @@ td {
     text-align: center;
 }
 
-#pseudo_container_table tr:nth-child(even) {
+/*#pseudo_container_table tr:nth-child(even) {
     background-color: var(--cell_color);
-}
+}*/
 
 #pseudo_container th {
     padding: 3px;
@@ -2249,10 +2261,9 @@ td {
 
     /*  Views   */
     view {
-        top: 30px;
         left: 0;
         width: 100vw;
-        height: calc(100vh - 30px);
+        height: 100vh;
         overflow-y: scroll;
     }
 
@@ -2289,10 +2300,8 @@ td {
 
     /*  manage_view   */
     #manage_view {
-        top: 30px;
-        left: 0;
         width: 100vw;
-        height: calc(100vh - 30px);
+        height: 100vh;
         display: none;
         overflow-y: hidden;
         z-index: 2000;
@@ -2378,7 +2387,7 @@ td {
         bottom: 0;
         top: unset;
         right: 0;
-        height: calc(90vh - 30px);
+        height: 90vh;
         width: 70vh;
         z-index: 500;
         background-color: rgba(0, 0, 0, 0);
@@ -2401,7 +2410,7 @@ td {
         bottom: 0;
         right: 0;
         left: unset;
-        height: calc(90vh - 30px);
+        height: 90vh;
         width: 70vh;
     }
 

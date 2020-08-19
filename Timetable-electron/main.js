@@ -1,18 +1,33 @@
 const electron = require('electron');//includes electron dependency
-const { app, BrowserWindow, dialog, Menu, screen } = electron//dialogue is remote
+const { app, BrowserWindow, dialog, screen } = electron//dialogue is remote
 
 const path = require('path');//path to necessary files
 const url = require('url');//web dependency
 const windowStateKeeper = require('electron-window-state');//preserves the window state
 const fs = require('fs');
+const Store = require('electron-store')
+const store = new Store;
 
 let mainWindow = null;//defines the window as an abject
 
+let config = {
+	frame: false,
+}
+
 app.on('ready', function () {
+	if (store.get('default')) {//emsists
+		config = JSON.parse(store.get('default'))
+	} else {//doesnt emsist
+		store.set('default', JSON.stringify(config))
+	}
 	create_main_window()
-	//application_menu()
 })
 
+app.on('window-all-closed',function(){
+	if(process.platform!='darwin'){
+		app.quit()
+	}
+})
 
 function create_main_window() {
 	mainWindow = null
@@ -25,18 +40,24 @@ function create_main_window() {
 		height: mainWindowState.height,
 		backgroundColor: '#000000',
 		title: 'Timetable',
-		icon: path.join(__dirname, '/assets/icons/icon.ico'),//some linux window managers cant process due to bug
-		frame: true,
+		icon: path.join(__dirname, '/assets/icons/icon.png'),//some linux window managers cant process due to bug
+		frame: config.frame,
 		minWidth: 400,
 		show: true,
 		webPreferences: {
 			devTools: true,
 			nodeIntegration: true,
 		}
-	})
+	});
 
-	mainWindow.loadURL(url.format({ pathname: path.join(__dirname, '/www/index.html'), protocol: 'file:', slashes: true, icon: path.join(__dirname, '/assets/icons/icon.ico'), }))
-	mainWindowState.manage(mainWindow)
+	mainWindow.loadURL(url.format({
+		pathname: path.join(__dirname, '/www/index.html'),
+		protocol: 'file:',
+		slashes: true,
+		icon: path.join(__dirname, '/assets/icons/icon.png'),
+	}));
+
+	mainWindowState.manage(mainWindow);
 }
 
 async function write_file(filepath, buffer_data) {
@@ -50,7 +71,19 @@ async function write_file(filepath, buffer_data) {
 	})
 }
 
+function setframee(frame) {
+	config.frame = frame
+	store.set('default', JSON.stringify(config))
+	app.relaunch()
+	app.exit()
+}
+
+exports.setframe = (frame) => setframee(frame);
+
+exports.framestate = () => { return config.frame }
+
 exports.write_object_json_out = (filepath, buffer_data) => { write_file(filepath, buffer_data) }
+
 exports.closeapp = () => { app.quit() }
 
 exports.minmize_main_window = () => { mainWindow.minimize() }

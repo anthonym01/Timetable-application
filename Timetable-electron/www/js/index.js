@@ -3,33 +3,35 @@ const { dialog, Menu, MenuItem, shell, systemPreferences, nativeTheme } = requir
 const path = require('path');
 const fs = require('fs');
 const wallpaper = require('wallpaper');
-
-const text_box_menu = new Menu.buildFromTemplate([
-    { role: 'cut' },
-    { role: 'copy' },
-    { role: 'paste' },
-    { role: 'selectAll' },
-    { role: 'undo' },
-    { role: 'redo' },
-])
+const my_website = 'https://anthonym01.github.io/Portfolio/?contact=me';
 
 window.addEventListener('load', function () { //window loads
     console.log('Running from:', process.resourcesPath)
     console.log(process)
-    application_menu()
-    body_menu();
-    textboxmenu();
-    console.log(nativeTheme)
 
+    body_menu()
+    textboxmenu()
+    application_menu()
+
+    console.log(nativeTheme)
     if (localStorage.getItem("TT001_cfg")) {
         config.load()
     } else {
         config.validate()
     }
-    maininitalizer();
+
+    maininitalizer()
     UI.initalize()
-    table.hilight_engine_go_vroom();
+    table.hilight_engine_go_vroom()
+    table.quick_add()
     table.clock.start_clock()
+
+    setTimeout(() => {
+
+        console.log('Closing loading screen...')
+        document.getElementById('Loading').style.display = 'none'
+
+    }, 250)
 })
 
 function maininitalizer() {
@@ -37,12 +39,6 @@ function maininitalizer() {
     table.data_render(); //render data
     manage.initalize()
     config.properties.changed = false;
-    setTimeout(() => {
-
-        console.log('Closing loading screen...')
-        document.getElementById('Loading').style.display = 'none'
-
-    }, 500)
 }
 
 function body_menu() {
@@ -50,11 +46,7 @@ function body_menu() {
     const menu_body = new Menu()
     menu_body.append(new MenuItem({ label: 'Force refresh UI', click() { maininitalizer() } }))
     menu_body.append(new MenuItem({ type: 'separator' }))
-    menu_body.append(new MenuItem({
-        label: 'Contact developer', click() {
-            shell.openExternal('https://anthonym01.github.io/Portfolio/?contact=me')
-        }
-    }))
+    menu_body.append(new MenuItem({ label: 'Contact developer', click() { shell.openExternal(my_website) } }))
     menu_body.append(new MenuItem({ role: 'toggledevtools' }))
 
     window.addEventListener('contextmenu', (event) => {//opens menu on auxilery click
@@ -64,6 +56,14 @@ function body_menu() {
 }
 
 function textboxmenu() {
+    const text_box_menu = new Menu.buildFromTemplate([
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'selectAll' },
+        { role: 'undo' },
+        { role: 'redo' },
+    ])
 
     document.getElementById('name_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('wallpaper_pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
@@ -76,7 +76,6 @@ function textboxmenu() {
         text_box_menu.popup({ window: require('electron').remote.getCurrentWindow() })
     }
 }
-
 
 function application_menu() {
     const appmenu = Menu.buildFromTemplate([
@@ -161,6 +160,9 @@ let config = {
         colors_changed: true, //re-render color pannel when this is true
         clocking: false, // is clock ticking
         management: false,
+        quimk_start: -1,
+        quimk_end: -1,
+        quimk_day: null,
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
@@ -1707,7 +1709,1087 @@ let table = {
                 }, 1000); //un-color the target
             }
         }
-    }
+    },
+    quick_add: async function () {//quick add context menus
+        //menu
+        const quick_add_menu = new Menu.buildFromTemplate([
+            {
+                label: 'Add item here', click() {//Clicks to add new fills time in edit pannel
+                    UI.manage_toggle()
+                    manage.dialogue.open()
+                    document.getElementById('start_time_put').value = config.properties.quimk_start
+                    document.getElementById('end_time_put').value = config.properties.quimk_end
+                    document.getElementById('day_put').value = config.properties.quimk_day
+                    switch (config.properties.quimk_day) {
+                        case "0":
+                            document.getElementById('day_put_text').innerText = "Sunday";
+                            break;
+                        case "1":
+                            document.getElementById('day_put_text').innerText = "Monday";
+                            break;
+                        case "2":
+                            document.getElementById('day_put_text').innerText = "Tuesday";
+                            break;
+                        case "3":
+                            document.getElementById('day_put_text').innerText = "Wednsday";
+                            break;
+                        case "4":
+                            document.getElementById('day_put_text').innerText = "Thursday";
+                            break;
+                        case "5":
+                            document.getElementById('day_put_text').innerText = "Friday";
+                            break;
+                        case "6":
+                            document.getElementById('day_put_text').innerText = "Saturday";
+                            break;
+                    }
+                }
+            },
+            { type: 'separator' },
+            { label: 'Force refresh UI', click() { maininitalizer() } },
+            { type: 'separator' },
+            { label: 'Contact developer', click() { shell.openExternal(my_website) } },
+            //{ role: 'toggledevtools' }
+        ])
+
+        function quimk_popup(e) {//Popup the menu
+            e.preventDefault()
+            e.stopPropagation()
+            quick_add_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+        }
+
+
+        //Sunday
+        document.getElementById('7_0').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "00:00"
+            config.properties.quimk_end = "01:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_1').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "01:00"
+            config.properties.quimk_end = "02:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_2').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "02:00"
+            config.properties.quimk_end = "03:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_3').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "03:00"
+            config.properties.quimk_end = "04:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_4').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "04:00"
+            config.properties.quimk_end = "05:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_5').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "05:00"
+            config.properties.quimk_end = "06:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_6').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "06:00"
+            config.properties.quimk_end = "07:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_7').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "07:00"
+            config.properties.quimk_end = "08:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_8').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "08:00"
+            config.properties.quimk_end = "09:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_9').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "09:00"
+            config.properties.quimk_end = "10:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_10').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "10:00"
+            config.properties.quimk_end = "11:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_11').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "11:00"
+            config.properties.quimk_end = "12:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_12').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "12:00"
+            config.properties.quimk_end = "13:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_13').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "13:00"
+            config.properties.quimk_end = "14:00"
+            config.properties.quimk_day = "7"
+        })
+
+        document.getElementById('7_14').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "14:00"
+            config.properties.quimk_end = "15:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_15').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "15:00"
+            config.properties.quimk_end = "16:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_16').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "16:00"
+            config.properties.quimk_end = "17:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_17').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "17:00"
+            config.properties.quimk_end = "18:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_18').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "18:00"
+            config.properties.quimk_end = "19:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_19').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "19:00"
+            config.properties.quimk_end = "20:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_20').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "20:00"
+            config.properties.quimk_end = "21:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_21').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "21:00"
+            config.properties.quimk_end = "22:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_22').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "22:00"
+            config.properties.quimk_end = "23:00"
+            config.properties.quimk_day = "7"
+        })
+        document.getElementById('7_23').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "23:00"
+            config.properties.quimk_end = "23:59"
+            config.properties.quimk_day = "7"
+        })
+
+
+        //monday
+        document.getElementById('1_0').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "00:00"
+            config.properties.quimk_end = "01:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_1').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "01:00"
+            config.properties.quimk_end = "02:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_2').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "02:00"
+            config.properties.quimk_end = "03:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_3').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "03:00"
+            config.properties.quimk_end = "04:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_4').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "04:00"
+            config.properties.quimk_end = "05:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_5').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "05:00"
+            config.properties.quimk_end = "06:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_6').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "06:00"
+            config.properties.quimk_end = "07:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_7').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "07:00"
+            config.properties.quimk_end = "08:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_8').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "08:00"
+            config.properties.quimk_end = "09:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_9').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "09:00"
+            config.properties.quimk_end = "10:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_10').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "10:00"
+            config.properties.quimk_end = "11:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_11').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "11:00"
+            config.properties.quimk_end = "12:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_12').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "12:00"
+            config.properties.quimk_end = "13:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_13').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "13:00"
+            config.properties.quimk_end = "14:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_14').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "14:00"
+            config.properties.quimk_end = "15:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_15').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "15:00"
+            config.properties.quimk_end = "16:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_16').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "16:00"
+            config.properties.quimk_end = "17:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_17').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "17:00"
+            config.properties.quimk_end = "18:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_18').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "18:00"
+            config.properties.quimk_end = "19:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_19').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "19:00"
+            config.properties.quimk_end = "20:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_20').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "20:00"
+            config.properties.quimk_end = "21:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_21').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "21:00"
+            config.properties.quimk_end = "22:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_22').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "22:00"
+            config.properties.quimk_end = "23:00"
+            config.properties.quimk_day = "1"
+        })
+        document.getElementById('1_23').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "23:00"
+            config.properties.quimk_end = "23:59"
+            config.properties.quimk_day = "1"
+        })
+
+
+        //tuesday
+        document.getElementById('2_0').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "00:00"
+            config.properties.quimk_end = "01:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_1').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "01:00"
+            config.properties.quimk_end = "02:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_2').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "02:00"
+            config.properties.quimk_end = "03:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_3').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "03:00"
+            config.properties.quimk_end = "04:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_4').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "04:00"
+            config.properties.quimk_end = "05:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_5').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "05:00"
+            config.properties.quimk_end = "06:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_6').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "06:00"
+            config.properties.quimk_end = "07:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_7').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "07:00"
+            config.properties.quimk_end = "08:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_8').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "08:00"
+            config.properties.quimk_end = "09:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_9').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "09:00"
+            config.properties.quimk_end = "10:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_10').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "10:00"
+            config.properties.quimk_end = "11:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_11').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "11:00"
+            config.properties.quimk_end = "12:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_12').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "12:00"
+            config.properties.quimk_end = "13:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_13').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "13:00"
+            config.properties.quimk_end = "14:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_14').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "14:00"
+            config.properties.quimk_end = "15:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_15').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "15:00"
+            config.properties.quimk_end = "16:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_16').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "16:00"
+            config.properties.quimk_end = "17:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_17').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "17:00"
+            config.properties.quimk_end = "18:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_18').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "18:00"
+            config.properties.quimk_end = "19:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_19').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "19:00"
+            config.properties.quimk_end = "20:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_20').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "20:00"
+            config.properties.quimk_end = "21:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_21').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "21:00"
+            config.properties.quimk_end = "22:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_22').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "22:00"
+            config.properties.quimk_end = "23:00"
+            config.properties.quimk_day = "2"
+        })
+        document.getElementById('2_23').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "23:00"
+            config.properties.quimk_end = "23:59"
+            config.properties.quimk_day = "2"
+        })
+
+
+        //wednsday
+        document.getElementById('3_0').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "00:00"
+            config.properties.quimk_end = "01:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_1').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "01:00"
+            config.properties.quimk_end = "02:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_2').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "02:00"
+            config.properties.quimk_end = "03:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_3').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "03:00"
+            config.properties.quimk_end = "04:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_4').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "04:00"
+            config.properties.quimk_end = "05:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_5').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "05:00"
+            config.properties.quimk_end = "06:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_6').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "06:00"
+            config.properties.quimk_end = "07:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_7').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "07:00"
+            config.properties.quimk_end = "08:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_8').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "08:00"
+            config.properties.quimk_end = "09:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_9').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "09:00"
+            config.properties.quimk_end = "10:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_10').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "10:00"
+            config.properties.quimk_end = "11:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_11').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "11:00"
+            config.properties.quimk_end = "12:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_12').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "12:00"
+            config.properties.quimk_end = "13:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_13').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "13:00"
+            config.properties.quimk_end = "14:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_14').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "14:00"
+            config.properties.quimk_end = "15:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_15').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "15:00"
+            config.properties.quimk_end = "16:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_16').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "16:00"
+            config.properties.quimk_end = "17:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_17').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "17:00"
+            config.properties.quimk_end = "18:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_18').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "18:00"
+            config.properties.quimk_end = "19:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_19').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "19:00"
+            config.properties.quimk_end = "20:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_20').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "20:00"
+            config.properties.quimk_end = "21:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_21').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "21:00"
+            config.properties.quimk_end = "22:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_22').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "22:00"
+            config.properties.quimk_end = "23:00"
+            config.properties.quimk_day = "3"
+        })
+        document.getElementById('3_23').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "23:00"
+            config.properties.quimk_end = "23:59"
+            config.properties.quimk_day = "3"
+        })
+
+
+        //thursday
+        document.getElementById('4_0').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "00:00"
+            config.properties.quimk_end = "01:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_1').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "01:00"
+            config.properties.quimk_end = "02:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_2').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "02:00"
+            config.properties.quimk_end = "03:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_3').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "03:00"
+            config.properties.quimk_end = "04:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_4').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "04:00"
+            config.properties.quimk_end = "05:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_5').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "05:00"
+            config.properties.quimk_end = "06:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_6').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "06:00"
+            config.properties.quimk_end = "07:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_7').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "07:00"
+            config.properties.quimk_end = "08:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_8').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "08:00"
+            config.properties.quimk_end = "09:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_9').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "09:00"
+            config.properties.quimk_end = "10:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_10').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "10:00"
+            config.properties.quimk_end = "11:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_11').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "11:00"
+            config.properties.quimk_end = "12:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_12').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "12:00"
+            config.properties.quimk_end = "13:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_13').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "13:00"
+            config.properties.quimk_end = "14:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_14').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "14:00"
+            config.properties.quimk_end = "15:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_15').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "15:00"
+            config.properties.quimk_end = "16:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_16').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "16:00"
+            config.properties.quimk_end = "17:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_17').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "17:00"
+            config.properties.quimk_end = "18:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_18').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "18:00"
+            config.properties.quimk_end = "19:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_19').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "19:00"
+            config.properties.quimk_end = "20:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_20').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "20:00"
+            config.properties.quimk_end = "21:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_21').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "21:00"
+            config.properties.quimk_end = "22:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_22').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "22:00"
+            config.properties.quimk_end = "23:00"
+            config.properties.quimk_day = "4"
+        })
+        document.getElementById('4_23').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "23:00"
+            config.properties.quimk_end = "23:59"
+            config.properties.quimk_day = "4"
+        })
+
+
+
+        //friday
+        document.getElementById('5_0').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "00:00"
+            config.properties.quimk_end = "01:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_1').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "01:00"
+            config.properties.quimk_end = "02:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_2').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "02:00"
+            config.properties.quimk_end = "03:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_3').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "03:00"
+            config.properties.quimk_end = "04:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_4').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "04:00"
+            config.properties.quimk_end = "05:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_5').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "05:00"
+            config.properties.quimk_end = "06:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_6').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "06:00"
+            config.properties.quimk_end = "07:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_7').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "07:00"
+            config.properties.quimk_end = "08:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_8').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "08:00"
+            config.properties.quimk_end = "09:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_9').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "09:00"
+            config.properties.quimk_end = "10:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_10').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "10:00"
+            config.properties.quimk_end = "11:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_11').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "11:00"
+            config.properties.quimk_end = "12:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_12').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "12:00"
+            config.properties.quimk_end = "13:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_13').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "13:00"
+            config.properties.quimk_end = "14:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_14').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "14:00"
+            config.properties.quimk_end = "15:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_15').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "15:00"
+            config.properties.quimk_end = "16:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_16').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "16:00"
+            config.properties.quimk_end = "17:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_17').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "17:00"
+            config.properties.quimk_end = "18:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_18').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "18:00"
+            config.properties.quimk_end = "19:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_19').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "19:00"
+            config.properties.quimk_end = "20:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_20').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "20:00"
+            config.properties.quimk_end = "21:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_21').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "21:00"
+            config.properties.quimk_end = "22:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_22').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "22:00"
+            config.properties.quimk_end = "23:00"
+            config.properties.quimk_day = "5"
+        })
+        document.getElementById('5_23').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "23:00"
+            config.properties.quimk_end = "23:59"
+            config.properties.quimk_day = "5"
+        })
+
+
+        //saturday
+        document.getElementById('6_0').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "00:00"
+            config.properties.quimk_end = "01:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_1').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "01:00"
+            config.properties.quimk_end = "02:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_2').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "02:00"
+            config.properties.quimk_end = "03:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_3').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "03:00"
+            config.properties.quimk_end = "04:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_4').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "04:00"
+            config.properties.quimk_end = "05:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_5').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "05:00"
+            config.properties.quimk_end = "06:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_6').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "06:00"
+            config.properties.quimk_end = "07:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_7').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "07:00"
+            config.properties.quimk_end = "08:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_8').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "08:00"
+            config.properties.quimk_end = "09:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_9').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "09:00"
+            config.properties.quimk_end = "10:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_10').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "10:00"
+            config.properties.quimk_end = "11:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_11').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "11:00"
+            config.properties.quimk_end = "12:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_12').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "12:00"
+            config.properties.quimk_end = "13:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_13').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "13:00"
+            config.properties.quimk_end = "14:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_14').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "14:00"
+            config.properties.quimk_end = "15:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_15').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "15:00"
+            config.properties.quimk_end = "16:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_16').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "16:00"
+            config.properties.quimk_end = "17:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_17').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "17:00"
+            config.properties.quimk_end = "18:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_18').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "18:00"
+            config.properties.quimk_end = "19:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_19').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "19:00"
+            config.properties.quimk_end = "20:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_20').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "20:00"
+            config.properties.quimk_end = "21:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_21').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "21:00"
+            config.properties.quimk_end = "22:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_22').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "22:00"
+            config.properties.quimk_end = "23:00"
+            config.properties.quimk_day = "6"
+        })
+        document.getElementById('6_23').addEventListener('contextmenu', function (e) {
+            quimk_popup(e)
+            config.properties.quimk_start = "23:00"
+            config.properties.quimk_end = "23:59"
+            config.properties.quimk_day = "6"
+        })
+
+    },
 }
 
 /*  Data manager    */
@@ -1722,9 +2804,13 @@ let manage = {
         while (config.data.table_details[i] != null) {
             if (config.data.table_details[i].identifier == Number(config.data.table_selected) && config.data.table_details[i].deleted != true) {
                 document.getElementById('tablemanage_txt').innerText = config.data.table_details[i].purpose;
+                document.getElementById('title_txt').innerText = config.data.table_details[i].purpose;
+                document.getElementById('pg_title').innerText = config.data.table_details[i].purpose;
                 break;
             } else {
                 document.getElementById('tablemanage_txt').innerText = "Homeless tiles";
+                document.getElementById('title_txt').innerText = "Homeless tiles";
+                document.getElementById('pg_title').innerText = "Homeless tiles";
             }
             i++
         }
@@ -1908,6 +2994,7 @@ let manage = {
                     tab_put.focus()
                 }, 200)
                 tab_put.addEventListener('keyup', function (event) {
+                    event.stopPropagation()
                     if (event.keyCode === 13) { //enterkey
                         confirmimg.click(); //enterkey is pressed, confirm input
                     } else if (event.keyCode == 27) { //esckey
@@ -2099,6 +3186,7 @@ let manage = {
                     config.data.table1_db[index].deleted = false;
                     config.save();
                     manage.render_list();
+                    config.properties.changed = true
                 }); //un-"delete"
             } else {
                 //populate the block with relivant data
@@ -2130,15 +3218,18 @@ let manage = {
                 time_tab_row.appendChild(time_tab);
                 sub_tab.appendChild(time_tab_row);
                 tempblock.appendChild(sub_tab);
-                //alow editing function
+                //allow editing function
                 tempblock.setAttribute('id', 'bar_' + index);
                 tempblock.addEventListener('click', function () {
+                    event.stopPropagation()
                     manage.dialogue.edit(index)
                 }); //Edit btn
                 editbtn.addEventListener('click', function () {
+                    event.stopPropagation()
                     manage.dialogue.edit(index)
                 }); //Edit btn
                 deletebtn.addEventListener('click', function () {
+                    event.stopPropagation()
                     config.data.table1_db[index].deleted = true
                     config.save()
                     manage.render_list()
@@ -2497,6 +3588,8 @@ let UI = {
                     UI.manage_toggle()
                 } else if (document.getElementById('setting_view').style.display == "block") {
                     UI.setting_toggle()
+                } else if (document.getElementById('fullscreen_tile').classList == "fullscreen_tile_active") {
+                    UI.close_tile()
                 }
             }
 
@@ -2551,12 +3644,13 @@ let UI = {
         document.getElementById('save_btn').addEventListener('click', manage.dialogue.save); //Save button
         document.getElementById('savepluss_btn').addEventListener('click', manage.dialogue.saveplus);
         document.getElementById('delete_btn').addEventListener('click', function () {
-            console.log('Delete called');
-            config.data.table1_db[config.properties.overwrite].deleted = true;
+            console.log('Delete called')
+            config.data.table1_db[config.properties.overwrite].deleted = true
             config.properties.changed = true
-            manage.dialogue.close();
-            manage.dialogue.clear();
-            manage.render_list();
+            manage.dialogue.close()
+            manage.dialogue.clear()
+            manage.render_list()
+            config.save()
         });
         document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
 
@@ -2601,6 +3695,14 @@ let UI = {
         UI.setting.Row.setpostition();
         UI.setting.wallpaper.set_wallpaper()
         UI.setting.set_theme();
+        UI.setting.frame.setpostition();
+
+        if (config.data.always_on_top == true) {
+            main.setontop()
+            document.getElementById('always_on_top_btn').classList = "statusbtn_active"
+        } else {
+            main.setnotontop()
+        }
 
         if (config.baseconfig.use_alt_storage == true && config.baseconfig.use_alt_storage != undefined) {
             document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString()
@@ -2610,11 +3712,23 @@ let UI = {
             document.getElementById('pathrepresenter').readonly = true;//unlock path input
         }
 
+        document.getElementById('mainx_btn').addEventListener('click', function () { main.closeapp() })//X button close app
+
+        document.getElementById('maximize_btn').addEventListener('click', UI.minimize_maximize)
+
+        document.getElementById('minimize_btn').addEventListener('click', function () { main.minmize_main_window() })
+
+        document.getElementById('always_on_top_btn').addEventListener('click', UI.toggle_alwaysontop)
+
+        document.getElementById('Setting_btn').addEventListener('click', UI.setting_toggle)
+        document.getElementById('Manage_button_btn').addEventListener('click', UI.manage_toggle)
+
         //Switch triggers
         document.getElementById('hilight_btn').addEventListener('click', UI.setting.hilight.flip)
         document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
+        document.getElementById('frame_btn').addEventListener('click', UI.setting.frame.flip)
         document.getElementById('close_btn').addEventListener('click', UI.close_tile)
 
         document.getElementById('select_btn').addEventListener('click', function () { //Select the configuration location
@@ -2662,6 +3776,11 @@ let UI = {
             config.save()
         })
 
+        document.getElementById('fullscreen_tile').addEventListener('contextmenu', function () {
+            event.stopPropagation()
+            event.preventDefault()
+            UI.close_tile()
+        })
 
     },
     hue_selec: function (hue) {
@@ -2673,43 +3792,56 @@ let UI = {
         var state = main.togglealways_on_top()
         if (state == true) {
             //is always on top
+            document.getElementById('always_on_top_btn').classList = "statusbtn_active"
             config.data.always_on_top = true;
             config.save()
         } else {
             //is not always on top
+            document.getElementById('always_on_top_btn').classList = "statusbtn"
             config.data.always_on_top = false;
             config.save()
         }
         console.log('Window always on top :', state);
     },
     setting_toggle: function () {
+        UI.close_tile()
         if (document.getElementById('manage_view').style.display == "block") {
             //close
+            document.getElementById('Manage_button_btn').classList = "statusbtn"
             document.getElementById('manage_view').style.display = ""
         }
 
         if (document.getElementById('setting_view').style.display == "block") {
             //close
+            document.getElementById('Setting_btn').classList = "statusbtn"
             document.getElementById('setting_view').style.display = ""
+            if (config.properties.changed == true) {
+                maininitalizer();//Efficiency goes VROOOOM
+            }
         } else {
             //open
+            document.getElementById('Setting_btn').classList = "statusbtn_active"
             document.getElementById('setting_view').style.display = "block"
         }
     },
     manage_toggle: function () {
+        UI.close_tile()
         if (document.getElementById('setting_view').style.display == "block") {
             //close
+            document.getElementById('Setting_btn').classList = "statusbtn"
             document.getElementById('setting_view').style.display = ""
         }
 
         if (document.getElementById('manage_view').style.display == "block") {
             //close
+            document.getElementById('Manage_button_btn').classList = "statusbtn"
             document.getElementById('manage_view').style.display = ""
             if (config.properties.changed == true) {
                 maininitalizer();//Efficiency goes VROOOOM
             }
         } else {
             //open
+            document.getElementById('Manage_button_btn').classList = "statusbtn_active"
             document.getElementById('manage_view').style.display = "block"
         }
     },
@@ -2912,7 +4044,7 @@ let UI = {
                     console.warn('animations enabled');
                 }
 
-                if (systemPreferences.getAnimationSettings().shouldRenderRichAnimation == false) {//animations preffered by system
+                if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == false) {//animations preffered by system
                     notify.new('System', 'Animations dissabled by Current Users animation preferences');
                 }
 
@@ -2920,18 +4052,30 @@ let UI = {
                 UI.setting.animation.setpostition();
             },
             setpostition: function () {
-                if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == true) {//animations preffered by system
-                    if (config.data.animation) {
-                        document.getElementById('Animations_switch_container').className = 'switch_container_active';
-                        document.getElementById('nomation').href = "";
-                    } else {
-                        document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
-                        document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
-                    }
-                } else {//system preffers no animations
+                switch (process.platform) {
+                    case "linux"://Linux && free BSD
+                        if (config.data.animation) {
+                            document.getElementById('Animations_switch_container').className = 'switch_container_active';
+                            document.getElementById('nomation').href = "";
+                        } else {
+                            document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
+                            document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
+                        }
+                        break;
+                    default://Mac OS && windows
+                        if (systemPreferences.getAnimationSettings().shouldRenderRichAnimation == true) {//animations preffered by system only works on windows and wackOS
+                            if (config.data.animation) {
+                                document.getElementById('Animations_switch_container').className = 'switch_container_active';
+                                document.getElementById('nomation').href = "";
+                            } else {
+                                document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
+                                document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
+                            }
+                        } else {//system preffers no animations
 
-                    document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
-                    document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
+                            document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
+                            document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
+                        }
                 }
             },
         },
@@ -2987,23 +4131,43 @@ let UI = {
                 }
             },
         },
+        frame: {
+            flip: function () {
+                console.log('frame switch triggered');
+                var framestate = main.framestate()
+                if (framestate == true) {
+                    //turn off the switch
+                    main.setframe(false)
+                } else {
+                    //turn on the witch
+                    main.setframe(true)
+                }
+            },
+            setpostition: function () {
+                var framestate = main.framestate()
+                if (framestate == true) {
+                    document.getElementById('index_css').href = "css/index-frameon.css"
+                    document.getElementById('frame_switch_container').className = 'switch_container_active';
+                } else {
+                    document.getElementById('index_css').href = "css/index-frameoff.css"
+                    document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
+                }
+            },
+        },
         wallpaper: {
             set_wallpaper: async function () {
                 if (config.data.backgroundimg != null || undefined) {
-                    if (config.data.backgroundimg == "default") {
-                        wallpaper.get().then((wallpaperpath) => {//get desktop wallpaper
-                            var parsedwallpaperpath = path.parse(wallpaperpath);
-                            if (parsedwallpaperpath.ext !== undefined) {//check for windows
+                    if (config.data.backgroundimg == "default") {//Use "Default" wallpaper
+                        wallpaper.get().then((wallpaperpath) => {//gets desktop wallpaper
+                            if (path.parse(wallpaperpath).ext !== undefined) {//check if file is usable
                                 //use desktop wallpaper
-                                for (i = 0; i <= wallpaperpath.length; i++) {
-                                    console.log(wallpaperpath)
-                                    wallpaperpath = wallpaperpath.replace('\\', '/');
-                                }
-                                document.getElementById('timetable').style.backgroundImage = "";
+                                for (i = 0; i <= wallpaperpath.length; i++) { wallpaperpath = wallpaperpath.replace('\\', '/') }
+
+                                //document.getElementById('timetable').style.backgroundImage = "";
                                 document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
                                 document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                 document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                document.getElementById('wallpaper_pathrepresenter').value = wallpaperpath;
+                                document.getElementById('wallpaper_pathrepresenter').value = "Desktop wallpaper";
                             } else {//default to css wallpaper
                                 document.getElementById('timetable').style.backgroundImage = "";
                                 document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
@@ -3013,40 +4177,60 @@ let UI = {
                         //Convert path to form css can understand
                         var resaucepath = process.resourcesPath
                         for (i = 0; i <= resaucepath.length; i++) {
-                            console.log(resaucepath)
+                            //console.log(resaucepath)
                             resaucepath = resaucepath.replace('\\', '/');
                         }
-                        //document.getElementById('timetable').style.backgroundImage = "";
+                        //document.getElementById('timetable').style.backgroundImage = "url('C:\\fakepath\\fakeimg.png')";
                         document.getElementById('timetable').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
                         document.getElementById('wallpaper_pathrepresenter').value = resaucepath + "/backgroundimg" + config.data.backgroundimg.ext;
+
                     }
                 } else {//no wallperper, clear and use css wallpaper
                     document.getElementById('timetable').style.backgroundImage = "";
                     document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
                 }
             },
-            select_wallpaper: async function () {
-                dialog.showOpenDialog({
-                    buttonLabel: "open", filters: [
-                        { name: 'Images', extensions: ['jpg', 'png', 'gif'] },
-                        { name: 'All Files', extensions: ['*'] }
-                    ]
+            select_wallpaper: async function () {//User selects wallpaper
+                dialog.showOpenDialog({//electron async file dialogue
+                    buttonLabel: "Select image", filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }, { name: 'All Files', extensions: ['*'] }]//Options for file dialogue
                 }).then((filestuff) => {
                     if (filestuff.canceled == true) {//user canceled file dialogue
                         console.log('User canceled file dialogue')
                     } else {
                         var parsed_path = path.parse(filestuff.filePaths[0])
-                        fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "\\backgroundimg" + parsed_path.ext, function () {
-                            console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "\\backgroundimg" + parsed_path.ext)
-                            config.data.backgroundimg = parsed_path
-                            console.log('Set background img as :', config.data.backgroundimg)
-                            config.save()
-                            setTimeout(() => {
-                                UI.setting.wallpaper.set_wallpaper()
-                            }, 500);
-                        })
+                        var wallpaperpath = filestuff.filePaths[0]
+                        if (parsed_path.ext !== undefined) {//check if file is usable
+                            for (i = 0; i <= wallpaperpath.length; i++) { wallpaperpath = wallpaperpath.replace('\\', '/') }
+                        }
+                        switch (process.platform) {
+                            case "linux":
+                                fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "/backgroundimg" + parsed_path.ext, function () {
+                                    console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "/backgroundimg" + parsed_path.ext)
+                                    config.data.backgroundimg = parsed_path
+                                    console.log('Set background img as :', config.data.backgroundimg)
+                                    config.save()
+                                    setTimeout(() => {
+                                        document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                    }, 50);
+                                })
+                                break;
+                            default:
+                                fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "\\backgroundimg" + parsed_path.ext, function () {
+                                    console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "\\backgroundimg" + parsed_path.ext)
+                                    config.data.backgroundimg = parsed_path
+                                    console.log('Set background img as :', config.data.backgroundimg)
+                                    config.save()
+                                    setTimeout(() => {
+                                        document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                    }, 50);
+                                })
+                        }
                     }
                 }).catch((error) => {
                     alert('An error occured, ', error.message)
