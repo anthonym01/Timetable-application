@@ -73,6 +73,8 @@
     --dark_pannel_book: url('../img/manage-white.webp');
     --light_pannel_book: url('../img/manage-dark.webp');
     --book_open: url('../img/manage-open-white.webp');
+    --window-top: url('../img/window-top-512-light.webp');
+    --setting:url('../img/setting-light.webp');
     --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 70%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 30%));
     --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
     --primary_hue_active: hsl(var(--hue_value), var(--saturat), 40%);
@@ -160,6 +162,8 @@
     --dark_pannel_book: url('../img/manage-white.webp');
     --light_pannel_book: url('../img/manage-dark.webp');
     --book_open: url('../img/manage-open-white.webp');
+    --window-top: url('../img/window-top-512-dark.webp');
+    --setting:url('../img/setting-dark.webp');
     --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 30%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 70%));
     --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
     --primary_hue_active: hsl(var(--hue_value), var(--saturat), 60%);
@@ -546,8 +550,8 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     cursor: pointer;
-    background-image: url('../img/window-top-512-light.webp');
-    filter: invert(var(--inversion_factor));
+    background-image:var(--window-top);
+    /*filter: invert(var(--inversion_factor));*/
 }
 
 #Setting_btn {
@@ -557,8 +561,8 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     cursor: pointer;
-    background-image: url('../img/setting-light.webp');
-    filter: invert(var(--inversion_factor));
+    background-image: var(--setting);
+    /*filter: invert(var(--inversion_factor));*/
 }
 
 #Manage_button_btn {
@@ -569,7 +573,7 @@ body {
     background-repeat: no-repeat;
     cursor: pointer;
     background-image: var(--book_closed);
-    filter: invert(var(--inversion_factor));
+    /*filter: invert(var(--inversion_factor));*/
 }
 
 #mainx_btn {
@@ -743,7 +747,7 @@ view {
 .fullscreen_tile,
 .fullscreen_tile_active {
     position: fixed;
-    bottom: 7vh;
+    bottom: 0;
     left: 0;
     width: 100vw;
     height: 0px;
@@ -757,7 +761,7 @@ view {
 
 .fullscreen_tile_active {
     display: block;
-    height: calc(100vh - 30px);
+    height: 100vh;
     opacity: 1;
     transform: translate(0vh);
 }
