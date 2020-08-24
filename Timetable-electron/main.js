@@ -31,8 +31,9 @@ app.on('window-all-closed',function(){
 
 function create_main_window() {
 	mainWindow = null
-	const { screenwidth, screenheight } = electron.screen.getPrimaryDisplay().workAreaSize //gets screen size and sets it to height and width
+	const { screenwidth, screenheight } = screen.getPrimaryDisplay().workAreaSize //gets screen size and sets it to height and width
 	let mainWindowState = windowStateKeeper({ defaultWidth: screenwidth, defaultHeight: screenheight });
+	
 	mainWindow = new BrowserWindow({
 		x: mainWindowState.x,
 		y: mainWindowState.y,

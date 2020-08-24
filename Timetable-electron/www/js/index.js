@@ -465,12 +465,14 @@ let config = {
             alert('An error occured ', err.message)
         }).finally(() => {
             if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if it was on, turn it back on
+            document.getElementById('pathrepresenter').value = path.join(config.baseconfig.alt_location.toString(), "Timetableconfig.json")
         })
     },
     usedefault: function () {//use default storage location
         config.baseconfig.use_alt_storage = false
         localStorage.setItem("TT001_cfg_baseconfig", JSON.stringify(config.baseconfig))//save base config
         maininitalizer()
+        document.getElementById('pathrepresenter').value = 'application storage'
     },
 }
 
@@ -3733,7 +3735,6 @@ let UI = {
 
         document.getElementById('select_btn').addEventListener('click', function () { //Select the configuration location
             config.selectlocation()
-            document.getElementById('pathrepresenter').value = path.join(config.baseconfig.alt_location.toString(), "Timetableconfig.json")
             config.properties.changed = true
         })
         document.getElementById('save_conf_btn').addEventListener('click', config.save)
@@ -4171,38 +4172,54 @@ let UI = {
             set_wallpaper: async function () {
                 if (config.data.backgroundimg != null || undefined) {
                     if (config.data.backgroundimg == "default") {//Use "Default" wallpaper
-                        wallpaper.get().then((wallpaperpath) => {//gets desktop wallpaper
-                            if (path.parse(wallpaperpath).ext !== undefined) {//check if file is usable
-                                //use desktop wallpaper
-                                for (i = 0; i <= wallpaperpath.length; i++) { wallpaperpath = wallpaperpath.replace('\\', '/') }
-
-                                //document.getElementById('timetable').style.backgroundImage = "";
-                                document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                document.getElementById('wallpaper_pathrepresenter').value = "Desktop wallpaper";
-                            } else {//default to css wallpaper
-                                document.getElementById('timetable').style.backgroundImage = "";
-                                document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
-                            }
-                        })
+                        useDesktop();
                     } else {//use user selected wallpaper
-                        //Convert path to form css can understand
-                        var resaucepath = process.resourcesPath
-                        for (i = 0; i <= resaucepath.length; i++) {
-                            //console.log(resaucepath)
-                            resaucepath = resaucepath.replace('\\', '/');
-                        }
+                        useUserSelected();
+                    }
+                } else {//no wallperper, clear and use css wallpaper
+                    useCSS();
+                }
+
+                function useCSS() {
+                    document.getElementById('timetable').style.backgroundImage = "";
+                    document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
+                }
+
+                function useUserSelected() {
+                    //Convert path to form css can understand
+                    var resaucepath = process.resourcesPath
+                    for (i = 0; i <= resaucepath.length; i++) {
+                        //console.log(resaucepath)
+                        resaucepath = resaucepath.replace('\\', '/');
+                    }
+                    if (fs.existsSync(resaucepath + "/backgroundimg" + config.data.backgroundimg.ext)) {
                         //document.getElementById('timetable').style.backgroundImage = "url('C:\\fakepath\\fakeimg.png')";
                         document.getElementById('timetable').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
                         document.getElementById('wallpaper_pathrepresenter').value = resaucepath + "/backgroundimg" + config.data.backgroundimg.ext;
-
+                    } else {
+                        useDesktop();
+                        notify.new('file error','custom Wallpaper file not found')
                     }
-                } else {//no wallperper, clear and use css wallpaper
-                    document.getElementById('timetable').style.backgroundImage = "";
-                    document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
+                }
+
+                async function useDesktop() {
+                    wallpaper.get().then((wallpaperpath) => {//gets desktop wallpaper
+                        if (path.parse(wallpaperpath).ext !== undefined) {//check if file is usable
+                            //use desktop wallpaper
+                            for (i = 0; i <= wallpaperpath.length; i++) { wallpaperpath = wallpaperpath.replace('\\', '/') }
+
+                            //document.getElementById('timetable').style.backgroundImage = "";
+                            document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                            document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                            document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                            document.getElementById('wallpaper_pathrepresenter').value = "Desktop wallpaper";
+                        } else {//default to css wallpaper
+                            document.getElementById('timetable').style.backgroundImage = "";
+                            document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
+                        }
+                    })
                 }
             },
             select_wallpaper: async function () {//User selects wallpaper
