@@ -22,11 +22,12 @@ var wallpaper = require('wallpaper');
 var my_website = 'https://anthonym01.github.io/Portfolio/?contact=me';
 window.addEventListener('load', function () {
   //window loads
-  //console.log('Running from:', process.resourcesPath)
-  //console.log(process)
+  console.log('Running from:', process.resourcesPath);
+  console.log(process);
   body_menu();
-  textboxmenu();
-  application_menu(); //console.log(nativeTheme)
+  textboxmenu(); //application_menu()
+
+  console.log(nativeTheme);
 
   if (localStorage.getItem("TT001_cfg")) {
     config.load();
@@ -40,7 +41,7 @@ window.addEventListener('load', function () {
   table.quick_add();
   table.clock.start_clock();
   setTimeout(function () {
-    //console.log('Closing loading screen...')
+    console.log('Closing loading screen...');
     document.getElementById('Loading').style.display = 'none';
   }, 250);
 });
@@ -230,10 +231,10 @@ var config = {
                   switch (_context2.prev = _context2.next) {
                     case 0:
                       //Html5 storage API
-                      //console.log('config saved to application storage')
+                      console.log('config saved to application storage');
                       localStorage.setItem("TT001_cfg", JSON.stringify(config.data));
 
-                    case 1:
+                    case 2:
                     case "end":
                       return _context2.stop();
                   }
@@ -247,10 +248,10 @@ var config = {
                   switch (_context.prev = _context.next) {
                     case 0:
                       //save config to directory defined by the user
-                      //console.log('saving to File system: ', config.baseconfig.alt_location)
+                      console.log('saving to File system: ', config.baseconfig.alt_location);
                       main.write_object_json_out(config.baseconfig.alt_location + "/TT001_cfg config.json", JSON.stringify(config.data)); //hand off writing the file to main process
 
-                    case 1:
+                    case 2:
                     case "end":
                       return _context.stop();
                   }
@@ -259,7 +260,7 @@ var config = {
             };
 
             //Save the config file
-            //console.table('Configuration is being saved', config.data)
+            console.table('Configuration is being saved', config.data);
             ToStorageAPI(); //save to application storage reguardless incase the file gets removed by the user, because users are kinda dumb
 
             if (config.baseconfig.use_alt_storage == true && _typeof(config.data) == 'object') {
@@ -267,7 +268,7 @@ var config = {
               ToFileSystem();
             }
 
-          case 4:
+          case 5:
           case "end":
             return _context3.stop();
         }
@@ -276,7 +277,8 @@ var config = {
   },
   load: function load() {
     //Load the config file
-    //console.warn('Configuration is being loaded')
+    console.warn('Configuration is being loaded');
+
     if (localStorage.getItem("TT001_cfg_baseconfig")) {
       //load base config
       config.baseconfig = JSON.parse(localStorage.getItem("TT001_cfg_baseconfig"));
@@ -293,16 +295,17 @@ var config = {
         var fileout = fs.readFileSync(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json", {
           encoding: 'utf8'
         }); //Read from file with charset utf8
-        //console.warn('config Loaded from: ', config.baseconfig.alt_location.toString(), 'Data from fs read operation: ', fileout)
 
+        console.warn('config Loaded from: ', config.baseconfig.alt_location.toString(), 'Data from fs read operation: ', fileout);
         fileout = JSON.parse(fileout); //parse the json
 
         if (fileout.key == "TT01") {
           //check if file has key
-          config.data = fileout; //console.warn('configuration applied from file')
+          config.data = fileout;
+          console.warn('configuration applied from file');
         } else {
           //no key, not correct file, load from application storage
-          //console.warn('The file is not a config file, internal configuration will be used')
+          console.warn('The file is not a config file, internal configuration will be used');
           config.data = JSON.parse(localStorage.getItem("TT001_cfg"));
         }
       } else {
@@ -313,32 +316,36 @@ var config = {
       }
     } else {
       //load from application storage
-      config.data = JSON.parse(localStorage.getItem("TT001_cfg")); //console.log('config Loaded from application storage')
-    } //console.table(config.data)
+      config.data = JSON.parse(localStorage.getItem("TT001_cfg"));
+      console.log('config Loaded from application storage');
+    }
 
-
+    console.table(config.data);
     this.validate();
   },
   validate: function validate() {
     //validate configuration file
-    //console.log('Config is being validated')
+    console.log('Config is being validated');
     var configisvalid = true;
 
     if (typeof this.data.backgroundimg == 'undefined') {
       this.data.backgroundimg = 'default';
-      configisvalid = false; //console.log('"backgroundimg" was found to be invalid and was set to default');
+      configisvalid = false;
+      console.log('"backgroundimg" was found to be invalid and was set to default');
     }
 
     if (typeof this.data.always_on_top == 'undefined') {
       this.data.always_on_top = false;
-      configisvalid = false; //console.log('"always_on_top" was found to be invalid and was set to default');
+      configisvalid = false;
+      console.log('"always_on_top" was found to be invalid and was set to default');
     }
 
     if (typeof this.data.table1_db !== 'undefined') {
       if (this.data.table1_db == undefined || null) {
         //check db existance
         this.data.table1_db = [];
-        configisvalid = false; //console.log('"Table1_database" was found to be invalid and was set to default')
+        configisvalid = false;
+        console.log('"Table1_database" was found to be invalid and was set to default');
       } else {
         var _i = 0;
         var overwrite = [];
@@ -346,26 +353,29 @@ var config = {
         var detetioncheck = false; //Construct the data
 
         while (config.data.table1_db[_i] != null || undefined) {
-          //console.log('checked state on :', i)
-          if (config.data.table1_db[_i].deleted) {
-            deleted.push(config.data.table1_db[_i]); //console.log('State of ', i, ' false')
+          console.log('checked state on :', _i);
 
+          if (config.data.table1_db[_i].deleted) {
+            deleted.push(config.data.table1_db[_i]);
+            console.log('State of ', _i, ' false');
             detetioncheck = true;
           } else {
-            overwrite.push(config.data.table1_db[_i]); //console.log('State of ', i, ' true')
+            overwrite.push(config.data.table1_db[_i]);
+            console.log('State of ', _i, ' true');
           }
 
           _i++;
         }
 
         if (detetioncheck) {
-          //console.table(deleted)
+          console.table(deleted);
           config.data.table1_db = overwrite;
         }
       }
     } else {
       this.data.table1_db = [];
-      configisvalid = false; //console.log('"Table1_database" was found to not exist and was set to default');
+      configisvalid = false;
+      console.log('"Table1_database" was found to not exist and was set to default');
     }
 
     if (typeof this.data.table_details == 'undefined') {
@@ -373,8 +383,8 @@ var config = {
         purpose: "table #1",
         deleted: false,
         identifier: 1
-      }]; //console.log('Table names were not defined!');
-
+      }];
+      console.log('Table names were not defined!');
       configisvalid = false;
     } else {
       //Remove deleted Items from the array
@@ -384,64 +394,73 @@ var config = {
       var _detetioncheck = false; //Construct the data
 
       while (config.data.table_details[_i2] != null || undefined) {
-        //console.log('checked state on :', i)
+        console.log('checked state on :', _i2);
+
         if (config.data.table_details[_i2].deleted == true) {
-          _deleted.push(config.data.table_details[_i2]); //console.log('State of ', i, ' false')
+          _deleted.push(config.data.table_details[_i2]);
 
-
+          console.log('State of ', _i2, ' false');
           _detetioncheck = true;
         } else {
-          _overwrite.push(config.data.table_details[_i2]); //console.log('State of ', i, ' true')
+          _overwrite.push(config.data.table_details[_i2]);
 
+          console.log('State of ', _i2, ' true');
         }
 
         _i2++;
       }
 
       if (_detetioncheck) {
-        //console.table(deleted)
+        console.table(_deleted);
         config.data.table_details = _overwrite;
       }
     }
 
     if (typeof this.data.previous_colors == 'undefined') {
       this.data.previous_colors = [];
-      configisvalid = false; //console.log('"previous_colors" was found to be invalid and was set to default');
+      configisvalid = false;
+      console.log('"previous_colors" was found to be invalid and was set to default');
     }
 
     if (typeof this.data.colorpallet == 'undefined') {
       this.data.colorpallet = -1;
-      configisvalid = false; //console.log('"colorpallet" was found to be invalid and was set to default');
+      configisvalid = false;
+      console.log('"colorpallet" was found to be invalid and was set to default');
     }
 
     if (typeof this.data.theme == 'undefined') {
       this.data.theme = "dark";
-      configisvalid = false; //console.log('"theme" was found to not exist and was set to default');
+      configisvalid = false;
+      console.log('"theme" was found to not exist and was set to default');
     }
 
     if (typeof this.data.hilight_engine == 'undefined') {
       this.data.hilight_engine = true;
-      configisvalid = false; //console.log('"hilight_engine" was found to be invalid and was set to default');
+      configisvalid = false;
+      console.log('"hilight_engine" was found to be invalid and was set to default');
     }
 
     if (typeof this.data.empty_rows == 'undefined') {
       this.data.empty_rows = true;
-      configisvalid = false; //console.log('"empty_rows" was found to be invalid and was set to default');
+      configisvalid = false;
+      console.log('"empty_rows" was found to be invalid and was set to default');
     }
 
     if (typeof this.data.animation == 'undefined') {
       this.data.animation = true;
-      configisvalid = false; //console.log('"animation" was found to be invalid and was set to default');
+      configisvalid = false;
+      console.log('"animation" was found to be invalid and was set to default');
     }
 
     if (typeof this.data.tiles == 'undefined') {
       this.data.tiles = false;
-      configisvalid = false; //console.log('"tiles" was found to be invalid and was set to default');
+      configisvalid = false;
+      console.log('"tiles" was found to be invalid and was set to default');
     }
 
     if (typeof this.data.previous_colors == 'undefined') {
-      this.data.previous_colors = []; //console.log('previous_colors were not defined!');
-
+      this.data.previous_colors = [];
+      console.log('previous_colors were not defined!');
       configisvalid = false;
     } else {
       config.data.previous_colors = Array.from(new Set(config.data.previous_colors)); //remove dublicates; vary comblicated (Sets dont allow duplicates, convert array to new set using "new Set()" then back to array using "Array.from()"")
@@ -452,26 +471,28 @@ var config = {
 
         while (config.data.previous_colors[i] != null || undefined) {
           //check check check
-          //console.error('Removed recent color :', config.data.previous_colors.pop()) //for debugging
+          console.error('Removed recent color :', config.data.previous_colors.pop()); //for debugging
+
           i++;
         }
       }
     }
 
     if (!configisvalid) {
-      //console.log('config was found to be invalid and will be overwritten');
+      console.log('config was found to be invalid and will be overwritten');
       config.save(); //Save new confog because old config is no longer valid
-    } else {//console.log('config was found to be valid');
-      }
+    } else {
+      console.log('config was found to be valid');
+    }
   },
   "delete": function _delete() {
     //Wjipe stowage
     localStorage.clear("TT001_cfg"); //yeet storage key
 
     config.usedefault(); //use default location
-    //console.log('config deleted: ')
-    //console.table(config.data)
 
+    console.log('config deleted: ');
+    console.table(config.data);
     this.validate();
   },
   backup: function backup() {
@@ -481,7 +502,7 @@ var config = {
         switch (_context4.prev = _context4.next) {
           case 0:
             //backup configuration to a file
-            //console.warn('Configuration backup initiated')
+            console.warn('Configuration backup initiated');
             always_on_top_state = main.checkontop();
             date = new Date();
 
@@ -492,15 +513,22 @@ var config = {
 
             filepath = dialog.showSaveDialog({
               //electron file save dialogue
-              defaultPath: "TT001_cfg backup " + Number(date.getMonth() + 1) + " - " + date.getDay() + " - " + date.getFullYear() + ".json",
-              buttonLabel: "Save"
+              window: require('electron').remote.getCurrentWindow(),
+              defaultPath: "TT001_cfg backup " + Number(date.getMonth() + 1) + " - " + date.getDate() + " - " + date.getFullYear(),
+              buttonLabel: "Save",
+              filters: [{
+                name: 'JSON',
+                extensions: ['json']
+              }]
             });
-            _context4.next = 6;
+            _context4.next = 7;
             return regeneratorRuntime.awrap(filepath.then(function (filepath) {
               //resolve filepath promise
-              //console.log(filepath)
-              if (filepath.canceled == true) {//the file save dialogue was canceled my the user
-                //console.warn('The file dialogue was canceled by the user')
+              console.log(filepath);
+
+              if (filepath.canceled == true) {
+                //the file save dialogue was canceled my the user
+                console.warn('The file dialogue was canceled by the user');
               } else {
                 main.write_object_json_out(filepath.filePath, JSON.stringify(config.data)); //hand off writing the file to main process
               }
@@ -514,7 +542,7 @@ var config = {
 
             }));
 
-          case 6:
+          case 7:
           case "end":
             return _context4.stop();
         }
@@ -528,7 +556,7 @@ var config = {
         switch (_context5.prev = _context5.next) {
           case 0:
             //restore configuration from a file
-            //console.warn('Configuration restoration initiated')
+            console.warn('Configuration restoration initiated');
             always_on_top_state = main.checkontop();
 
             if (always_on_top_state == true) {
@@ -546,16 +574,18 @@ var config = {
                 extensions: ['*']
               }]
             }).then(function (filepath) {
-              //console.log(filepath)
-              if (filepath.canceled == true) {//diologue ccanceled
-                //console.log("diologue ccanceled");
+              console.log(filepath);
+
+              if (filepath.canceled == true) {
+                //diologue ccanceled
+                console.log("diologue ccanceled");
               } else {
                 fs.readFile(filepath.filePaths[0], 'utf-8', function (err, data) {
                   //load data from file
                   if (err) {
                     alert("An error ocurred reading the file :" + err.message);
                   } else {
-                    //console.log("The file content is : " + data);
+                    console.log("The file content is : " + data);
                     var fileout = JSON.parse(data);
 
                     if (fileout.key == "TT01") {
@@ -563,7 +593,8 @@ var config = {
                       config.data = fileout;
                       config.save();
                       maininitalizer();
-                    } else {//console.warn(filepath.filePaths[0] + ' is not a backup file')
+                    } else {
+                      console.warn(filepath.filePaths[0] + ' is not a backup file');
                     }
                   }
                 });
@@ -577,7 +608,7 @@ var config = {
 
             });
 
-          case 3:
+          case 4:
           case "end":
             return _context5.stop();
         }
@@ -591,7 +622,7 @@ var config = {
         switch (_context6.prev = _context6.next) {
           case 0:
             //select location for configuration storage
-            //console.log('Select config location')
+            console.log('Select config location');
             always_on_top_state = main.checkontop();
 
             if (always_on_top_state == true) {
@@ -611,13 +642,13 @@ var config = {
               });
             }
 
-            _context6.next = 5;
+            _context6.next = 6;
             return regeneratorRuntime.awrap(path.then(function (path) {
               if (path.canceled == true) {//user canceled dialogue
                 //user canceled file dialogue
                 //config.usedefault()
               } else {
-                //console.warn('Alternate configuration path :', path.filePaths[0])
+                console.warn('Alternate configuration path :', path.filePaths[0]);
                 config.baseconfig.use_alt_storage = true;
                 config.baseconfig.alt_location = path.filePaths[0];
                 localStorage.setItem("TT001_cfg_baseconfig", JSON.stringify(config.baseconfig)); //save base config
@@ -625,6 +656,10 @@ var config = {
                 if (fs.existsSync(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json")) {
                   //config file already exist there
                   config.load();
+                  maininitalizer();
+                  setTimeout(function () {
+                    config.save();
+                  }, 500);
                 } else {
                   //no config file exist there
                   config.save();
@@ -639,10 +674,10 @@ var config = {
               } //if it was on, turn it back on
 
 
-              document.getElementById('pathrepresenter').value = path.join(config.baseconfig.alt_location.toString(), "Timetableconfig.json");
+              document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString(), "Timetableconfig.json";
             }));
 
-          case 5:
+          case 6:
           case "end":
             return _context6.stop();
         }
@@ -662,8 +697,8 @@ var config = {
 
 var table = {
   data_render: function data_render() {
-    //console.log('Table render started')
-    //wjipe main cells
+    console.log('Table render started'); //wjipe main cells
+
     var jkx = document.querySelectorAll(".jkx");
 
     for (i = 0; i < jkx.length; i++) {
@@ -710,12 +745,14 @@ var table = {
 
           config.properties.max = Math.max(config.data.table1_db[i].end, config.properties.max); //find maximum time in all datu
         }
-      } //console.log('Table minimum found to be: ', config.properties.min, ' Table maximum found to be: ', config.properties.max)
+      }
 
+      console.log('Table minimum found to be: ', config.properties.min, ' Table maximum found to be: ', config.properties.max);
 
       for (i = 0; i < config.data.table1_db.length; i++) {
         //construct table
-        //console.log('Data run on index :', i);
+        console.log('Data run on index :', i);
+
         if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
           build_block_db1(i);
         }
@@ -726,13 +763,14 @@ var table = {
 
 
       validate(); //Strip empty cells form top and bottom
-    } //console.log('Table render Completed');
+    }
 
+    console.log('Table render Completed');
 
     function build_block_db1(index) {
       //Builds timetable from database
-      //console.log('Building Block :', index);
-      //Create the data block
+      console.log('Building Block :', index); //Create the data block
+
       var tempblock = document.createElement('div');
       tempblock.setAttribute("class", "data_block"); //time processing
 
@@ -822,7 +860,8 @@ var table = {
 
 
       var starthraw = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
-      //console.warn('Raw Time value: ', starthraw);
+
+      console.warn('Raw Time value: ', starthraw);
 
       switch (config.data.table1_db[index].day) {
         //Day decsion
@@ -836,8 +875,9 @@ var table = {
           else if (starthraw >= 10 && starthraw < 24) {
               document.getElementById('1_' + starthraw.toPrecision(2)).appendChild(tempblock);
             } //more than 10 precision 2
-            else {} //console.log('Time logic error on index :', index, ' Time code :', starthraw)
-              //yeet a time error cause that dont exist fam
+            else {
+                console.log('Time logic error on index :', index, ' Time code :', starthraw);
+              } //yeet a time error cause that dont exist fam
 
 
           break;
@@ -850,7 +890,8 @@ var table = {
             document.getElementById('2_' + starthraw.toPrecision(1)).appendChild(tempblock);
           } else if (starthraw >= 10 && starthraw < 24) {
             document.getElementById('2_' + starthraw.toPrecision(2)).appendChild(tempblock);
-          } else {//console.log('Time logic error on index :', index, ' Time code :', starthraw)
+          } else {
+            console.log('Time logic error on index :', index, ' Time code :', starthraw);
           }
 
           break;
@@ -863,7 +904,8 @@ var table = {
             document.getElementById('3_' + starthraw.toPrecision(1)).appendChild(tempblock);
           } else if (starthraw >= 10 && starthraw < 24) {
             document.getElementById('3_' + starthraw.toPrecision(2)).appendChild(tempblock);
-          } else {//console.log('Time logic error on index :', index, ' Time code :', starthraw)
+          } else {
+            console.log('Time logic error on index :', index, ' Time code :', starthraw);
           }
 
           break;
@@ -875,7 +917,8 @@ var table = {
             document.getElementById('4_' + starthraw.toPrecision(1)).appendChild(tempblock);
           } else if (starthraw >= 10 && starthraw < 24) {
             document.getElementById('4_' + starthraw.toPrecision(2)).appendChild(tempblock);
-          } else {//console.log('Time logic error on index :', index, ' Time code :', starthraw)
+          } else {
+            console.log('Time logic error on index :', index, ' Time code :', starthraw);
           }
 
           break;
@@ -887,7 +930,8 @@ var table = {
             document.getElementById('5_' + starthraw.toPrecision(1)).appendChild(tempblock);
           } else if (starthraw >= 10 && starthraw < 24) {
             document.getElementById('5_' + starthraw.toPrecision(2)).appendChild(tempblock);
-          } else {//console.log('Time logic error on index :', index, ' Time code :', starthraw)
+          } else {
+            console.log('Time logic error on index :', index, ' Time code :', starthraw);
           }
 
           break;
@@ -899,7 +943,8 @@ var table = {
             document.getElementById('6_' + starthraw.toPrecision(1)).appendChild(tempblock);
           } else if (starthraw >= 10 && starthraw < 24) {
             document.getElementById('6_' + starthraw.toPrecision(2)).appendChild(tempblock);
-          } else {//console.log('Time logic error on index :', index, ' Time code :', starthraw)
+          } else {
+            console.log('Time logic error on index :', index, ' Time code :', starthraw);
           }
 
           break;
@@ -911,19 +956,20 @@ var table = {
             document.getElementById('7_' + starthraw.toPrecision(1)).appendChild(tempblock);
           } else if (starthraw >= 10 && starthraw < 24) {
             document.getElementById('7_' + starthraw.toPrecision(2)).appendChild(tempblock);
-          } else {//console.log('Time logic error on index :', index, ' Time code :', starthraw)
+          } else {
+            console.log('Time logic error on index :', index, ' Time code :', starthraw);
           }
 
           break;
 
-        default: //console.log('Date positioning error on index: ', index, ' Day code: ', config.data.table1_db[index].day);
-
+        default:
+          console.log('Date positioning error on index: ', index, ' Day code: ', config.data.table1_db[index].day);
       } //time to height calculations must be done after render
 
 
       setTimeout(function () {
-        var blockheight = Number(config.data.table1_db[index].end - config.data.table1_db[index].start) * 100; //console.log(config.data.table1_db[index].name, ' As assigned height of :', blockheight, '%');
-
+        var blockheight = Number(config.data.table1_db[index].end - config.data.table1_db[index].start) * 100;
+        console.log(config.data.table1_db[index].name, ' As assigned height of :', blockheight, '%');
         tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
         tempblock.style.height = blockheight + '%';
         var blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
@@ -940,7 +986,8 @@ var table = {
       }, 100); //click action
 
       tempblock.addEventListener('click', function () {
-        //console.log('Triggered data cell: ', tempblock);
+        console.log('Triggered data cell: ', tempblock);
+
         if (config.data.tiles) {
           //show full tile view
           //place data into overlay
@@ -977,8 +1024,8 @@ var table = {
               document.getElementById('day_cell').innerText = "Sunday";
               break;
 
-            default: //console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
-
+            default:
+              console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
           }
 
           if (config.data.table1_db[index].detail != undefined) {
@@ -1015,14 +1062,16 @@ var table = {
         e.preventDefault();
         context_menu.popup({
           window: require('electron').remote.getCurrentWindow()
-        }); //console.log('COntext meny on :', tempblock);
-      }); //console.log('Block :', index, ' Check complete');
+        });
+        console.log('COntext meny on :', tempblock);
+      });
+      console.log('Block :', index, ' Check complete');
     }
 
     function validate() {
       //Remove empty days with the bread crums left behing durring the initial render
       if (config.data.empty_rows == false) {
-        //console.log('Validating Table');
+        console.log('Validating Table');
         var days = 7;
 
         if (!config.properties.monday) {
@@ -1031,7 +1080,8 @@ var table = {
 
           for (i = 0; i < 24; i++) {
             //Loop to blank the cells associated with that title
-            document.getElementById('1_' + i).style.display = 'none'; //console.log('Removing Monday time index :', i);
+            document.getElementById('1_' + i).style.display = 'none';
+            console.log('Removing Monday time index :', i);
           }
 
           days--;
@@ -1042,7 +1092,8 @@ var table = {
           document.getElementById('day2').style.display = 'none';
 
           for (i = 0; i < 24; i++) {
-            document.getElementById('2_' + i).style.display = 'none'; //console.log('Removing Tuesday time index :', i);
+            document.getElementById('2_' + i).style.display = 'none';
+            console.log('Removing Tuesday time index :', i);
           }
 
           days--;
@@ -1053,7 +1104,8 @@ var table = {
           document.getElementById('day3').style.display = 'none';
 
           for (i = 0; i < 24; i++) {
-            document.getElementById('3_' + i).style.display = 'none'; //console.log('Removing wednsday time index :', i);
+            document.getElementById('3_' + i).style.display = 'none';
+            console.log('Removing wednsday time index :', i);
           }
 
           days--;
@@ -1064,7 +1116,8 @@ var table = {
           document.getElementById('day4').style.display = 'none';
 
           for (i = 0; i < 24; i++) {
-            document.getElementById('4_' + i).style.display = 'none'; //console.log('Removing Thursday time index :', i);
+            document.getElementById('4_' + i).style.display = 'none';
+            console.log('Removing Thursday time index :', i);
           }
 
           days--;
@@ -1075,7 +1128,8 @@ var table = {
           document.getElementById('day5').style.display = 'none';
 
           for (i = 0; i < 24; i++) {
-            document.getElementById('5_' + i).style.display = 'none'; //console.log('Removing friday time index :', i);
+            document.getElementById('5_' + i).style.display = 'none';
+            console.log('Removing friday time index :', i);
           }
 
           days--;
@@ -1086,7 +1140,8 @@ var table = {
           document.getElementById('day6').style.display = 'none';
 
           for (i = 0; i < 24; i++) {
-            document.getElementById('6_' + i).style.display = 'none'; //console.log('Removing saturday time index :', i);
+            document.getElementById('6_' + i).style.display = 'none';
+            console.log('Removing saturday time index :', i);
           }
 
           days--;
@@ -1097,7 +1152,8 @@ var table = {
           document.getElementById('day0').style.display = 'none';
 
           for (i = 0; i < 24; i++) {
-            document.getElementById('7_' + i).style.display = 'none'; //console.log('Removing sunday time index :', i);
+            document.getElementById('7_' + i).style.display = 'none';
+            console.log('Removing sunday time index :', i);
           }
 
           days--;
@@ -1122,7 +1178,8 @@ var table = {
 
         for (i = 0; i < config.properties.min; i++) {
           //knock out all below minimum start time
-          //console.log('Called null on row: ', i);
+          console.log('Called null on row: ', i);
+
           if (document.getElementById('timerow_' + i)) {
             document.getElementById('timerow_' + i).style.display = "none";
           }
@@ -1132,15 +1189,16 @@ var table = {
 
         for (i = config.properties.max.toPrecision(2); i < 24; i++) {
           //knock out all above maximum end time
-          //console.log('Called null on row: ', i);
+          console.log('Called null on row: ', i);
+
           if (document.getElementById('timerow_' + i)) {
             document.getElementById('timerow_' + i).style.display = "none";
           }
 
           rows--;
-        } //console.log('Time rows found value: ', rows);
-        //set font size dependent on rows value
+        }
 
+        console.log('Time rows found value: ', rows); //set font size dependent on rows value
 
         switch (rows) {
           case 1:
@@ -1239,15 +1297,16 @@ var table = {
             document.getElementById('timetable').style.fontSize = '2vh';
             break;
 
-          default: //console.log('Row error, defaulted :', rows);
-
+          default:
+            console.log('Row error, defaulted :', rows);
         }
 
         if (days == 0 || rows == 0) {
           //Table is empty
           notify["new"]('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
-        } //console.log('Table validated');
+        }
 
+        console.log('Table validated');
       }
     }
   },
@@ -1255,7 +1314,7 @@ var table = {
     clock_tick_trigger: null,
     //setInterval(()=>{table.clock.clock_tick()},1000),
     clock_tick: function clock_tick() {
-      //console.log('Clock ticks');
+      console.log('Clock ticks');
       var date = new Date();
       document.getElementById('live_clock').innerHTML = date.toLocaleTimeString();
 
@@ -1982,12 +2041,12 @@ var table = {
           document.getElementById('timerow_23').className = 'glowrow';
           break;
 
-        default: //console.error('THEY CHANGED THE RULES FOR DATES NIBBA!!!');
-
+        default:
+          console.error('THEY CHANGED THE RULES FOR DATES NIBBA!!!');
       }
     },
     stop_clock: function stop_clock() {
-      //console.warn('Clock was stopped');
+      console.warn('Clock was stopped');
       clearInterval(this.clock_tick_trigger); //stops teh clock ticking
 
       config.properties.clocking = false;
@@ -1995,7 +2054,7 @@ var table = {
     start_clock: function start_clock() {
       var _this = this;
 
-      //console.warn('Clock has started');
+      console.warn('Clock has started');
       this.clock_tick();
       setTimeout(function () {
         _this.clock_tick_trigger = setInterval(function () {
@@ -2008,7 +2067,7 @@ var table = {
   },
   hilight_engine_go_vroom: function hilight_engine_go_vroom() {
     if (config.data.hilight_engine) {
-      //console.log('Hilight Query state Checking..');
+      console.log('Hilight Query state Checking..');
       var query = document.querySelectorAll(".maincell");
       var _i3 = 0;
 
@@ -2019,13 +2078,15 @@ var table = {
           passive: true
         });
 
-        _i3++; //console.log('Added event listener for hilight_query: ', i);
+        _i3++;
+        console.log('Added event listener for hilight_query: ', _i3);
       }
     }
   },
   engine_spark: function engine_spark(event) {
     if (config.data.hilight_engine) {
-      //console.log('Hilight Engine trigger fired on :', event);
+      console.log('Hilight Engine trigger fired on :', event);
+
       if (!event.target.classList.contains('data_block') && !event.target.classList.contains('data_block_active')) {
         //check if the cell is a data_block
         if (config.data.theme == "light") {
@@ -3144,7 +3205,7 @@ var table = {
 
 var manage = {
   initalize: function initalize() {
-    //console.log('Manager initializes');
+    console.log('Manager initializes');
     this.render_list();
     this.render_tables(); //Set text feilds
 
@@ -3221,7 +3282,7 @@ var manage = {
     }
   },
   render_tables: function render_tables() {
-    //console.log('Table management render started');
+    console.log('Table management render started');
     clear();
     var i = 0;
 
@@ -3276,15 +3337,15 @@ var manage = {
         identifier: Number(identifier + 1)
       };
       config.data.table_details.push(newtable);
-      config.save(); //console.warn('Indentifier value: ', identifier)
-
+      config.save();
+      console.warn('Indentifier value: ', identifier);
       maininitalizer();
       config.properties.changed = true;
     });
 
     function renderbar(index) {
-      //console.log('Creating actionbutton for :', config.data.table_details[index]);
-      //build menu
+      console.log('Creating actionbutton for :', config.data.table_details[index]); //build menu
+
       var table_bar = document.createElement('div');
       table_bar.setAttribute("class", "table_bar");
       var titlespan = document.createElement('span');
@@ -3328,7 +3389,7 @@ var manage = {
       }, false);
       table_bar.addEventListener('click', function () {
         //select table fucntion
-        //console.warn('Table selected by identifier : ', config.data.table_details[index].identifier)
+        console.warn('Table selected by identifier : ', config.data.table_details[index].identifier);
         config.data.table_selected = config.data.table_details[index].identifier;
         config.save();
         maininitalizer();
@@ -3346,8 +3407,8 @@ var manage = {
       });
       editbtn.addEventListener('click', function () {
         //edit button is pressed
-        event.stopPropagation(); //console.log('Edit called on table name: ' + config.data.table_details[index].purpose)
-
+        event.stopPropagation();
+        console.log('Edit called on table name: ' + config.data.table_details[index].purpose);
         confirmimg.setAttribute("title", "Confirm name change");
         cancelimg.setAttribute("title", "Do not change");
         confirmimg.style.display = "block";
@@ -3373,8 +3434,8 @@ var manage = {
       });
       deletebtn.addEventListener('click', function () {
         //edit button is pressed
-        event.stopPropagation(); //console.log('Delete called on table name: ' + config.data.table_details[index].purpose)
-
+        event.stopPropagation();
+        console.log('Delete called on table name: ' + config.data.table_details[index].purpose);
         confirmimg.setAttribute("title", "Confirm delete " + config.data.table_details[index].purpose);
         cancelimg.setAttribute("title", "Do not delete " + config.data.table_details[index].purpose);
         confirmimg.style.display = "block";
@@ -3385,14 +3446,14 @@ var manage = {
       });
       confirmimg.addEventListener('click', function () {
         //cancel button is pressed
-        event.stopPropagation(); //console.log('Confirm button pressed')
-        //perform confirmation action
+        event.stopPropagation();
+        console.log('Confirm button pressed'); //perform confirmation action
 
         if (tab_put.style.display == "block") {
-          //console.log('save action on: ' + config.data.table_details[index])
+          console.log('save action on: ' + config.data.table_details[index]);
           config.data.table_details[index].purpose = tab_put.value;
         } else if (tab_put.style.display == "none") {
-          //console.log('delete action')
+          console.log('delete action');
           config.data.table_details[index].deleted = true;
         }
 
@@ -3402,8 +3463,8 @@ var manage = {
       });
       cancelimg.addEventListener('click', function () {
         //cancel button is pressed
-        event.stopPropagation(); //console.log('Cancel button pressed')
-
+        event.stopPropagation();
+        console.log('Cancel button pressed');
         confirmimg.style.display = "none";
         cancelimg.style.display = "none";
         deletebtn.style.display = "block";
@@ -3417,26 +3478,28 @@ var manage = {
     }
   },
   render_list: function render_list() {
-    //console.log('Manager Render starts');
+    console.log('Manager Render starts');
     clear();
     var i = 0;
 
-    if (config.data.table1_db[i] == null || undefined) {//show first time setup screen
-      //console.log('The table database is empty,manager will show first time setup');
+    if (config.data.table1_db[i] == null || undefined) {
+      //show first time setup screen
+      console.log('The table database is empty,manager will show first time setup');
     } else {
       //Construct the data
       if (config.data.table_details[0] == null) {
         //there are no tables, everyone is homeless render them all
         while (config.data.table1_db[i] != null || undefined) {
           //render selected tables data
-          //console.log('Data run on index :', i);
+          console.log('Data run on index :', i);
           build_bar_db1(i);
           i++;
         }
       } else {
         while (config.data.table1_db[i] != null || undefined) {
           //render selected tables data
-          //console.log('Data run on index :', i);
+          console.log('Data run on index :', i);
+
           if (config.data.table1_db[i].show == config.data.table_selected) {
             build_bar_db1(i);
           }
@@ -3448,7 +3511,8 @@ var manage = {
 
         while (config.data.table1_db[i] != null || undefined) {
           //render non-selected tables data
-          //console.log('Data run on index :', i);
+          console.log('Data run on index :', i);
+
           if (config.data.table1_db[i].show != config.data.table_selected) {
             build_bar_db1(i);
           }
@@ -3457,8 +3521,9 @@ var manage = {
         }
       } //config.save()//save because many things get changed and shuffled durring this function
 
-    } //console.log('Manager Render Completed');
+    }
 
+    console.log('Manager Render Completed');
 
     function build_bar_db1(index) {
       //Builds timetable from database
@@ -3479,9 +3544,9 @@ var manage = {
         //ya bois homeless, put him in the homeless table
         config.data.table1_db[index].show = 0;
       } //Create the data block
-      //console.log('Building Bar: ', index);
 
 
+      console.log('Building Bar: ', index);
       var tempblock = document.createElement('div');
       tempblock.title = "Click to edit";
       tempblock.setAttribute("class", "data_bar"); //assign a color
@@ -3572,8 +3637,8 @@ var manage = {
           day = "Sunday";
           break;
 
-        default: //console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
-
+        default:
+          console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
       }
 
       if (config.data.table1_db[index].deleted) {
@@ -3638,6 +3703,7 @@ var manage = {
           config.data.table1_db[index].deleted = true;
           config.save();
           manage.render_list();
+          config.properties.changed = true;
         });
         var context_menu = new Menu();
         context_menu.append(new MenuItem({
@@ -3673,7 +3739,8 @@ var manage = {
           e.preventDefault();
           context_menu.popup({
             window: require('electron').remote.getCurrentWindow()
-          }); //console.log('COntext meny on :', tempblock);
+          });
+          console.log('COntext meny on :', tempblock);
         });
       }
 
@@ -3701,18 +3768,19 @@ var manage = {
       noot.setAttribute('class', 'data_noot');
       tempblock.appendChild(noot);
       document.getElementById('manage_dataspace').appendChild(tempblock); //put the bar into the dukument
-      //console.log('Bar: ', index, ' Complete');
+
+      console.log('Bar: ', index, ' Complete');
     }
 
     function clear() {
-      //console.log('manage_dataspace clear called');
+      console.log('manage_dataspace clear called');
       document.getElementById('manage_dataspace').innerHTML = '';
     }
   },
   dialogue: {
     edit: function edit(index) {
       //Does not edit anything, only populates feilds in the editor with data, listener found in manage.data.build_bar_db1();
-      //console.log('Dialogue Edit called on index: ', index);
+      console.log('Dialogue Edit called on index: ', index);
       config.properties.overwrite = index; //Set overwrtite so save function knows to do
 
       document.getElementById('day_put').value = config.data.table1_db[index].day; //set day feild
@@ -3816,8 +3884,8 @@ var manage = {
     },
     open: function open() {
       //The listener for the add open btn is in manage.render_list() 
-      //console.log('Dialogue open called');
-      //other stuff
+      console.log('Dialogue open called'); //other stuff
+
       document.getElementById('manage_dataspace').classList = "dataspace_compact"; //switch dataspace to compact view
 
       if (config.properties.overwrite == null) {
@@ -3871,7 +3939,7 @@ var manage = {
       }
 
       function render_color(index) {
-        //console.log('Rendering recent color :', config.data.previous_colors[index], ', index:', index);
+        console.log('Rendering recent color :', config.data.previous_colors[index], ', index:', index);
         var color_doot = document.createElement("div");
         color_doot.setAttribute("class", "color_doot");
         color_doot.style.backgroundColor = "hsl(" + config.data.previous_colors[index].hue + "," + config.data.previous_colors[index].sat + "%," + config.data.previous_colors[index].light + "%)";
@@ -3882,13 +3950,14 @@ var manage = {
           document.getElementById('light_put').value = config.data.previous_colors[index].light; //sets slider colors
 
           document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + config.data.previous_colors[index].hue + "," + config.data.previous_colors[index].sat + "%, 50%),#ffffff)";
-          document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + config.data.previous_colors[index].hue + ", 100%, 50%)"; //console.warn('Pushed recent color: ', config.data.previous_colors[index])
+          document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + config.data.previous_colors[index].hue + ", 100%, 50%)";
+          console.warn('Pushed recent color: ', config.data.previous_colors[index]);
         });
       }
     },
     clear: function clear() {
       //clear the input and remove the input screen
-      //console.log('Dialogue clear called')
+      console.log('Dialogue clear called');
       document.getElementById('detail_put').value = "";
       document.getElementById('name_put').value = "";
       document.getElementById('start_time_put').value = "";
@@ -3897,7 +3966,8 @@ var manage = {
     },
     close: function close() {
       //remove the input screen
-      document.getElementById('manage_dataspace').classList = "dataspace"; //console.log('Dialogue close called');
+      document.getElementById('manage_dataspace').classList = "dataspace";
+      console.log('Dialogue close called');
 
       if (config.data.animation) {
         document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, setting this in css causes the buttons to glitch out
@@ -3911,7 +3981,7 @@ var manage = {
       }
     },
     save: function save() {
-      //console.log('Dialogue save called');
+      console.log('Dialogue save called');
       var tempentry = {
         show: true,
         day: null,
@@ -3952,7 +4022,8 @@ var manage = {
         document.getElementById('name_put').style.border = "0.3vh solid #ff0000";
         notify["new"]('HEY!', 'Please Enter a name');
       } else {
-        document.getElementById('name_put').style.border = ""; //console.log('Name detected: ', tempentry.name);
+        document.getElementById('name_put').style.border = "";
+        console.log('Name detected: ', tempentry.name);
       } //Process time
 
 
@@ -3990,13 +4061,16 @@ var manage = {
       } //get view state
 
 
-      tempentry.show = document.getElementById('view_put').value; //console.table(tempentry);
+      tempentry.show = document.getElementById('view_put').value;
+      console.table(tempentry);
 
       if (entryisvalid) {
         if (config.properties.overwrite == null) {
-          config.data.table1_db.push(tempentry); //console.log('Entry saved')
+          config.data.table1_db.push(tempentry);
+          console.log('Entry saved');
         } else {
-          config.data.table1_db[config.properties.overwrite] = tempentry; //console.log('Overwrite on index: ', config.properties.overwrite);
+          config.data.table1_db[config.properties.overwrite] = tempentry;
+          console.log('Overwrite on index: ', config.properties.overwrite);
         }
 
         config.save();
@@ -4015,7 +4089,7 @@ var manage = {
       return entryisvalid;
     },
     saveplus: function saveplus() {
-      //console.log('Dialogue savepluss was called');
+      console.log('Dialogue savepluss was called');
       config.properties.called_from_plus = true;
       var entryisvalid = manage.dialogue.save();
 
@@ -4031,10 +4105,11 @@ var manage = {
 
 var UI = {
   initalize: function initalize() {
-    //console.log('UI Initalize');
-    //esc trigger
+    console.log('UI Initalize'); //esc trigger
+
     document.getElementById('body').addEventListener('keyup', function (e) {
-      //console.log('keycode: ', e.keyCode)
+      console.log('keycode: ', e.keyCode);
+
       if (e.keyCode == 27) {
         //esc key mashed
         if (document.getElementById('dataentry_screen').style.display == "block") {
@@ -4088,11 +4163,12 @@ var UI = {
     }); //Add new button
 
     document.getElementById('new_class_button').addEventListener('click', function () {
-      manage.dialogue.open(); //console.log('Add new class button clicked')
+      manage.dialogue.open();
+      console.log('Add new class button clicked');
     }); //add new btn listener
 
     document.getElementById('cancel_btn').addEventListener('click', function () {
-      //console.log('Cancel button clicked');
+      console.log('Cancel button clicked');
       manage.dialogue.clear();
       manage.dialogue.close();
       config.properties.overwrite = null;
@@ -4101,7 +4177,7 @@ var UI = {
 
     document.getElementById('savepluss_btn').addEventListener('click', manage.dialogue.saveplus);
     document.getElementById('delete_btn').addEventListener('click', function () {
-      //console.log('Delete called')
+      console.log('Delete called');
       config.data.table1_db[config.properties.overwrite].deleted = true;
       config.properties.changed = true;
       manage.dialogue.close();
@@ -4115,7 +4191,7 @@ var UI = {
     document.getElementById('day_put_text').innerText = "Monday";
     document.getElementById('day_put').addEventListener('change', function () {
       /* Switches dates on change */
-      //console.log('Day put changed');
+      console.log('Day put changed');
       var tmp = document.getElementById('day_put').value;
 
       switch (tmp) {
@@ -4147,8 +4223,8 @@ var UI = {
           document.getElementById('day_put_text').innerText = "Sunday";
           break;
 
-        default: //console.error('Blyat');
-
+        default:
+          console.error('Blyat');
       }
     }); //Set switch positions
 
@@ -4283,8 +4359,9 @@ var UI = {
       document.getElementById('always_on_top_btn').classList = "statusbtn";
       config.data.always_on_top = false;
       config.save();
-    } //console.log('Window always on top :', state);
+    }
 
+    console.log('Window always on top :', state);
   },
   setting_toggle: function setting_toggle() {
     UI.close_tile();
@@ -4333,7 +4410,7 @@ var UI = {
     }
   },
   close_tile: function close_tile() {
-    //console.log('closed full tile function');
+    console.log('closed full tile function');
     document.getElementById('fullscreen_tile').classList = "fullscreen_tile";
   },
   minimize_maximize: function minimize_maximize() {
@@ -4345,12 +4422,14 @@ var UI = {
     } else {
       //is not maximized
       document.getElementById('resise_constraint').style.display = "block";
-    } //console.log('Window maximized :', state);
+    }
 
+    console.log('Window maximized :', state);
   },
   setting: {
     set_theme: function set_theme() {
-      //console.log('Set theme')
+      console.log('Set theme');
+
       if (config.data.theme == "dark") {
         set_dark();
         document.getElementById('light_selection_put').checked = false;
@@ -4369,72 +4448,72 @@ var UI = {
       function set_dark() {
         switch (config.data.colorpallet) {
           case -1:
-            document.getElementById('body').classList = "dark"; //console.log('Dark inverse theme');
-
+            document.getElementById('body').classList = "dark";
+            console.log('Dark inverse theme');
             break;
 
           case 0:
-            document.getElementById('body').classList = "dark _0"; //console.log('%cdark _0', "color: hsl(0,100%,50%)")
-
+            document.getElementById('body').classList = "dark _0";
+            console.log('%cdark _0', "color: hsl(0,100%,50%)");
             break;
 
           case 30:
-            document.getElementById('body').classList = "dark _30"; //console.log('%cdark _30', "color: hsl(30,100%,50%)");
-
+            document.getElementById('body').classList = "dark _30";
+            console.log('%cdark _30', "color: hsl(30,100%,50%)");
             break;
 
           case 60:
-            document.getElementById('body').classList = "dark _60"; //console.log('%cdark _60', "color: hsl(60,100%,50%)");
-
+            document.getElementById('body').classList = "dark _60";
+            console.log('%cdark _60', "color: hsl(60,100%,50%)");
             break;
 
           case 90:
-            document.getElementById('body').classList = "dark _90"; //console.log('%cdark _90', "color: hsl(90,100%,50%)");
-
+            document.getElementById('body').classList = "dark _90";
+            console.log('%cdark _90', "color: hsl(90,100%,50%)");
             break;
 
           case 120:
-            document.getElementById('body').classList = "dark _120"; //console.log('%cdark _120', "color: hsl(120,100%,50%)");
-
+            document.getElementById('body').classList = "dark _120";
+            console.log('%cdark _120', "color: hsl(120,100%,50%)");
             break;
 
           case 150:
-            document.getElementById('body').classList = "dark _150"; //console.log('%cdark _150', "color: hsl(150,100%,50%)");
-
+            document.getElementById('body').classList = "dark _150";
+            console.log('%cdark _150', "color: hsl(150,100%,50%)");
             break;
 
           case 180:
-            document.getElementById('body').classList = "dark _180"; //console.log('%cdark _180', "color: hsl(180,100%,50%)");
-
+            document.getElementById('body').classList = "dark _180";
+            console.log('%cdark _180', "color: hsl(180,100%,50%)");
             break;
 
           case 210:
-            document.getElementById('body').classList = "dark _210"; //console.log('%cdark _210', "color: hsl(210,100%,50%)");
-
+            document.getElementById('body').classList = "dark _210";
+            console.log('%cdark _210', "color: hsl(210,100%,50%)");
             break;
 
           case 240:
-            document.getElementById('body').classList = "dark _240"; //console.log('%cdark _240', "color: hsl(240,100%,50%)");
-
+            document.getElementById('body').classList = "dark _240";
+            console.log('%cdark _240', "color: hsl(240,100%,50%)");
             break;
 
           case 270:
-            document.getElementById('body').classList = "dark _270"; //console.log('%cdark _270', "color: hsl(270,100%,50%)");
-
+            document.getElementById('body').classList = "dark _270";
+            console.log('%cdark _270', "color: hsl(270,100%,50%)");
             break;
 
           case 300:
-            document.getElementById('body').classList = "dark _300"; //console.log('%cdark _300', "color: hsl(300,100%,50%)");
-
+            document.getElementById('body').classList = "dark _300";
+            console.log('%cdark _300', "color: hsl(300,100%,50%)");
             break;
 
           case 330:
-            document.getElementById('body').classList = "dark _330"; //console.log('%cdark _330', "color: hsl(330,100%,50%)");
-
+            document.getElementById('body').classList = "dark _330";
+            console.log('%cdark _330', "color: hsl(330,100%,50%)");
             break;
 
           default:
-            //console.error('Theme error :', config.data.colorpallet);
+            console.error('Theme error :', config.data.colorpallet);
             document.getElementById('body').classList = "dark _210";
             config.data.colorpallet = 210;
         }
@@ -4443,72 +4522,72 @@ var UI = {
       function set_light() {
         switch (config.data.colorpallet) {
           case -1:
-            document.getElementById('body').classList = "light"; //console.log('light inverse theme');
-
+            document.getElementById('body').classList = "light";
+            console.log('light inverse theme');
             break;
 
           case 0:
-            document.getElementById('body').classList = "light _0"; //console.log('%clight_0', "color: hsl(0,100%,50%)")
-
+            document.getElementById('body').classList = "light _0";
+            console.log('%clight_0', "color: hsl(0,100%,50%)");
             break;
 
           case 30:
-            document.getElementById('body').classList = "light _30"; //console.log('%clight_30', "color: hsl(30,100%,50%)");
-
+            document.getElementById('body').classList = "light _30";
+            console.log('%clight_30', "color: hsl(30,100%,50%)");
             break;
 
           case 60:
-            document.getElementById('body').classList = "light _60"; //console.log('%clight_60', "color: hsl(60,100%,50%)");
-
+            document.getElementById('body').classList = "light _60";
+            console.log('%clight_60', "color: hsl(60,100%,50%)");
             break;
 
           case 90:
-            document.getElementById('body').classList = "light _90"; //console.log('%clight_90', "color: hsl(90,100%,50%)");
-
+            document.getElementById('body').classList = "light _90";
+            console.log('%clight_90', "color: hsl(90,100%,50%)");
             break;
 
           case 120:
-            document.getElementById('body').classList = "light _120"; //console.log('%clight_120', "color: hsl(120,100%,50%)");
-
+            document.getElementById('body').classList = "light _120";
+            console.log('%clight_120', "color: hsl(120,100%,50%)");
             break;
 
           case 150:
-            document.getElementById('body').classList = "light _150"; //console.log('%clight_150', "color: hsl(150,100%,50%)");
-
+            document.getElementById('body').classList = "light _150";
+            console.log('%clight_150', "color: hsl(150,100%,50%)");
             break;
 
           case 180:
-            document.getElementById('body').classList = "light _180"; //console.log('%clight_180', "color: hsl(180,100%,50%)");
-
+            document.getElementById('body').classList = "light _180";
+            console.log('%clight_180', "color: hsl(180,100%,50%)");
             break;
 
           case 210:
-            document.getElementById('body').classList = "light _210"; //console.log('%clight_210', "color: hsl(210,100%,50%)");
-
+            document.getElementById('body').classList = "light _210";
+            console.log('%clight_210', "color: hsl(210,100%,50%)");
             break;
 
           case 240:
-            document.getElementById('body').classList = "light _240"; //console.log('%clight_240', "color: hsl(240,100%,50%)");
-
+            document.getElementById('body').classList = "light _240";
+            console.log('%clight_240', "color: hsl(240,100%,50%)");
             break;
 
           case 270:
-            document.getElementById('body').classList = "light _270"; //console.log('%clight_270', "color: hsl(270,100%,50%)");
-
+            document.getElementById('body').classList = "light _270";
+            console.log('%clight_270', "color: hsl(270,100%,50%)");
             break;
 
           case 300:
-            document.getElementById('body').classList = "light _300"; //console.log('%clight_300', "color: hsl(300,100%,50%)");
-
+            document.getElementById('body').classList = "light _300";
+            console.log('%clight_300', "color: hsl(300,100%,50%)");
             break;
 
           case 330:
-            document.getElementById('body').classList = "light _330"; //console.log('%clight_330', "color: hsl(330,100%,50%)");
-
+            document.getElementById('body').classList = "light _330";
+            console.log('%clight_330', "color: hsl(330,100%,50%)");
             break;
 
           default:
-            //console.error('Theme error :', config.data.colorpallet);
+            console.error('Theme error :', config.data.colorpallet);
             document.getElementById('body').classList = "light _210";
             config.data.colorpallet = 210;
         }
@@ -4516,17 +4595,19 @@ var UI = {
     },
     hilight: {
       flip: function flip() {
-        //console.log('switch triggered');
+        console.log('switch triggered');
+
         if (config.data.hilight_engine) {
           //turn off the switch
           config.data.hilight_engine = false;
-          notify["new"]('Settings', 'hilights dissabled'); //console.log('hilights dissabled');
+          notify["new"]('Settings', 'hilights dissabled');
+          console.log('hilights dissabled');
         } else {
           //turn on the witch
           config.data.hilight_engine = true;
           table.hilight_engine_go_vroom();
-          notify["new"]('Settings', 'hilights enabled'); //console.log('hilights enabled');
-          //table.hilight_engine_go_vroom();
+          notify["new"]('Settings', 'hilights enabled');
+          console.log('hilights enabled'); //table.hilight_engine_go_vroom();
         }
 
         config.save();
@@ -4534,7 +4615,8 @@ var UI = {
       },
       setpostition: function setpostition() {
         //sets the switches position depending on the theme, and changes the theme accordingly
-        //console.log('hilight Position set to: ', config.data.hilight_engine);
+        console.log('hilight Position set to: ', config.data.hilight_engine);
+
         if (config.data.hilight_engine) {
           document.getElementById('hilight_switch_container').className = 'switch_container_active';
         } else {
@@ -4544,20 +4626,24 @@ var UI = {
     },
     animation: {
       flip: function flip() {
-        //console.log('animation switch triggered');
+        console.log('animation switch triggered');
+
         if (config.data.animation) {
           //turn off the switch
           config.data.animation = false;
-          notify["new"]('Settings', 'animations dissabled'); //console.warn('animations dissabled');
+          notify["new"]('Settings', 'animations dissabled');
+          console.warn('animations dissabled');
         } else {
           //turn on the witch
           config.data.animation = true;
-          notify["new"]('Settings', 'animations enabled'); //console.warn('animations enabled');
+          notify["new"]('Settings', 'animations enabled');
+          console.warn('animations enabled');
         }
 
         if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == false) {
           //animations preffered by system
-          notify["new"]('System', 'Animations dissabled by Current Users animation preferences');
+          config.data.animation = false;
+          notify["new"]('System', 'Animations dissabled by Your OS animation preferences');
         }
 
         config.save();
@@ -4599,15 +4685,18 @@ var UI = {
     },
     tiles: {
       flip: function flip() {
-        //console.log('tiles switch triggered');
+        console.log('tiles switch triggered');
+
         if (config.data.tiles) {
           //turn off the switch
           config.data.tiles = false;
-          notify["new"]('Settings', 'tiles dissabled'); //console.warn('tiles dissabled');
+          notify["new"]('Settings', 'tiles dissabled');
+          console.warn('tiles dissabled');
         } else {
           //turn on the witch
           config.data.tiles = true;
-          notify["new"]('Settings', 'tiles enabled'); //console.warn('tiles enabled');
+          notify["new"]('Settings', 'tiles enabled');
+          console.warn('tiles enabled');
         }
 
         config.save();
@@ -4623,18 +4712,19 @@ var UI = {
     },
     Row: {
       flip: function flip() {
-        //console.log('Row switch triggered');
+        console.log('Row switch triggered');
+
         if (config.data.empty_rows) {
           //turn off the switch
           config.data.empty_rows = false;
-          notify["new"]('Settings', 'Empty Rows dissabled'); //console.warn('Empty Rows dissabled');
-
+          notify["new"]('Settings', 'Empty Rows dissabled');
+          console.warn('Empty Rows dissabled');
           config.properties.changed = true;
         } else {
           //turn on the witch
           config.data.empty_rows = true;
-          notify["new"]('Settings', 'Empty Rows Enabled'); //console.warn('Empty Rows Enabled');
-
+          notify["new"]('Settings', 'Empty Rows Enabled');
+          console.warn('Empty Rows Enabled');
           config.properties.changed = true;
         }
 
@@ -4651,7 +4741,7 @@ var UI = {
     },
     frame: {
       flip: function flip() {
-        //console.log('frame switch triggered');
+        console.log('frame switch triggered');
         var framestate = main.framestate();
 
         if (process.platform == 'linux') {
@@ -4733,11 +4823,11 @@ var UI = {
                   var resaucepath = process.resourcesPath;
 
                   for (i = 0; i <= resaucepath.length; i++) {
-                    //console.log(resaucepath)
+                    console.log(resaucepath);
                     resaucepath = resaucepath.replace('\\', '/');
                   }
 
-                  if (fs.existsSync(resaucepath + "/backgroundimg" + config.data.backgroundimg.ext)) {
+                  if (fs.existsSync(resaucepath + "/backgroundimg" + config.data.backgroundimg.ext) || fs.existsSync(resaucepath + "\\backgroundimg" + config.data.backgroundimg.ext)) {
                     //document.getElementById('timetable').style.backgroundImage = "url('C:\\fakepath\\fakeimg.png')";
                     document.getElementById('timetable').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
                     document.getElementById('light_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
@@ -4792,8 +4882,9 @@ var UI = {
                   }] //Options for file dialogue
 
                 }).then(function (filestuff) {
-                  if (filestuff.canceled == true) {//user canceled file dialogue
-                    //console.log('User canceled file dialogue')
+                  if (filestuff.canceled == true) {
+                    //user canceled file dialogue
+                    console.log('User canceled file dialogue');
                   } else {
                     var parsed_path = path.parse(filestuff.filePaths[0]);
                     var wallpaperpath = filestuff.filePaths[0];
@@ -4808,9 +4899,9 @@ var UI = {
                     switch (process.platform) {
                       case "linux":
                         fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "/backgroundimg" + parsed_path.ext, function () {
-                          //console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "/backgroundimg" + parsed_path.ext)
-                          config.data.backgroundimg = parsed_path; //console.log('Set background img as :', config.data.backgroundimg)
-
+                          console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "/backgroundimg" + parsed_path.ext);
+                          config.data.backgroundimg = parsed_path;
+                          console.log('Set background img as :', config.data.backgroundimg);
                           config.save();
                           setTimeout(function () {
                             document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
@@ -4822,9 +4913,9 @@ var UI = {
 
                       default:
                         fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "\\backgroundimg" + parsed_path.ext, function () {
-                          //console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "\\backgroundimg" + parsed_path.ext)
-                          config.data.backgroundimg = parsed_path; //console.log('Set background img as :', config.data.backgroundimg)
-
+                          console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "\\backgroundimg" + parsed_path.ext);
+                          config.data.backgroundimg = parsed_path;
+                          console.log('Set background img as :', config.data.backgroundimg);
                           config.save();
                           setTimeout(function () {
                             document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";

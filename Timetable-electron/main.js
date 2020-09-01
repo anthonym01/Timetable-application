@@ -5,7 +5,8 @@ const path = require('path');//path to necessary files
 const url = require('url');//web dependency
 const windowStateKeeper = require('electron-window-state');//preserves the window state
 const fs = require('fs');
-const Store = require('electron-store')
+const Store = require('electron-store');
+const { Menu, MenuItem } = require('electron');
 const store = new Store;
 
 let mainWindow = null;//defines the window as an abject
@@ -23,8 +24,8 @@ app.on('ready', function () {
 	create_main_window()
 })
 
-app.on('window-all-closed',function(){
-	if(process.platform!='darwin'){
+app.on('window-all-closed', function () {
+	if (process.platform != 'darwin') {
 		app.quit()
 	}
 })
@@ -33,7 +34,7 @@ function create_main_window() {
 	mainWindow = null
 	const { screenwidth, screenheight } = screen.getPrimaryDisplay().workAreaSize //gets screen size and sets it to height and width
 	let mainWindowState = windowStateKeeper({ defaultWidth: screenwidth, defaultHeight: screenheight });
-	
+
 	mainWindow = new BrowserWindow({
 		x: mainWindowState.x,
 		y: mainWindowState.y,

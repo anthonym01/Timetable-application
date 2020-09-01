@@ -1,0 +1,61 @@
+{
+  "_from": "git+https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser.git",
+  "_id": "cordova-plugin-simple-file-chooser@2.2.1",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/cordova-plugin-simple-file-chooser",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "git+https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser.git",
+    "rawSpec": "git+https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser.git",
+    "saveSpec": "git+https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser.git",
+    "fetchSpec": "https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser.git#c447ec95f706973661d8483be5b49db3ef398f22",
+  "_spec": "git+https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser.git",
+  "_where": "D:\\Git\\Timetable-application\\Timetable-Cordova",
+  "author": {
+    "name": "Cyph, Inc.",
+    "email": "cordova-plugin-chooser@cyph.com",
+    "url": "https://github.com/cyph"
+  },
+  "bugs": {
+    "url": "https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-simple-file-chooser",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "deprecated": false,
+  "description": "Cordova file chooser plugin",
+  "homepage": "https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser#readme",
+  "keywords": [
+    "file",
+    "chooser",
+    "picker",
+    "file-chooser",
+    "android",
+    "ios"
+  ],
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "name": "cordova-plugin-simple-file-chooser",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshzalavadiya/cordova-plugin-simple-file-chooser.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "2.2.1"
+}

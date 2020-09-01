@@ -1240,13 +1240,15 @@ td {
     /*   Block Containing the data_bar(s)   */
     position: relative;
     margin-top: 10vh;
-    margin-left: 5vw;
-    width: 90vw;
+    margin-left: 0;
+    width: 100vw;
     height: 83vh;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
     transition: width 300ms;
+    overflow-y: auto;
+    box-sizing: content-box;
 }
 
 .data_bar {
@@ -1269,6 +1271,7 @@ td {
     border-bottom: 1vh solid var(--primary_hue);
     background-color: var(--background-color);
     overflow: hidden;
+    box-sizing: content-box;
 }
 
 .data_bar:hover {
@@ -1369,7 +1372,7 @@ td {
     top: 0;
     right: 0;
     font-size: 2vh;
-    padding: 0.4vh;
+    /*padding: 0.4vh;*/
     padding-right: 0.8vh;
     padding-left: 0.8vh;
     height: 4vh;
@@ -2353,20 +2356,22 @@ td {
     .dataspace {
         /*   Block Containing the data_bar(s)   */
         margin-top: 10vh;
+        max-height: 88vh;
         margin-left: 0;
         margin-right: 0;
-        border-bottom: 0.5vh solid #000000;
+        border-bottom:none;
         width: 100%;
-        height: 90%;
+        height: fit-content;
         overflow-y: auto;
     }
 
     .dataspace_compact {
         margin-left: 0;
         margin-right: 0;
-        border-bottom: 0.5vh solid #000000;
+        border-bottom:none;
         width: calc(100% - 70vh);
         min-height: 90vh;
+        max-height: 90vh;
         overflow-y: auto;
     }
 
@@ -2384,7 +2389,7 @@ td {
         font-size: 2vh;
         height: 2vh;
         width: auto;
-        padding: 0.5vh;
+        /*padding: 0.5vh;*/
         /*border-radius: 4vh;*/
         /*transform: translate(1vh, -1.5vh);*/
     }
