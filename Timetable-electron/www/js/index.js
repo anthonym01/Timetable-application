@@ -44,7 +44,7 @@ function maininitalizer() {
 function body_menu() {
     //build menu
     const menu_body = new Menu()
-    menu_body.append(new MenuItem({ label: 'Force refresh UI', click() { maininitalizer() }}))
+    menu_body.append(new MenuItem({ label: 'Force refresh UI', click() { maininitalizer() } }))
     menu_body.append(new MenuItem({ type: 'separator' }))
     menu_body.append(new MenuItem({ label: 'Contact developer', click() { shell.openExternal(my_website) } }))
     menu_body.append(new MenuItem({ role: 'toggledevtools' }))
@@ -115,23 +115,8 @@ let config = {
                 deleted: false,
                 identifier: 1
             },
-            /*{ purpose: "table #2", deleted: false, identifier: 2 },
-            { purpose: "table #3", deleted: false, identifier: 3 },
-            { purpose: "table #4", deleted: false, identifier: 4 }*/
         ],
-        table1_db: [ // Table database
-
-            /*{ show: 4, day: 1, name: "Test 1", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 0, sat: 100, light: 50 }, start: 0.0, end: 1.0 },
-            { show: 4, day: 2, name: "Test 2", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 50, sat: 100, light: 50 }, start: 11.62, end: 14.57 },
-            { show: 4, day: 3, name: "Test 3", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 100, sat: 100, light: 50 }, start: 8.5, end: 10.76 },
-            { show: 4, day: 4, name: "Test 4", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 150, sat: 100, light: 50 }, start: 1.32, end: 4.0 },
-            { show: 4, day: 5, name: "Test 5", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 200, sat: 100, light: 50 }, start: 2.0, end: 4.0 },
-            { show: 4, day: 6, name: "Test 6", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 250, sat: 100, light: 50 }, start: 4.0, end: 5.4 },
-            { show: 4, day: 7, name: "Test 7", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 100, light: 50 }, start: 6.0, end: 7.7 },
-            { show: 3, day: 7, name: "Test 8", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 7.0, end: 8.7 },
-            { show: 2, day: 7, name: "Test 9", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 8.0, end: 9.7 },
-            { show: 1, day: 7, name: "Test 10", Lecturer: "placeholder", room: "none", course_code: "test data", type: "test data", color: { hue: 300, sat: 0, light: 50 }, start: 9.0, end: 10.7 },*/
-        ],
+        table1_db: [],// Table database
         previous_colors: [],
     },
     baseconfig: {
@@ -612,7 +597,7 @@ let table = {
                 let detail_row = document.createElement("tr");
                 let detail_content = document.createElement("td");
                 //detail_content.setAttribute("colspan", 2);
-                detail_content.innerText = config.data.table1_db[index].detail;
+                detail_content.innerHTML = config.data.table1_db[index].detail;
                 detail_row.appendChild(detail_content);
                 sub_tab.appendChild(detail_row);
                 doot.appendChild(sub_tab);
@@ -749,9 +734,9 @@ let table = {
                             console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
                     }
                     if (config.data.table1_db[index].detail != undefined) {
-                        document.getElementById('detail_cell').innerText = config.data.table1_db[index].detail;
+                        document.getElementById('detail_cell').innerHTML = config.data.table1_db[index].detail;
                     } else {
-                        document.getElementById('detail_cell').innerText = "No details"
+                        document.getElementById('detail_cell').innerHTML = "No details"
                     }
                     document.getElementById('time_cell').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
                     document.getElementById('fullscreen_tile').classList = "fullscreen_tile_active"
@@ -3103,7 +3088,15 @@ let manage = {
             tempblock.setAttribute("class", "data_bar");
 
             //assign a color
-            tempblock.style.borderColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+            if (config.data.table1_db[index].color.light == 0 || config.data.table1_db[index].color.light == 100) {
+                if (config.data.theme == 'dark') {//force border light
+                    tempblock.style.borderColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 100%)";
+                } else {//force border dark
+                    tempblock.style.borderColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 0%)";
+                }
+            } else {
+                tempblock.style.borderColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+            }
             tempblock.style.boxShadow = "0vh 0vh 0.5vh 0vh hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
 
             //build menu
@@ -3182,7 +3175,15 @@ let manage = {
                 //populate the block with relivant data
                 tempblock.innerHTML = config.data.table1_db[index].name + '<br> Marked for delete, Click to undo';
                 tempblock.setAttribute("class", "data_bar");
-                tempblock.style.border = "0.5vh dashed red";
+                if (config.data.table1_db[index].color.light == 0 || config.data.table1_db[index].color.light == 100) {
+                    if (config.data.theme == 'dark') {//force border light
+                        tempblock.style.border = "0.5vh dashed hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 100%)";
+                    } else {//force border dark
+                        tempblock.style.border = "0.5vh dashed hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 0%)";
+                    }
+                } else {
+                    tempblock.style.border = "0.5vh dashed hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
+                }
                 //alow editing function
                 tempblock.setAttribute('id', 'bar_' + index);
                 tempblock.addEventListener('click', function () {
@@ -3254,10 +3255,8 @@ let manage = {
                         manage.render_list()
                     }
                 }))
-                context_menu.append(new MenuItem({
-                    type: 'separator'
-                }))
-                context_menu.append(new MenuItem({
+                context_menu.append(new MenuItem({ type: 'separator' }))
+                context_menu.append(new MenuItem({//duplicates this entry
                     label: 'Duplicate', click() {
                         config.data.table1_db.push(config.data.table1_db[index])
                         config.properties.changed = true;
@@ -3266,8 +3265,8 @@ let manage = {
                     }
                 }))
 
-                tempblock.addEventListener('contextmenu', function (e) {
-                    e.stopPropagation();
+                tempblock.addEventListener('contextmenu', function (e) {//Popup contect meny on alt_click
+                    e.stopPropagation()
                     e.preventDefault()
                     context_menu.popup({ window: require('electron').remote.getCurrentWindow() })
                     console.log('COntext meny on :', tempblock);
@@ -3581,6 +3580,14 @@ let manage = {
 let UI = {
     initalize: function () {
         console.log('UI Initalize');
+
+        //Path representers
+        document.getElementById('wallpaper_pathrepresenter').addEventListener('dblclick', function () {
+            if (config.data.backgroundimg != 'default') { shell.showItemInFolder(document.getElementById('wallpaper_pathrepresenter').value) }
+        })
+        document.getElementById('pathrepresenter').addEventListener('dblclick', function () {
+            if (config.baseconfig.use_alt_storage) { shell.openPath(config.baseconfig.alt_location + "/TT001_cfg config.json") }
+        })
 
         //esc trigger
         document.getElementById('body').addEventListener('keyup', function (e) {
@@ -4035,21 +4042,21 @@ let UI = {
         animation: {
             flip: function () {
                 console.log('animation switch triggered');
-                if (config.data.animation) {
-                    //turn off the switch
+                if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == false) {//animations preffered OFF by system
                     config.data.animation = false;
-                    notify.new('Settings', 'animations dissabled');
-                    console.warn('animations dissabled');
+                    notify.new('System', 'Animations dissabled by Your Systems animation preferences');
                 } else {
-                    //turn on the witch
-                    config.data.animation = true;
-                    notify.new('Settings', 'animations enabled');
-                    console.warn('animations enabled');
-                }
-
-                if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == false) {//animations preffered by system
-                    config.data.animation = false;
-                    notify.new('System', 'Animations dissabled by Your OS animation preferences');
+                    if (config.data.animation) {
+                        //turn off the switch
+                        config.data.animation = false;
+                        notify.new('Settings', 'animations dissabled');
+                        console.warn('animations dissabled');
+                    } else {
+                        //turn on the witch
+                        config.data.animation = true;
+                        notify.new('Settings', 'animations enabled');
+                        console.warn('animations enabled');
+                    }
                 }
 
                 config.save();

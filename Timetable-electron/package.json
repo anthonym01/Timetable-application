@@ -54,13 +54,12 @@
   "license": "ISC",
   "devDependencies": {
     "asar": "^1.0.0",
-    "electron": "^9.2.1",
+    "electron": "^10.1.1",
     "electron-builder": "^22.8.0"
   },
   "dependencies": {
     "electron-store": "^6.0.0",
     "electron-window-state": "^5.0.3",
-    "fs": "0.0.1-security",
     "wallpaper": "^4.4.1"
   }
 }

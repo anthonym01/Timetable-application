@@ -591,6 +591,7 @@ view {
     padding-bottom: 1vh;
     vertical-align: middle;
     align-content: center;
+    white-space: pre-wrap;
 }
 
 #fullscreen_tile_tab_container .lefter {

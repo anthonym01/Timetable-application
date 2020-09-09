@@ -1,12 +1,11 @@
 const electron = require('electron');//includes electron dependency
 const { app, BrowserWindow, dialog, screen } = electron//dialogue is remote
 
-const path = require('path');//path to necessary files
-const url = require('url');//web dependency
-const windowStateKeeper = require('electron-window-state');//preserves the window state
-const fs = require('fs');
-const Store = require('electron-store');
-const { Menu, MenuItem } = require('electron');
+const path = require('path')//path to necessary files
+const url = require('url')//web dependency
+const windowStateKeeper = require('electron-window-state')//preserves the window state
+const fs = require('fs')
+const Store = require('electron-store')
 const store = new Store;
 
 let mainWindow = null;//defines the window as an abject
@@ -33,7 +32,7 @@ app.on('window-all-closed', function () {
 function create_main_window() {
 	mainWindow = null
 	const { screenwidth, screenheight } = screen.getPrimaryDisplay().workAreaSize //gets screen size and sets it to height and width
-	let mainWindowState = windowStateKeeper({ defaultWidth: screenwidth, defaultHeight: screenheight });
+	let mainWindowState = windowStateKeeper({ defaultWidth: screenwidth, defaultHeight: screenheight })
 
 	mainWindow = new BrowserWindow({
 		x: mainWindowState.x,
@@ -47,19 +46,21 @@ function create_main_window() {
 		minWidth: 400,
 		show: true,
 		webPreferences: {
-			devTools: true,
 			nodeIntegration: true,
-		}
-	});
+			enableRemoteModule: true,
+			nodeIntegrationInWorker: true,
+			worldSafeExecuteJavaScript: true
+		},
+	})
 
 	mainWindow.loadURL(url.format({
 		pathname: path.join(__dirname, '/www/index.html'),
 		protocol: 'file:',
 		slashes: true,
 		icon: path.join(__dirname, '/assets/icons/icon.png'),
-	}));
+	}))
 
-	mainWindowState.manage(mainWindow);
+	mainWindowState.manage(mainWindow)
 }
 
 async function write_file(filepath, buffer_data) {
