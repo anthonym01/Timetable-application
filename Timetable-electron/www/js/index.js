@@ -8,10 +8,10 @@ const my_website = 'https://anthonym01.github.io/Portfolio/?contact=me';
 window.addEventListener('load', function () { //window loads
     console.log('Running from:', process.resourcesPath)
     console.log(process)
-
+    console.log('#'+systemPreferences.getAccentColor())
     body_menu()
     textboxmenu()
-    application_menu()
+    //application_menu()
 
     console.log(nativeTheme)
     if (localStorage.getItem("TT001_cfg")) {
@@ -44,6 +44,7 @@ function maininitalizer() {
 function body_menu() {
     //build menu
     const menu_body = new Menu()
+    menu_body.append(new MenuItem({role:'reload'}))
     menu_body.append(new MenuItem({ label: 'Force refresh UI', click() { maininitalizer() } }))
     menu_body.append(new MenuItem({ type: 'separator' }))
     menu_body.append(new MenuItem({ label: 'Contact developer', click() { shell.openExternal(my_website) } }))
@@ -362,8 +363,7 @@ let config = {
         var always_on_top_state = main.checkontop()
         var date = new Date();
         if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
-        var filepath = dialog.showSaveDialog({//electron file save dialogue
-            window: require('electron').remote.getCurrentWindow(),
+        var filepath = dialog.showSaveDialog(require('electron').remote.getCurrentWindow(), {//electron file save dialogue
             defaultPath: "TT001_cfg backup " + Number(date.getMonth() + 1) + " - " + date.getDate() + " - " + date.getFullYear(),
             buttonLabel: "Save", filters: [{ name: 'JSON', extensions: ['json'] }]
         });
@@ -385,7 +385,7 @@ let config = {
         console.warn('Configuration restoration initiated')
         var always_on_top_state = main.checkontop()
         if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
-        dialog.showOpenDialog({
+        dialog.showOpenDialog(require('electron').remote.getCurrentWindow(), {
             buttonLabel: "open", filters: [
                 { name: 'Custom File Type', extensions: ['json'] },
                 { name: 'All Files', extensions: ['*'] }
@@ -422,9 +422,9 @@ let config = {
         var always_on_top_state = main.checkontop()
         if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
         if (config.baseconfig.alt_location != undefined) {
-            var path = dialog.showOpenDialog({ properties: ['createDirectory', 'openDirectory'], defaultPath: config.baseconfig.alt_location.toString() })
+            var path = dialog.showOpenDialog(require('electron').remote.getCurrentWindow(), { properties: ['createDirectory', 'openDirectory'], defaultPath: config.baseconfig.alt_location.toString() })
         } else {
-            var path = dialog.showOpenDialog({ properties: ['createDirectory', 'openDirectory'], defaultPath: null })
+            var path = dialog.showOpenDialog(require('electron').remote.getCurrentWindow(), { properties: ['createDirectory', 'openDirectory'], defaultPath: null })
         }
 
         await path.then((path) => {
@@ -468,21 +468,20 @@ let table = {
         console.log('Table render started')
         //wjipe main cells
         var jkx = document.querySelectorAll(".jkx")
-        for (i = 0; i < jkx.length; i++) {
+        var jkxl = jkx.length;
+        for (i = 0; i < jkxl; i++) {
             jkx[i].innerHTML = ""
             jkx[i].style.display = ""
         }
 
-        document.getElementById('day0').style.display = '';
-        document.getElementById('day1').style.display = '';
-        document.getElementById('day2').style.display = '';
-        document.getElementById('day3').style.display = '';
-        document.getElementById('day4').style.display = '';
-        document.getElementById('day5').style.display = '';
-        document.getElementById('day6').style.display = '';
-        for (i = 0; i < 24; i++) {
-            document.getElementById('timerow_' + i).style.display = "";
-        }
+        document.getElementById('day0').style.display = ''
+        document.getElementById('day1').style.display = ''
+        document.getElementById('day2').style.display = ''
+        document.getElementById('day3').style.display = ''
+        document.getElementById('day4').style.display = ''
+        document.getElementById('day5').style.display = ''
+        document.getElementById('day6').style.display = ''
+        for (i = 0; i < 24; i++) { document.getElementById('timerow_' + i).style.display = ""; }
 
         config.properties.max = 0
         config.properties.min = 24
@@ -502,7 +501,9 @@ let table = {
                 manage.dialogue.open()
             }, 'click to add new class')
         } else {
-            for (i = 0; i < config.data.table1_db.length; i++) { //Get minimum time and maximum time to construct correct height
+            var configdatatable1_dblength = config.data.table1_db.length;
+            //Get minimum time and maximum time to construct correct height
+            for (i = 0; i < configdatatable1_dblength; i++) {
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
                     let starthraw = Number(config.data.table1_db[i].start) - config.data.table1_db[i].start % 1; // taking away the modulus 1 of itself removes the remainder
                     config.properties.min = Math.min(starthraw, config.properties.min); //find minimum time in all datu
@@ -510,16 +511,14 @@ let table = {
                 }
             }
             console.log('Table minimum found to be: ', config.properties.min, ' Table maximum found to be: ', config.properties.max)
-            for (i = 0; i < config.data.table1_db.length; i++) { //construct table
+            //construct table
+            for (i = 0; i < configdatatable1_dblength; i++) {
                 console.log('Data run on index :', i);
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
                     build_block_db1(i);
                 }
             }
-            /*setTimeout(() => {
-                validate(); //Strip empty cells form top and bottom    
-            }, 300);*/
-            validate(); //Strip empty cells form top and bottom
+            if (config.data.empty_rows == false) { validate() } //Strip empty cells form top and bottom and remove empty days
         }
         console.log('Table render Completed');
 
@@ -532,16 +531,13 @@ let table = {
             //time processing
             let startmeridian = 'a.m.';
             let starthr = 0;
-            let startminute = Number(config.data.table1_db[index].start % 1 * 60).toFixed(0);
-            if (startminute == 0) {
-                startminute = '00'
-            }
+            let startminute = Number(config.data.table1_db[index].start % 1 * 60).toFixed(0);//trim of the minute swith modulus and *60
+
+            if (startminute < 10) { startminute = '0' + startminute }
             let endmeridian = 'a.m.';
             let endhr = 0;
             let endminute = Number(config.data.table1_db[index].end % 1 * 60).toFixed(0);
-            if (endminute == 0) {
-                endminute = '00'
-            }
+            if (endminute < 10) { endminute = '0' + endminute }
 
             if (config.data.table1_db[index].start >= 12) {
                 startmeridian = 'p.m.'; //morning or evening
@@ -549,22 +545,20 @@ let table = {
             } else {
                 starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
             }
+
             if (config.data.table1_db[index].end >= 12) {
                 endmeridian = 'p.m.'; //morning or evening
                 endhr = Number(config.data.table1_db[index].end - 12) - config.data.table1_db[index].end % 1; //removes remainder
             } else {
                 endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1; //removes remainder
             }
-            if (starthr == 0) {
-                starthr = 12
-            }
-            if (endhr == 0) {
-                endhr = 12
-            }
+
+            if (starthr == 0) { starthr = 12 }
+            if (endhr == 0) { endhr = 12 }
 
 
             //populate the block with relivant data
-            tempblock.innerHTML = config.data.table1_db[index].name /* + '<br>' + starthr+':'+startminute+' '+startmeridian+' - '+endhr+':'+endminute+' '+endmeridian*/;
+            tempblock.innerHTML = config.data.table1_db[index].name
 
             //info doots
             let doot = document.createElement('div');
@@ -616,7 +610,7 @@ let table = {
                         document.getElementById('1_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } //more than 10 precision 2
                     else {
-                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
                     } //yeet a time error cause that dont exist fam
                     break;
                 case 2: //Tuesday
@@ -626,7 +620,7 @@ let table = {
                     } else if (starthraw >= 10 && starthraw < 24) {
                         document.getElementById('2_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
                     }
                     break;
                 case 3: //Wednsday
@@ -636,7 +630,7 @@ let table = {
                     } else if (starthraw >= 10 && starthraw < 24) {
                         document.getElementById('3_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
                     }
                     break;
                 case 4:
@@ -646,7 +640,7 @@ let table = {
                     } else if (starthraw >= 10 && starthraw < 24) {
                         document.getElementById('4_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
                     }
                     break;
                 case 5:
@@ -656,7 +650,7 @@ let table = {
                     } else if (starthraw >= 10 && starthraw < 24) {
                         document.getElementById('5_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
                     }
                     break;
                 case 6:
@@ -666,7 +660,7 @@ let table = {
                     } else if (starthraw >= 10 && starthraw < 24) {
                         document.getElementById('6_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
                     }
                     break;
                 case 7:
@@ -676,26 +670,27 @@ let table = {
                     } else if (starthraw >= 10 && starthraw < 24) {
                         document.getElementById('7_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.log('Time logic error on index :', index, ' Time code :', starthraw)
+                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
                     }
                     break;
                 default:
                     console.log('Date positioning error on index: ', index, ' Day code: ', config.data.table1_db[index].day);
             }
+
             //time to height calculations must be done after render
             setTimeout(() => {
-                let blockheight = Number(config.data.table1_db[index].end - config.data.table1_db[index].start) * 100;
-                console.log(config.data.table1_db[index].name, ' As assigned height of :', blockheight, '%');
+                let blockheight = Number(config.data.table1_db[index].end - config.data.table1_db[index].start) * 100;//1 cell is 1hr under normal conditions
+                console.log(config.data.table1_db[index].name, ' is assigned height of :', blockheight, '%');
                 tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")"
                 if (config.data.table1_db[index].color.light < 49) {
                     tempblock.style.color = "white"
-                    tempblock.style.textShadow = " 0vh 0vh 2vh black";
+                    tempblock.style.textShadow = " 0vh 0vh 1vh black";
                 } else {
                     tempblock.style.color = "black"
-                    tempblock.style.textShadow = " 0vh 0vh 2vh white";
+                    tempblock.style.textShadow = " 0vh 0vh 1vh white";
                 }
 
             }, 100);
@@ -703,37 +698,22 @@ let table = {
             //click action
             tempblock.addEventListener('click', () => {
                 console.log('Triggered data cell: ', tempblock);
+
                 if (config.data.tiles) { //show full tile view
                     //place data into overlay
-                    tempblock.name = "off";
-                    tempblock.setAttribute("class", "data_block");
+                    tempblock.setAttribute("class", "data_block");//close block reguardless
                     document.getElementById('title_cell').innerText = config.data.table1_db[index].name;
                     switch (config.data.table1_db[index].day) {
-                        case 1:
-                            document.getElementById('day_cell').innerText = "Monday";
-                            break;
-                        case 2:
-                            document.getElementById('day_cell').innerText = "Tuesday";
-                            break;
-                        case 3:
-                            document.getElementById('day_cell').innerText = "Wednesday";
-                            break;
-                        case 4:
-                            document.getElementById('day_cell').innerText = "Thursday";
-                            break;
-                        case 5:
-                            document.getElementById('day_cell').innerText = "Friday";
-                            break;
-                        case 6:
-                            document.getElementById('day_cell').innerText = "Saturday";
-                            break;
-                        case 7:
-                            document.getElementById('day_cell').innerText = "Sunday";
-                            break;
-                        default:
-                            console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
+                        case 1: document.getElementById('day_cell').innerText = "Monday"; break;
+                        case 2: document.getElementById('day_cell').innerText = "Tuesday"; break;
+                        case 3: document.getElementById('day_cell').innerText = "Wednesday"; break;
+                        case 4: document.getElementById('day_cell').innerText = "Thursday"; break;
+                        case 5: document.getElementById('day_cell').innerText = "Friday"; break;
+                        case 6: document.getElementById('day_cell').innerText = "Saturday"; break;
+                        case 7: document.getElementById('day_cell').innerText = "Sunday"; break;
+                        default: console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
                     }
-                    if (config.data.table1_db[index].detail != undefined) {
+                    if ('detail' in config.data.table1_db[index]) {
                         document.getElementById('detail_cell').innerHTML = config.data.table1_db[index].detail;
                     } else {
                         document.getElementById('detail_cell').innerHTML = "No details"
@@ -741,20 +721,17 @@ let table = {
                     document.getElementById('time_cell').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
                     document.getElementById('fullscreen_tile').classList = "fullscreen_tile_active"
                     document.getElementById('close_btn').style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
-                } else {
-                    //show the normal card flip out view
-                    if (tempblock.name == "on") {
-                        tempblock.name = "off";
-                        tempblock.setAttribute("class", "data_block");
-                    } else {
-                        tempblock.name = "on";
+                } else {//show the normal card flip out view
+                    if (tempblock.classList == 'data_block') {
                         tempblock.setAttribute("class", "data_block_active");
+                    } else {
+                        tempblock.setAttribute("class", "data_block");
                     }
                 }
             });
 
-            let context_menu = new Menu()
-            context_menu.append(new MenuItem({
+            let context_menu = new Menu()//context menu
+            context_menu.append(new MenuItem({//add edit menu item with edit function
                 label: 'edit', click() {
                     manage.dialogue.edit(index)
                     manage.dialogue.open()
@@ -762,10 +739,10 @@ let table = {
                 }
             }))
 
-            tempblock.addEventListener('contextmenu', function (e) {
+            tempblock.addEventListener('contextmenu', function (e) {//popup context menu on alt click
                 e.stopPropagation();
                 e.preventDefault()
-                context_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+                context_menu.popup({ window: require('electron').remote.getCurrentWindow() })//popup context menu in current window
                 console.log('COntext meny on :', tempblock);
             })
             console.log('Block :', index, ' Check complete');
@@ -773,178 +750,178 @@ let table = {
 
         function validate() {
             //Remove empty days with the bread crums left behing durring the initial render
-            if (config.data.empty_rows == false) {
-                console.log('Validating Table');
-                let days = 7;
-                if (!config.properties.monday) { //remove monday?
-                    document.getElementById('day1').style.display = 'none'; //Blank the title
-                    for (i = 0; i < 24; i++) { //Loop to blank the cells associated with that title
-                        document.getElementById('1_' + i).style.display = 'none';
-                        console.log('Removing Monday time index :', i);
-                    }
-                    days--;
-                }
-                if (!config.properties.tuesday) { //remove tuesday?
-                    document.getElementById('day2').style.display = 'none';
-                    for (i = 0; i < 24; i++) {
-                        document.getElementById('2_' + i).style.display = 'none';
-                        console.log('Removing Tuesday time index :', i);
-                    }
-                    days--;
-                }
-                if (!config.properties.wednsday) { //remove wednsday?
-                    document.getElementById('day3').style.display = 'none';
-                    for (i = 0; i < 24; i++) {
-                        document.getElementById('3_' + i).style.display = 'none';
-                        console.log('Removing wednsday time index :', i);
-                    }
-                    days--;
-                }
-                if (!config.properties.thursday) { //remove thursday?
-                    document.getElementById('day4').style.display = 'none';
-                    for (i = 0; i < 24; i++) {
-                        document.getElementById('4_' + i).style.display = 'none';
-                        console.log('Removing Thursday time index :', i);
-                    }
-                    days--;
-                }
-                if (!config.properties.friday) { //remove friday?
-                    document.getElementById('day5').style.display = 'none';
-                    for (i = 0; i < 24; i++) {
-                        document.getElementById('5_' + i).style.display = 'none';
-                        console.log('Removing friday time index :', i);
-                    }
-                    days--;
-                }
-                if (!config.properties.saturday) { //remove saturday?
-                    document.getElementById('day6').style.display = 'none';
-                    for (i = 0; i < 24; i++) {
-                        document.getElementById('6_' + i).style.display = 'none';
-                        console.log('Removing saturday time index :', i);
-                    }
-                    days--;
-                }
-                if (!config.properties.sunday) { //remove sunday?
-                    document.getElementById('day0').style.display = 'none';
-                    for (i = 0; i < 24; i++) {
-                        document.getElementById('7_' + i).style.display = 'none';
-                        console.log('Removing sunday time index :', i);
-                    }
-                    days--;
-                }
 
-                //remove empty time cells
-                if (config.data.table1_db.length < 3) { //normalization makes life easier fror small table users
-                    config.properties.min = config.properties.min - 3;
-                    config.properties.max = config.properties.max + 3;
-                    if (config.properties.min < 0) {
-                        config.properties.min = 0
-                    }
-                    if (config.properties.min > 23) {
-                        config.properties.min = 23
-                    }
+            console.log('Validating Table');
+            let days = 7;
+            if (!config.properties.monday) { //remove monday?
+                document.getElementById('day1').style.display = 'none'; //Blank the title
+                for (i = 0; i < 24; i++) { //Loop to blank the cells associated with that title
+                    document.getElementById('1_' + i).style.display = 'none';
+                    console.log('Removing Monday time index :', i);
                 }
-
-                let rows = 24;
-                for (i = 0; i < config.properties.min; i++) { //knock out all below minimum start time
-                    console.log('Called null on row: ', i);
-                    if (document.getElementById('timerow_' + i)) {
-                        document.getElementById('timerow_' + i).style.display = "none";
-                    }
-                    rows--;
-                }
-                for (i = config.properties.max.toPrecision(2); i < 24; i++) { //knock out all above maximum end time
-                    console.log('Called null on row: ', i);
-                    if (document.getElementById('timerow_' + i)) {
-                        document.getElementById('timerow_' + i).style.display = "none";
-                    }
-                    rows--;
-                }
-                console.log('Time rows found value: ', rows);
-
-                //set font size dependent on rows value
-                switch (rows) {
-                    case 1:
-                        document.getElementById('timetable').style.fontSize = '11vh';
-                        break;
-                    case 2:
-                        document.getElementById('timetable').style.fontSize = '10vh';
-                        break;
-                    case 3:
-                        document.getElementById('timetable').style.fontSize = '9vh';
-                        break;
-                    case 4:
-                        document.getElementById('timetable').style.fontSize = '8vh';
-                        break;
-                    case 5:
-                        document.getElementById('timetable').style.fontSize = '7vh';
-                        break;
-                    case 6:
-                        document.getElementById('timetable').style.fontSize = '6vh';
-                        break;
-                    case 7:
-                        document.getElementById('timetable').style.fontSize = '6vh';
-                        break;
-                    case 8:
-                        document.getElementById('timetable').style.fontSize = '5vh';
-                        break;
-                    case 9:
-                        document.getElementById('timetable').style.fontSize = '3.4vh';
-                        break;
-                    case 10:
-                        document.getElementById('timetable').style.fontSize = '4vh';
-                        break;
-                    case 11:
-                        document.getElementById('timetable').style.fontSize = '4vh';
-                        break;
-                    case 12:
-                        document.getElementById('timetable').style.fontSize = '3vh';
-                        break;
-                    case 13:
-                        document.getElementById('timetable').style.fontSize = '3vh';
-                        break;
-                    case 14:
-                        document.getElementById('timetable').style.fontSize = '3vh';
-                        break;
-                    case 15:
-                        document.getElementById('timetable').style.fontSize = '3vh';
-                        break;
-                    case 16:
-                        document.getElementById('timetable').style.fontSize = '3vh';
-                        break;
-                    case 17:
-                        document.getElementById('timetable').style.fontSize = '2vh';
-                        break;
-                    case 18:
-                        document.getElementById('timetable').style.fontSize = '2vh';
-                        break;
-                    case 19:
-                        document.getElementById('timetable').style.fontSize = '2vh';
-                        break;
-                    case 20:
-                        document.getElementById('timetable').style.fontSize = '2vh';
-                        break;
-                    case 21:
-                        document.getElementById('timetable').style.fontSize = '2vh';
-                        break;
-                    case 22:
-                        document.getElementById('timetable').style.fontSize = '2vh';
-                        break;
-                    case 23:
-                        document.getElementById('timetable').style.fontSize = '2vh';
-                        break;
-                    case 24:
-                        document.getElementById('timetable').style.fontSize = '2vh';
-                        break;
-                    default:
-                        console.log('Row error, defaulted :', rows);
-                }
-                if (days == 0 || rows == 0) {
-                    //Table is empty
-                    notify.new('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
-                }
-                console.log('Table validated');
+                days--;
             }
+            if (!config.properties.tuesday) { //remove tuesday?
+                document.getElementById('day2').style.display = 'none';
+                for (i = 0; i < 24; i++) {
+                    document.getElementById('2_' + i).style.display = 'none';
+                    console.log('Removing Tuesday time index :', i);
+                }
+                days--;
+            }
+            if (!config.properties.wednsday) { //remove wednsday?
+                document.getElementById('day3').style.display = 'none';
+                for (i = 0; i < 24; i++) {
+                    document.getElementById('3_' + i).style.display = 'none';
+                    console.log('Removing wednsday time index :', i);
+                }
+                days--;
+            }
+            if (!config.properties.thursday) { //remove thursday?
+                document.getElementById('day4').style.display = 'none';
+                for (i = 0; i < 24; i++) {
+                    document.getElementById('4_' + i).style.display = 'none';
+                    console.log('Removing Thursday time index :', i);
+                }
+                days--;
+            }
+            if (!config.properties.friday) { //remove friday?
+                document.getElementById('day5').style.display = 'none';
+                for (i = 0; i < 24; i++) {
+                    document.getElementById('5_' + i).style.display = 'none';
+                    console.log('Removing friday time index :', i);
+                }
+                days--;
+            }
+            if (!config.properties.saturday) { //remove saturday?
+                document.getElementById('day6').style.display = 'none';
+                for (i = 0; i < 24; i++) {
+                    document.getElementById('6_' + i).style.display = 'none';
+                    console.log('Removing saturday time index :', i);
+                }
+                days--;
+            }
+            if (!config.properties.sunday) { //remove sunday?
+                document.getElementById('day0').style.display = 'none';
+                for (i = 0; i < 24; i++) {
+                    document.getElementById('7_' + i).style.display = 'none';
+                    console.log('Removing sunday time index :', i);
+                }
+                days--;
+            }
+
+            //remove empty time cells
+            if (config.data.table1_db.length < 3) { //normalization makes life easier fror small table users
+                config.properties.min = config.properties.min - 3;
+                config.properties.max = config.properties.max + 3;
+                if (config.properties.min < 0) {
+                    config.properties.min = 0
+                }
+                if (config.properties.min > 23) {
+                    config.properties.min = 23
+                }
+            }
+
+            let rows = 24;
+            for (i = 0; i < config.properties.min; i++) { //knock out all below minimum start time
+                console.log('Called null on row: ', i);
+                if (document.getElementById('timerow_' + i)) {
+                    document.getElementById('timerow_' + i).style.display = "none";
+                }
+                rows--;
+            }
+            for (i = config.properties.max.toPrecision(2); i < 24; i++) { //knock out all above maximum end time
+                console.log('Called null on row: ', i);
+                if (document.getElementById('timerow_' + i)) {
+                    document.getElementById('timerow_' + i).style.display = "none";
+                }
+                rows--;
+            }
+            console.log('Time rows found value: ', rows);
+
+            //set font size dependent on rows value
+            switch (rows) {
+                case 1:
+                    document.getElementById('timetable').style.fontSize = '11vh';
+                    break;
+                case 2:
+                    document.getElementById('timetable').style.fontSize = '10vh';
+                    break;
+                case 3:
+                    document.getElementById('timetable').style.fontSize = '9vh';
+                    break;
+                case 4:
+                    document.getElementById('timetable').style.fontSize = '8vh';
+                    break;
+                case 5:
+                    document.getElementById('timetable').style.fontSize = '7vh';
+                    break;
+                case 6:
+                    document.getElementById('timetable').style.fontSize = '6vh';
+                    break;
+                case 7:
+                    document.getElementById('timetable').style.fontSize = '6vh';
+                    break;
+                case 8:
+                    document.getElementById('timetable').style.fontSize = '5vh';
+                    break;
+                case 9:
+                    document.getElementById('timetable').style.fontSize = '3.4vh';
+                    break;
+                case 10:
+                    document.getElementById('timetable').style.fontSize = '4vh';
+                    break;
+                case 11:
+                    document.getElementById('timetable').style.fontSize = '4vh';
+                    break;
+                case 12:
+                    document.getElementById('timetable').style.fontSize = '3vh';
+                    break;
+                case 13:
+                    document.getElementById('timetable').style.fontSize = '3vh';
+                    break;
+                case 14:
+                    document.getElementById('timetable').style.fontSize = '3vh';
+                    break;
+                case 15:
+                    document.getElementById('timetable').style.fontSize = '3vh';
+                    break;
+                case 16:
+                    document.getElementById('timetable').style.fontSize = '3vh';
+                    break;
+                case 17:
+                    document.getElementById('timetable').style.fontSize = '2vh';
+                    break;
+                case 18:
+                    document.getElementById('timetable').style.fontSize = '2vh';
+                    break;
+                case 19:
+                    document.getElementById('timetable').style.fontSize = '2vh';
+                    break;
+                case 20:
+                    document.getElementById('timetable').style.fontSize = '2vh';
+                    break;
+                case 21:
+                    document.getElementById('timetable').style.fontSize = '2vh';
+                    break;
+                case 22:
+                    document.getElementById('timetable').style.fontSize = '2vh';
+                    break;
+                case 23:
+                    document.getElementById('timetable').style.fontSize = '2vh';
+                    break;
+                case 24:
+                    document.getElementById('timetable').style.fontSize = '2vh';
+                    break;
+                default:
+                    console.log('Row error, defaulted :', rows);
+            }
+            if (days == 0 || rows == 0) {
+                //Table is empty
+                notify.new('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
+            }
+            console.log('Table validated');
+
 
         }
     },
@@ -2792,12 +2769,10 @@ let manage = {
         while (config.data.table_details[i] != null) {
             if (config.data.table_details[i].identifier == Number(config.data.table_selected) && config.data.table_details[i].deleted != true) {
                 document.getElementById('tablemanage_txt').innerText = config.data.table_details[i].purpose;
-                document.getElementById('title_txt').innerText = config.data.table_details[i].purpose;
                 document.getElementById('pg_title').innerText = config.data.table_details[i].purpose;
                 break;
             } else {
                 document.getElementById('tablemanage_txt').innerText = "Homeless tiles";
-                document.getElementById('title_txt').innerText = "Homeless tiles";
                 document.getElementById('pg_title').innerText = "Homeless tiles";
             }
             i++
@@ -2910,8 +2885,51 @@ let manage = {
         })
 
         function renderbar(index) {
-            console.log('Creating actionbutton for :', config.data.table_details[index]);
-            //build menu
+            console.log('Creating actionbutton and title button for :', config.data.table_details[index]);
+
+            let table_button = document.createElement('div');
+            if (config.data.table_details[index].identifier == config.data.table_selected) {
+                table_button.classList = "table_button_active"
+                table_button.addEventListener('click', function () {
+                    UI.close_tile()
+                    if (document.getElementById('manage_view').style.display == "block") {
+                        //close
+                        document.getElementById('Manage_button_btn').classList = "statusbtn"
+                        document.getElementById('manage_view').style.display = ""
+                    }
+                    if (document.getElementById('setting_view').style.display == "block") {
+                        //close
+                        document.getElementById('Setting_btn').classList = "statusbtn"
+                        document.getElementById('setting_view').style.display = ""
+                    }
+
+                })
+            } else {
+                table_button.classList = "table_button"
+                table_button.addEventListener('click', function () {
+                    config.data.table_selected = config.data.table_details[index].identifier
+                    config.save()
+                    maininitalizer()
+                    config.properties.changed = true
+                    UI.close_tile()
+                    if (document.getElementById('manage_view').style.display == "block") {
+                        //close
+                        document.getElementById('Manage_button_btn').classList = "statusbtn"
+                        document.getElementById('manage_view').style.display = ""
+                    }
+                    if (document.getElementById('setting_view').style.display == "block") {
+                        //close
+                        document.getElementById('Setting_btn').classList = "statusbtn"
+                        document.getElementById('setting_view').style.display = ""
+                    }
+
+                })
+            }
+            table_button.innerText = config.data.table_details[index].purpose;
+            document.getElementById('titlebar_table_selector').appendChild(table_button)
+
+
+            //build pseudo menu
             let table_bar = document.createElement('div');
             table_bar.setAttribute("class", "table_bar");
             let titlespan = document.createElement('span');
@@ -3029,6 +3047,7 @@ let manage = {
 
         function clear() {
             document.getElementById('tablespace_render').innerHTML = "";
+            document.getElementById('titlebar_table_selector').innerHTML = "";
         }
     },
     render_list: function () {
@@ -3117,15 +3136,11 @@ let manage = {
             let startmeridian = 'a.m.';
             let starthr = 0;
             let startminute = Number(config.data.table1_db[index].start % 1 * 60).toFixed(0);
-            if (startminute == 0) {
-                startminute = '00'
-            }
+            if (startminute == 0) { startminute = '00' }
             let endmeridian = 'a.m.';
             let endhr = 0;
             let endminute = Number(config.data.table1_db[index].end % 1 * 60).toFixed(0);
-            if (endminute == 0) {
-                endminute = '00'
-            }
+            if (endminute == 0) { endminute = '00' }
 
             if (config.data.table1_db[index].start > 12) {
                 startmeridian = 'p.m.'; //morning or evening
@@ -4170,10 +4185,10 @@ let UI = {
             setpostition: function () {
                 var framestate = main.framestate()
                 if (framestate == true) {
-                    document.getElementById('index_css').href = "css/index-frameon.css"
+                    document.getElementById('title_bar').classList = "title_bar"
                     document.getElementById('frame_switch_container').className = 'switch_container_active';
                 } else {
-                    document.getElementById('index_css').href = "css/index-frameoff.css"
+                    document.getElementById('title_bar').classList = "title_bar_frameless"
                     document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
                 }
             },

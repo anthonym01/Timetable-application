@@ -1,5 +1,5 @@
 const electron = require('electron');//includes electron dependency
-const { app, BrowserWindow, dialog, screen } = electron//dialogue is remote
+const { app, BrowserWindow,Menu, dialog, screen } = electron//dialogue is remote
 
 const path = require('path')//path to necessary files
 const url = require('url')//web dependency
@@ -20,6 +20,7 @@ app.on('ready', function () {
 	} else {//doesnt emsist
 		store.set('default', JSON.stringify(config))
 	}
+	Menu.setApplicationMenu(null)//Change application menu
 	create_main_window()
 })
 

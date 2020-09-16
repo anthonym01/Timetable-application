@@ -74,7 +74,7 @@
     --light_pannel_book: url('../img/manage-dark.webp');
     --book_open: url('../img/manage-open-white.webp');
     --window-top: url('../img/window-top-512-light.webp');
-    --setting:url('../img/setting-light.webp');
+    --setting: url('../img/setting-light.webp');
     --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 70%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 30%));
     --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
     --primary_hue_active: hsl(var(--hue_value), var(--saturat), 40%);
@@ -163,7 +163,7 @@
     --light_pannel_book: url('../img/manage-dark.webp');
     --book_open: url('../img/manage-open-white.webp');
     --window-top: url('../img/window-top-512-dark.webp');
-    --setting:url('../img/setting-dark.webp');
+    --setting: url('../img/setting-dark.webp');
     --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 30%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 70%));
     --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
     --primary_hue_active: hsl(var(--hue_value), var(--saturat), 60%);
@@ -420,32 +420,41 @@ body {
     color: var(--text-color);
 }
 
-.title_bar {
+.title_bar,
+.title_bar_frameless {
     position: fixed;
     height: 30px;
     width: 100vw;
     top: 0;
     right: 0;
     z-index: 1000;
-    -webkit-app-region: drag;
+    /*-webkit-app-region: drag;*/
     overflow: hidden;
     background-image: linear-gradient(90deg, var(--background-color), var(--primary_hue), var(--background-color));
 }
 
-.resise_constraint {
+.title_bar_frameless {
+    -webkit-app-region: drag;
+}
+
+.title_bar_frameless .resise_constraint {
     /* show and hide depending on window state */
     position: absolute;
     top: 0;
     left: 0;
     width: calc(100% - 180px);
     height: 5px;
-    display: block;
+    display: none !important;
     -webkit-app-region: no-drag;
     /*background-color: red;*/
     /* For debugging */
 }
 
-.title_icon {
+.title_bar .resise_constraint {
+    display: none !important;
+}
+
+.title_bar_frameless .title_icon {
     position: absolute;
     top: 0;
     left: 0;
@@ -456,17 +465,11 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-image: url('../img/icon.webp');
+    -webkit-app-region: drag;
 }
 
-#title_txt {
-    position: absolute;
-    top: 0;
-    left: 35px;
-    width: fit-content;
-    height: 30px;
-    font-family: Lexend_Deca;
-    font-size: 20px;
-    padding-top: 2px;
+.title_bar .title_icon {
+    display: none;
 }
 
 .statusbtn,
@@ -478,22 +481,26 @@ body {
     height: 30px;
     -webkit-app-region: no-drag;
     cursor: default;
-    transition: background-color 300ms;
+
 }
 
 .statusbtn:hover {
     background-color: var(--grey);
+    transition: background-color 300ms;
 }
 
 .statusbtn_active,
-/* For always on top button */
 .statusbtn:active {
     background-color: var(--primary_hue_active);
     transition: background-color 80ms;
 }
 
-#maximize_btn {
+.title_bar_frameless #maximize_btn {
     right: 45px;
+}
+
+.title_bar #maximize_btn {
+    display: none;
 }
 
 #maximize_btn::after {
@@ -505,7 +512,6 @@ body {
     width: 13px;
     border: 1px solid var(--text-color);
     background-color: var(--background-color);
-    /*background-color: var(--text-color);*/
 }
 
 #maximize_btn:hover::after {
@@ -526,8 +532,13 @@ body {
     border: 1px solid var(--text-color);
 }
 
-#minimize_btn {
+.title_bar_frameless #minimize_btn {
     right: 90px;
+}
+
+
+.title_bar #minimize_btn {
+    display: none;
 }
 
 #minimize_btn::after {
@@ -544,18 +555,25 @@ body {
 }
 
 #always_on_top_btn {
-    right: 135px;
     background-size: 55%;
     /*background-size: contain;*/
     background-position: center;
     background-repeat: no-repeat;
     cursor: pointer;
-    background-image:var(--window-top);
+    background-image: var(--window-top);
     /*filter: invert(var(--inversion_factor));*/
 }
 
-#Setting_btn {
+.title_bar_frameless #always_on_top_btn {
     right: 180px;
+}
+
+.title_bar #always_on_top_btn {
+    right: 45px;
+}
+
+#Setting_btn {
+
     background-size: 55%;
     /*background-size: contain;*/
     background-position: center;
@@ -565,8 +583,15 @@ body {
     /*filter: invert(var(--inversion_factor));*/
 }
 
+.title_bar_frameless #Setting_btn {
+    right: 135px;
+}
+
+.title_bar #Setting_btn {
+    right: 0px;
+}
+
 #Manage_button_btn {
-    right: 225px;
     background-size: 55%;
     /*background-size: contain;*/
     background-position: center;
@@ -574,6 +599,18 @@ body {
     cursor: pointer;
     background-image: var(--book_closed);
     /*filter: invert(var(--inversion_factor));*/
+}
+
+.title_bar_frameless #Manage_button_btn {
+    right: 225px;
+}
+
+.title_bar #Manage_button_btn {
+    right: 90px;
+}
+
+.title_bar #mainx_btn {
+    display: none;
 }
 
 #mainx_btn {
@@ -628,6 +665,65 @@ body {
     transform: rotate(230deg);
 }
 
+#titlebar_table_selector {
+    position: absolute;
+    bottom: 0;
+    height: 30px;
+    width: calc(100% - 135px);
+    left: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row-reverse;
+    flex-wrap: nowrap;
+    -webkit-app-region: drag;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+#titlebar_table_selector::-webkit-scrollbar {
+    display: none;
+}
+
+.title_bar_frameless #titlebar_table_selector {
+    width: calc(100% - 300px);
+    height: 30px;
+    left: 30px;
+}
+
+.table_button,
+.table_button_active {
+    height: 100%;
+    /*width: 95px;*/
+    width: auto;
+    box-sizing: border-box;
+    padding-top: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 16px;
+    border-bottom: 3px solid var(--text-color);
+    background-color: transparent;
+    color: var(--text-color);
+    -webkit-app-region: no-drag;
+    /*margin-left: 4px;
+    margin-right: 4px;*/
+    word-wrap: normal;
+    white-space: nowrap;
+    display: block;
+    cursor: pointer;
+    transition: padding 100ms, background-color 300ms;
+    /*border-radius: 3px;*/
+    text-align: center;
+}
+
+.table_button:hover {
+    padding-top: 1px;
+    background-color: var(--grey);
+    transition: padding 100ms, background-color 0ms;
+}
+
+.table_button_active {
+    background-color: var(--primary_hue_active);
+}
 
 /*Scrollbar custom*/
 ::-webkit-scrollbar {
@@ -2360,7 +2456,7 @@ td {
         max-height: 88vh;
         margin-left: 0;
         margin-right: 0;
-        border-bottom:none;
+        border-bottom: none;
         width: 100%;
         height: fit-content;
         overflow-y: auto;
@@ -2369,7 +2465,7 @@ td {
     .dataspace_compact {
         margin-left: 0;
         margin-right: 0;
-        border-bottom:none;
+        border-bottom: none;
         width: calc(100% - 70vh);
         min-height: 90vh;
         max-height: 90vh;
