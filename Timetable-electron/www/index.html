@@ -15,30 +15,30 @@
     <link rel="stylesheet" id="nomation" href="">
 
     <script defer type="text/javascript" src="js/index.js" charset="UTF-8"></script>
+    <script defer type="text/javascript" src="js/clock.js" charset="UTF-8"></script>
     <title id="pg_title">Timetable</title>
 </head>
 
-<body id="body" class="dark">
+<body class="dark">
 
     <!--Table view-->
-    <view id="table1" style="display: block;">
+    <div class="view" id="table1" style="display: block;">
         <div id="fullscreen_tile" class="fullscreen_tile" title="Right click to close">
             <!-- Onclick title card -->
             <div id="close_btn" title="Close">Close</div>
             <div id="fullscreen_tile_tab_container">
                 <table id="tile_table">
                     <tr>
-                        <th id="title_cell" colspan="2"></th>
+                        <th id="title_cell"></th>
                     </tr>
                     <tr>
-                        <td class="lefter">Day :</td>
-                        <td class="righter" id="day_cell"></td>
+                        <td id="day_cell"></td>
                     </tr>
                     <tr>
-                        <td colspan="2" id="time_cell"></td>
+                        <td id="time_cell"></td>
                     </tr>
                     <tr>
-                        <td colspan="2" id="detail_cell"></td>
+                        <td id="detail_cell"></td>
                     </tr>
                 </table>
             </div>
@@ -47,9 +47,10 @@
             <tr>
                 <!--Head row-->
                 <th class="maincell" id="live_clock">live_clock</th>
-                <th class="maincell" id="day1">&nbsp;&nbsp;&nbsp;Monday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day1">&nbsp;&nbsp;&nbsp;Monday&nbsp;&nbsp;&nbsp;
+                </th>
                 <th class="maincell" id="day2">&nbsp;&nbsp;&nbsp;Tuesday&nbsp;&nbsp;&nbsp;</th>
-                <th class="maincell" id="day3">&nbsp;&nbsp;&nbsp;Wednsday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day3">&nbsp;&nbsp;&nbsp;Wednesday&nbsp;&nbsp;&nbsp;</th>
                 <th class="maincell" id="day4">&nbsp;&nbsp;&nbsp;Thursday&nbsp;&nbsp;&nbsp;</th>
                 <th class="maincell" id="day5">&nbsp;&nbsp;&nbsp;Friday&nbsp;&nbsp;&nbsp;</th>
                 <th class="maincell" id="day6">&nbsp;&nbsp;&nbsp;Saturday&nbsp;&nbsp;&nbsp;</th>
@@ -57,7 +58,7 @@
             </tr>
             <tr id="timerow_0">
                 <!--0:00 - 1:00 row-->
-                <th class="maincell">12:00 - 1:00 a.m.</th>
+                <th class="maincell">12:00 - 1:00 <small>AM</small></th>
                 <td class="maincell jkx" id="1_0"></td>
                 <td class="maincell jkx" id="2_0"></td>
                 <td class="maincell jkx" id="3_0"></td>
@@ -320,21 +321,89 @@
                 <td class="maincell jkx" id="7_23"></td>
             </tr>
         </table>
-    </view>
+        <div class="Clock_lock" id="slideclock">
+            <!--First of hour-->
+            <div class="numberpannel" id="hr1st">
+                <div class="snumber_slide" id="1sthr0">0</div>
+                <div class="snumber_slide" id="1sthr1">1</div>
+            </div>
+            <!--Second of hour-->
+            <div class="numberpannel" id="hr2t" style="left: 4vw;">
+                <div class="snumber_slide" id="2ndhr0">0</div>
+                <div class="snumber_slide" id="2ndhr1">1</div>
+                <div class="snumber_slide" id="2ndhr2">2</div>
+                <div class="snumber_slide" id="2ndhr3">3</div>
+                <div class="snumber_slide" id="2ndhr4">4</div>
+                <div class="snumber_slide" id="2ndhr5">5</div>
+                <div class="snumber_slide" id="2ndhr6">6</div>
+                <div class="snumber_slide" id="2ndhr7">7</div>
+                <div class="snumber_slide" id="2ndhr8">8</div>
+                <div class="snumber_slide" id="2ndhr9">9</div>
+            </div>
+            <div class="numberpannel" style="left: 8vw;width: 2vw;">:</div>
+            <!--First of minute-->
+            <div class="numberpannel" id="min1st" style="left:10vw">
+                <div class="snumber_slide" id="1min0">0</div>
+                <div class="snumber_slide" id="1min1">1</div>
+                <div class="snumber_slide" id="1min2">2</div>
+                <div class="snumber_slide" id="1min3">3</div>
+                <div class="snumber_slide" id="1min4">4</div>
+                <div class="snumber_slide" id="1min5">5</div>
+            </div>
+            <!-- Second of minutes -->
+            <div class="numberpannel" id="min2st" style="left:14vw">
+                <div class="snumber_slide" id="2min0">0</div>
+                <div class="snumber_slide" id="2min1">1</div>
+                <div class="snumber_slide" id="2min2">2</div>
+                <div class="snumber_slide" id="2min3">3</div>
+                <div class="snumber_slide" id="2min4">4</div>
+                <div class="snumber_slide" id="2min5">5</div>
+                <div class="snumber_slide" id="2min6">6</div>
+                <div class="snumber_slide" id="2min7">7</div>
+                <div class="snumber_slide" id="2min8">8</div>
+                <div class="snumber_slide" id="2min9">9</div>
+            </div>
+            <div class="numberpannel" style="left: 18vw;width:2vw">:</div>
+            <!--First of second-->
+            <div class="numberpannel" id="sec1st" style="left:20vw">
+                <div class="snumber_slide" id="1sec0">0</div>
+                <div class="snumber_slide" id="1sec1">1</div>
+                <div class="snumber_slide" id="1sec2">2</div>
+                <div class="snumber_slide" id="1sec3">3</div>
+                <div class="snumber_slide" id="1sec4">4</div>
+                <div class="snumber_slide" id="1sec5">5</div>
+            </div>
+            <!-- Second of second -->
+            <div class="numberpannel" id="sec2st" style="left:24vw">
+                <div class="snumber_slide" id="2sec0">0</div>
+                <div class="snumber_slide" id="2sec1">1</div>
+                <div class="snumber_slide" id="2sec2">2</div>
+                <div class="snumber_slide" id="2sec3">3</div>
+                <div class="snumber_slide" id="2sec4">4</div>
+                <div class="snumber_slide" id="2sec5">5</div>
+                <div class="snumber_slide" id="2sec6">6</div>
+                <div class="snumber_slide" id="2sec7">7</div>
+                <div class="snumber_slide" id="2sec8">8</div>
+                <div class="snumber_slide" id="2sec9">9</div>
+            </div>
+            <div class="numberpannel" id="maridizer" style="left:30vw">
+                <div class="snumber_slide" id="am">AM</div>
+                <div class="snumber_slide" id="pm">PM</div>
+            </div>
+        </div>
+    </div>
 
     <!--Setting View-->
-    <view id="setting_view">
-        <div class="Setting_title" id="configmngtile">Configuration manager</div>
-
+    <div class="view" id="setting_view">
         <!-- Configuration pannel -->
-        <div class="config-manage-pannel">
-
+        <div class="Setting_title">Configuration</div>
+        <div class="config-manage-pannel" style="margin-top:2vh;">
             <input id="pathrepresenter" value="application storage"
                 title="Location where the application data is being stored" readonly></input>
-            <button class="config_btn" id="save_conf_btn"
-                title="Manually save configuration, use if it doesnt save automatically for some reason">Save</button>
-            <button class="config_btn" id="default_btn" title="use default storage location">Default location</button>
-            <button class="config_btn" id="select_btn" title="select storeage location">Select location</button>
+            <button class="config_btn" id="default_btn"
+                title="use default storage location (in user folder)">Default</button>
+            <button class="config_btn" id="select_btn"
+                title="select a folder to store app configration file">Select</button>
             <button class="config_btn" id="backup_btn" title="Backup configration to a file">Backup</button>
             <button class="config_btn" id="restore_btn" title="Restore configuration from a file">Restore</button>
         </div>
@@ -343,28 +412,10 @@
         <div class="Setting_title">Theme</div>
         <div class="selection_container">
             <!-- Container for themes -->
-            <div class="selectionbox" id="light_theme_selection">
-                <div class="mincropallet" id="light_pallet">
-                    <div class="palletfoot">
-                        <div class="icon appicon"></div>
-                        <div class="icon bookli"></div>
-                        <div class="icon gear_inverse"></div>
-                    </div>
+            <div class="selectionbox" id="light_theme_selection" title="select light theme">
+                <div class="mincropallet light_pallet" id="light_pallet">
+                    <div class="palletfoot"></div>
                     <table class="pallet_table" id="light_pallet_table">
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
                         <tr>
                             <td class="maincell"></td class="maincell">
                             <td class="maincell"></td class="maincell">
@@ -413,28 +464,11 @@
                 <div class="selection_title">LIGHT</div>
             </div>
 
-            <div class="selectionbox" id="dark_theme_selection">
-                <div class="mincropallet" id="amoled_pallet">
-                    <div class="palletfoot">
-                        <div class="icon appicon_inverse"></div>
-                        <div class="icon bookamol"></div>
-                        <div class="icon gear"></div>
-                    </div>
+            <div class="selectionbox" id="dark_theme_selection" title="select dark theme">
+                <div class="mincropallet amoled_pallet" id="amoled_pallet">
+                    <div class="palletfoot"></div>
                     <table class="pallet_table" id="dark_pallet_table">
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
+
                         <tr>
                             <td class="maincell"></td class="maincell">
                             <td class="maincell"></td class="maincell">
@@ -482,13 +516,66 @@
                 </div>
                 <div class="selection_title">DARK</div>
             </div>
+
+            <div class="selectionbox" id="system_theme_selection" title="follow system theme">
+                <div class="mincropallet amoled_pallet" id="system_pallet">
+                    <div class="palletfoot"></div>
+                    <table class="pallet_table" id="system_pallet_table">
+
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                    </table>
+                    <input type="checkbox" class="selcetion_put" id="system_selection_put"></input>
+                </div>
+                <div class="selection_title">SYSTEM</div>
+            </div>
         </div>
         <!-- Background image selector -->
         <div class="Setting_title">Wallpaper</div>
         <div class="config-manage-pannel">
             <input id="wallpaper_pathrepresenter" value="desktop wallpaper" title="wallpaper location" readonly></input>
-            <button class="config_btn" id="select_wallpaper_btn">Select wallpaper</button>
-            <button class="config_btn" id="default_wallpaper_btn">default wallpaper</button>
+            <button class="config_btn" id="select_wallpaper_btn" title="choose your own background">Select</button>
+            <button class="config_btn" id="default_wallpaper_btn" title="Use default wallpaper">default</button>
         </div>
 
         <div class="Setting_title">Accent color</div>
@@ -506,12 +593,10 @@
             <div class="accent-blob" id="hue270-selec" title="select this color"></div>
             <div class="accent-blob" id="hue300-selec" title="select this color"></div>
             <div class="accent-blob" id="hue330-selec" title="select this color"></div>
-
         </div>
 
         <div class="setting_bar" id="hilight_btn" title="toggle hilights">
-            <!--Permanently dissabled untill fixed-->
-            <div class="Bar_title">Hilights</div>
+            <div class="Bar_title">Cell Hilights</div>
             <div class="switch_container_active" id="hilight_switch_container">
                 <div class="switchbdy" id="hilight_switchbdy">
                     <div class="switch"></div>
@@ -519,7 +604,7 @@
             </div>
         </div>
 
-        <div class="setting_bar" id="tiles_btn" title="toggle fullscreen tiles">
+        <div class="setting_bar" id="tiles_btn" title="Use of fullscreen tiles">
             <div class="Bar_title">Full Tiles</div>
             <div class="switch_container_active" id="tiles_switch_container">
                 <div class="switchbdy" id="tiles_switchbdy">
@@ -537,8 +622,17 @@
             </div>
         </div>
 
-        <div class="setting_bar" id="Row_btn" title="toggle Empty cells">
-            <div class="Bar_title">Empty Rows</div>
+        <div class="setting_bar" id="Clock_btn" title="toggle Clock">
+            <div class="Bar_title">Clock</div>
+            <div class="switch_container_active" id="Clock_switch_container">
+                <div class="switchbdy" id="Clock_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="Row_btn" title="toggle Unused space in table">
+            <div class="Bar_title">Empty space</div>
             <div class="switch_container_active" id="Row_switch_container">
                 <div class="switchbdy" id="Row_switchbdy">
                     <div class="switch"></div>
@@ -547,7 +641,7 @@
         </div>
 
         <div class="setting_bar" id="frame_btn" title="toggle Empty cells">
-            <div class="Bar_title">Window Frame</div>
+            <div class="Bar_title">Frame integration</div>
             <div class="switch_container_active" id="frame_switch_container">
                 <div class="switchbdy" id="frame_switchbdy">
                     <div class="switch"></div>
@@ -555,10 +649,27 @@
             </div>
         </div>
 
-    </view>
+        <div class="setting_bar" id="link_btn" title="Toggle opening links in external browser">
+            <div class="Bar_title">Open links externally</div>
+            <div class="switch_container_active" id="link_switch_container">
+                <div class="switchbdy" id="link_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="menu_btn" title="toggle application menu on or off">
+            <div class="Bar_title">Application menu</div>
+            <div class="switch_container_active" id="menu_switch_container">
+                <div class="switchbdy" id="menu_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--management view-->
-    <view id="manage_view">
+    <div class="view" id="manage_view">
         <div class="data_action_header">
             <div id="tablemanger" class="tablemanger" name="dissabled" title="manage tables">
                 <!-- Revised table manager -->
@@ -683,72 +794,39 @@
                 </div>
                 <div class="databtns" id="delete_btn" title="Delete this entry?">Delete</div>
             </div>
-            <!--<div id="delete_confirm_pannel">
-                <div class="title">Delete</div>
-                <div id="pseudo_container">
-                    <table id="pseudo_container_table">
-                        <tr>
-                            <th id="title_cellp" colspan="2"></th>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Day :</td>
-                            <td class="righter" id="day_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Room :</td>
-                            <td class="righter" id="room_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Lecturer :</td>
-                            <td class="righter" id="Lecturer_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Type :</td>
-                            <td class="righter" id="type_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Code :</td>
-                            <td class="righter" id="coursecode_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" id="time_cellp"></td>
-                        </tr>
-                    </table>
-                </div>
-                <button type="button" id="no_del_btn">No</button>
-                <button type="button" id="yes_btn">Yes</button>
-            </div>-->
-            <div id="erraser" title="clear inputs"></div>
         </form>
-    </view>
+    </div>
 
     <!--Page shader-->
     <div id="page_shade"></div>
 
-    <div class="title_bar" id="title_bar">
-        <div id="titlebar_table_selector">
-            <div class="table_button_active">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
-            <div class="table_button">Test button</div>
+    <!-- Triggers titlebar in framed view -->
+    <div id="title_trigger">
+        <div class="title_bar" id="title_bar">
+            <div id="titlebar_table_selector">
+                <div class="table_button_active">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+            </div>
+            <div class="title_icon"></div>
+            <!--<div class="resise_constraint" id="resise_constraint"></div>-->
+            <div class="statusbtn" id="mainx_btn" title="close"></div>
+            <div class="statusbtn" id="maximize_btn" title="Maximize"></div>
+            <div class="statusbtn" id="minimize_btn" title="Minimize"></div>
+            <div class="statusbtn" id="always_on_top_btn" title="toggle always on top"></div>
+            <div class="statusbtn" id="Setting_btn" title="Settings"></div>
+            <div class="statusbtn" id="Manage_button_btn" title="Manage classes"></div>
         </div>
-        <div class="title_icon"></div>
-        <div class="resise_constraint" id="resise_constraint"></div>
-        <div class="statusbtn" id="mainx_btn" title="close"></div>
-        <div class="statusbtn" id="maximize_btn" title="Maximize"></div>
-        <div class="statusbtn" id="minimize_btn" title="Minimize"></div>
-        <div class="statusbtn" id="always_on_top_btn" title="toggle always on top"></div>
-        <div class="statusbtn" id="Setting_btn" title="Settings"></div>
-        <div class="statusbtn" id="Manage_button_btn" title="Manage classes"></div>
     </div>
 
     <!--Loading Screen-->

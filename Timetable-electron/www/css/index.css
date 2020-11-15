@@ -3,56 +3,35 @@
 }
 
 @font-face {
-    src: url(../fonts/handwriting-black-draft_DEMO.otf);
-    font-family: handwriting;
-}
-
-@font-face {
-    src: url(../fonts/Minecrafter.Reg.ttf);
-    font-family: minecraft;
-}
-
-@font-face {
-    src: url(../fonts/Minecrafter.Alt.ttf);
-    font-family: minecraft_cracked;
-}
-
-@font-face {
     font-family: Lexend_Deca;
     src: url(../fonts/LexendDeca-Regular.ttf);
 }
 
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg)
-    }
-
-    100% {
-        transform: rotate(360deg)
-    }
-}
-
-@keyframes backrounding {
-    0% {
-        background-position: 0% 100%;
-    }
-
-    50% {
-        background-position: 100% 0%;
-    }
-}
-
-@keyframes glowrow {
+@keyframes glow {
     0% {
         background-color: hsla(var(--hue_value), 100%, 50%, 0.8)
     }
 
     50% {
-        background-color: hsla(var(--hue_value), 100%, 50%, 0.0)
+        background-color: var(--cell_color)
     }
 
     100% {
         background-color: hsla(var(--hue_value), 100%, 50%, 0.8)
+    }
+}
+
+@keyframes bob {
+    0% {
+        top: -1vh;
+    }
+
+    50% {
+        top: -2vh;
+    }
+
+    100% {
+        top: -1vh;
     }
 }
 
@@ -83,7 +62,6 @@
 
 .dark #hueinverse-selec {
     background-image: linear-gradient(120deg, hsl(0, 0%, 100%), hsl(0, 0%, 80%));
-    box-shadow: 0vh 0vh 3vh 0vh rgb(255, 255, 255);
 }
 
 .dark #hue0-selec {
@@ -137,10 +115,6 @@
 .dark #light_pallet,
 .dark #amoled_pallet {
     --cell_color: rgba(0, 0, 0, 0);
-}
-
-.dark #amoled_pallet {
-    box-shadow: 0vh 0vh 2.5vh 0vh var(--primary_hue);
 }
 
 .light {
@@ -225,10 +199,6 @@
 .light #light_pallet,
 .light #amoled_pallet {
     --cell_color: rgba(0, 0, 0, 0);
-}
-
-.light #light_pallet {
-    box-shadow: 0vh 0vh 2.5vh 0vh var(--primary_hue);
 }
 
 ._0 {
@@ -420,21 +390,112 @@ body {
     color: var(--text-color);
 }
 
+a {
+    color: inherit;
+}
+
+a:hover {
+    color: var(--primary_hue);
+}
+
+/* Clock */
+
+.Clock_lock {
+    position: absolute;
+    overflow: visible;
+    bottom: 11vw;
+    right: 2vw;
+    width: 40vw;
+    margin-right: auto;
+    margin-left: auto;
+    height: 6vw;
+    max-height: 6vw;
+    font-family: Lexend_Deca;
+    overflow: visible;
+}
+
+.numberpannel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    display: block;
+    height: 6vw;
+    line-height: 6vw;
+    font-size: 6vw;
+    font-family: inherit;
+    width: 4vw;
+    transition: transform 500ms;
+    cursor: default;
+    /*overflow: hidden;*/
+}
+
+.snumber_slide {
+    position: relative;
+    display: block;
+    height: 6vw;
+    font-size: 6vw;
+    font-family: inherit;
+    width: 4vw;
+    line-height: 6vw;
+    transition: opacity 200ms;
+    text-shadow: 0vh 0vh 0.5vh var(--text-color);
+    /*overflow: hidden;*/
+}
+.light .snumber_slide{
+    text-shadow: none;
+}
+
+.daypin {
+    position: absolute;
+    top: -1vh;
+    left: calc(50% - 1.5vh);
+    height: 0;
+    width: 0;
+    padding: 1vh;
+    border-left: 1vh solid var(--primary_hue);
+    border-bottom: 1vh solid var(--primary_hue);
+    transform: rotate(-45deg);
+    /*animation: bob 2s ease infinite;*/
+}
+
+
+/* Titlebar */
+
 .title_bar,
 .title_bar_frameless {
     position: fixed;
     height: 30px;
     width: 100vw;
-    top: 0;
+    background-color: var(--background-color);
     right: 0;
     z-index: 1000;
     /*-webkit-app-region: drag;*/
     overflow: hidden;
-    background-image: linear-gradient(90deg, var(--background-color), var(--primary_hue), var(--background-color));
+}
+
+.title_bar {
+    top: -30px;
+    transition: top 300ms 1500ms;
+}
+
+#title_trigger {
+    position: fixed;
+    height: 30px;
+    width: 100vw;
+    right: 0;
+    z-index: 999;
+}
+
+#title_trigger:hover .title_bar {
+    top: 0px;
+    transition: top 0ms 0ms;
 }
 
 .title_bar_frameless {
     -webkit-app-region: drag;
+    top: 0;
+    background-image: linear-gradient(90deg, var(--background-color), var(--primary_hue), var(--background-color));
 }
 
 .title_bar_frameless .resise_constraint {
@@ -696,16 +757,15 @@ body {
     /*width: 95px;*/
     width: auto;
     box-sizing: border-box;
-    padding-top: 3px;
+    padding-top: 5px;
     padding-left: 5px;
     padding-right: 5px;
     font-size: 16px;
-    border-bottom: 3px solid var(--text-color);
     background-color: transparent;
     color: var(--text-color);
     -webkit-app-region: no-drag;
-    /*margin-left: 4px;
-    margin-right: 4px;*/
+    /*margin-left: 2px;
+    margin-right: 2px;*/
     word-wrap: normal;
     white-space: nowrap;
     display: block;
@@ -713,6 +773,8 @@ body {
     transition: padding 100ms, background-color 300ms;
     /*border-radius: 3px;*/
     text-align: center;
+    border: none;
+    outline: none;
 }
 
 .table_button:hover {
@@ -722,7 +784,9 @@ body {
 }
 
 .table_button_active {
+    padding-top: 3px;
     background-color: var(--primary_hue_active);
+    border-bottom: 3px solid var(--text-color);
 }
 
 /*Scrollbar custom*/
@@ -822,21 +886,26 @@ body {
 }
 
 /*  Views   */
-view {
+.view,
+.view_framless {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100vw;
-    height: calc(100vh - 30px);
+    height: 100vh;
     display: none;
     overflow: hidden;
+}
+
+.view_framless {
+    height: calc(100vh - 30px);
 }
 
 /*Timetable view*/
 #table1 {
     /*overflow: auto;*/
     overflow-x: auto;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 /*Timetable view*/
@@ -950,8 +1019,11 @@ view {
     background-size: cover;
     background-repeat: no-repeat;
     background-image: var(--timetable_background);
-    text-shadow: 0vh 0vh 0.5vh var(--background-color);
+    text-shadow: 0vh 0vh 0.3vh var(--background-color);
     background-position: center;
+}
+.light #timetable{
+    text-shadow: none;
 }
 
 tr {
@@ -960,7 +1032,7 @@ tr {
 
 .glowrow {
     background-color: var(--primary_hue);
-    animation: glowrow 4s infinite;
+    /*animation: glow 4s infinite;*/
 }
 
 td {
@@ -983,7 +1055,6 @@ td {
     overflow: visible;
     background: none;
     width: auto;
-    /*min-width: 33vw;*/
     height: auto;
     font-family: Lexend_Deca;
     font-size: 2.8vh;
@@ -991,6 +1062,11 @@ td {
     transition-duration: 500ms;
     background-color: var(--cell_color);
     border: 0.1vh solid var(--text-color);
+}
+
+.glowcell {
+    background-color: var(--primary_hue);
+    /*animation: glow 4s infinite;*/
 }
 
 .data_block,
@@ -1009,7 +1085,7 @@ td {
     transform: translate(-0.5vh, 0vh);
     padding-left: 0.5vh;
     padding-right: 0.5vh;
-    transition: box-shadow 300ms, transform 500ms, background-color 300ms, color 300ms;
+    transition: box-shadow 300ms, transform 0ms, background-color 300ms, color 300ms;
     text-decoration: none;
     display: block;
     text-shadow: none;
@@ -1041,19 +1117,24 @@ td {
     background-color: inherit;
     position: absolute;
     bottom: 0;
-    right: 200%;
+    right: 1vh;
     min-width: 100%;
     width: 100%;
+    height: fit-content;
+    max-height: 700%;
+    max-width: 200%;
     display: block;
     opacity: 0;
     transform: rotate3d(1, 0, 0, 90deg) translate(1vh, 0);
     white-space: normal;
     padding: 1vh;
     border-radius: 1vh 1vh 1vh 1vh;
-    transition: box-shadow 500ms, transform 300ms, background-color 500ms, color 500ms, opacity 500ms, width 500ms, right 500ms;
+    transition: box-shadow 500ms, transform 300ms, background-color 300ms, color 500ms, opacity 500ms, width 500ms, right 500ms;
     color: inherit;
     background-color: inherit;
     text-shadow: inherit;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .infodoot:active {
@@ -1067,8 +1148,10 @@ td {
     z-index: 400;
     transform: rotate3d(1, 0, 0, 0deg) translate(1vh, 0);
     min-width: 100%;
-    width: 180%;
-    right: 5%;
+    /*width: 180%;*/
+    max-width: 200%;
+    width: auto;
+    right: 1vh;
 }
 
 .nowrap {
@@ -1094,6 +1177,8 @@ td {
     align-content: center;
     background: none !important;
     white-space: pre-wrap;
+    /* Scroll when full */
+    overflow: auto;
 }
 
 .infodoot .lefter {
@@ -1117,32 +1202,11 @@ td {
     cursor: pointer;
 }
 
-#manage_shadow {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 1px;
-    height: 100%;
-    box-shadow: 0vw 0vw 0vw 0vw #000000;
-    z-index: 1000;
-    transition: box-shadow 300ms;
-}
-
-#manage_trigger:hover #manage_shadow {
-
-    box-shadow: 0vw 0vw 3vw 2vw #000000;
-}
-
 #manage_view {
-    /* Adjust manage view to align with table selector at the bottom*/
-    top: 30px;
-    left: 0;
-    /*width: 100vw;
-        height: 93vh;*/
     overflow-x: hidden;
     overflow-y: auto;
     background-color: var(--shade_color);
-    z-index: 2000;
+    z-index: 500;
 }
 
 .data_action_header {
@@ -1155,6 +1219,7 @@ td {
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-around;
+    background-image: linear-gradient(180deg, var(--shade_color), transparent);
 }
 
 .tablemanger,
@@ -1339,13 +1404,18 @@ td {
     margin-top: 10vh;
     margin-left: 0;
     width: 100vw;
-    height: 83vh;
+    height: 90vh;
+    padding-bottom: 3vh;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    transition: width 300ms;
     overflow-y: auto;
-    box-sizing: content-box;
+    box-sizing: border-box;
+}
+
+.view_framless .dataspace,
+.view_framless .dataspace_compact {
+    max-height: calc(90vh - 30px);
 }
 
 .data_bar {
@@ -1436,7 +1506,6 @@ td {
 .cancelimg {
     background-image: url('../img/cancel-error-pngrepo-com.webp');
 }
-
 
 
 .data_bar table {
@@ -1537,6 +1606,11 @@ td {
     justify-content: space-evenly;
 }
 
+.color_container::-webkit-scrollbar {
+    display: none;
+}
+
+
 .color_doot {
     position: relative;
     margin: 1vh;
@@ -1550,8 +1624,8 @@ td {
 
 #dataentry_screen {
     position: fixed;
-    top: 30px;
-    height: calc(100% - 30px);
+    top: 0px;
+    height: 100%;
     width: 100%;
     display: none;
     overflow-y: scroll;
@@ -1559,6 +1633,11 @@ td {
     transition: transform 200ms;
     background-color: var(--background-color);
     z-index: 500;
+}
+
+.view_framless #dataentry_screen {
+    top: 30px;
+    height: calc(100% - 30px);
 }
 
 #dataentry_screen table {
@@ -1596,7 +1675,7 @@ td {
 #detail_put {
     width: calc(100% - 1vh);
     height: 30vh;
-    font-size: 4.5vh;
+    font-size: 3vh;
     border-radius: 1vh;
     text-align: center;
     transition: border 300ms;
@@ -1880,25 +1959,16 @@ td {
     transition: background-color 0ms;
 }
 
-#erraser {
-    /* Clear inputs    */
-    position: absolute;
-    top: 2vh;
-    right: 2vh;
-    height: 9vh;
-    width: 9vh;
-    background-size: contain;
-    cursor: pointer;
-    transition: transform 500ms;
-}
-
-
 /* Settings view */
 #setting_view {
     overflow-x: hidden;
     overflow-y: scroll;
     background-color: var(--shade_color);
     z-index: 999
+}
+
+#setting_view::-webkit-scrollbar {
+    display: none;
 }
 
 .config-manage-pannel {
@@ -1966,7 +2036,20 @@ td {
     transition: background 50ms;
 }
 
-#pathrepresenter,
+#pathrepresenter {
+    position: relative;
+    margin-top: 0.5vh;
+    width: 100%;
+    height: 3vh;
+    border-radius: 1.5vh;
+    padding: 1vh;
+    font-size: 3vh;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: none;
+    text-align: center;
+}
+
 #wallpaper_pathrepresenter {
     position: relative;
     margin-top: 0.5vh;
@@ -2012,13 +2095,13 @@ td {
 .selection_container {
     margin-top: 1vh;
     position: relative;
-    height: 40vh;
+    height: 30vh;
     width: 100%;
 }
 
 .selectionbox {
     height: 100%;
-    width: 50%;
+    width: 33.333%;
     float: left;
     cursor: pointer;
 }
@@ -2087,30 +2170,28 @@ td {
     border-collapse: collapse;
 }
 
-#amoled_pallet {
+.amoled_pallet {
     background-color: rgb(0, 0, 0);
-
-    /*box-shadow: 0vh 0vh 2vh 0vh hsl(0, 100%, 50%)*/
 }
 
-#amoled_pallet table {
+.amoled_pallet table {
     background-image: url('../img/blyatground.webp');
 }
 
-#amoled_pallet td {
+.amoled_pallet td {
     border: 1px solid #ffffff;
 }
 
 
-#light_pallet {
+.light_pallet {
     background-color: rgb(255, 255, 255);
 }
 
-#light_pallet table {
+.light_pallet table {
     background-image: url('../img/whiteground.webp');
 }
 
-#light_pallet td {
+.light_pallet td {
     border: 1px solid #000000;
 }
 
@@ -2122,34 +2203,40 @@ td {
     width: 100%;
 }
 
-#dark_theme_selection .palletfoot {
+.amoled_pallet .palletfoot {
     background-image: linear-gradient(90deg, #000000, var(--primary_hue), #000000);
 }
 
-#light_theme_selection .palletfoot {
+.light_pallet .palletfoot {
     background-image: linear-gradient(90deg, #ffffff, var(--primary_hue), #ffffff);
 }
 
 .setting_bar {
     position: relative;
     height: 6vh;
-    width: calc(100% - 12vh);
+    width: 100%;
     text-align: center;
     margin-top: 2vh;
 }
 
 .Bar_title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: calc(100% - 14vh);
     /*height: 6vh;*/
-    font-size: 5.5vh;
+    font-size: 4vh;
     text-align: center;
     cursor: pointer;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 /* Switches */
 .switch_container_active {
     position: absolute;
-    transform: translate(12vh, 0);
+    /*transform: translate(12vh, 0);*/
     top: 0vh;
     right: 1vh;
     width: 12vh;
@@ -2187,7 +2274,7 @@ td {
 
 .switch_container_dissabled {
     position: absolute;
-    transform: translate(12vh, 0);
+    /*transform: translate(12vh, 0);*/
     top: 0vh;
     right: 1vh;
     width: 12vh;
@@ -2408,13 +2495,7 @@ td {
 
     /*  manage_view   */
     #manage_view {
-        top: 30px;
-        left: 0;
-        width: 100vw;
-        height: calc(100vh - 30px);
-        display: none;
         overflow-y: hidden;
-        z-index: 2000;
     }
 
     .tablemanger,
@@ -2453,13 +2534,21 @@ td {
     .dataspace {
         /*   Block Containing the data_bar(s)   */
         margin-top: 10vh;
-        max-height: 88vh;
+        margin-bottom: 4vh;
+        max-height: 90vh;
         margin-left: 0;
         margin-right: 0;
         border-bottom: none;
         width: 100%;
-        height: fit-content;
+        /*height: fit-content;*/
         overflow-y: auto;
+        box-sizing: border-box;
+        padding-bottom: 2vh;
+        transition: width 300ms;
+    }
+
+    .view_framless .dataspace {
+        max-height: calc(90vh - 30px);
     }
 
     .dataspace_compact {
@@ -2467,9 +2556,14 @@ td {
         margin-right: 0;
         border-bottom: none;
         width: calc(100% - 70vh);
-        min-height: 90vh;
         max-height: 90vh;
         overflow-y: auto;
+        box-sizing: border-box;
+        transition: width 300ms;
+    }
+
+    .view_framless .dataspace_compact {
+        max-height: calc(90vh - 30px);
     }
 
     .data_bar {
@@ -2486,23 +2580,70 @@ td {
         font-size: 2vh;
         height: 2vh;
         width: auto;
-        /*padding: 0.5vh;*/
-        /*border-radius: 4vh;*/
-        /*transform: translate(1vh, -1.5vh);*/
     }
 
     /* Dataentry screen */
-
-
 
     #dataentry_screen {
         bottom: 0;
         top: unset;
         right: 0;
-        height: calc(90vh - 30px);
+        height: 90vh;
         width: 70vh;
         z-index: 500;
-        background-color: rgba(0, 0, 0, 0);
+        background-color: transparent;
+        background-image: linear-gradient(310deg, var(--background-color), transparent, transparent);
+    }
+
+    .view_framless #dataentry_screen {
+        top: unset;
+        bottom: 0;
+        height: calc(90vh - 30px);
+    }
+
+    #dataentry_screen input {
+        width: 100%;
+        height: 100%;
+        font-size: 4.5vh;
+        border-radius: 1vh;
+        text-align: center;
+        transition: border 300ms;
+        position: relative;
+        border: none;
+        border-bottom: 0.7vh solid var(--text-color);
+        color: inherit;
+        margin-top: 1vh;
+    }
+
+    #detail_put {
+        width: 100%;
+        height: 30vh;
+        font-size: 3vh;
+        border-radius: 1vh;
+        text-align: center;
+        transition: border 300ms;
+        position: relative;
+        /*    border: none;*/
+        border: 0.5vh solid var(--text-color);
+        /*background-color: inherit;*/
+        color: inherit;
+        background-color: var(--shade_color);
+        font-family: Lexend_Deca;
+        margin-top: 1vh;
+        box-sizing: border-box;
+    }
+
+    #detail_put:focus {
+        border: 0.5vh solid var(--primary_hue);
+        outline: none;
+    }
+
+    #dataentry_screen input:focus {
+        border: none;
+        border-bottom: 0.7vh solid var(--primary_hue);
+        background-color: var(--background-color);
+        color: inherit;
+        outline: none;
     }
 
     #btn_bar {
@@ -2548,5 +2689,13 @@ td {
         transition: transform 500ms;
     }
 
+    .setting_bar {
+        position: relative;
+        height: 6vh;
+        width: 50%;
+        text-align: center;
+        margin-top: 2vh;
+        float: left;
+    }
 
 }

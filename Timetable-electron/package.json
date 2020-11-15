@@ -1,7 +1,7 @@
 {
   "name": "timetable",
   "productName": "Timetable",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "timetable app",
   "main": "main.js",
   "author": {
@@ -23,8 +23,8 @@
     "electron-builder": "electron-builder",
     "postinstall": "electron-builder install-app-deps",
     "builder-default": "electron-builder",
-    "builder-linux": "electron-builder --linux deb appimage tar.xz snap",
-    "builder-win": "electron-builder --win --x64 --ia32"
+    "builder-linux": "electron-builder --linux appimage pacman deb zip snap",
+    "builder-win": "electron-builder --win --ia32 --x64"
   },
   "build": {
     "appId": "com.anthonym.Timetable",
@@ -43,9 +43,8 @@
       "icon": "assets/icons/icon.ico"
     },
     "linux": {
-      "target": "deb",
-      "category": "utility",
-      "icon": "assets/icons/icon.png"
+      "icon": "assets/icons/icon.png",
+      "category": "utility"
     }
   },
   "icon": "assets/icons/icon.ico",
@@ -54,12 +53,14 @@
   "license": "ISC",
   "devDependencies": {
     "asar": "^1.0.0",
-    "electron": "^10.1.1",
-    "electron-builder": "^22.8.0"
+    "electron": "^10.1.5",
+    "electron-builder": "^22.9.1"
   },
   "dependencies": {
-    "electron-store": "^6.0.0",
+    "anchorme": "^2.1.2",
+    "electron-store": "^6.0.1",
     "electron-window-state": "^5.0.3",
+    "fs": "0.0.1-security",
     "wallpaper": "^4.4.1"
   }
 }

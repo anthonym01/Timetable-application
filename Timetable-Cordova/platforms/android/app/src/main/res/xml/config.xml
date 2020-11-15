@@ -46,6 +46,6 @@
     <preference name="StatusBarStyle" value="lightcontent" />
     <preference name="StatusBarBackgroundColor" value="#000000" />
     <preference name="AndroidLaunchMode" value="singleTop" />
-    <preference name="android-minSdkVersion" value="19" />
+    <preference name="android-minSdkVersion" value="21" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
 </widget>

@@ -1,71 +1,74 @@
-const main = require('electron').remote.require('./main'); //acess export functions in main
-const { dialog, Menu, MenuItem, shell, systemPreferences, nativeTheme } = require('electron').remote;
-const path = require('path');
-const fs = require('fs');
-const wallpaper = require('wallpaper');
-const my_website = 'https://anthonym01.github.io/Portfolio/?contact=me';
+const { remote } = require('electron');//Remote electron module
+const main = remote.require('./main'); //acess export functions in main
+const { dialog, Menu, MenuItem, shell, systemPreferences, nativeTheme, clipboard } = remote;
+const path = require('path');//path
+const fs = require('fs');//fil system access
+
+const anchorme = require("anchorme").default; // Converts links in text to clickable links
+const wallpaper = require('wallpaper');//get desktop wallpaper
+
+const my_website = 'https://anthonym01.github.io/Portfolio/?contact=me';//My website
+
+//menu for text boxes
+const text_box_menu = new Menu.buildFromTemplate([
+    { role: 'cut' },
+    { role: 'copy' },
+    { role: 'paste' },
+    { role: 'selectAll' },
+    { role: 'undo' },
+    { role: 'redo' },
+]);
+
+//Main body menu
+const menu_body = new Menu.buildFromTemplate([
+    { label: 'Force refresh UI', click() { maininitalizer() } },
+    { type: 'separator' },
+    { role: 'reload' },
+    { label: 'Contact developer', click() { shell.openExternal(my_website) } },
+    { role: 'toggledevtools' },
+]);
+
+window.addEventListener('contextmenu', (event) => {//opens menu on auxilery click
+    event.preventDefault()
+    menu_body.popup({ window: remote.getCurrentWindow() })//popup menu
+}, false)
 
 window.addEventListener('load', function () { //window loads
     console.log('Running from:', process.resourcesPath)
-    console.log(process)
-    console.log('#'+systemPreferences.getAccentColor())
-    body_menu()
-    textboxmenu()
-    //application_menu()
 
-    console.log(nativeTheme)
+    textboxmenu()
+
     if (localStorage.getItem("TT001_cfg")) {
         config.load()
     } else {
         config.validate()
     }
 
-    maininitalizer()
     UI.initalize()
+    maininitalizer()
+    manage.initalize()
     table.hilight_engine_go_vroom()
     table.quick_add()
-    table.clock.start_clock()
 
     setTimeout(() => {
-
         console.log('Closing loading screen...')
         document.getElementById('Loading').style.display = 'none'
-
     }, 250)
-})
 
-function maininitalizer() {
+    clocktick()
+    setInterval(() => { clocktick() }, 1000)
+});
 
+function maininitalizer() {//starter/soft resterter
     table.data_render(); //render data
-    manage.initalize()
+    manage.render_list()
+    manage.render_tables()
     config.properties.changed = false;
-}
-
-function body_menu() {
-    //build menu
-    const menu_body = new Menu()
-    menu_body.append(new MenuItem({role:'reload'}))
-    menu_body.append(new MenuItem({ label: 'Force refresh UI', click() { maininitalizer() } }))
-    menu_body.append(new MenuItem({ type: 'separator' }))
-    menu_body.append(new MenuItem({ label: 'Contact developer', click() { shell.openExternal(my_website) } }))
-    menu_body.append(new MenuItem({ role: 'toggledevtools' }))
-
-    window.addEventListener('contextmenu', (event) => {//opens menu on auxilery click
-        event.preventDefault()
-        menu_body.popup({ window: require('electron').remote.getCurrentWindow() })//popup menu
-    }, false)
+    setday()
 }
 
 function textboxmenu() {
-    const text_box_menu = new Menu.buildFromTemplate([
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        { role: 'selectAll' },
-        { role: 'undo' },
-        { role: 'redo' },
-    ])
-
+    //Apply listeners to text boxes
     document.getElementById('name_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('wallpaper_pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
@@ -74,55 +77,18 @@ function textboxmenu() {
     function popupmenu(event) {
         event.preventDefault()
         event.stopPropagation()
-        text_box_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+        text_box_menu.popup({ window: remote.getCurrentWindow() })
     }
-}
-
-function application_menu() {
-    const appmenu = Menu.buildFromTemplate([
-        {
-            id: 'table', label: 'Table', click() {
-                document.getElementById('setting_view').style.display = ""
-                document.getElementById('manage_view').style.display = ""
-            }
-        },
-        {
-            id: 'manage', label: 'Manage', click() { UI.manage_toggle() }
-        },
-        {
-            id: 'setting', label: 'Settings', click() { UI.setting_toggle() }
-        },
-        { role: 'Quit' },//quit app
-    ])
-    Menu.setApplicationMenu(appmenu)//Change application menu
 }
 
 /*  Config file handler    */
 let config = {
     data: {
         key: "TT01",
-        theme: "device", //sets theme, defaults to time based
-        backgroundimg: 'default',
-        hilight_engine: false, //hilight engine whether to run or not
-        colorpallet: 'default',
-        animation: true,
-        tiles: true,
-        empty_rows: false,
         table_selected: 1,
-        always_on_top: false,
-        table_details: [ // Details about different tables
-            {
-                purpose: "table #1",
-                deleted: false,
-                identifier: 1
-            },
-        ],
+        table_details: [{ purpose: "table #1", deleted: false, identifier: 1 },],// Details about different tables
         table1_db: [],// Table database
         previous_colors: [],
-    },
-    baseconfig: {
-        use_alt_storage: false,
-        alt_location: "",
     },
     properties: {
         tempdata: false,
@@ -147,17 +113,17 @@ let config = {
         quimk_start: -1,
         quimk_end: -1,
         quimk_day: null,
+        theme: null,
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
         ToStorageAPI();//save to application storage reguardless incase the file gets removed by the user, because users are kinda dumb
-        if (config.baseconfig.use_alt_storage == true && typeof (config.data) == 'object') {//save to alternate storage location
+        if (main.get_use_alt_location() == true && typeof (config.data) == 'object') {//save to alternate storage location
             ToFileSystem();
         }
 
         async function ToFileSystem() {//save config to directory defined by the user
-            console.log('saving to File system: ', config.baseconfig.alt_location)
-            main.write_object_json_out(config.baseconfig.alt_location + "/TT001_cfg config.json", JSON.stringify(config.data))//hand off writing the file to main process
+            main.write_object_json_out(main.get_alt_location() + "/TT001_cfg config.json", JSON.stringify(config.data))//hand off writing the file to main process
         }
 
         async function ToStorageAPI() {//Html5 storage API
@@ -170,18 +136,11 @@ let config = {
     load: function () {//Load the config file
         console.warn('Configuration is being loaded')
 
-        if (localStorage.getItem("TT001_cfg_baseconfig")) {//load base config
-            config.baseconfig = JSON.parse(localStorage.getItem("TT001_cfg_baseconfig"))
-        } else {
-            //first startup
-            localStorage.setItem("TT001_cfg_baseconfig", JSON.stringify(config.baseconfig))
-        }
-
-        if (config.baseconfig.use_alt_storage == true) {//Load from alt location
+        if (main.get_use_alt_location() == true) {//Load from alt location
             //load from alternate storage location
-            if (fs.existsSync(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json")) {//Directory exists
-                var fileout = fs.readFileSync(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json", { encoding: 'utf8' })//Read from file with charset utf8
-                console.warn('config Loaded from: ', config.baseconfig.alt_location.toString(), 'Data from fs read operation: ', fileout)
+            if (fs.existsSync(main.get_alt_location() + "/TT001_cfg config.json")) {//Directory exists
+                var fileout = fs.readFileSync(main.get_alt_location() + "/TT001_cfg config.json", { encoding: 'utf8' })//Read from file with charset utf8
+                console.warn('config Loaded from: ', main.get_alt_location(), 'Data from fs read operation: ', fileout)
                 fileout = JSON.parse(fileout)//parse the json
                 if (fileout.key == "TT01") {//check if file has key
                     config.data = fileout;
@@ -207,11 +166,15 @@ let config = {
         console.log('Config is being validated')
         let configisvalid = true
 
-
         if (typeof (this.data.backgroundimg) == 'undefined') {
             this.data.backgroundimg = 'default';
             configisvalid = false;
             console.log('"backgroundimg" was found to be invalid and was set to default');
+        }
+        if (typeof (this.data.link) == 'undefined') {
+            this.data.link = true;
+            configisvalid = false;
+            console.log('"link" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.always_on_top) == 'undefined') {
@@ -299,7 +262,7 @@ let config = {
         }
 
         if (typeof (this.data.theme) == 'undefined') {
-            this.data.theme = "dark";
+            this.data.theme = "system";
             configisvalid = false;
             console.log('"theme" was found to not exist and was set to default');
         }
@@ -363,7 +326,7 @@ let config = {
         var always_on_top_state = main.checkontop()
         var date = new Date();
         if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
-        var filepath = dialog.showSaveDialog(require('electron').remote.getCurrentWindow(), {//electron file save dialogue
+        var filepath = dialog.showSaveDialog(remote.getCurrentWindow(), {//electron file save dialogue
             defaultPath: "TT001_cfg backup " + Number(date.getMonth() + 1) + " - " + date.getDate() + " - " + date.getFullYear(),
             buttonLabel: "Save", filters: [{ name: 'JSON', extensions: ['json'] }]
         });
@@ -385,7 +348,7 @@ let config = {
         console.warn('Configuration restoration initiated')
         var always_on_top_state = main.checkontop()
         if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
-        dialog.showOpenDialog(require('electron').remote.getCurrentWindow(), {
+        dialog.showOpenDialog(remote.getCurrentWindow(), {
             buttonLabel: "open", filters: [
                 { name: 'Custom File Type', extensions: ['json'] },
                 { name: 'All Files', extensions: ['*'] }
@@ -420,28 +383,26 @@ let config = {
     selectlocation: async function () {//select location for configuration storage
         console.log('Select config location')
         var always_on_top_state = main.checkontop()
+        var alt_location = main.get_alt_location()
         if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
-        if (config.baseconfig.alt_location != undefined) {
-            var path = dialog.showOpenDialog(require('electron').remote.getCurrentWindow(), { properties: ['createDirectory', 'openDirectory'], defaultPath: config.baseconfig.alt_location.toString() })
+        if (alt_location != "" && alt_location != null && typeof (alt_location) == 'string') {
+            var path = dialog.showOpenDialog(remote.getCurrentWindow(), { properties: ['createDirectory', 'openDirectory'], defaultPath: alt_location })
         } else {
-            var path = dialog.showOpenDialog(require('electron').remote.getCurrentWindow(), { properties: ['createDirectory', 'openDirectory'], defaultPath: null })
+            var path = dialog.showOpenDialog(remote.getCurrentWindow(), { properties: ['createDirectory', 'openDirectory'] })
         }
 
         await path.then((path) => {
             if (path.canceled == true) {//user canceled dialogue
-                //user canceled file dialogue
-                //config.usedefault()
+                console.warn('user canceled file dialogue')
             } else {
                 console.warn('Alternate configuration path :', path.filePaths[0])
 
-                config.baseconfig.use_alt_storage = true
-                config.baseconfig.alt_location = path.filePaths[0]
-                localStorage.setItem("TT001_cfg_baseconfig", JSON.stringify(config.baseconfig))//save base config
+                main.set_use_alt_location(true)
+                main.set_alt_location(path.filePaths[0])
 
-                if (fs.existsSync(config.baseconfig.alt_location.toString() + "/TT001_cfg config.json")) {//config file already exist there
+                if (fs.existsSync(main.get_alt_location() + "/TT001_cfg config.json")) {//config file already exist there
                     config.load()
                     maininitalizer()
-                    setTimeout(() => { config.save() }, 500)
                 } else {//no config file exist there
                     config.save();
                 }
@@ -451,13 +412,12 @@ let config = {
             alert('An error occured ', err.message)
         }).finally(() => {
             if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if it was on, turn it back on
-            document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString(), "Timetableconfig.json"
+            document.getElementById('pathrepresenter').value = main.get_alt_location(), "Timetableconfig.json"
         })
     },
     usedefault: function () {//use default storage location
-        config.baseconfig.use_alt_storage = false
-        localStorage.setItem("TT001_cfg_baseconfig", JSON.stringify(config.baseconfig))//save base config
-        maininitalizer()
+        main.set_use_alt_location(false)
+        //maininitalizer()
         document.getElementById('pathrepresenter').value = 'application storage'
     },
 }
@@ -466,13 +426,12 @@ let config = {
 let table = {
     data_render: function () {
         console.log('Table render started')
+
         //wjipe main cells
-        var jkx = document.querySelectorAll(".jkx")
-        var jkxl = jkx.length;
-        for (i = 0; i < jkxl; i++) {
-            jkx[i].innerHTML = ""
-            jkx[i].style.display = ""
-        }
+        document.querySelectorAll(".jkx").forEach(jkx => {
+            jkx.innerHTML = ""
+            jkx.style.display = ""
+        })
 
         document.getElementById('day0').style.display = ''
         document.getElementById('day1').style.display = ''
@@ -481,8 +440,9 @@ let table = {
         document.getElementById('day4').style.display = ''
         document.getElementById('day5').style.display = ''
         document.getElementById('day6').style.display = ''
-        for (i = 0; i < 24; i++) { document.getElementById('timerow_' + i).style.display = ""; }
+        for (let i = 0; i < 24; i++) { document.getElementById('timerow_' + i).style.display = "" }
 
+        //reset logic
         config.properties.max = 0
         config.properties.min = 24
         config.properties.monday = false
@@ -505,9 +465,14 @@ let table = {
             //Get minimum time and maximum time to construct correct height
             for (i = 0; i < configdatatable1_dblength; i++) {
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
-                    let starthraw = Number(config.data.table1_db[i].start) - config.data.table1_db[i].start % 1; // taking away the modulus 1 of itself removes the remainder
-                    config.properties.min = Math.min(starthraw, config.properties.min); //find minimum time in all datu
-                    config.properties.max = Math.max(config.data.table1_db[i].end, config.properties.max); //find maximum time in all datu
+                    if (typeof (config.data.table1_db[i].start) && typeof (config.data.table1_db[i].end) === 'string') {
+                        let percentage_start = Number(config.data.table1_db[i].start.slice(0, 2) / 1);
+                        let percentage_end = Number((config.data.table1_db[i].end.slice(0, 2) / 1) + (config.data.table1_db[i].end.slice(3) / 60));// time as a number eg. "13:50" will be 13.83333333333
+                        config.properties.min = Math.min(percentage_start, config.properties.min); //find minimum time in all datu
+                        config.properties.max = Math.max(percentage_end, config.properties.max); //find maximum time in all datu
+                    } else {
+                        console.warn('Bad 24 time tring on: ', config.data.table1_db[i])
+                    }
                 }
             }
             console.log('Table minimum found to be: ', config.properties.min, ' Table maximum found to be: ', config.properties.max)
@@ -518,7 +483,7 @@ let table = {
                     build_block_db1(i);
                 }
             }
-            if (config.data.empty_rows == false) { validate() } //Strip empty cells form top and bottom and remove empty days
+            if (main.get_empty_rows() == false) { validate() } //Strip empty cells form top and bottom and remove empty days
         }
         console.log('Table render Completed');
 
@@ -528,78 +493,59 @@ let table = {
             let tempblock = document.createElement('div');
             tempblock.setAttribute("class", "data_block");
 
-            //time processing
-            let startmeridian = 'a.m.';
-            let starthr = 0;
-            let startminute = Number(config.data.table1_db[index].start % 1 * 60).toFixed(0);//trim of the minute swith modulus and *60
-
-            if (startminute < 10) { startminute = '0' + startminute }
-            let endmeridian = 'a.m.';
-            let endhr = 0;
-            let endminute = Number(config.data.table1_db[index].end % 1 * 60).toFixed(0);
-            if (endminute < 10) { endminute = '0' + endminute }
-
-            if (config.data.table1_db[index].start >= 12) {
-                startmeridian = 'p.m.'; //morning or evening
-                starthr = Number(config.data.table1_db[index].start - 12) - config.data.table1_db[index].start % 1; //removes remainder
-            } else {
-                starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
-            }
-
-            if (config.data.table1_db[index].end >= 12) {
-                endmeridian = 'p.m.'; //morning or evening
-                endhr = Number(config.data.table1_db[index].end - 12) - config.data.table1_db[index].end % 1; //removes remainder
-            } else {
-                endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1; //removes remainder
-            }
-
-            if (starthr == 0) { starthr = 12 }
-            if (endhr == 0) { endhr = 12 }
-
-
             //populate the block with relivant data
             tempblock.innerHTML = config.data.table1_db[index].name
 
-            //info doots
-            let doot = document.createElement('div');
-            doot.setAttribute('class', 'infodoot');
-            if (config.data.table1_db[index].start < config.properties.min + 3) { //Set the doot to flip up or down depending on the pannels position
-                doot.style.top = '0vh';
-                doot.style.bottom = 'unset';
+            //Decide where it does
+            let starthraw = -1;
+            if (typeof (config.data.table1_db[index].start) == 'string') {
+                starthraw = Number(config.data.table1_db[index].start.slice(0, 2));
             }
+            let startime = Timerize(config.data.table1_db[index].start);
+            let endtime = Timerize(config.data.table1_db[index].end);
 
-            //make table in doot to keep things even
-            let sub_tab = document.createElement("table");
-            let name_tab_row = document.createElement("tr");
-            let name_tab_content = document.createElement("th");
-            name_tab_content.classList = "nowrap"
-            name_tab_content.innerHTML = config.data.table1_db[index].name;
-            //name_tab_content.setAttribute("colspan", 2);
-            name_tab_row.appendChild(name_tab_content);
-            sub_tab.appendChild(name_tab_row);
-            doot.appendChild(sub_tab);
-            let time_tab_row = document.createElement("tr");
-            let time_tab = document.createElement("td");
-            time_tab.classList = "nowrap"
-            //time_tab.setAttribute("colspan", 2);
-            time_tab.innerHTML = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
-            time_tab_row.appendChild(time_tab);
-            sub_tab.appendChild(time_tab_row);
-            doot.appendChild(sub_tab);
-            tempblock.appendChild(doot);
             if (config.data.table1_db[index].detail != "" && config.data.table1_db[index].detail != undefined) {
+                //info doots
+                let doot = document.createElement('div');
+                doot.setAttribute('class', 'infodoot');
+
+                //make table in doot to keep things even
+                let sub_tab = document.createElement("table");
+                let name_tab_row = document.createElement("tr");
+                let name_tab_content = document.createElement("th");
+                name_tab_content.classList = "nowrap"
+                name_tab_content.innerHTML = config.data.table1_db[index].name;
+                //name_tab_content.setAttribute("colspan", 2);
+                name_tab_row.appendChild(name_tab_content);
+                sub_tab.appendChild(name_tab_row);
+                doot.appendChild(sub_tab);
+                let time_tab_row = document.createElement("tr");
+                let time_tab = document.createElement("td");
+                time_tab.classList = "nowrap"
+                //time processing
+
+                time_tab.innerHTML = startime.hr + ':' + startime.min + ' <small>' + startime.meridian + '</small> - ' + endtime.hr + ':' + endtime.min + ' <small>' + endtime.meridian + '</small>';
+                time_tab_row.appendChild(time_tab);
+                sub_tab.appendChild(time_tab_row);
+                doot.appendChild(sub_tab);
+                tempblock.appendChild(doot);
+
                 let detail_row = document.createElement("tr");
                 let detail_content = document.createElement("td");
-                //detail_content.setAttribute("colspan", 2);
-                detail_content.innerHTML = config.data.table1_db[index].detail;
+                //let input = 
+                detail_content.innerHTML = linkify(config.data.table1_db[index].detail)
                 detail_row.appendChild(detail_content);
                 sub_tab.appendChild(detail_row);
                 doot.appendChild(sub_tab);
+
+                if (starthraw < config.properties.min + 3) { //Set the doot to flip up or down depending on the pannels position
+                    doot.style.top = '0vh';
+                    doot.style.bottom = 'unset';
+                    //doot.style.borderRadius = '1vh 1vh 0vh 0vh;';
+                }
             }
 
-            //Decide where it does
-            let starthraw = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
-            console.warn('Raw Time value: ', starthraw);
+
             switch (config.data.table1_db[index].day) { //Day decsion
                 case 1: //Monday
                     config.properties.monday = true;
@@ -679,11 +625,14 @@ let table = {
 
             //time to height calculations must be done after render
             setTimeout(() => {
-                let blockheight = Number(config.data.table1_db[index].end - config.data.table1_db[index].start) * 100;//1 cell is 1hr under normal conditions
+                let blockheight = 100;//default
+                if (typeof (config.data.table1_db[index].end) == 'string' && typeof (config.data.table1_db[index].start) == 'string') {
+                    blockheight = (Number(config.data.table1_db[index].end.slice(0, 2)) + Number(endtime.min / 60) - Number(config.data.table1_db[index].start.slice(0, 2))) * 100;//1 cell is 1hr under normal conditions
+                }
                 console.log(config.data.table1_db[index].name, ' is assigned height of :', blockheight, '%');
                 tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
-                tempblock.style.height = blockheight + '%';
-                let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
+
+                let blocktop = document.getElementById('live_clock').offsetHeight * Number(startime.min / 60); //gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")"
                 if (config.data.table1_db[index].color.light < 49) {
                     tempblock.style.color = "white"
@@ -692,6 +641,7 @@ let table = {
                     tempblock.style.color = "black"
                     tempblock.style.textShadow = " 0vh 0vh 1vh white";
                 }
+                tempblock.style.height = 'calc(' + blockheight + '% - ' + blocktop + 'px)';
 
             }, 100);
 
@@ -699,26 +649,26 @@ let table = {
             tempblock.addEventListener('click', () => {
                 console.log('Triggered data cell: ', tempblock);
 
-                if (config.data.tiles) { //show full tile view
+                if (main.get_tiles() == true) { //show full tile view
                     //place data into overlay
                     tempblock.setAttribute("class", "data_block");//close block reguardless
                     document.getElementById('title_cell').innerText = config.data.table1_db[index].name;
                     switch (config.data.table1_db[index].day) {
-                        case 1: document.getElementById('day_cell').innerText = "Monday"; break;
-                        case 2: document.getElementById('day_cell').innerText = "Tuesday"; break;
-                        case 3: document.getElementById('day_cell').innerText = "Wednesday"; break;
-                        case 4: document.getElementById('day_cell').innerText = "Thursday"; break;
-                        case 5: document.getElementById('day_cell').innerText = "Friday"; break;
-                        case 6: document.getElementById('day_cell').innerText = "Saturday"; break;
-                        case 7: document.getElementById('day_cell').innerText = "Sunday"; break;
+                        case 1: day_cell.innerText = "Monday"; break;
+                        case 2: day_cell.innerText = "Tuesday"; break;
+                        case 3: day_cell.innerText = "Wednesday"; break;
+                        case 4: day_cell.innerText = "Thursday"; break;
+                        case 5: day_cell.innerText = "Friday"; break;
+                        case 6: day_cell.innerText = "Saturday"; break;
+                        case 7: day_cell.innerText = "Sunday"; break;
                         default: console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
                     }
-                    if ('detail' in config.data.table1_db[index]) {
-                        document.getElementById('detail_cell').innerHTML = config.data.table1_db[index].detail;
+                    if ('detail' in config.data.table1_db[index]) {//if property 'detail' in object
+                        document.getElementById('detail_cell').innerHTML = linkify(config.data.table1_db[index].detail)
                     } else {
                         document.getElementById('detail_cell').innerHTML = "No details"
                     }
-                    document.getElementById('time_cell').innerText = starthr + ':' + startminute + ' ' + startmeridian + ' to ' + endhr + ':' + endminute + ' ' + endmeridian;
+                    document.getElementById('time_cell').innerHTML = startime.hr + ':' + startime.min + ' <small>' + startime.meridian + '</small> - ' + endtime.hr + ':' + endtime.min + ' <small>' + endtime.meridian + '</small>';
                     document.getElementById('fullscreen_tile').classList = "fullscreen_tile_active"
                     document.getElementById('close_btn').style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
                 } else {//show the normal card flip out view
@@ -742,7 +692,7 @@ let table = {
             tempblock.addEventListener('contextmenu', function (e) {//popup context menu on alt click
                 e.stopPropagation();
                 e.preventDefault()
-                context_menu.popup({ window: require('electron').remote.getCurrentWindow() })//popup context menu in current window
+                context_menu.popup({ window: remote.getCurrentWindow() })//popup context menu in current window
                 console.log('COntext meny on :', tempblock);
             })
             console.log('Block :', index, ' Check complete');
@@ -918,11 +868,15 @@ let table = {
             }
             if (days == 0 || rows == 0) {
                 //Table is empty
-                notify.new('Table: ' + config.data.table_selected, 'Table #' + config.data.table_selected + ' is empty...', 3);
+                for (i = 0; i < config.data.table_details.length; i++) {
+                    if (config.data.table_selected == config.data.table_details[i].identifier) {
+                        notify.new(config.data.table_details[i].identifier, 'found no data for this table', 3);
+                        break;
+                    }
+                }
             }
             console.log('Table validated');
-
-
+            refunctionizelink()
         }
     },
     clock: {
@@ -998,675 +952,656 @@ let table = {
             }
             switch (date.getHours()) { //Hour switch
                 case 0:
-                    document.getElementById('timerow_0').className = 'glowrow';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = 'glowrow';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 1:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = 'glowrow';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = 'glowrow';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 2:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = 'glowrow';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = 'glowrow';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 3:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = 'glowrow';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = 'glowrow';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 4:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = 'glowrow';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = 'glowrow';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 5:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = 'glowrow';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = 'glowrow';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 6:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = 'glowrow';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = 'glowrow';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 7:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = 'glowrow';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = 'glowrow';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 8:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = 'glowrow';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = 'glowrow';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 9:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = 'glowrow';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = 'glowrow';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 10:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = 'glowrow';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = 'glowrow';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 11:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = 'glowrow';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = 'glowrow';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 12:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = 'glowrow';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = 'glowrow';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 13:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = 'glowrow';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = 'glowrow';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 14:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = 'glowrow';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = 'glowrow';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 15:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = 'glowrow';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = 'glowrow';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 16:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = 'glowrow';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = 'glowrow';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 17:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = 'glowrow';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = 'glowrow';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 18:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = 'glowrow';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = 'glowrow';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 19:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = 'glowrow';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = 'glowrow';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 20:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = 'glowrow';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = 'glowrow';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 21:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = 'glowrow';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = 'glowrow';
+                    timerow_22.className = '';
+                    timerow_23.className = '';
                     break;
                 case 22:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = 'glowrow';
-                    document.getElementById('timerow_23').className = '';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = 'glowrow';
+                    timerow_23.className = '';
                     break;
                 case 23:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = 'glowrow';
+                    timerow_0.className = '';
+                    timerow_1.className = '';
+                    timerow_2.className = '';
+                    timerow_3.className = '';
+                    timerow_4.className = '';
+                    timerow_5.className = '';
+                    timerow_6.className = '';
+                    timerow_7.className = '';
+                    timerow_8.className = '';
+                    timerow_9.className = '';
+                    timerow_10.className = '';
+                    timerow_11.className = '';
+                    timerow_12.className = '';
+                    timerow_13.className = '';
+                    timerow_14.className = '';
+                    timerow_15.className = '';
+                    timerow_16.className = '';
+                    timerow_17.className = '';
+                    timerow_18.className = '';
+                    timerow_19.className = '';
+                    timerow_20.className = '';
+                    timerow_21.className = '';
+                    timerow_22.className = '';
+                    timerow_23.className = 'glowrow';
                     break;
                 default:
-                    console.error('THEY CHANGED THE RULES FOR DATES NIBBA!!!');
+                    console.error();
             }
-        },
-        stop_clock: function () {
-            console.warn('Clock was stopped');
-            clearInterval(this.clock_tick_trigger); //stops teh clock ticking
-            config.properties.clocking = false
-        },
-        start_clock: function () {
-            console.warn('Clock has started');
-            this.clock_tick();
-            setTimeout(() => {
-                this.clock_tick_trigger = setInterval(() => {
-                    this.clock_tick()
-                }, 1000);
-            }, 500); // Set timeout higher if slow devices can initalize intime
-            config.properties.clocking = true
-        },
+        }
     },
     hilight_engine_go_vroom: function () {
-        if (config.data.hilight_engine) {
+        if (main.get_hilight_engine() == true) {
             console.log('Hilight Query state Checking..');
             let query = document.querySelectorAll(".maincell");
             let i = 0;
             while (query[i] != null || query[i] != undefined) {
-                query[i].addEventListener('mouseover', () => {
-                    table.engine_spark(event)
-                }, {
-                    passive: true
-                });
+                query[i].addEventListener('mouseover', () => { table.engine_spark(event) }, { passive: true });
                 i++;
                 console.log('Added event listener for hilight_query: ', i);
             }
         }
     },
     engine_spark: function (event) {
-        if (config.data.hilight_engine) {
+        if (main.get_hilight_engine() == true) {
             console.log('Hilight Engine trigger fired on :', event);
             if (!event.target.classList.contains('data_block') && !event.target.classList.contains('data_block_active')) { //check if the cell is a data_block
-                if (config.data.theme == "light") {
+                if (config.properties.theme == "light") {
                     event.target.style.color = 'black';
-                    event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,70%)'; //color the target
-                } else if (config.data.theme == "dark") {
+                    event.target.style.backgroundColor = 'hsl(' + table.rand.number(360, 0) + ',100%,70%)'; //color the target
+                } else {
                     event.target.style.color = 'black';
-                    event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,60%)'; //color the target
+                    event.target.style.backgroundColor = 'hsl(' + table.rand.number(360, 0) + ',100%,60%)'; //color the target
                 }
                 setTimeout(() => {
                     event.target.style.backgroundColor = "";
@@ -1714,13 +1649,13 @@ let table = {
             { label: 'Force refresh UI', click() { maininitalizer() } },
             { type: 'separator' },
             { label: 'Contact developer', click() { shell.openExternal(my_website) } },
-            //{ role: 'toggledevtools' }
+            { role: 'toggledevtools' }
         ])
 
         function quimk_popup(e) {//Popup the menu
             e.preventDefault()
             e.stopPropagation()
-            quick_add_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+            quick_add_menu.popup({ window: remote.getCurrentWindow() })
         }
 
 
@@ -2755,6 +2690,12 @@ let table = {
         })
 
     },
+    rand: {
+        HEX: function () { return '#' + Math.floor(Math.random() * 16777215).toString(16) },
+        RGB: function () { return { RED: this.number(255, 0), GREEN: this.number(255, 0), BLUE: this.number(255, 0) } },
+        HSL: function () { return { HUE: this.number(360, 0), SATURATION: this.number(100, 0) + '%', LIGHTENESS: this.number(100, 1) + '%' } },
+        number(max, min) { return Math.floor(Math.random() * (max - min + 1)) + min }
+    },
 }
 
 /*  Data manager    */
@@ -2777,26 +2718,7 @@ let manage = {
             }
             i++
         }
-        //Initalize Table put selector
-        i = 0;
-        var view_put = document.getElementById('view_put');
-        view_put.innerHTML = "";
-        while (config.data.table_details[i] != null) {
-            if (config.data.table_details[i].deleted != true) {
-                buildoption(i)
-            }
-            i++;
-        }
-        document.getElementById('view_put').value = config.data.table_selected; //Value to view put
-        function buildoption(i) { //function build options
-            var option = document.createElement('option')
-            option.value = config.data.table_details[i].identifier;
-            option.innerHTML = config.data.table_details[i].purpose;
-            view_put.appendChild(option);
-            if (config.data.table_details[i].identifier == config.data.table_selected) {
-                document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose;
-            }
-        }
+
 
         //color sliders initalizer
         document.getElementById('color_put').addEventListener('change', slidecolor)
@@ -2812,33 +2734,44 @@ let manage = {
         function slidesat() {
             document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
         }
-
-        //fill autofill
-        document.getElementById('name_autofill').innerHTML = ""
-        for (i = 0; i < config.data.table1_db.length; i++) {
-            autofill_name(i)
-        }
-
-        function autofill_name(i) {
-            var option = document.createElement('option');
-            option.value = config.data.table1_db[i].name;
-            document.getElementById('name_autofill').appendChild(option);
-        }
-
+        document.getElementById('view_put').value = config.data.table_selected; //Value to view put
     },
-
-    render_tables: function () {
+    render_tables: function () {// Puts table button in table manager and titlebar
         console.log('Table management render started');
         clear();
-        let i = 0;
-        while (config.data.table_details[i] != undefined || null) {
+
+        //Build table managers and table put selector
+
+        i = 0;
+        var view_put = document.getElementById('view_put');
+        view_put.innerHTML = "";
+
+        while (config.data.table_details[i] != null) {
             if (config.data.table_details[i].deleted != true) {
+                buildoption(i);
                 renderbar(i);
             }
             i++;
         }
 
-        //button to select table 0
+        function buildoption(i) { //build options for 'view_put'
+            var option = document.createElement('option');
+            option.value = config.data.table_details[i].identifier;
+            option.innerHTML = config.data.table_details[i].purpose;
+            view_put.appendChild(option);
+            if (config.data.table_details[i].identifier == config.data.table_selected) {
+                document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose;
+            }
+        }
+
+        //select homeless table (table 0) option
+        var option0 = document.createElement('option');
+        option0.value = 0
+        option0.innerHTML = 'No Table'
+        view_put.appendChild(option0);
+
+
+        //button to select table 0 (homeless table)
         let table0_button = document.createElement('div');
         table0_button.setAttribute("class", "table_bar");
         let titlespan0 = document.createElement('span');
@@ -2851,7 +2784,7 @@ let manage = {
             config.data.table_selected = 0;
             config.save();
             maininitalizer();
-            config.properties.changed = true
+            //config.properties.changed = true
         })
 
         //Button to add new table
@@ -2862,9 +2795,9 @@ let manage = {
         titlespan.title = "Click to create new empty table";
         new_table_button.appendChild(titlespan)
         document.getElementById('tablespace_render').appendChild(new_table_button);
-        new_table_button.addEventListener('click', function () {
+        new_table_button.addEventListener('click', function () {//New table button click
             event.stopPropagation()//stop manager from closing
-            let identifier = 1
+            let identifier = 1;//starts at 1 becoase 0 is homeless tables
             let i = 0;
             while (config.data.table_details[i] != null) {
                 if (config.data.table_details[i].deleted != true) {
@@ -2884,45 +2817,32 @@ let manage = {
             config.properties.changed = true
         })
 
-        function renderbar(index) {
+        function renderbar(index) {//Builds table buttons in the titlebar
             console.log('Creating actionbutton and title button for :', config.data.table_details[index]);
 
-            let table_button = document.createElement('div');
+            let table_button = document.createElement('button');
             if (config.data.table_details[index].identifier == config.data.table_selected) {
                 table_button.classList = "table_button_active"
                 table_button.addEventListener('click', function () {
+                    if (config.properties.changed) {
+                        table.data_render()
+                    }
                     UI.close_tile()
-                    if (document.getElementById('manage_view').style.display == "block") {
-                        //close
-                        document.getElementById('Manage_button_btn').classList = "statusbtn"
-                        document.getElementById('manage_view').style.display = ""
-                    }
-                    if (document.getElementById('setting_view').style.display == "block") {
-                        //close
-                        document.getElementById('Setting_btn').classList = "statusbtn"
-                        document.getElementById('setting_view').style.display = ""
-                    }
-
+                    UI.close_setting()
+                    UI.close_manage()
                 })
             } else {
                 table_button.classList = "table_button"
                 table_button.addEventListener('click', function () {
                     config.data.table_selected = config.data.table_details[index].identifier
+                    document.getElementById('tablemanage_txt').innerText = config.data.table_details[index].purpose;
+                    document.getElementById('pg_title').innerText = config.data.table_details[index].purpose;
                     config.save()
                     maininitalizer()
                     config.properties.changed = true
                     UI.close_tile()
-                    if (document.getElementById('manage_view').style.display == "block") {
-                        //close
-                        document.getElementById('Manage_button_btn').classList = "statusbtn"
-                        document.getElementById('manage_view').style.display = ""
-                    }
-                    if (document.getElementById('setting_view').style.display == "block") {
-                        //close
-                        document.getElementById('Setting_btn').classList = "statusbtn"
-                        document.getElementById('setting_view').style.display = ""
-                    }
-
+                    UI.close_setting()
+                    UI.close_manage()
                 })
             }
             table_button.innerText = config.data.table_details[index].purpose;
@@ -2967,12 +2887,14 @@ let manage = {
             tab_put.addEventListener('contextmenu', function (event) {
                 event.preventDefault()
                 event.stopPropagation()
-                text_box_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+                text_box_menu.popup({ window: remote.getCurrentWindow() })
             }, false)
 
             table_bar.addEventListener('click', function () { //select table fucntion
                 console.warn('Table selected by identifier : ', config.data.table_details[index].identifier)
                 config.data.table_selected = config.data.table_details[index].identifier;
+                document.getElementById('tablemanage_txt').innerText = config.data.table_details[index].purpose;
+                document.getElementById('pg_title').innerText = config.data.table_details[index].purpose;
                 config.save()
                 maininitalizer();
                 config.properties.changed = true
@@ -3001,15 +2923,16 @@ let manage = {
                 }, 200)
                 tab_put.addEventListener('keyup', function (event) {
                     event.stopPropagation()
-                    if (event.keyCode === 13) { //enterkey
-                        confirmimg.click(); //enterkey is pressed, confirm input
-                    } else if (event.keyCode == 27) { //esckey
-                        cancelimg.click(); //Cancel key is pressed, cancel input
+                    event.preventDefault()
+                    if (event.key === 'Enter') {
+                        confirmimg.click(); //confirm input
+                    } else if (event.key == 'Escape') {
+                        cancelimg.click(); //cancel input
                     }
                 })
             })
-            deletebtn.addEventListener('click', function () { //edit button is pressed
-                event.stopPropagation();
+            deletebtn.addEventListener('click', function (e) { //edit button is pressed
+                e.stopPropagation();
                 console.log('Delete called on table name: ' + config.data.table_details[index].purpose)
                 confirmimg.setAttribute("title", "Confirm delete " + config.data.table_details[index].purpose);
                 cancelimg.setAttribute("title", "Do not delete " + config.data.table_details[index].purpose);
@@ -3019,8 +2942,8 @@ let manage = {
                 editbtn.style.display = "none"
                 tab_put.style.display = "none"
             })
-            confirmimg.addEventListener('click', function () { //cancel button is pressed
-                event.stopPropagation();
+            confirmimg.addEventListener('click', function (e) { //cancel button is pressed
+                e.stopPropagation();
                 console.log('Confirm button pressed')
                 //perform confirmation action
                 if (tab_put.style.display == "block") {
@@ -3045,7 +2968,7 @@ let manage = {
             })
         }
 
-        function clear() {
+        function clear() {//whipe away old things
             document.getElementById('tablespace_render').innerHTML = "";
             document.getElementById('titlebar_table_selector').innerHTML = "";
         }
@@ -3055,36 +2978,30 @@ let manage = {
         clear();
         let i = 0;
 
-        if (config.data.table1_db[i] == null || undefined) {
-            //show first time setup screen
-            console.log('The table database is empty,manager will show first time setup');
-        } else {
-            //Construct the data
-            if (config.data.table_details[0] == null) { //there are no tables, everyone is homeless render them all
-                while (config.data.table1_db[i] != null || undefined) { //render selected tables data
-                    console.log('Data run on index :', i);
-                    build_bar_db1(i);
-                    i++;
-                }
-            } else {
-                while (config.data.table1_db[i] != null || undefined) { //render selected tables data
-                    console.log('Data run on index :', i);
-                    if (config.data.table1_db[i].show == config.data.table_selected) {
-                        build_bar_db1(i);
-                    }
-                    i++;
-                }
-                i = 0;
-                while (config.data.table1_db[i] != null || undefined) { //render non-selected tables data
-                    console.log('Data run on index :', i);
-                    if (config.data.table1_db[i].show != config.data.table_selected) {
-                        build_bar_db1(i);
-                    }
-                    i++;
-                }
+        //Construct the data
+        /*if (config.data.table_details[0] == null) { //there are no tables, everyone is homeless render them all
+            while (config.data.table1_db[i] != null || undefined) { //render selected tables data
+                console.log('Data run on index :', i);
+                build_bar_db1(i);
+                i++;
             }
-            //config.save()//save because many things get changed and shuffled durring this function
+        } else {*/
+        while (config.data.table1_db[i] != null || undefined) { //render selected tables data
+            console.log('Data run on index :', i);
+            if (config.data.table1_db[i].show == config.data.table_selected) {
+                build_bar_db1(i);
+            }
+            i++;
         }
+        i = 0;
+        while (config.data.table1_db[i] != null || undefined) { //render non-selected tables data
+            console.log('Data run on index :', i);
+            if (config.data.table1_db[i].show != config.data.table_selected) {
+                build_bar_db1(i);
+            }
+            i++;
+        }
+        //}
         console.log('Manager Render Completed');
 
         function build_bar_db1(index) { //Builds timetable from database
@@ -3108,7 +3025,7 @@ let manage = {
 
             //assign a color
             if (config.data.table1_db[index].color.light == 0 || config.data.table1_db[index].color.light == 100) {
-                if (config.data.theme == 'dark') {//force border light
+                if (config.properties.theme == 'dark') {//force border light
                     tempblock.style.borderColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 100%)";
                 } else {//force border dark
                     tempblock.style.borderColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 0%)";
@@ -3132,34 +3049,6 @@ let manage = {
             sub_optionbar.appendChild(deletebtn)
             tempblock.appendChild(sub_optionbar)
 
-            //time processing
-            let startmeridian = 'a.m.';
-            let starthr = 0;
-            let startminute = Number(config.data.table1_db[index].start % 1 * 60).toFixed(0);
-            if (startminute == 0) { startminute = '00' }
-            let endmeridian = 'a.m.';
-            let endhr = 0;
-            let endminute = Number(config.data.table1_db[index].end % 1 * 60).toFixed(0);
-            if (endminute == 0) { endminute = '00' }
-
-            if (config.data.table1_db[index].start > 12) {
-                startmeridian = 'p.m.'; //morning or evening
-                starthr = Number(config.data.table1_db[index].start - 12) - config.data.table1_db[index].start % 1; //removes remainder
-            } else {
-                starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
-            }
-            if (config.data.table1_db[index].end > 12) {
-                endmeridian = 'p.m.'; //morning or evening
-                endhr = Number(config.data.table1_db[index].end - 12) - config.data.table1_db[index].end % 1; //removes remainder
-            } else {
-                endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1; //removes remainder
-            }
-            if (starthr == 0) {
-                starthr = 12
-            }
-            if (endhr == 0) {
-                endhr = 12
-            }
             let day;
             switch (config.data.table1_db[index].day) {
                 case 1:
@@ -3191,7 +3080,7 @@ let manage = {
                 tempblock.innerHTML = config.data.table1_db[index].name + '<br> Marked for delete, Click to undo';
                 tempblock.setAttribute("class", "data_bar");
                 if (config.data.table1_db[index].color.light == 0 || config.data.table1_db[index].color.light == 100) {
-                    if (config.data.theme == 'dark') {//force border light
+                    if (config.properties.theme == 'dark') {//force border light
                         tempblock.style.border = "0.5vh dashed hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 100%)";
                     } else {//force border dark
                         tempblock.style.border = "0.5vh dashed hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 0%)";
@@ -3219,21 +3108,18 @@ let manage = {
                 sub_tab.appendChild(name_tab_row);
                 tempblock.appendChild(sub_tab);
                 let day_tab_row = document.createElement("tr");
-                //let day_tab_head = document.createElement("td");
                 let day_tab_content = document.createElement("td");
-                /*day_tab_head.setAttribute("class","lefter");
-                day_tab_content.setAttribute("class","righter");
-                day_tab_head.innerHTML='Day : ';*/
                 day_tab_content.innerHTML = day;
                 day_tab_content.setAttribute("colspan", 2);
-                //day_tab_row.appendChild(day_tab_head);
                 day_tab_row.appendChild(day_tab_content);
                 sub_tab.appendChild(day_tab_row);
                 tempblock.appendChild(sub_tab);
                 let time_tab_row = document.createElement("tr");
                 let time_tab = document.createElement("td");
                 time_tab.setAttribute("colspan", 2);
-                time_tab.innerHTML = starthr + ':' + startminute + ' ' + startmeridian + ' - ' + endhr + ':' + endminute + ' ' + endmeridian;
+                let startime = Timerize(config.data.table1_db[index].start);
+                let endtime = Timerize(config.data.table1_db[index].end);
+                time_tab.innerHTML = startime.hr + ':' + startime.min + ' <small>' + startime.meridian + '</small> - ' + endtime.hr + ':' + endtime.min + ' <small>' + endtime.meridian + '</small>';
                 time_tab_row.appendChild(time_tab);
                 sub_tab.appendChild(time_tab_row);
                 tempblock.appendChild(sub_tab);
@@ -3273,7 +3159,7 @@ let manage = {
                 context_menu.append(new MenuItem({ type: 'separator' }))
                 context_menu.append(new MenuItem({//duplicates this entry
                     label: 'Duplicate', click() {
-                        config.data.table1_db.push(config.data.table1_db[index])
+                        config.data.table1_db.push(JSON.parse(JSON.stringify(config.data.table1_db[index])))//removes the events attached
                         config.properties.changed = true;
                         config.save()
                         manage.render_list()
@@ -3283,7 +3169,7 @@ let manage = {
                 tempblock.addEventListener('contextmenu', function (e) {//Popup contect meny on alt_click
                     e.stopPropagation()
                     e.preventDefault()
-                    context_menu.popup({ window: require('electron').remote.getCurrentWindow() })
+                    context_menu.popup({ window: remote.getCurrentWindow() })
                     console.log('COntext meny on :', tempblock);
                 })
             }
@@ -3320,27 +3206,13 @@ let manage = {
             config.properties.overwrite = index; //Set overwrtite so save function knows to do
             document.getElementById('day_put').value = config.data.table1_db[index].day; //set day feild
             switch (config.data.table1_db[index].day) {
-                case 0:
-                    document.getElementById('day_put_text').innerText = "Sunday";
-                    break;
-                case 1:
-                    document.getElementById('day_put_text').innerText = "Monday";
-                    break;
-                case 2:
-                    document.getElementById('day_put_text').innerText = "Tuesday";
-                    break;
-                case 3:
-                    document.getElementById('day_put_text').innerText = "Wednsday";
-                    break;
-                case 4:
-                    document.getElementById('day_put_text').innerText = "Thursday";
-                    break;
-                case 5:
-                    document.getElementById('day_put_text').innerText = "Friday";
-                    break;
-                case 6:
-                    document.getElementById('day_put_text').innerText = "Saturday";
-                    break;
+                case 0: document.getElementById('day_put_text').innerText = "Sunday"; break;
+                case 1: document.getElementById('day_put_text').innerText = "Monday"; break;
+                case 2: document.getElementById('day_put_text').innerText = "Tuesday"; break;
+                case 3: document.getElementById('day_put_text').innerText = "Wednsday"; break;
+                case 4: document.getElementById('day_put_text').innerText = "Thursday"; break;
+                case 5: document.getElementById('day_put_text').innerText = "Friday"; break;
+                case 6: document.getElementById('day_put_text').innerText = "Saturday"; break;
             }
             document.getElementById('color_put').value = config.data.table1_db[index].color.hue; //set color feild
             document.getElementById('light_put').value = config.data.table1_db[index].color.light; //set color feild
@@ -3350,42 +3222,14 @@ let manage = {
             document.getElementById('detail_put').value = config.data.table1_db[index].detail; //set detail
             document.getElementById('name_put').value = config.data.table1_db[index].name; //Set Name feild
 
-            //process time
-            let starthr = Number(config.data.table1_db[index].start) - config.data.table1_db[index].start % 1; //removes remainder
-            let startminute = Number(config.data.table1_db[index].start % 1 * 60).toFixed(0);
-            if (startminute == 0) {
-                startminute = '00'
-            }
-            if (starthr < 10) {
-                starthr = '0' + starthr
-            }
-            let endhr = Number(config.data.table1_db[index].end) - config.data.table1_db[index].end % 1; //removes remainder
-            let endminute = Number(config.data.table1_db[index].end % 1 * 60).toFixed(0);
-            if (endminute == 0) {
-                endminute = '00'
-            }
-            if (endhr < 10) {
-                endhr = '0' + endhr
-            }
-            document.getElementById('start_time_put').value = starthr + ':' + startminute //Set start time feild
-            document.getElementById('end_time_put').value = endhr + ':' + endminute //Set the end time feild
+            document.getElementById('start_time_put').value = config.data.table1_db[index].start //Set start time feild
+            document.getElementById('end_time_put').value = config.data.table1_db[index].end //Set the end time feild
             document.getElementById('view_put').value = config.data.table1_db[index].show //Set view state feild
-            switch (config.data.table1_db[index].show) {
-                case 0:
-                    document.getElementById('view_put_text').innerText = "Hidden";
+            for (i = 0; i < config.data.table_details.length; i++) {
+                if (config.data.table_details[i].deleted != true && config.data.table1_db[index].show == config.data.table_details[i].identifier) {
+                    document.getElementById('view_put_text').innerText = config.data.table_details[i].purpose;
                     break;
-                case 1:
-                    document.getElementById('view_put_text').innerText = config.data.table_details[0].purpose;
-                    break;
-                case 2:
-                    document.getElementById('view_put_text').innerText = config.data.table_details[1].purpose;
-                    break;
-                case 3:
-                    document.getElementById('view_put_text').innerText = config.data.table_details[2].purpose;
-                    break;
-                case 4:
-                    document.getElementById('view_put_text').innerText = config.data.table_details[3].purpose;
-                    break;
+                }
             }
             this.open() //Open after
         },
@@ -3411,7 +3255,7 @@ let manage = {
             document.getElementById('name_put').style.border = "";
             document.getElementById('start_time_put').style.border = "";
             document.getElementById('end_time_put').style.border = "";
-            if (config.data.animation) {
+            if (main.get_animation() == true) {
                 document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, setting this in css causes the buttons to glitch out
                 document.getElementById('dataentry_screen').style.display = "block";
                 setTimeout(() => {
@@ -3467,7 +3311,7 @@ let manage = {
         close: function () { //remove the input screen
             document.getElementById('manage_dataspace').classList = "dataspace";
             console.log('Dialogue close called');
-            if (config.data.animation) {
+            if (main.get_animation() == true) {
                 document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, setting this in css causes the buttons to glitch out
                 setTimeout(() => {
                     document.getElementById('dataentry_screen').style.display = "none";
@@ -3490,7 +3334,7 @@ let manage = {
                     light: null
                 },
                 start: null,
-                end: null
+                end: null,
             }; //Its test data
             let entryisvalid = true;
 
@@ -3501,15 +3345,8 @@ let manage = {
             tempentry.color.hue = Number(document.getElementById('color_put').value);
             tempentry.color.sat = Number(document.getElementById('sat_put').value);
             tempentry.color.light = Number(document.getElementById('light_put').value);
-            /*if(typeof(config.data.previous_colors[config.data.previous_colors.length-1])!='undefined'){
-                if(tempentry.color.hue!=config.data.previous_colors[config.data.previous_colors.length-1].hue || tempentry.color.sat!=config.data.previous_colors[config.data.previous_colors.length-1].sat || tempentry.color.hue!=config.data.previous_colors[config.data.previous_colors.length-1].light){
-                    config.data.previous_colors.push(tempentry.color);
-                    config.properties.colors_changed=true;
-                }
-            }*/
             config.data.previous_colors.push(tempentry.color);
             config.properties.colors_changed = true;
-            //Course Code is not required and can be anything, even nothing
             tempentry.detail = document.getElementById('detail_put').value;
 
             //Get Name feild
@@ -3524,19 +3361,22 @@ let manage = {
             }
 
             //Process time
-            let start_time_raw = document.getElementById('start_time_put').value.toString();
-            let end_time_raw = document.getElementById('end_time_put').value.toString();
-            let percentage_start = Number((start_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (start_time_raw.slice(3) / 60));
-            let percentage_end = Number((end_time_raw.slice(0, 2) / 1 /*I divide it by one becasue the scripting engine is drunk*/) + (end_time_raw.slice(3) / 60));
-            if (start_time_raw == "" || start_time_raw == null || start_time_raw == undefined) {
+            let start_time_raw = document.getElementById('start_time_put').value;
+            let end_time_raw = document.getElementById('end_time_put').value;
+            let percentage_start = Number((start_time_raw.slice(0, 2) / 1 /*divide it by 1 becasue the v8 engine is drunk*/) + (start_time_raw.slice(3) / 60));// time as a number eg. "12:30" will be 12.5
+            let percentage_end = Number((end_time_raw.slice(0, 2) / 1 /*divide it by 1 becasue the v8 engine is drunk*/) + (end_time_raw.slice(3) / 60));// time as a number eg. "13:50" will be 13.83333333333
+            console.log('percent start: ', percentage_start, ' percent end', percentage_end)
+            if (start_time_raw == "") {
                 notify.new('HEY!', 'Start time cannot be empty');
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
-            } else if (end_time_raw == "" || end_time_raw == null || end_time_raw == undefined) {
+            }
+            if (end_time_raw == "") {
                 notify.new('HEY!', 'End time cannot be empty');
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
-            } else if (percentage_start == percentage_end) {
+            }
+            if (percentage_start == percentage_end) {
                 document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
@@ -3546,8 +3386,8 @@ let manage = {
                 document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else {
-                tempentry.start = percentage_start;
-                tempentry.end = percentage_end;
+                tempentry.start = start_time_raw;
+                tempentry.end = end_time_raw;
                 document.getElementById('start_time_put').style.border = "";
                 document.getElementById('end_time_put').style.border = "";
             }
@@ -3596,18 +3436,12 @@ let UI = {
     initalize: function () {
         console.log('UI Initalize');
 
-        //Path representers
-        document.getElementById('wallpaper_pathrepresenter').addEventListener('dblclick', function () {
-            if (config.data.backgroundimg != 'default') { shell.showItemInFolder(document.getElementById('wallpaper_pathrepresenter').value) }
-        })
-        document.getElementById('pathrepresenter').addEventListener('dblclick', function () {
-            if (config.baseconfig.use_alt_storage) { shell.openPath(config.baseconfig.alt_location + "/TT001_cfg config.json") }
-        })
+        //Path representer
 
         //esc trigger
-        document.getElementById('body').addEventListener('keyup', function (e) {
-            console.log('keycode: ', e.keyCode)
-            if (e.keyCode == 27) {//esc key mashed
+        document.body.addEventListener('keyup', function (e) {
+            console.log('keycode: ', e.key)
+            if (e.key == 'Escape') {//esc key mashed
                 if (document.getElementById('dataentry_screen').style.display == "block") {
                     manage.dialogue.close()
                 } else if (document.getElementById('manage_view').style.display == "block") {
@@ -3625,12 +3459,16 @@ let UI = {
             setTimeout(() => {
                 var vewalue = document.getElementById('view_put').value;
                 var i = 0;
-                while (config.data.table_details[i] != null) {//Loop data brothgar
-                    if (config.data.table_details[i].deleted != true && config.data.table_details[i].identifier == vewalue) {//check view put value against saved table details
-                        document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose
-                        break; //found it
+                if (vewalue == 0) {
+                    document.getElementById('view_put_text').innerHTML = 'No Table'
+                } else {
+                    while (config.data.table_details[i] != null) {//Loop data brothgar
+                        if (config.data.table_details[i].deleted != true && config.data.table_details[i].identifier == vewalue) {//check view put value against saved table details
+                            document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose
+                            break; //found it
+                        }
+                        i++;
                     }
-                    i++;
                 }
             }, 50)
         })
@@ -3651,9 +3489,7 @@ let UI = {
                 document.getElementById('tablemanger').classList = "tablemanger"
             }
         })
-        document.getElementById('tablespace_render').addEventListener('click', function () {
-            event.stopPropagation() //Stop propogation to the dataspace
-        })
+        document.getElementById('tablespace_render').addEventListener('click', function () { event.stopPropagation() })
 
         //Add new button
         document.getElementById('new_class_button').addEventListener('click', function () {
@@ -3678,7 +3514,7 @@ let UI = {
             manage.render_list()
             config.save()
         });
-        document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
+        //document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
 
         //Initalize day_put selector
         document.getElementById('day_put').value = "1";
@@ -3688,29 +3524,14 @@ let UI = {
             console.log('Day put changed');
             let tmp = document.getElementById('day_put').value;
             switch (tmp) {
-                case "1":
-                    document.getElementById('day_put_text').innerText = "Monday";
-                    break;
-                case "2":
-                    document.getElementById('day_put_text').innerText = "Tuesday";
-                    break;
-                case "3":
-                    document.getElementById('day_put_text').innerText = "Wednsday";
-                    break;
-                case "4":
-                    document.getElementById('day_put_text').innerText = "Thursday";
-                    break;
-                case "5":
-                    document.getElementById('day_put_text').innerText = "Friday";
-                    break;
-                case "6":
-                    document.getElementById('day_put_text').innerText = "Saturday";
-                    break;
-                case "7":
-                    document.getElementById('day_put_text').innerText = "Sunday";
-                    break;
-                default:
-                    console.error('Blyat');
+                case "1": document.getElementById('day_put_text').innerText = "Monday"; break;
+                case "2": document.getElementById('day_put_text').innerText = "Tuesday"; break;
+                case "3": document.getElementById('day_put_text').innerText = "Wednsday"; break;
+                case "4": document.getElementById('day_put_text').innerText = "Thursday"; break;
+                case "5": document.getElementById('day_put_text').innerText = "Friday"; break;
+                case "6": document.getElementById('day_put_text').innerText = "Saturday"; break;
+                case "7": document.getElementById('day_put_text').innerText = "Sunday"; break;
+                default: console.error('Blyat');
             }
         });
 
@@ -3719,22 +3540,39 @@ let UI = {
         UI.setting.animation.setpostition();
         UI.setting.tiles.setpostition();
         UI.setting.Row.setpostition();
-        UI.setting.wallpaper.set_wallpaper()
+        UI.setting.wallpaper.set_wallpaper();
         UI.setting.set_theme();
         UI.setting.frame.setpostition();
+        UI.setting.link.setpostition();
+        UI.setting.menu.setpostition();
 
-        if (config.data.always_on_top == true) {
+        if (main.get_always_on_top() == true) {
             main.setontop()
             document.getElementById('always_on_top_btn').classList = "statusbtn_active"
         } else {
             main.setnotontop()
         }
 
-        if (config.baseconfig.use_alt_storage == true && config.baseconfig.use_alt_storage != undefined) {
-            document.getElementById('pathrepresenter').value = config.baseconfig.alt_location.toString()
+        if (main.get_use_alt_location() == true) {
+            if (process.platform == 'win32') {
+                document.getElementById('pathrepresenter').value = main.get_alt_location() + '\\TT001_cfg config.json'
+            } else {
+                document.getElementById('pathrepresenter').value = main.get_alt_location() + '/TT001_cfg config.json'
+            }
+
+            document.getElementById('pathrepresenter').title = "double click to open"
+            document.getElementById('pathrepresenter').addEventListener('dblclick', function () {
+                if (process.platform == 'win32') {
+                    shell.showItemInFolder(main.get_alt_location() + '\\TT001_cfg config.json')
+                } else {
+                    shell.showItemInFolder(main.get_alt_location() + '/TT001_cfg config.json')
+                }
+
+            })
             document.getElementById('pathrepresenter').readonly = true;//unlock path input
         } else {
             document.getElementById('pathrepresenter').value = "application storage"
+            document.getElementById('pathrepresenter').title = "Location where the application data is being stored"
             document.getElementById('pathrepresenter').readonly = true;//unlock path input
         }
 
@@ -3755,27 +3593,34 @@ let UI = {
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
         document.getElementById('frame_btn').addEventListener('click', UI.setting.frame.flip)
+        document.getElementById('link_btn').addEventListener('click', UI.setting.link.flip)
+        document.getElementById('menu_btn').addEventListener('click', UI.setting.menu.flip)
+        document.getElementById('Clock_btn').addEventListener('click', UI.setting.slideclock.flip)
         document.getElementById('close_btn').addEventListener('click', UI.close_tile)
 
         document.getElementById('select_btn').addEventListener('click', function () { //Select the configuration location
             config.selectlocation()
             config.properties.changed = true
         })
-        document.getElementById('save_conf_btn').addEventListener('click', config.save)
         document.getElementById('default_btn').addEventListener('click', config.usedefault)
         document.getElementById('backup_btn').addEventListener('click', config.backup)
         document.getElementById('restore_btn').addEventListener('click', config.restore)
 
 
         document.getElementById('dark_theme_selection').addEventListener('click', function () {
-            config.data.theme = "dark";
-            config.save();
+            main.set_theme("dark");
             UI.setting.set_theme();
+            manage.render_list();
         })
         document.getElementById('light_theme_selection').addEventListener('click', function () {
-            config.data.theme = "light"
-            config.save();
+            main.set_theme("light");
             UI.setting.set_theme();
+            manage.render_list();
+        })
+        document.getElementById('system_theme_selection').addEventListener('click', function () {
+            main.set_theme("system");
+            UI.setting.set_theme();
+            manage.render_list();
         })
 
         //hue selecton buttons
@@ -3796,21 +3641,19 @@ let UI = {
         //wallpaper
         document.getElementById('select_wallpaper_btn').addEventListener('click', UI.setting.wallpaper.select_wallpaper)
         document.getElementById('default_wallpaper_btn').addEventListener('click', function () {
-            config.data.backgroundimg = "default"
+            main.set_backgroundimg("default")
             UI.setting.wallpaper.set_wallpaper()
-            config.save()
         })
 
-        document.getElementById('fullscreen_tile').addEventListener('contextmenu', function () {
-            event.stopPropagation()
-            event.preventDefault()
+        document.getElementById('fullscreen_tile').addEventListener('contextmenu', function (e) {
+            e.stopPropagation()
+            e.preventDefault()
             UI.close_tile()
         })
 
     },
     hue_selec: function (hue) {
-        config.data.colorpallet = hue;
-        config.save()
+        main.set_colorpallet(hue)
         UI.setting.set_theme();
     },
     toggle_alwaysontop: function () {
@@ -3818,24 +3661,19 @@ let UI = {
         if (state == true) {
             //is always on top
             document.getElementById('always_on_top_btn').classList = "statusbtn_active"
-            config.data.always_on_top = true;
+            main.set_always_on_top(true);
             config.save()
         } else {
             //is not always on top
             document.getElementById('always_on_top_btn').classList = "statusbtn"
-            config.data.always_on_top = false;
+            main.set_always_on_top(false);
             config.save()
         }
         console.log('Window always on top :', state);
     },
     setting_toggle: function () {
         UI.close_tile()
-        if (document.getElementById('manage_view').style.display == "block") {
-            //close
-            document.getElementById('Manage_button_btn').classList = "statusbtn"
-            document.getElementById('manage_view').style.display = ""
-        }
-
+        UI.close_manage()
         if (document.getElementById('setting_view').style.display == "block") {
             //close
             document.getElementById('Setting_btn').classList = "statusbtn"
@@ -3847,16 +3685,12 @@ let UI = {
             //open
             document.getElementById('Setting_btn').classList = "statusbtn_active"
             document.getElementById('setting_view').style.display = "block"
+            document.getElementById('title_bar').style.top = "0px"
         }
     },
     manage_toggle: function () {
         UI.close_tile()
-        if (document.getElementById('setting_view').style.display == "block") {
-            //close
-            document.getElementById('Setting_btn').classList = "statusbtn"
-            document.getElementById('setting_view').style.display = ""
-        }
-
+        UI.close_setting()
         if (document.getElementById('manage_view').style.display == "block") {
             //close
             document.getElementById('Manage_button_btn').classList = "statusbtn"
@@ -3868,6 +3702,25 @@ let UI = {
             //open
             document.getElementById('Manage_button_btn').classList = "statusbtn_active"
             document.getElementById('manage_view').style.display = "block"
+            document.getElementById('title_bar').style.top = "0px"
+        }
+    },
+    close_manage: function () {
+        document.getElementById('title_bar').style.top = ""
+        if (document.getElementById('manage_view').style.display == "block") {
+            //close
+            document.getElementById('Manage_button_btn').classList = "statusbtn"
+            document.getElementById('manage_view').style.display = ""
+            document.getElementById('title_bar').style.top = ""
+        }
+    },
+    close_setting: function () {
+        document.getElementById('title_bar').style.top = ""
+        if (document.getElementById('setting_view').style.display == "block") {
+            //close
+            document.getElementById('Setting_btn').classList = "statusbtn"
+            document.getElementById('setting_view').style.display = ""
+            document.getElementById('title_bar').style.top = ""
         }
     },
     close_tile: function () {
@@ -3876,168 +3729,185 @@ let UI = {
     },
     minimize_maximize: function () {
         var state = main.maximize_main_window()
-        if (state == true) {
+        /*if (state == true) {
             //is maximized
             document.getElementById('resise_constraint').style.display = "none"
         } else {
             //is not maximized
             document.getElementById('resise_constraint').style.display = "block"
-        }
+        }*/
         console.log('Window maximized :', state);
     },
     setting: {
         set_theme: function () {
             console.log('Set theme')
-            if (config.data.theme == "dark") {
+            if (nativeTheme.shouldUseDarkColors == true) {
+                document.getElementById('system_pallet').classList = "mincropallet amoled_pallet"
+                if (main.get_theme() != "dark" && main.get_theme() != "light") {
+                    set_dark()
+                    mark_system()
+                }
+            } else {
+                document.getElementById('system_pallet').classList = "mincropallet light_pallet"
+                if (main.get_theme() != "dark" && main.get_theme() != "light") {
+                    set_light()
+                    mark_system()
+                }
+            }
+            if (main.get_theme() == "dark") {
                 set_dark()
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = true;
-            } else if (config.data.theme == "light") {
+                document.getElementById('system_selection_put').checked = false;
+            } else if (main.get_theme() == "light") {
                 set_light()
                 document.getElementById('light_selection_put').checked = true;
                 document.getElementById('dark_selection_put').checked = false;
-            } else {
-                config.data.theme = "dark"
+                document.getElementById('system_selection_put').checked = false;
+            }
+
+            function mark_system() {
                 document.getElementById('light_selection_put').checked = false;
-                document.getElementById('dark_selection_put').checked = true;
-                set_dark()
+                document.getElementById('dark_selection_put').checked = false;
+                document.getElementById('system_selection_put').checked = true;
+                nativeTheme.addListener('updated', function () { UI.setting.set_theme() })
             }
 
             function set_dark() {
-                switch (config.data.colorpallet) {
+                config.properties.theme = 'dark'
+                switch (main.get_colorpallet()) {
                     case -1:
-                        document.getElementById('body').classList = "dark";
+                        document.body.classList = "dark";
                         console.log('Dark inverse theme');
                         break;
                     case 0:
-                        document.getElementById('body').classList = "dark _0";
+                        document.body.classList = "dark _0";
                         console.log('%cdark _0', "color: hsl(0,100%,50%)")
                         break;
                     case 30:
-                        document.getElementById('body').classList = "dark _30";
+                        document.body.classList = "dark _30";
                         console.log('%cdark _30', "color: hsl(30,100%,50%)");
                         break;
                     case 60:
-                        document.getElementById('body').classList = "dark _60";
+                        document.body.classList = "dark _60";
                         console.log('%cdark _60', "color: hsl(60,100%,50%)");
                         break;
                     case 90:
-                        document.getElementById('body').classList = "dark _90";
+                        document.body.classList = "dark _90";
                         console.log('%cdark _90', "color: hsl(90,100%,50%)");
                         break;
                     case 120:
-                        document.getElementById('body').classList = "dark _120";
+                        document.body.classList = "dark _120";
                         console.log('%cdark _120', "color: hsl(120,100%,50%)");
                         break;
                     case 150:
-                        document.getElementById('body').classList = "dark _150";
+                        document.body.classList = "dark _150";
                         console.log('%cdark _150', "color: hsl(150,100%,50%)");
                         break;
                     case 180:
-                        document.getElementById('body').classList = "dark _180";
+                        document.body.classList = "dark _180";
                         console.log('%cdark _180', "color: hsl(180,100%,50%)");
                         break;
                     case 210:
-                        document.getElementById('body').classList = "dark _210";
+                        document.body.classList = "dark _210";
                         console.log('%cdark _210', "color: hsl(210,100%,50%)");
                         break;
                     case 240:
-                        document.getElementById('body').classList = "dark _240";
+                        document.body.classList = "dark _240";
                         console.log('%cdark _240', "color: hsl(240,100%,50%)");
                         break;
                     case 270:
-                        document.getElementById('body').classList = "dark _270";
+                        document.body.classList = "dark _270";
                         console.log('%cdark _270', "color: hsl(270,100%,50%)");
                         break;
                     case 300:
-                        document.getElementById('body').classList = "dark _300";
+                        document.body.classList = "dark _300";
                         console.log('%cdark _300', "color: hsl(300,100%,50%)");
                         break;
                     case 330:
-                        document.getElementById('body').classList = "dark _330";
+                        document.body.classList = "dark _330";
                         console.log('%cdark _330', "color: hsl(330,100%,50%)");
                         break;
                     default:
-                        console.error('Theme error :', config.data.colorpallet);
-                        document.getElementById('body').classList = "dark _210";
-                        config.data.colorpallet = 210;
+                        console.error('Defaulted color pallet');
+                        document.body.classList = "dark";
+                        main.set_colorpallet(-1)
                 }
             }
 
             function set_light() {
-                switch (config.data.colorpallet) {
+                config.properties.theme = 'light'
+                switch (main.get_colorpallet()) {
                     case -1:
-                        document.getElementById('body').classList = "light";
+                        document.body.classList = "light";
                         console.log('light inverse theme');
                         break;
                     case 0:
-                        document.getElementById('body').classList = "light _0";
+                        document.body.classList = "light _0";
                         console.log('%clight_0', "color: hsl(0,100%,50%)")
                         break;
                     case 30:
-                        document.getElementById('body').classList = "light _30";
+                        document.body.classList = "light _30";
                         console.log('%clight_30', "color: hsl(30,100%,50%)");
                         break;
                     case 60:
-                        document.getElementById('body').classList = "light _60";
+                        document.body.classList = "light _60";
                         console.log('%clight_60', "color: hsl(60,100%,50%)");
                         break;
                     case 90:
-                        document.getElementById('body').classList = "light _90";
+                        document.body.classList = "light _90";
                         console.log('%clight_90', "color: hsl(90,100%,50%)");
                         break;
                     case 120:
-                        document.getElementById('body').classList = "light _120";
+                        document.body.classList = "light _120";
                         console.log('%clight_120', "color: hsl(120,100%,50%)");
                         break;
                     case 150:
-                        document.getElementById('body').classList = "light _150";
+                        document.body.classList = "light _150";
                         console.log('%clight_150', "color: hsl(150,100%,50%)");
                         break;
                     case 180:
-                        document.getElementById('body').classList = "light _180";
+                        document.body.classList = "light _180";
                         console.log('%clight_180', "color: hsl(180,100%,50%)");
                         break;
                     case 210:
-                        document.getElementById('body').classList = "light _210";
+                        document.body.classList = "light _210";
                         console.log('%clight_210', "color: hsl(210,100%,50%)");
                         break;
                     case 240:
-                        document.getElementById('body').classList = "light _240";
+                        document.body.classList = "light _240";
                         console.log('%clight_240', "color: hsl(240,100%,50%)");
                         break;
                     case 270:
-                        document.getElementById('body').classList = "light _270";
+                        document.body.classList = "light _270";
                         console.log('%clight_270', "color: hsl(270,100%,50%)");
                         break;
                     case 300:
-                        document.getElementById('body').classList = "light _300";
+                        document.body.classList = "light _300";
                         console.log('%clight_300', "color: hsl(300,100%,50%)");
                         break;
                     case 330:
-                        document.getElementById('body').classList = "light _330";
+                        document.body.classList = "light _330";
                         console.log('%clight_330', "color: hsl(330,100%,50%)");
                         break;
                     default:
-                        console.error('Theme error :', config.data.colorpallet);
-                        document.getElementById('body').classList = "light _210";
-                        config.data.colorpallet = 210;
+                        console.error('Defaulted color pallet');
+                        document.body.classList = "light";
+                        main.set_colorpallet(-1)
                 }
             }
         },
         hilight: {
             flip: function () {
                 console.log('switch triggered');
-                if (config.data.hilight_engine) {
+                if (main.get_hilight_engine()) {
                     //turn off the switch
-                    config.data.hilight_engine = false;
-                    notify.new('Settings', 'hilights dissabled');
+                    main.set_hilight_engine(false)
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
-                    config.data.hilight_engine = true;
+                    main.set_hilight_engine(true)
                     table.hilight_engine_go_vroom();
-                    notify.new('Settings', 'hilights enabled');
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
                 }
@@ -4045,9 +3915,7 @@ let UI = {
                 UI.setting.hilight.setpostition();
             },
             setpostition: function () {
-                //sets the switches position depending on the theme, and changes the theme accordingly
-                console.log('hilight Position set to: ', config.data.hilight_engine);
-                if (config.data.hilight_engine) {
+                if (main.get_hilight_engine() == true) {
                     document.getElementById('hilight_switch_container').className = 'switch_container_active';
                 } else {
                     document.getElementById('hilight_switch_container').className = 'switch_container_dissabled';
@@ -4058,18 +3926,16 @@ let UI = {
             flip: function () {
                 console.log('animation switch triggered');
                 if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == false) {//animations preffered OFF by system
-                    config.data.animation = false;
+                    main.set_animation(false)
                     notify.new('System', 'Animations dissabled by Your Systems animation preferences');
                 } else {
-                    if (config.data.animation) {
+                    if (main.get_animation() == true) {
                         //turn off the switch
-                        config.data.animation = false;
-                        notify.new('Settings', 'animations dissabled');
+                        main.set_animation(false)
                         console.warn('animations dissabled');
                     } else {
                         //turn on the witch
-                        config.data.animation = true;
-                        notify.new('Settings', 'animations enabled');
+                        main.set_animation(true)
                         console.warn('animations enabled');
                     }
                 }
@@ -4080,7 +3946,7 @@ let UI = {
             setpostition: function () {
                 switch (process.platform) {
                     case "linux"://Linux && free BSD
-                        if (config.data.animation) {
+                        if (main.get_animation() == true) {
                             document.getElementById('Animations_switch_container').className = 'switch_container_active';
                             document.getElementById('nomation').href = "";
                         } else {
@@ -4090,7 +3956,7 @@ let UI = {
                         break;
                     default://Mac OS && windows
                         if (systemPreferences.getAnimationSettings().shouldRenderRichAnimation == true) {//animations preffered by system only works on windows and wackOS
-                            if (config.data.animation) {
+                            if (main.get_animation() == true) {
                                 document.getElementById('Animations_switch_container').className = 'switch_container_active';
                                 document.getElementById('nomation').href = "";
                             } else {
@@ -4098,7 +3964,6 @@ let UI = {
                                 document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
                             }
                         } else {//system preffers no animations
-
                             document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
                             document.getElementById('nomation').href = "css/nomation.css"; //nomation sheet removes animations
                         }
@@ -4108,22 +3973,20 @@ let UI = {
         tiles: {
             flip: function () {
                 console.log('tiles switch triggered');
-                if (config.data.tiles) {
+                if (main.get_tiles() == true) {
                     //turn off the switch
-                    config.data.tiles = false;
-                    notify.new('Settings', 'tiles dissabled');
+                    main.set_tiles(false);
                     console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
-                    config.data.tiles = true;
-                    notify.new('Settings', 'tiles enabled');
+                    main.set_tiles(true);
                     console.warn('tiles enabled');
                 }
                 config.save();
                 UI.setting.tiles.setpostition();
             },
             setpostition: function () {
-                if (config.data.tiles) {
+                if (main.get_tiles() == true) {
                     document.getElementById('tiles_switch_container').className = 'switch_container_active';
                 } else {
                     document.getElementById('tiles_switch_container').className = 'switch_container_dissabled';
@@ -4133,16 +3996,14 @@ let UI = {
         Row: {
             flip: function () {
                 console.log('Row switch triggered');
-                if (config.data.empty_rows) {
+                if (main.get_empty_rows() == true) {
                     //turn off the switch
-                    config.data.empty_rows = false;
-                    notify.new('Settings', 'Empty Rows dissabled');
+                    main.set_empty_rows(false);
                     console.warn('Empty Rows dissabled');
                     config.properties.changed = true;
                 } else {
                     //turn on the witch
-                    config.data.empty_rows = true;
-                    notify.new('Settings', 'Empty Rows Enabled');
+                    main.set_empty_rows(true);
                     console.warn('Empty Rows Enabled');
                     config.properties.changed = true;
                 }
@@ -4150,7 +4011,7 @@ let UI = {
                 UI.setting.Row.setpostition();
             },
             setpostition: function () {
-                if (config.data.empty_rows) {
+                if (main.get_empty_rows() == true) {
                     document.getElementById('Row_switch_container').className = 'switch_container_active';
                 } else {
                     document.getElementById('Row_switch_container').className = 'switch_container_dissabled';
@@ -4183,20 +4044,75 @@ let UI = {
                 }
             },
             setpostition: function () {
-                var framestate = main.framestate()
-                if (framestate == true) {
+                if (main.framestate() == true) {
                     document.getElementById('title_bar').classList = "title_bar"
-                    document.getElementById('frame_switch_container').className = 'switch_container_active';
+                    document.getElementById('manage_view').classList = "view_framless"
+                    document.getElementById('setting_view').classList = "view_framless"
+                    document.getElementById('table1').classList = "view"
+                    document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
+                    document.getElementById('menu_btn').style.display = "block"
                 } else {
                     document.getElementById('title_bar').classList = "title_bar_frameless"
-                    document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
+                    document.getElementById('manage_view').classList = "view_framless"
+                    document.getElementById('setting_view').classList = "view_framless"
+                    document.getElementById('table1').classList = "view_framless"
+                    document.getElementById('frame_switch_container').className = 'switch_container_active';
+                    document.getElementById('menu_btn').style.display = "none"
+                }
+            },
+        },
+        link: {
+            flip: function () {
+                console.log('link switch triggered');
+                if (main.get_link() == true) {
+                    //turn off the switch
+                    main.set_link(false);
+                    console.warn('link state off');
+                    config.properties.changed = true;
+                } else {
+                    //turn on the witch
+                    main.set_link(true);
+                    console.warn('link state on');
+                    config.properties.changed = true;
+                }
+                config.save();
+                UI.setting.link.setpostition();
+            },
+            setpostition: function () {
+                if (main.get_link() == true) {
+                    document.getElementById('link_switch_container').className = 'switch_container_dissabled';
+                } else {
+                    document.getElementById('link_switch_container').className = 'switch_container_active';
+                }
+            },
+        },
+        slideclock: {
+            flip: function () {
+                console.log('slideclock triggered');
+                if (main.get_alt_slideclock() == true) {
+                    //turn off the switch
+                    main.set_alt_slideclock(false);
+                } else {
+                    //turn on the witch
+                    main.set_alt_slideclock(true);
+                }
+                UI.setting.slideclock.setpostition();
+            },
+            setpostition: function () {
+                if (main.get_alt_slideclock() == true) {
+                    document.getElementById('Clock_switch_container').className = 'switch_container_dissabled';
+                    document.getElementById('slideclock').style.display = "none"
+                } else {
+                    document.getElementById('Clock_switch_container').className = 'switch_container_active';
+                    document.getElementById('slideclock').style.display = "block"
                 }
             },
         },
         wallpaper: {
             set_wallpaper: async function () {
-                if (config.data.backgroundimg != null || undefined) {
-                    if (config.data.backgroundimg == "default") {//Use "Default" wallpaper
+                var backgroundimg = main.get_backgroundimg()
+                if (backgroundimg != null || undefined) {
+                    if (backgroundimg == "default") {//Use "Default" wallpaper
                         useDesktop();
                     } else {//use user selected wallpaper
                         useUserSelected();
@@ -4213,16 +4129,17 @@ let UI = {
                 function useUserSelected() {
                     //Convert path to form css can understand
                     var resaucepath = process.resourcesPath
-                    for (i = 0; i <= resaucepath.length; i++) {
-                        console.log(resaucepath)
-                        resaucepath = resaucepath.replace('\\', '/');
-                    }
-                    if (fs.existsSync(resaucepath + "/backgroundimg" + config.data.backgroundimg.ext) || fs.existsSync(resaucepath + "\\backgroundimg" + config.data.backgroundimg.ext)) {
+                    /*for (i = 0; i <= resaucepath.length; i++) {
+                        console.log(resaucepath)*/
+                    resaucepath = resaucepath.replaceAll('\\', '/');
+                    /*}*/
+                    if (fs.existsSync(resaucepath + "/backgroundimg" + backgroundimg.ext) || fs.existsSync(resaucepath + "\\backgroundimg" + backgroundimg.ext)) {
                         //document.getElementById('timetable').style.backgroundImage = "url('C:\\fakepath\\fakeimg.png')";
-                        document.getElementById('timetable').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
-                        document.getElementById('light_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
-                        document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + config.data.backgroundimg.ext + "')";
-                        document.getElementById('wallpaper_pathrepresenter').value = resaucepath + "/backgroundimg" + config.data.backgroundimg.ext;
+                        document.getElementById('timetable').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
+                        document.getElementById('light_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
+                        document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
+                        document.getElementById('system_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
+                        document.getElementById('wallpaper_pathrepresenter').value = resaucepath + "/backgroundimg" + backgroundimg.ext;
                     } else {
                         useDesktop();
                         notify.new('file error', 'custom Wallpaper file not found')
@@ -4239,6 +4156,7 @@ let UI = {
                             document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                            document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('wallpaper_pathrepresenter').value = "Desktop wallpaper";
                         } else {//default to css wallpaper
                             document.getElementById('timetable').style.backgroundImage = "";
@@ -4249,7 +4167,7 @@ let UI = {
             },
             select_wallpaper: async function () {//User selects wallpaper
                 dialog.showOpenDialog({//electron async file dialogue
-                    buttonLabel: "Select image", filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }, { name: 'All Files', extensions: ['*'] }]//Options for file dialogue
+                    buttonLabel: "Select image", filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'jjif', 'bmp'] }, { name: 'All Files', extensions: ['*'] }]//Options for file dialogue
                 }).then((filestuff) => {
                     if (filestuff.canceled == true) {//user canceled file dialogue
                         console.log('User canceled file dialogue')
@@ -4263,26 +4181,28 @@ let UI = {
                             case "linux":
                                 fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "/backgroundimg" + parsed_path.ext, function () {
                                     console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "/backgroundimg" + parsed_path.ext)
-                                    config.data.backgroundimg = parsed_path
-                                    console.log('Set background img as :', config.data.backgroundimg)
+                                    main.set_backgroundimg(parsed_path)
+                                    console.log('Set background img as :', parsed_path)
                                     config.save()
                                     setTimeout(() => {
                                         document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                     }, 50);
                                 })
                                 break;
                             default:
                                 fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "\\backgroundimg" + parsed_path.ext, function () {
                                     console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "\\backgroundimg" + parsed_path.ext)
-                                    config.data.backgroundimg = parsed_path
-                                    console.log('Set background img as :', config.data.backgroundimg)
+                                    main.set_backgroundimg(parsed_path)
+                                    console.log('Set background img as :', parsed_path)
                                     config.save()
                                     setTimeout(() => {
                                         document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                     }, 50);
                                 })
                         }
@@ -4290,6 +4210,40 @@ let UI = {
                 }).catch((error) => {
                     alert('An error occured, ', error.message)
                 })
+            },
+        },
+        menu: {
+            flip: function () {
+                console.log('menu switch triggered');
+                var menustate = main.menustate()
+                if (process.platform == 'linux') {
+                    notify.new('Menu', 'app must restart')
+                    setTimeout(() => {
+                        if (menustate == true) {
+                            //turn off the switch
+                            main.setmenu(false)
+                        } else {
+                            //turn on the witch
+                            main.setmenu(true)
+                        }
+                    }, 1500)
+                } else {
+                    if (menustate == true) {
+                        //turn off the switch
+                        main.setmenu(false)
+                    } else {
+                        //turn on the witch
+                        main.setmenu(true)
+                    }
+                }
+                UI.setting.menu.setpostition()
+            },
+            setpostition: function () {
+                if (main.menustate() == true) {
+                    document.getElementById('menu_switch_container').className = 'switch_container_active';
+                } else {
+                    document.getElementById('menu_switch_container').className = 'switch_container_dissabled';
+                }
             },
         }
     },
@@ -4437,50 +4391,108 @@ let notify = {
     }
 }
 
-let utility = { //Some usefull things
-    /*  Close the app   */
-    close: function () {
-        config.save();
-        if (navigator.app) {
-            navigator.app.exitApp();
-        } else if (navigator.device) {
-            navigator.device.exitApp();
-        } else {
-            window.close();
-        }
-    },
-    /*  Push text to the keyboard   */
-    clipboard: function (textpush) {
-        copyText.toString(); //Makes it a string so the clipboard will accept it
-        let temptxtbox = document.createElement("input"); //creates an 'input' element and assigns it to 'temptxtbox'
-        document.body.appendChild(temptxtbox); //Puts the input element into the document
-        temptxtbox.setAttribute("id", "temp_copy"); //Assigns an id to the input element
-        document.getElementById("temp_copy").value = copyText; //Puts the txt u want to copy into the input element
-        temptxtbox.select(); //Makes the curser select the text that's in the input element
-        document.execCommand("copy"); //Commands the document to copy the selected text
-        document.body.removeChild(temptxtbox); //Removes the input element from the document
-    },
-    /*  Produce Random numbers  */
-    rand: {
-        HEX: function () {
-            return '#' + Math.floor(Math.random() * 16777215).toString(16) /* hex color code */
+function Timerize(timecode) {//takes 24 hr time string "03:24" and converts 12hr to { hr: 3, min: '24', meridian: 'am' } object
+    if (typeof (timecode) != 'string') { return { hr: 0, min: '00', meridian: 'bad data' } }
+
+    let meridian;
+    let hr = Number(timecode.slice(0, 2));
+    let min = timecode.slice(3);
+    if (hr > 12) {
+        meridian = 'pm';
+        hr = hr - 12;
+    } else if (hr == 12) {
+        meridian = 'pm';
+    } else {
+        meridian = 'am';
+    }
+    //console.log('Converted:', timecode, ' to: ', { hr, min, meridian })
+    return { hr, min, meridian }
+}
+
+function linkify(input) {//use https://github.com/alexcorvi/anchorme.js to linkify links
+    return anchorme({//anchorme converts links in text to clickable links
+        input,
+        // use some options
+        options: {
+            attributes: {
+                target: "_blank",
+                class: "detected",
+            },
+            truncate: function (string) {
+                if (string.indexOf("google.com/search?") > -1) {
+                    return 40;
+                } else if (string.indexOf("github.com/") > -1) {
+                    return Infinity;
+                } else {
+                    return 30;
+                }
+            },
+            middleTruncation: false,
         },
-        RGB: function () {
-            return {
-                RED: this.number(255, 0),
-                GREEN: this.number(255, 0),
-                BLUE: this.number(255, 0)
-            } /* object with RGB color code */
-        },
-        HSL: function () {
-            return {
-                HUE: this.number(360, 0),
-                SATURATION: this.number(100, 0) + '%',
-                LIGHTENESS: this.number(100, 1) + '%'
-            } /* HSL color code */
-        },
-        number(max, min) {
-            return Math.floor(Math.random() * (max - min + 1)) + min /* Random number*/
-        }
-    },
+        exclude: string => string.startsWith("file://"),
+        protocol: "http://",
+        specialTransform: [
+            {
+                test: /\.img$/,
+                transform: string => `<a href="${string}">IMAGE FILE</a>`
+            },
+            {
+                test: /^http:\/\//,
+                transform: () => `<a href="${string}">INSECURE URL</a>`
+            }
+        ],
+        // and extensions
+        extensions: [
+            // an extension for hashtag search
+            {
+                test: /#(\w|_)+/gi,
+                transform: (string) =>
+                    `<a href="https://a.b?s=${string.substr(1)}">${string}</a>`,
+            },
+            // an extension for mentions
+            {
+                test: /@(\w|_)+/gi,
+                transform: (string) =>
+                    `<a href="https://a.b/${string.substr(1)}">${string}</a>`,
+            },
+        ],
+    });
+}
+
+async function refunctionizelink() {//finds links, changes their default function, and adds a menu to them to open externally or internally
+    let lonks = document.querySelectorAll('a');
+    var lonk_length = lonks.length;
+    for (let i = 0; i < lonk_length; i++) { build_lonk_action(i) }
+
+    function build_lonk_action(i) {
+        var lonkihref = lonks[i].href;
+        lonks[i].title = lonkihref;
+        lonks[i].addEventListener('click', function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+            if (main.get_link() == true) {
+                if (lonkihref.contains('file:///')) {
+                    shell.openExternal(lonkihref)
+                } else { main.secondary_battery(lonkihref) }
+            } else { shell.openExternal(lonkihref) }
+        });
+
+        lonks[i].addEventListener('contextmenu', function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+            const lonk_menu = new Menu.buildFromTemplate([
+                { label: 'open externally', click() { shell.openExternal(lonkihref) } },
+                {
+                    label: 'open internally', click() {
+                        if (lonkihref.contains('file:///')) {
+                            shell.openExternal(lonkihref)
+                        } else { main.secondary_battery(lonkihref) }
+                    }
+                },
+                { type: 'separator' },
+                { label: 'copy', click() { clipboard.writeText(lonkihref) } }
+            ])
+            lonk_menu.popup({ window: remote.getCurrentWindow() })
+        });
+    }
 }
