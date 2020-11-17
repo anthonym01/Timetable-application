@@ -8,7 +8,7 @@ var app = {// Application Constructor
     },// deviceready Event Handler
     onDeviceReady: function () {//device ready event
         maininitalizer()
-        this.receivedEvent('deviceready');
+        //this.receivedEvent('deviceready');
         console.log('Device Ready...');
     },
     onBackKeyDown: function () {//Back button pressed event
@@ -27,7 +27,7 @@ var app = {// Application Constructor
     },
 
     // Update DOM on a Received Event
-    receivedEvent: function (id) {
+    /*receivedEvent: function (id) {
         let parentElement = document.getElementById(id);
         let listeningElement = parentElement.querySelector('.listening');
         let receivedElement = parentElement.querySelector('.received');
@@ -36,7 +36,7 @@ var app = {// Application Constructor
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
-    }
+    }*/
 }; app.initialize();
 
 function maininitalizer() {

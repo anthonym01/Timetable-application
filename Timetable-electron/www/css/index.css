@@ -442,7 +442,8 @@ a:hover {
     text-shadow: 0vh 0vh 0.5vh var(--text-color);
     /*overflow: hidden;*/
 }
-.light .snumber_slide{
+
+.light .snumber_slide {
     text-shadow: none;
 }
 
@@ -810,65 +811,19 @@ a:hover {
 }
 
 /*  Loading Screen  */
-#Loading {
+#page_shadeer {
+    /* Hides page when it first loads */
     position: fixed;
+    background-color: var(--background-color);
+    transition: background-color 600ms;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
     top: 0;
     right: 0;
-    height: 100vh;
-    width: 100vw;
-    z-index: 5000;
     display: block;
-    box-shadow: var(--text-color);
-    background-color: var(--background-color);
-}
-
-#Loading #title {
-    position: relative;
-    margin-top: 30vh;
-    height: 15vw;
-    font-size: 15vw;
-    width: 100%;
-    text-align: center;
-    border-radius: 10vh;
-    animation: pulse 2s ease infinite;
-}
-
-#Loading #loader {
-    position: relative;
-    margin-top: 3vh;
-    margin-left: auto;
-    margin-right: auto;
-    height: 7vh;
-    width: 90vw;
-    border-radius: 2vh;
     overflow: hidden;
-    animation: none;
-    border: 0.5vh solid var(--text-color);
-}
-
-@keyframes loadimate {
-    0% {
-        left: 0%;
-    }
-
-    50% {
-        left: 80%;
-    }
-
-    100% {
-        left: 0%;
-    }
-}
-
-#loadimate {
-    position: absolute;
-    top: 0;
-    left: 0%;
-    height: 100%;
-    width: 20%;
-    background-color: var(--primary_hue);
-    border-radius: 2vh;
-    animation: loadimate 2s ease-in-out infinite;
+    -webkit-app-region: drag;
 }
 
 /*  page darkener   */
@@ -1022,7 +977,8 @@ a:hover {
     text-shadow: 0vh 0vh 0.3vh var(--background-color);
     background-position: center;
 }
-.light #timetable{
+
+.light #timetable {
     text-shadow: none;
 }
 

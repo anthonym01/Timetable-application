@@ -20,7 +20,7 @@ let config = {
 	colorpallet: 0,//default to red because primary pixels pop
 	animation: true,
 	dissable_animations_on_battery: false,
-	slideclock:true,
+	slideclock: true,
 	tiles: false,
 	empty_rows: false,
 	always_on_top: false,
@@ -60,7 +60,7 @@ function create_main_window() {
 		icon: path.join(__dirname, '/assets/icons/icon.png'),//some linux window managers cant process due to bug
 		frame: config.frame,
 		minWidth: 400,
-		show: true,
+		show: false,
 		webPreferences: {
 			nodeIntegration: true,
 			enableRemoteModule: true,
@@ -77,7 +77,9 @@ function create_main_window() {
 	}));
 
 	mainWindowState.manage(mainWindow);
+	mainWindow.once('ready-to-show', () => { mainWindow.show() });
 }
+
 
 function secondary_win(url) {
 	let secondary = new BrowserWindow({
