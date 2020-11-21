@@ -60,7 +60,7 @@ function create_main_window() {
 		icon: path.join(__dirname, '/assets/icons/icon.png'),//some linux window managers cant process due to bug
 		frame: config.frame,
 		minWidth: 400,
-		show: false,
+		show: true,
 		webPreferences: {
 			nodeIntegration: true,
 			enableRemoteModule: true,

@@ -3431,7 +3431,7 @@ let UI = {
                     var resaucepath = process.resourcesPath
                     /*for (i = 0; i <= resaucepath.length; i++) {
                         console.log(resaucepath)*/
-                    resaucepath = resaucepath.replaceAll('\\', '/');
+                    resaucepath = resaucepath.replace(/\\/g, '/');// replace all \\ with /
                     /*}*/
                     if (fs.existsSync(resaucepath + "/backgroundimg" + backgroundimg.ext) || fs.existsSync(resaucepath + "\\backgroundimg" + backgroundimg.ext)) {
                         //document.getElementById('timetable').style.backgroundImage = "url('C:\\fakepath\\fakeimg.png')";
@@ -3450,7 +3450,7 @@ let UI = {
                     wallpaper.get().then((wallpaperpath) => {//gets desktop wallpaper
                         if (path.parse(wallpaperpath).ext !== undefined) {//check if file is usable
                             //use desktop wallpaper
-                            for (i = 0; i <= wallpaperpath.length; i++) { wallpaperpath = wallpaperpath.replace('\\', '/') }
+                            wallpaperpath = wallpaperpath.replace(/\\/g, '/');// replace all \\ with /
 
                             //document.getElementById('timetable').style.backgroundImage = "";
                             document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
@@ -3475,7 +3475,7 @@ let UI = {
                         var parsed_path = path.parse(filestuff.filePaths[0])
                         var wallpaperpath = filestuff.filePaths[0]
                         if (parsed_path.ext !== undefined) {//check if file is usable
-                            for (i = 0; i <= wallpaperpath.length; i++) { wallpaperpath = wallpaperpath.replace('\\', '/') }
+                            wallpaperpath = wallpaperpath.replace(/\\/g, '/');// replace all \\ with /
                         }
                         switch (process.platform) {
                             case "linux":

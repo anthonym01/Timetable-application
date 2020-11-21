@@ -38,8 +38,8 @@
 .dark {
     --hue_value: 0;
     --saturat: 0%;
-    --background-color: black;
-    --text-color: white;
+    --background-color: #000000;
+    --text-color: #ffffff;
     --grey: rgb(100, 100, 100);
     --dark-grey: rgb(50, 50, 50);
     --icon: url('../img/icon.webp');
