@@ -1,7 +1,7 @@
 {
   "name": "timetable",
   "productName": "Timetable",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "timetable app",
   "main": "main.js",
   "author": {
@@ -15,16 +15,9 @@
   },
   "scripts": {
     "start": "electron main.js",
-    "lazy-reinstall": "npm install electron",
-    "package-mac": "electron-packager ./ --overwrite --platform=darwin --arch=all --icon=assets/icons/icon.icns --prune=true --out=release-builds",
-    "package-win": "electron-packager ./ --overwrite --asar --platform=win32 --arch=all --icon=assets/icons/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Timetable\"",
-    "package-linux": "electron-packager ./ timetable --overwrite --asar --platform=linux --arch=all --icon=assets/icons/icon.png --prune=true --out=release-builds",
-    "deb-all": "electron-installer-debian --src release-builds/timetable-linux-x64/ --arch x64 --config debian.json && electron-installer-debian --src release-builds/timetable-linux-ia32/ --arch ia32 --config debian.json && electron-installer-debian --src release-builds/timetable-linux-arm64/ --arch arm64 --config debian.json && electron-installer-debian --src release-builds/timetable-linux-armv7l/ --arch armv7l --config debian.json",
-    "electron-builder": "electron-builder",
-    "postinstall": "electron-builder install-app-deps",
-    "builder-default": "electron-builder",
     "builder-linux": "electron-builder --linux appimage pacman deb zip snap",
-    "builder-win": "electron-builder --win --ia32 --x64"
+    "builder-win": "electron-builder --win --ia32 --x64",
+    "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "appId": "com.anthonym.Timetable",

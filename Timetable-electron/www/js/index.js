@@ -480,7 +480,7 @@ let table = {
                     build_block_db1(i);
                 }
             }
-            if (main.get_empty_rows() == false) { validate() } //Strip empty cells form top and bottom and remove empty days
+            validate() //Strip empty cells form top and bottom and remove empty days
         }
         console.log('Table render Completed');
 
@@ -698,61 +698,79 @@ let table = {
         function validate() {
             //Remove empty days with the bread crums left behing durring the initial render
 
+            var remove = main.get_empty_rows()
+
             console.log('Validating Table');
             let days = 7;
             if (!config.properties.monday) { //remove monday?
-                document.getElementById('day1').style.display = 'none'; //Blank the title
-                for (i = 0; i < 24; i++) { //Loop to blank the cells associated with that title
-                    document.getElementById('1_' + i).style.display = 'none';
-                    console.log('Removing Monday time index :', i);
+                if (remove) {
+                    document.getElementById('day1').style.display = 'none'; //Blank the title
+                    for (i = 0; i < 24; i++) { //Loop to blank the cells associated with that title
+                        document.getElementById('1_' + i).style.display = 'none';
+                        console.log('Removing Monday time index :', i);
+                    }
                 }
                 days--;
             }
             if (!config.properties.tuesday) { //remove tuesday?
-                document.getElementById('day2').style.display = 'none';
-                for (i = 0; i < 24; i++) {
-                    document.getElementById('2_' + i).style.display = 'none';
-                    console.log('Removing Tuesday time index :', i);
+                if (remove) {
+                    document.getElementById('day2').style.display = 'none';
+                    for (i = 0; i < 24; i++) {
+                        document.getElementById('2_' + i).style.display = 'none';
+                        console.log('Removing Tuesday time index :', i);
+                    }
                 }
                 days--;
             }
             if (!config.properties.wednsday) { //remove wednsday?
-                document.getElementById('day3').style.display = 'none';
-                for (i = 0; i < 24; i++) {
-                    document.getElementById('3_' + i).style.display = 'none';
-                    console.log('Removing wednsday time index :', i);
+                if (remove) {
+                    document.getElementById('day3').style.display = 'none';
+                    for (i = 0; i < 24; i++) {
+                        document.getElementById('3_' + i).style.display = 'none';
+                        console.log('Removing wednsday time index :', i);
+                    }
                 }
                 days--;
             }
             if (!config.properties.thursday) { //remove thursday?
-                document.getElementById('day4').style.display = 'none';
-                for (i = 0; i < 24; i++) {
-                    document.getElementById('4_' + i).style.display = 'none';
-                    console.log('Removing Thursday time index :', i);
+                if (remove) {
+                    document.getElementById('day4').style.display = 'none';
+                    for (i = 0; i < 24; i++) {
+                        document.getElementById('4_' + i).style.display = 'none';
+                        console.log('Removing Thursday time index :', i);
+                    }
                 }
                 days--;
             }
             if (!config.properties.friday) { //remove friday?
-                document.getElementById('day5').style.display = 'none';
-                for (i = 0; i < 24; i++) {
-                    document.getElementById('5_' + i).style.display = 'none';
-                    console.log('Removing friday time index :', i);
+                if (remove) {
+                    document.getElementById('day5').style.display = 'none';
+                    for (i = 0; i < 24; i++) {
+                        document.getElementById('5_' + i).style.display = 'none';
+                        console.log('Removing friday time index :', i);
+                    }
                 }
                 days--;
             }
+
             if (!config.properties.saturday) { //remove saturday?
-                document.getElementById('day6').style.display = 'none';
-                for (i = 0; i < 24; i++) {
-                    document.getElementById('6_' + i).style.display = 'none';
-                    console.log('Removing saturday time index :', i);
+                if (remove) {
+                    document.getElementById('day6').style.display = 'none';
+                    for (i = 0; i < 24; i++) {
+                        document.getElementById('6_' + i).style.display = 'none';
+                        console.log('Removing saturday time index :', i);
+                    }
                 }
                 days--;
             }
+
             if (!config.properties.sunday) { //remove sunday?
-                document.getElementById('day0').style.display = 'none';
-                for (i = 0; i < 24; i++) {
-                    document.getElementById('7_' + i).style.display = 'none';
-                    console.log('Removing sunday time index :', i);
+                if (remove) {
+                    document.getElementById('day0').style.display = 'none';
+                    for (i = 0; i < 24; i++) {
+                        document.getElementById('7_' + i).style.display = 'none';
+                        console.log('Removing sunday time index :', i);
+                    }
                 }
                 days--;
             }
@@ -772,15 +790,23 @@ let table = {
             let rows = 24;
             for (i = 0; i < config.properties.min; i++) { //knock out all below minimum start time
                 console.log('Called null on row: ', i);
-                if (document.getElementById('timerow_' + i)) {
-                    document.getElementById('timerow_' + i).style.display = "none";
+                if (remove) {
+
+
+                    if (document.getElementById('timerow_' + i)) {
+                        document.getElementById('timerow_' + i).style.display = "none";
+                    }
                 }
                 rows--;
             }
             for (i = config.properties.max.toPrecision(2); i < 24; i++) { //knock out all above maximum end time
                 console.log('Called null on row: ', i);
-                if (document.getElementById('timerow_' + i)) {
-                    document.getElementById('timerow_' + i).style.display = "none";
+                if (remove) {
+
+
+                    if (document.getElementById('timerow_' + i)) {
+                        document.getElementById('timerow_' + i).style.display = "none";
+                    }
                 }
                 rows--;
             }
@@ -865,9 +891,9 @@ let table = {
             }
             if (days == 0 || rows == 0) {
                 //Table is empty
-                for (i = 0; i < config.data.table_details.length; i++) {
+                for (let i in config.data.table_details) {
                     if (config.data.table_selected == config.data.table_details[i].identifier) {
-                        notify.new(config.data.table_details[i].identifier, 'found no data for this table', 3);
+                        notify.new(config.data.table_details[i].purpose, 'found no data for this table', 3);
                         break;
                     }
                 }
@@ -875,7 +901,7 @@ let table = {
             console.log('Table validated');
             console.log('Closing loading screen...')
             document.getElementById('page_shadeer').style.backgroundColor = "rgba(0,0,0,0)";
-            setTimeout(() => { document.getElementById('page_shadeer').style.display = "none"; }, 400);
+            setTimeout(() => { document.getElementById('page_shadeer').style.display = "none"; }, 200);
 
             refunctionizelink()
         }
@@ -3422,7 +3448,8 @@ let UI = {
                 }
 
                 function useCSS() {
-                    document.getElementById('timetable').style.backgroundImage = "";
+                    //document.getElementById('timetable').style.backgroundImage = "";
+                    document.getElementById('table1').style.backgroundImage = "";
                     document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
                 }
 
@@ -3435,7 +3462,9 @@ let UI = {
                     /*}*/
                     if (fs.existsSync(resaucepath + "/backgroundimg" + backgroundimg.ext) || fs.existsSync(resaucepath + "\\backgroundimg" + backgroundimg.ext)) {
                         //document.getElementById('timetable').style.backgroundImage = "url('C:\\fakepath\\fakeimg.png')";
-                        document.getElementById('timetable').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
+                        //document.getElementById('timetable').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
+
+                        document.getElementById('table1').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
                         document.getElementById('system_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
@@ -3453,13 +3482,16 @@ let UI = {
                             wallpaperpath = wallpaperpath.replace(/\\/g, '/');// replace all \\ with /
 
                             //document.getElementById('timetable').style.backgroundImage = "";
-                            document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                            //document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                            document.getElementById('table1').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('wallpaper_pathrepresenter').value = "Desktop wallpaper";
                         } else {//default to css wallpaper
-                            document.getElementById('timetable').style.backgroundImage = "";
+                            
+                    document.getElementById('table1').style.backgroundImage = "";
+                            //document.getElementById('timetable').style.backgroundImage = "";
                             document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
                         }
                     })
@@ -3485,7 +3517,8 @@ let UI = {
                                     console.log('Set background img as :', parsed_path)
                                     config.save()
                                     setTimeout(() => {
-                                        document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        //document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('table1').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
@@ -3499,7 +3532,8 @@ let UI = {
                                     console.log('Set background img as :', parsed_path)
                                     config.save()
                                     setTimeout(() => {
-                                        document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('table1').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        //document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
