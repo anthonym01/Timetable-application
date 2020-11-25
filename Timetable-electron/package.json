@@ -24,7 +24,7 @@
     "icon": "assets/icons/icon.png",
     "productName": "Timetable",
     "copyright": "Copyright © 2020 ${author}",
-    "buildVersion": "1.0.0",
+    "buildVersion": "1.2.1",
     "remoteBuild": "true",
     "asar": "true",
     "mac": {
