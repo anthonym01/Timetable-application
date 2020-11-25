@@ -3517,6 +3517,7 @@ let UI = {
                                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('wallpaper_pathrepresenter').value = "url('" + wallpaperpath + "')";
                                     }, 50);
                                 })
                                 break;
@@ -3532,6 +3533,7 @@ let UI = {
                                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        document.getElementById('wallpaper_pathrepresenter').value = "url('" + wallpaperpath + "')";
                                     }, 50);
                                 })
                         }
