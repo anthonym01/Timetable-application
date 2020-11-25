@@ -910,30 +910,25 @@ let table = {
         if (main.get_hilight_engine() == true) {
             console.log('Hilight Query state Checking..');
             let query = document.querySelectorAll(".maincell");
-            let i = 0;
-            while (query[i] != null || query[i] != undefined) {
-                query[i].addEventListener('mouseover', () => { table.engine_spark(event) }, { passive: true });
-                i++;
-                console.log('Added event listener for hilight_query: ', i);
-            }
+            query.forEach(maincell => {
+                maincell.addEventListener('mouseover', () => { table.engine_spark(maincell) }, { passive: true })
+            })
         }
     },
-    engine_spark: function (event) {
+    engine_spark: function (maincell) {
         if (main.get_hilight_engine() == true) {
-            console.log('Hilight Engine trigger fired on :', event);
-            if (!event.target.classList.contains('data_block') && !event.target.classList.contains('data_block_active')) { //check if the cell is a data_block
-                if (config.properties.theme == "light") {
-                    event.target.style.color = 'black';
-                    event.target.style.backgroundColor = 'hsl(' + table.rand.number(360, 0) + ',100%,70%)'; //color the target
-                } else {
-                    event.target.style.color = 'black';
-                    event.target.style.backgroundColor = 'hsl(' + table.rand.number(360, 0) + ',100%,60%)'; //color the target
-                }
-                setTimeout(() => {
-                    event.target.style.backgroundColor = "";
-                    event.target.style.color = '';
-                }, 1000); //un-color the target
+            if (config.properties.theme == "light") {
+                maincell.style.color = 'black';
+                maincell.style.backgroundColor = 'hsla(' + table.rand.number(360, 0) + ', 100% , 70% , 0.7)'; //color the target
+            } else {
+                maincell.style.color = 'black';
+                maincell.style.backgroundColor = 'hsla(' + table.rand.number(360, 0) + ', 100% , 60% , 0.7)'; //color the target
             }
+            setTimeout(() => {
+                maincell.style.backgroundColor = "";
+                maincell.style.color = '';
+            }, 1000); //un-color the target
+            //}
         }
     },
     quick_add: async function () {//quick add context menus
@@ -3489,8 +3484,8 @@ let UI = {
                             document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('wallpaper_pathrepresenter').value = "Desktop wallpaper";
                         } else {//default to css wallpaper
-                            
-                    document.getElementById('table1').style.backgroundImage = "";
+
+                            document.getElementById('table1').style.backgroundImage = "";
                             //document.getElementById('timetable').style.backgroundImage = "";
                             document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
                         }
