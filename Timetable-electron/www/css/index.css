@@ -815,7 +815,7 @@ a:hover {
     /* Hides page when it first loads */
     position: fixed;
     background-color: var(--background-color);
-    transition: background-color 600ms;
+    transition: background-color 400ms;
     height: 100%;
     width: 100%;
     z-index: 9999;

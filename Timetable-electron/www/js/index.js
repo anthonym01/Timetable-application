@@ -901,7 +901,7 @@ let table = {
             console.log('Table validated');
             console.log('Closing loading screen...')
             document.getElementById('page_shadeer').style.backgroundColor = "rgba(0,0,0,0)";
-            setTimeout(() => { document.getElementById('page_shadeer').style.display = "none"; }, 200);
+            setTimeout(() => { document.getElementById('page_shadeer').style.display = "none"; }, 400);
 
             refunctionizelink()
         }
