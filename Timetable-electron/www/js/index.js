@@ -34,7 +34,7 @@ window.addEventListener('contextmenu', (event) => {//opens menu on auxilery clic
 }, false)
 
 window.addEventListener('load', function () { //window loads
-    console.log('Running from:', process.resourcesPath)
+    //console.log('Running from:', process.resourcesPath)
 
     textboxmenu()
 
@@ -53,7 +53,10 @@ window.addEventListener('load', function () { //window loads
     clocktick()
     setInterval(() => { clocktick() }, 1000)
     //document.getElementById('page_shade').style.backgroundColor = "rgba(0,0,0,0)";
-    setTimeout(() => { document.getElementById('page_shadeer').style.display = "none"; }, 2000);
+    setTimeout(() => {
+        document.getElementById('page_shadeer').style.display = "none";
+        config.properties.startup = false;//non startup behaviour
+    }, 2000);
 });
 
 function maininitalizer() {//starter/soft resterter
@@ -101,16 +104,15 @@ let config = {
         min: 24, //Swapped because big brain, big big brain
         overwrite: null,
         called_from_plus: false,
-        view: "", //defaults to table
-        exit: false,
         startup: true,
         colors_changed: true, //re-render color pannel when this is true
-        clocking: false, // is clock ticking
         management: false,
+
+        //quick add values
         quimk_start: -1,
         quimk_end: -1,
         quimk_day: null,
-        theme: null,
+        theme: null,//old method
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
@@ -166,42 +168,33 @@ let config = {
         if (typeof (this.data.backgroundimg) == 'undefined') {
             this.data.backgroundimg = 'default';
             configisvalid = false;
-            console.log('"backgroundimg" was found to be invalid and was set to default');
         }
+
         if (typeof (this.data.link) == 'undefined') {
             this.data.link = true;
             configisvalid = false;
-            console.log('"link" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.always_on_top) == 'undefined') {
             this.data.always_on_top = false;
             configisvalid = false;
-            console.log('"always_on_top" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.table1_db) !== 'undefined') {
             if (this.data.table1_db == undefined || null) { //check db existance
                 this.data.table1_db = []
                 configisvalid = false
-                console.log('"Table1_database" was found to be invalid and was set to default')
             } else {
-                let i = 0
                 let overwrite = []
                 let deleted = []
                 let detetioncheck = false
-                //Construct the data
-                while (config.data.table1_db[i] != null || undefined) {
-                    console.log('checked state on :', i)
+                for (let i in config.data.table1_db) {
                     if (config.data.table1_db[i].deleted) {
                         deleted.push(config.data.table1_db[i])
-                        console.log('State of ', i, ' false')
                         detetioncheck = true
                     } else {
                         overwrite.push(config.data.table1_db[i])
-                        console.log('State of ', i, ' true')
                     }
-                    i++
                 }
                 if (detetioncheck) {
                     console.table(deleted)
@@ -211,7 +204,6 @@ let config = {
         } else {
             this.data.table1_db = [];
             configisvalid = false;
-            console.log('"Table1_database" was found to not exist and was set to default');
         }
 
         if (typeof (this.data.table_details) == 'undefined') {
@@ -220,25 +212,19 @@ let config = {
                 deleted: false,
                 identifier: 1
             }];
-            console.log('Table names were not defined!');
             configisvalid = false;
         } else { //Remove deleted Items from the array
-            let i = 0
             let overwrite = []
             let deleted = []
             let detetioncheck = false
             //Construct the data
-            while (config.data.table_details[i] != null || undefined) {
-                console.log('checked state on :', i)
+            for (let i in config.data.table_details) {
                 if (config.data.table_details[i].deleted == true) {
                     deleted.push(config.data.table_details[i])
-                    console.log('State of ', i, ' false')
                     detetioncheck = true
                 } else {
                     overwrite.push(config.data.table_details[i])
-                    console.log('State of ', i, ' true')
                 }
-                i++
             }
             if (detetioncheck) {
                 console.table(deleted)
@@ -249,48 +235,40 @@ let config = {
         if (typeof (this.data.previous_colors) == 'undefined') {
             this.data.previous_colors = [];
             configisvalid = false;
-            console.log('"previous_colors" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.colorpallet) == 'undefined') {
             this.data.colorpallet = -1;
             configisvalid = false;
-            console.log('"colorpallet" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.theme) == 'undefined') {
             this.data.theme = "system";
             configisvalid = false;
-            console.log('"theme" was found to not exist and was set to default');
         }
 
         if (typeof (this.data.hilight_engine) == 'undefined') {
             this.data.hilight_engine = true;
             configisvalid = false;
-            console.log('"hilight_engine" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.empty_rows) == 'undefined') {
             this.data.empty_rows = true;
             configisvalid = false;
-            console.log('"empty_rows" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.animation) == 'undefined') {
             this.data.animation = true;
             configisvalid = false;
-            console.log('"animation" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.tiles) == 'undefined') {
             this.data.tiles = false;
             configisvalid = false;
-            console.log('"tiles" was found to be invalid and was set to default');
         }
 
         if (typeof (this.data.previous_colors) == 'undefined') {
             this.data.previous_colors = [];
-            console.log('previous_colors were not defined!');
             configisvalid = false;
         } else {
             config.data.previous_colors = Array.from(new Set(config.data.previous_colors)); //remove dublicates; vary comblicated (Sets dont allow duplicates, convert array to new set using "new Set()" then back to array using "Array.from()"")
@@ -298,7 +276,7 @@ let config = {
             if (config.data.previous_colors.length > 25) {
                 var i = 22; //because reasons
                 while (config.data.previous_colors[i] != null || undefined) { //check check check
-                    console.error('Removed recent color :', config.data.previous_colors.pop()) //for debugging
+                    console.warn('Removed recent color :', config.data.previous_colors.pop()) //for debugging
                     i++;
                 }
             }
@@ -425,30 +403,31 @@ let table = {
         console.log('Table render started')
 
         //wjipe main cells
-        document.querySelectorAll(".jkx").forEach(jkx => {
-            jkx.innerHTML = ""
-            jkx.style.display = ""
-        })
+        if (config.properties.startup == false) {
+            document.querySelectorAll(".jkx").forEach(jkx => {
+                jkx.innerHTML = ""
+                jkx.style.display = ""
+            })
 
-        document.getElementById('day0').style.display = ''
-        document.getElementById('day1').style.display = ''
-        document.getElementById('day2').style.display = ''
-        document.getElementById('day3').style.display = ''
-        document.getElementById('day4').style.display = ''
-        document.getElementById('day5').style.display = ''
-        document.getElementById('day6').style.display = ''
-        for (let i = 0; i < 24; i++) { document.getElementById('timerow_' + i).style.display = "" }
-
-        //reset logic
-        config.properties.max = 0
-        config.properties.min = 24
-        config.properties.monday = false
-        config.properties.tuesday = false
-        config.properties.wednsday = false
-        config.properties.thursday = false
-        config.properties.friday = false
-        config.properties.saturday = false
-        config.properties.sunday = false
+            document.getElementById('day0').style.display = ''
+            document.getElementById('day1').style.display = ''
+            document.getElementById('day2').style.display = ''
+            document.getElementById('day3').style.display = ''
+            document.getElementById('day4').style.display = ''
+            document.getElementById('day5').style.display = ''
+            document.getElementById('day6').style.display = ''
+            for (let i = 0; i < 24; i++) { document.getElementById('timerow_' + i).style.display = "" }
+            //reset logic
+            config.properties.max = 0
+            config.properties.min = 24
+            config.properties.monday = false
+            config.properties.tuesday = false
+            config.properties.wednsday = false
+            config.properties.thursday = false
+            config.properties.friday = false
+            config.properties.saturday = false
+            config.properties.sunday = false
+        }
 
         var i = 0;
         if (config.data.table1_db[i] == null || undefined) {
