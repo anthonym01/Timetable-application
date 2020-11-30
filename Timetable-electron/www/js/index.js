@@ -271,8 +271,7 @@ let config = {
             this.data.previous_colors = [];
             configisvalid = false;
         } else {
-            config.data.previous_colors = Array.from(new Set(config.data.previous_colors)); //remove dublicates; vary comblicated (Sets dont allow duplicates, convert array to new set using "new Set()" then back to array using "Array.from()"")
-            //limit to 25
+            config.data.previous_colors = Array.from(new Set(config.data.previous_colors)); //remove dublicates
             if (config.data.previous_colors.length > 25) {
                 var i = 22; //because reasons
                 while (config.data.previous_colors[i] != null || undefined) { //check check check
@@ -429,32 +428,29 @@ let table = {
             config.properties.sunday = false
         }
 
-        var i = 0;
-        if (config.data.table1_db[i] == null || undefined) {
+        //var i = 0;
+        if (config.data.table1_db == []) {
             //show first time setup screen
             notify.new('U new here?', 'To start off, click here to add some classes', function () {
                 UI.navigate.MANAGE()
                 manage.dialogue.open()
             }, 'click to add new class')
         } else {
-            var configdatatable1_dblength = config.data.table1_db.length;
-            //Get minimum time and maximum time to construct correct height
-            for (i = 0; i < configdatatable1_dblength; i++) {
+            //var configdatatable1_dblength = config.data.table1_db.length;
+
+            for (let i in config.data.table1_db) {
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
-                    if (typeof (config.data.table1_db[i].start) && typeof (config.data.table1_db[i].end) === 'string') {
-                        let percentage_start = Number(config.data.table1_db[i].start.slice(0, 2) / 1);
-                        let percentage_end = Number((config.data.table1_db[i].end.slice(0, 2) / 1) + (config.data.table1_db[i].end.slice(3) / 60));// time as a number eg. "13:50" will be 13.83333333333
-                        config.properties.min = Math.min(percentage_start, config.properties.min); //find minimum time in all datu
-                        config.properties.max = Math.max(percentage_end, config.properties.max); //find maximum time in all datu
-                    } else {
-                        console.warn('Bad 24 time tring on: ', config.data.table1_db[i])
-                    }
+                    let percentage_start = Number(config.data.table1_db[i].start.slice(0, 2) / 1);
+                    let percentage_end = Number((config.data.table1_db[i].end.slice(0, 2) / 1) + (config.data.table1_db[i].end.slice(3) / 60));// time as a number eg. "13:50" will be 13.83333333333
+                    config.properties.min = Math.min(percentage_start, config.properties.min); //find minimum time in all datu
+                    config.properties.max = Math.max(percentage_end, config.properties.max); //find maximum time in all datu
+
                 }
             }
             console.log('Table minimum found to be: ', config.properties.min, ' Table maximum found to be: ', config.properties.max)
             //construct table
-            for (i = 0; i < configdatatable1_dblength; i++) {
-                console.log('Data run on index :', i);
+            for (let i in config.data.table1_db) {
+                console.log('Table construct on :', config.data.table1_db[i]);
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
                     build_block_db1(i);
                 }
@@ -464,7 +460,6 @@ let table = {
         console.log('Table render Completed');
 
         function build_block_db1(index) { //Builds timetable from database
-            console.log('Building Block :', index);
             //Create the data block
             let tempblock = document.createElement('div');
             tempblock.setAttribute("class", "data_block");
@@ -474,9 +469,7 @@ let table = {
 
             //Decide where it does
             let starthraw = -1;
-            if (typeof (config.data.table1_db[index].start) == 'string') {
-                starthraw = Number(config.data.table1_db[index].start.slice(0, 2));
-            }
+            starthraw = Number(config.data.table1_db[index].start.slice(0, 2));
             let startime = Timerize(config.data.table1_db[index].start);
             let endtime = Timerize(config.data.table1_db[index].end);
 
@@ -491,15 +484,12 @@ let table = {
                 let name_tab_content = document.createElement("th");
                 name_tab_content.classList = "nowrap"
                 name_tab_content.innerHTML = config.data.table1_db[index].name;
-                //name_tab_content.setAttribute("colspan", 2);
                 name_tab_row.appendChild(name_tab_content);
                 sub_tab.appendChild(name_tab_row);
                 doot.appendChild(sub_tab);
                 let time_tab_row = document.createElement("tr");
                 let time_tab = document.createElement("td");
                 time_tab.classList = "nowrap"
-                //time processing
-
                 time_tab.innerHTML = startime.hr + ':' + startime.min + ' <small>' + startime.meridian + '</small> - ' + endtime.hr + ':' + endtime.min + ' <small>' + endtime.meridian + '</small>';
                 time_tab_row.appendChild(time_tab);
                 sub_tab.appendChild(time_tab_row);
@@ -508,7 +498,6 @@ let table = {
 
                 let detail_row = document.createElement("tr");
                 let detail_content = document.createElement("td");
-                //let input = 
                 detail_content.innerHTML = linkify(config.data.table1_db[index].detail)
                 detail_row.appendChild(detail_content);
                 sub_tab.appendChild(detail_row);
@@ -517,98 +506,80 @@ let table = {
                 if (starthraw < config.properties.min + 3) { //Set the doot to flip up or down depending on the pannels position
                     doot.style.top = '0vh';
                     doot.style.bottom = 'unset';
-                    //doot.style.borderRadius = '1vh 1vh 0vh 0vh;';
                 }
             }
 
-
             switch (config.data.table1_db[index].day) { //Day decsion
                 case 1: //Monday
-                    config.properties.monday = true;
-                    if (starthraw < 10 && starthraw >= 0) {
+                    config.properties.monday = true;//logic, monday is true
+                    if (starthraw < 10) {//less than 10 precision 1
                         document.getElementById('1_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } //less than 10 precision 1
-                    else if (starthraw >= 10 && starthraw < 24) {
+                    } else {//more than 10 precision 2
                         document.getElementById('1_' + starthraw.toPrecision(2)).appendChild(tempblock)
-                    } //more than 10 precision 2
-                    else {
-                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
-                    } //yeet a time error cause that dont exist fam
+                    }
                     break;
                 case 2: //Tuesday
-                    config.properties.tuesday = true;
-                    if (starthraw < 10 && starthraw >= 0) {
+                    config.properties.tuesday = true;//logic, tuesday is true
+                    if (starthraw < 10) {
                         document.getElementById('2_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else if (starthraw >= 10 && starthraw < 24) {
-                        document.getElementById('2_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
+                        document.getElementById('2_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     }
                     break;
                 case 3: //Wednsday
-                    config.properties.wednsday = true;
-                    if (starthraw < 10 && starthraw >= 0) {
+                    config.properties.wednsday = true;//logic, wednsday is true
+                    if (starthraw < 10) {
                         document.getElementById('3_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else if (starthraw >= 10 && starthraw < 24) {
-                        document.getElementById('3_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
+                        document.getElementById('3_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     }
                     break;
                 case 4:
-                    config.properties.thursday = true;
-                    if (starthraw < 10 && starthraw >= 0) {
+                    config.properties.thursday = true;//logic, thursday is true
+                    if (starthraw < 10) {
                         document.getElementById('4_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else if (starthraw >= 10 && starthraw < 24) {
-                        document.getElementById('4_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
+                        document.getElementById('4_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     }
                     break;
                 case 5:
-                    config.properties.friday = true;
-                    if (starthraw < 10 && starthraw >= 0) {
+                    config.properties.friday = true;//logic, friday is true
+                    if (starthraw < 10) {
                         document.getElementById('5_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else if (starthraw >= 10 && starthraw < 24) {
-                        document.getElementById('5_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
+                        document.getElementById('5_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     }
                     break;
                 case 6:
-                    config.properties.saturday = true;
-                    if (starthraw < 10 && starthraw >= 0) {
+                    config.properties.saturday = true;//logic, saturday is true
+                    if (starthraw < 10) {
                         document.getElementById('6_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else if (starthraw >= 10 && starthraw < 24) {
-                        document.getElementById('6_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
+                        document.getElementById('6_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     }
                     break;
                 case 7:
                     config.properties.sunday = true;
-                    if (starthraw < 10 && starthraw >= 0) {
+                    if (starthraw < 10) {
                         document.getElementById('7_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else if (starthraw >= 10 && starthraw < 24) {
-                        document.getElementById('7_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     } else {
-                        console.error('Time logic error on index :', index, ' Time code :', starthraw)
+                        document.getElementById('7_' + starthraw.toPrecision(2)).appendChild(tempblock)
                     }
                     break;
                 default:
-                    console.log('Date positioning error on index: ', index, ' Day code: ', config.data.table1_db[index].day);
+                    console.log('Date positioning error on : ', config.data.table1_db[index]);
             }
 
             //time to height calculations must be done after render
             setTimeout(() => {
                 let blockheight = 100;//default
-                if (typeof (config.data.table1_db[index].end) == 'string' && typeof (config.data.table1_db[index].start) == 'string') {
-                    blockheight = (Number(config.data.table1_db[index].end.slice(0, 2)) + Number(endtime.min / 60) - Number(config.data.table1_db[index].start.slice(0, 2))) * 100;//1 cell is 1hr under normal conditions
-                }
+
+                blockheight = (Number(config.data.table1_db[index].end.slice(0, 2)) + Number(endtime.min / 60) - Number(config.data.table1_db[index].start.slice(0, 2))) * 100;//1 cell is 1hr under normal conditions
+
                 console.log(config.data.table1_db[index].name, ' is assigned height of :', blockheight, '%');
                 tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
 
-                let blocktop = document.getElementById('live_clock').offsetHeight * Number(startime.min / 60); //gets the height of a cell in pixels and the multiples by minute percentage
+                let blocktop = live_clock.offsetHeight * Number(startime.min / 60); //gets the height of a cell in pixels and the multiples by minute percentage
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")"
                 if (config.data.table1_db[index].color.light < 49) {
                     tempblock.style.color = "white"

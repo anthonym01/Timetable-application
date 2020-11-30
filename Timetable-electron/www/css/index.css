@@ -1096,6 +1096,9 @@ td {
     box-sizing: border-box;
     overflow: auto;
 }
+.infodoot:hover{
+    z-index: 1000;
+}
 
 /*Scrollbar custom*/
 .infodoot::-webkit-scrollbar {
