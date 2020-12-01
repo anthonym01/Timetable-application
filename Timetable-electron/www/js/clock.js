@@ -1,3 +1,38 @@
+//days
+const day0 = document.getElementById('day0')
+const day1 = document.getElementById('day1');
+const day2 = document.getElementById('day2');
+const day3 = document.getElementById('day3');
+const day4 = document.getElementById('day4');
+const day5 = document.getElementById('day5');
+const day6 = document.getElementById('day6');
+
+//timerows
+const timerow_0 = document.getElementById('timerow_0')
+const timerow_1 = document.getElementById('timerow_1')
+const timerow_2 = document.getElementById('timerow_0')
+const timerow_3 = document.getElementById('timerow_0')
+const timerow_4 = document.getElementById('timerow_0')
+const timerow_5 = document.getElementById('timerow_0')
+const timerow_6 = document.getElementById('timerow_0')
+const timerow_7 = document.getElementById('timerow_0')
+const timerow_8 = document.getElementById('timerow_0')
+const timerow_9 = document.getElementById('timerow_0')
+const timerow_10 = document.getElementById('timerow_0')
+const timerow_11 = document.getElementById('timerow_0')
+const timerow_12 = document.getElementById('timerow_0')
+const timerow_13 = document.getElementById('timerow_0')
+const timerow_14 = document.getElementById('timerow_0')
+const timerow_15 = document.getElementById('timerow_0')
+const timerow_16 = document.getElementById('timerow_0')
+const timerow_17 = document.getElementById('timerow_0')
+const timerow_18 = document.getElementById('timerow_0')
+const timerow_19 = document.getElementById('timerow_0')
+const timerow_20 = document.getElementById('timerow_0')
+const timerow_21 = document.getElementById('timerow_0')
+const timerow_22 = document.getElementById('timerow_0')
+const timerow_23 = document.getElementById('timerow_0')
+
 //hours
 const firstofHR = document.getElementById('hr1st');
 const secondofHR = document.getElementById('hr2t');
@@ -85,15 +120,7 @@ const timerow_1 = document.getElementById('timerow_1');
 const timerow_0 = document.getElementById('timerow_0');
 const live_clock = document.getElementById('live_clock');
 
-const day0 = document.getElementById('day0');
-const day1 = document.getElementById('day1');
-const day2 = document.getElementById('day2');
-const day3 = document.getElementById('day3');
-const day4 = document.getElementById('day4');
-const day5 = document.getElementById('day5');
-const day6 = document.getElementById('day6');
-
-var date;
+let date;
 
 async function clocktick() {
     date = new Date;
