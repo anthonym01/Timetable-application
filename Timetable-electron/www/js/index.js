@@ -52,10 +52,10 @@ window.addEventListener('load', function () { //window loads
 
     clocktick()
     setInterval(() => { clocktick() }, 1000)
-    //document.getElementById('page_shade').style.backgroundColor = "rgba(0,0,0,0)";
+    properties.startup = false;//non startup behaviour
     setTimeout(() => {
         document.getElementById('page_shadeer').style.display = "none";
-        properties.startup = false;//non startup behaviour
+
     }, 2000);
 });
 
@@ -395,6 +395,7 @@ let properties = {
     quimk_end: -1,
     quimk_day: null,
     theme: null,//old method
+    hilight: false,
 }
 
 /*  Table generator */
@@ -417,7 +418,7 @@ let table = {
             day5.style.display = ''
             day6.style.display = ''
 
-            for (let i = 0; i < 24; i++) { document.getElementById('timerow_' + i).style.display = "" }
+            for (let i = 0; i < 24; i++) { timerow[i].style.display = "" }
 
             //reset logic
             properties.max = 0
@@ -512,65 +513,23 @@ let table = {
                 }
             }
 
+
+            //assign to a timecell
+            if (starthraw < 10) {
+                timesets[config.data.table1_db[index].day - 1][starthraw.toPrecision(1)].appendChild(tempblock)
+            } else {
+                timesets[config.data.table1_db[index].day - 1][starthraw.toPrecision(2)].appendChild(tempblock)
+            }
+
             switch (config.data.table1_db[index].day) { //Day decsion
-                case 1: //Monday
-                    properties.monday = true;//logic, monday is true
-                    if (starthraw < 10) {//less than 10 precision 1
-                        document.getElementById('1_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else {//more than 10 precision 2
-                        document.getElementById('1_' + starthraw.toPrecision(2)).appendChild(tempblock)
-                    }
-                    break;
-                case 2: //Tuesday
-                    properties.tuesday = true;//logic, tuesday is true
-                    if (starthraw < 10) {
-                        document.getElementById('2_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else {
-                        document.getElementById('2_' + starthraw.toPrecision(2)).appendChild(tempblock)
-                    }
-                    break;
-                case 3: //Wednsday
-                    properties.wednsday = true;//logic, wednsday is true
-                    if (starthraw < 10) {
-                        document.getElementById('3_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else {
-                        document.getElementById('3_' + starthraw.toPrecision(2)).appendChild(tempblock)
-                    }
-                    break;
-                case 4:
-                    properties.thursday = true;//logic, thursday is true
-                    if (starthraw < 10) {
-                        document.getElementById('4_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else {
-                        document.getElementById('4_' + starthraw.toPrecision(2)).appendChild(tempblock)
-                    }
-                    break;
-                case 5:
-                    properties.friday = true;//logic, friday is true
-                    if (starthraw < 10) {
-                        document.getElementById('5_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else {
-                        document.getElementById('5_' + starthraw.toPrecision(2)).appendChild(tempblock)
-                    }
-                    break;
-                case 6:
-                    properties.saturday = true;//logic, saturday is true
-                    if (starthraw < 10) {
-                        document.getElementById('6_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else {
-                        document.getElementById('6_' + starthraw.toPrecision(2)).appendChild(tempblock)
-                    }
-                    break;
-                case 7:
-                    properties.sunday = true;
-                    if (starthraw < 10) {
-                        document.getElementById('7_' + starthraw.toPrecision(1)).appendChild(tempblock)
-                    } else {
-                        document.getElementById('7_' + starthraw.toPrecision(2)).appendChild(tempblock)
-                    }
-                    break;
-                default:
-                    console.log('Date positioning error on : ', config.data.table1_db[index]);
+                case 1: properties.monday = true; break;
+                case 2: properties.tuesday = true; break;
+                case 3: properties.wednsday = true; break;
+                case 4: properties.thursday = true; break;
+                case 5: properties.friday = true; break;
+                case 6: properties.saturday = true; break;
+                case 7: properties.sunday = true; break;
+                default: console.log('Date positioning error on : ', config.data.table1_db[index]);
             }
 
             //time to height calculations must be done after render
@@ -582,7 +541,21 @@ let table = {
                 console.log(config.data.table1_db[index].name, ' is assigned height of :', blockheight, '%');
                 tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
 
-                let blocktop = live_clock.offsetHeight * Number(startime.min / 60); //gets the height of a cell in pixels and the multiples by minute percentage
+                let blocktop;
+                if (starthraw < 10) {
+                    if (timesets[config.data.table1_db[index].day - 1][starthraw.toPrecision(1)].childElementCount > 1) {
+                        blocktop = 0;
+                    } else {
+                        blocktop = document.getElementById('time' + starthraw.toPrecision(1)).offsetHeight * Number(startime.min / 60); //gets the height of a cell in pixels and the multiples by minute percentage
+                    }
+                } else {
+                    if (timesets[config.data.table1_db[index].day - 1][starthraw.toPrecision(2)].childElementCount > 1) {
+                        blocktop = 0;
+                    } else {
+                        blocktop = document.getElementById('time' + starthraw.toPrecision(2)).offsetHeight * Number(startime.min / 60); //gets the height of a cell in pixels and the multiples by minute percentage
+                    }
+                }
+
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")"
                 if (config.data.table1_db[index].color.light < 49) {
                     tempblock.style.color = "white"
@@ -729,38 +702,22 @@ let table = {
             }
 
             //remove empty time cells
-            if (config.data.table1_db.length < 3) { //normalization makes life easier fror small table users
+            if (config.data.table1_db.length < 3) { //make life easier fror small table users
                 properties.min = properties.min - 3;
                 properties.max = properties.max + 3;
-                if (properties.min < 0) {
-                    properties.min = 0
-                }
-                if (properties.min > 23) {
-                    properties.min = 23
-                }
+                if (properties.min < 0) { properties.min = 0 }
+                if (properties.min > 23) { properties.min = 23 }
             }
 
             let rows = 24;
-            for (i = 0; i < properties.min; i++) { //knock out all below minimum start time
+            for (let i = 0; i < properties.min; i++) { //knock out all below minimum start time
                 console.log('Called null on row: ', i);
-                if (remove) {
-
-
-                    if (document.getElementById('timerow_' + i)) {
-                        document.getElementById('timerow_' + i).style.display = "none";
-                    }
-                }
+                if (remove) { timerow[i].style.display = "none" }
                 rows--;
             }
-            for (i = properties.max.toPrecision(2); i < 24; i++) { //knock out all above maximum end time
+            for (let i = properties.max.toPrecision(2); i < 24; i++) { //knock out all above maximum end time
                 console.log('Called null on row: ', i);
-                if (remove) {
-
-
-                    if (document.getElementById('timerow_' + i)) {
-                        document.getElementById('timerow_' + i).style.display = "none";
-                    }
-                }
+                if (remove) { timerow[i].style.display = "none" }
                 rows--;
             }
             console.log('Time rows found value: ', rows);
@@ -768,76 +725,76 @@ let table = {
             //set font size dependent on rows value
             switch (rows) {
                 case 1:
-                    document.getElementById('timetable').style.fontSize = '11vh';
+                    timetable.style.fontSize = '11vh';
                     break;
                 case 2:
-                    document.getElementById('timetable').style.fontSize = '10vh';
+                    timetable.style.fontSize = '10vh';
                     break;
                 case 3:
-                    document.getElementById('timetable').style.fontSize = '9vh';
+                    timetable.style.fontSize = '9vh';
                     break;
                 case 4:
-                    document.getElementById('timetable').style.fontSize = '8vh';
+                    timetable.style.fontSize = '8vh';
                     break;
                 case 5:
-                    document.getElementById('timetable').style.fontSize = '7vh';
+                    timetable.style.fontSize = '7vh';
                     break;
                 case 6:
-                    document.getElementById('timetable').style.fontSize = '6vh';
+                    timetable.style.fontSize = '6vh';
                     break;
                 case 7:
-                    document.getElementById('timetable').style.fontSize = '6vh';
+                    timetable.style.fontSize = '6vh';
                     break;
                 case 8:
-                    document.getElementById('timetable').style.fontSize = '5vh';
+                    timetable.style.fontSize = '5vh';
                     break;
                 case 9:
-                    document.getElementById('timetable').style.fontSize = '3.4vh';
+                    timetable.style.fontSize = '3.4vh';
                     break;
                 case 10:
-                    document.getElementById('timetable').style.fontSize = '4vh';
+                    timetable.style.fontSize = '4vh';
                     break;
                 case 11:
-                    document.getElementById('timetable').style.fontSize = '4vh';
+                    timetable.style.fontSize = '4vh';
                     break;
                 case 12:
-                    document.getElementById('timetable').style.fontSize = '3vh';
+                    timetable.style.fontSize = '3vh';
                     break;
                 case 13:
-                    document.getElementById('timetable').style.fontSize = '3vh';
+                    timetable.style.fontSize = '3vh';
                     break;
                 case 14:
-                    document.getElementById('timetable').style.fontSize = '3vh';
+                    timetable.style.fontSize = '3vh';
                     break;
                 case 15:
-                    document.getElementById('timetable').style.fontSize = '3vh';
+                    timetable.style.fontSize = '3vh';
                     break;
                 case 16:
-                    document.getElementById('timetable').style.fontSize = '3vh';
+                    timetable.style.fontSize = '3vh';
                     break;
                 case 17:
-                    document.getElementById('timetable').style.fontSize = '2vh';
+                    timetable.style.fontSize = '2vh';
                     break;
                 case 18:
-                    document.getElementById('timetable').style.fontSize = '2vh';
+                    timetable.style.fontSize = '2vh';
                     break;
                 case 19:
-                    document.getElementById('timetable').style.fontSize = '2vh';
+                    timetable.style.fontSize = '2vh';
                     break;
                 case 20:
-                    document.getElementById('timetable').style.fontSize = '2vh';
+                    timetable.style.fontSize = '2vh';
                     break;
                 case 21:
-                    document.getElementById('timetable').style.fontSize = '2vh';
+                    timetable.style.fontSize = '2vh';
                     break;
                 case 22:
-                    document.getElementById('timetable').style.fontSize = '2vh';
+                    timetable.style.fontSize = '2vh';
                     break;
                 case 23:
-                    document.getElementById('timetable').style.fontSize = '2vh';
+                    timetable.style.fontSize = '2vh';
                     break;
                 case 24:
-                    document.getElementById('timetable').style.fontSize = '2vh';
+                    timetable.style.fontSize = '2vh';
                     break;
                 default:
                     console.log('Row error, defaulted :', rows);
@@ -852,7 +809,6 @@ let table = {
                 }
             }
             console.log('Table validated');
-            console.log('Closing loading screen...')
             document.getElementById('page_shadeer').style.backgroundColor = "rgba(0,0,0,0)";
             setTimeout(() => { document.getElementById('page_shadeer').style.display = "none"; }, 400);
 
@@ -863,25 +819,26 @@ let table = {
         if (main.get_hilight_engine() == true) {
             console.log('Hilight Query state Checking..');
             let query = document.querySelectorAll(".maincell");
+
             query.forEach(maincell => {
-                maincell.addEventListener('mouseover', () => { table.engine_spark(maincell) }, { passive: true })
+                maincell.addEventListener('mouseover', () => {
+                    if (properties.hilight == true) {
+                        if (properties.theme == "light") {
+                            //maincell.style.color = 'black';
+                            maincell.style.backgroundColor = 'hsla(' + table.rand.number(360, 0) + ', 100% , 70% , 0.8)'; //color the target
+                        } else {
+                            //maincell.style.color = 'black';
+                            maincell.style.backgroundColor = 'hsla(' + table.rand.number(360, 0) + ', 100% , 60% , 0.8)'; //color the target
+                        }
+                        setTimeout(() => {
+                            maincell.style.backgroundColor = "";
+                            maincell.style.color = '';
+                        }, 1000); //un-color the target
+                        //}
+                    }
+                }, { passive: true })
             })
-        }
-    },
-    engine_spark: function (maincell) {
-        if (main.get_hilight_engine() == true) {
-            if (properties.theme == "light") {
-                maincell.style.color = 'black';
-                maincell.style.backgroundColor = 'hsla(' + table.rand.number(360, 0) + ', 100% , 70% , 0.7)'; //color the target
-            } else {
-                maincell.style.color = 'black';
-                maincell.style.backgroundColor = 'hsla(' + table.rand.number(360, 0) + ', 100% , 60% , 0.7)'; //color the target
-            }
-            setTimeout(() => {
-                maincell.style.backgroundColor = "";
-                maincell.style.color = '';
-            }, 1000); //un-color the target
-            //}
+
         }
     },
     quick_add: async function () {//quick add context menus
@@ -3191,8 +3148,10 @@ let UI = {
             setpostition: function () {
                 if (main.get_hilight_engine() == true) {
                     document.getElementById('hilight_switch_container').className = 'switch_container_active';
+                    properties.hilight = true
                 } else {
                     document.getElementById('hilight_switch_container').className = 'switch_container_dissabled';
+                    properties.hilight = true
                 }
             },
         },
@@ -3396,7 +3355,7 @@ let UI = {
                 }
 
                 function useCSS() {
-                    //document.getElementById('timetable').style.backgroundImage = "";
+                    //timetable.style.backgroundImage = "";
                     document.getElementById('table1').style.backgroundImage = "";
                     document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
                 }
@@ -3409,8 +3368,8 @@ let UI = {
                     resaucepath = resaucepath.replace(/\\/g, '/');// replace all \\ with /
                     /*}*/
                     if (fs.existsSync(resaucepath + "/backgroundimg" + backgroundimg.ext) || fs.existsSync(resaucepath + "\\backgroundimg" + backgroundimg.ext)) {
-                        //document.getElementById('timetable').style.backgroundImage = "url('C:\\fakepath\\fakeimg.png')";
-                        //document.getElementById('timetable').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
+                        //timetable.style.backgroundImage = "url('C:\\fakepath\\fakeimg.png')";
+                        //timetable.style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
 
                         document.getElementById('table1').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
@@ -3429,8 +3388,8 @@ let UI = {
                             //use desktop wallpaper
                             wallpaperpath = wallpaperpath.replace(/\\/g, '/');// replace all \\ with /
 
-                            //document.getElementById('timetable').style.backgroundImage = "";
-                            //document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                            //timetable.style.backgroundImage = "";
+                            //timetable.style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('table1').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                             document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
@@ -3439,7 +3398,7 @@ let UI = {
                         } else {//default to css wallpaper
 
                             document.getElementById('table1').style.backgroundImage = "";
-                            //document.getElementById('timetable').style.backgroundImage = "";
+                            //timetable.style.backgroundImage = "";
                             document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
                         }
                     })
@@ -3465,7 +3424,7 @@ let UI = {
                                     console.log('Set background img as :', parsed_path)
                                     config.save()
                                     setTimeout(() => {
-                                        //document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        //timetable.style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('table1').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
@@ -3482,7 +3441,7 @@ let UI = {
                                     config.save()
                                     setTimeout(() => {
                                         document.getElementById('table1').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        //document.getElementById('timetable').style.backgroundImage = "url('" + wallpaperpath + "')";
+                                        //timetable.style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
                                         document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
