@@ -1062,6 +1062,7 @@ td {
     /*prime for transition incase multi mouse*/
     transition: box-shadow 0ms, background-color 0ms, color 0ms;
     box-shadow: 0vh 0.5vh 2vh 0vh var(--text-color);
+    z-index: 1000;
 }
 
 .data_block:active,

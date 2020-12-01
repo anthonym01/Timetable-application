@@ -223,6 +223,32 @@ const timesets = [//array of arrays to make things easier
     ]
 ]
 
+const timestamp = [//arry of timestamps
+    document.getElementById('time0'),
+    document.getElementById('time1'),
+    document.getElementById('time2'),
+    document.getElementById('time3'),
+    document.getElementById('time4'),
+    document.getElementById('time5'),
+    document.getElementById('time6'),
+    document.getElementById('time7'),
+    document.getElementById('time8'),
+    document.getElementById('time9'),
+    document.getElementById('time10'),
+    document.getElementById('time11'),
+    document.getElementById('time12'),
+    document.getElementById('time13'),
+    document.getElementById('time14'),
+    document.getElementById('time15'),
+    document.getElementById('time16'),
+    document.getElementById('time17'),
+    document.getElementById('time18'),
+    document.getElementById('time19'),
+    document.getElementById('time20'),
+    document.getElementById('time21'),
+    document.getElementById('time22'),
+    document.getElementById('time23'),
+]
 
 //hours
 const firstofHR = document.getElementById('hr1st');
