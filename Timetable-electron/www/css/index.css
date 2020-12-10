@@ -56,6 +56,7 @@
     --setting: url('../img/setting-light.webp');
     --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 70%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 30%));
     --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
+    --primary_hue_t: hsl(var(--hue_value), var(--saturat), 50%, 0.6);
     --primary_hue_active: hsl(var(--hue_value), var(--saturat), 40%);
 
 }
@@ -140,6 +141,7 @@
     --setting: url('../img/setting-dark.webp');
     --linear_color: linear-gradient(120deg, hsl(var(--hue_value), var(--saturat), 30%), hsl(var(--hue_value), var(--saturat), 40%), hsl(var(--hue_value), var(--saturat), 50%), hsl(var(--hue_value), var(--saturat), 60%), hsl(var(--hue_value), var(--saturat), 70%));
     --primary_hue: hsl(var(--hue_value), var(--saturat), 50%);
+    --primary_hue_t: hsl(var(--hue_value), var(--saturat), 50%, 0.6);
     --primary_hue_active: hsl(var(--hue_value), var(--saturat), 60%);
 }
 
@@ -991,7 +993,7 @@ tr {
 }
 
 .glowrow {
-    background-color: var(--primary_hue);
+    background-color: var(--primary_hue_t);
     /*animation: glow 4s infinite;*/
 }
 
@@ -1062,7 +1064,6 @@ td {
     /*prime for transition incase multi mouse*/
     transition: box-shadow 0ms, background-color 0ms, color 0ms;
     box-shadow: 0vh 0.5vh 2vh 0vh var(--text-color);
-    z-index: 1000;
 }
 
 .data_block:active,
@@ -1097,7 +1098,8 @@ td {
     box-sizing: border-box;
     overflow: auto;
 }
-.infodoot:hover{
+
+.infodoot:hover {
     z-index: 1000;
 }
 

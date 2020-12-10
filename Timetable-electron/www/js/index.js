@@ -17,6 +17,45 @@ const day_put_text = document.getElementById('day_put_text');
 const start_time_put = document.getElementById('start_time_put');
 const end_time_put = document.getElementById('end_time_put');
 const day_put = document.getElementById('day_put');
+const tablemanage_txt = document.getElementById('tablemanage_txt');
+const pg_title = document.getElementById('pg_title');
+const color_put = document.getElementById('color_put');
+const sat_put = document.getElementById('sat_put');
+const light_put = document.getElementById('light_put');
+const view_put = document.getElementById('view_put');
+const view_put_text = document.getElementById('view_put_text');
+const tablespace_render = document.getElementById('tablespace_render');
+const titlebar_table_selector = document.getElementById('titlebar_table_selector');
+const manage_dataspace = document.getElementById('manage_dataspace');
+const detail_put = document.getElementById('detail_put');
+const name_put = document.getElementById('name_put');
+
+
+let properties = {
+    tempdata: false,
+    monday: false,
+    tuesday: false,
+    wednsday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+    sunday: false,
+    changed: false,
+    max: 0,
+    min: 24, //Swapped because big brain, big big brain
+    overwrite: null,
+    called_from_plus: false,
+    startup: true,
+    colors_changed: true, //re-render color pannel when this is true
+    management: false,
+    //quick add values
+    quimk_start: -1,
+    quimk_end: -1,
+    quimk_day: null,
+    theme: null,//old method
+    hilight: false,
+    animations: true,
+}
 
 //menu for text boxes
 const text_box_menu = new Menu.buildFromTemplate([
@@ -78,10 +117,10 @@ function maininitalizer() {//starter/soft resterter
 
 function textboxmenu() {
     //Apply listeners to text boxes
-    document.getElementById('name_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    name_put.addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('wallpaper_pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
-    document.getElementById('detail_put').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    detail_put.addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
 
     function popupmenu(event) {
         event.preventDefault()
@@ -381,32 +420,6 @@ let config = {
     },
 }
 
-
-let properties = {
-    tempdata: false,
-    monday: false,
-    tuesday: false,
-    wednsday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-    sunday: false,
-    changed: false,
-    max: 0,
-    min: 24, //Swapped because big brain, big big brain
-    overwrite: null,
-    called_from_plus: false,
-    startup: true,
-    colors_changed: true, //re-render color pannel when this is true
-    management: false,
-    //quick add values
-    quimk_start: -1,
-    quimk_end: -1,
-    quimk_day: null,
-    theme: null,//old method
-    hilight: false,
-}
-
 /*  Table generator */
 let table = {
     data_render: function () {
@@ -630,167 +643,108 @@ let table = {
 
         function validate() {
             //Remove empty days with the bread crums left behing durring the initial render
+            try {
 
-            var remove = main.get_empty_rows()
+                var remove = main.get_empty_rows()
 
-            console.log('Validating Table');
-            let days = 7;
-            if (!properties.monday) { //remove monday?
-                if (remove) {//remove vertial column from table
-                    day1.style.display = 'none';
-                    for (i = 0; i < 24; i++) { timesets[0][i].style.display = 'none'; }
+                console.log('Validating Table');
+                let days = 7;
+                if (!properties.monday) { //remove monday?
+                    if (remove) {//remove vertial column from table
+                        day1.style.display = 'none';
+                        for (i = 0; i < 24; i++) { timesets[0][i].style.display = 'none'; }
+                    }
+                    days--;//logic for empty table after startup
                 }
-                days--;//logic for empty table after startup
-            }
-            if (!properties.tuesday) { //remove tuesday?
-                if (remove) {
-                    day2.style.display = 'none';
-                    for (i = 0; i < 24; i++) { timesets[1][i].style.display = 'none'; }
+                if (!properties.tuesday) { //remove tuesday?
+                    if (remove) {
+                        day2.style.display = 'none';
+                        for (i = 0; i < 24; i++) { timesets[1][i].style.display = 'none'; }
+                    }
+                    days--;
                 }
-                days--;
-            }
-            if (!properties.wednsday) { //remove wednsday?
-                if (remove) {
-                    day3.style.display = 'none';
-                    for (i = 0; i < 24; i++) { timesets[2][i].style.display = 'none'; }
+                if (!properties.wednsday) { //remove wednsday?
+                    if (remove) {
+                        day3.style.display = 'none';
+                        for (i = 0; i < 24; i++) { timesets[2][i].style.display = 'none'; }
+                    }
+                    days--;
                 }
-                days--;
-            }
-            if (!properties.thursday) { //remove thursday?
-                if (remove) {
-                    day4.style.display = 'none';
-                    for (i = 0; i < 24; i++) { timesets[3][i].style.display = 'none'; }
+                if (!properties.thursday) { //remove thursday?
+                    if (remove) {
+                        day4.style.display = 'none';
+                        for (i = 0; i < 24; i++) { timesets[3][i].style.display = 'none'; }
+                    }
+                    days--;
                 }
-                days--;
-            }
-            if (!properties.friday) { //remove friday?
-                if (remove) {
-                    day5.style.display = 'none';
-                    for (i = 0; i < 24; i++) { timesets[4][i].style.display = 'none'; }
+                if (!properties.friday) { //remove friday?
+                    if (remove) {
+                        day5.style.display = 'none';
+                        for (i = 0; i < 24; i++) { timesets[4][i].style.display = 'none'; }
+                    }
+                    days--;
                 }
-                days--;
-            }
 
-            if (!properties.saturday) { //remove saturday?
-                if (remove) {
-                    day6.style.display = 'none';
-                    for (i = 0; i < 24; i++) { timesets[5][i].style.display = 'none'; }
+                if (!properties.saturday) { //remove saturday?
+                    if (remove) {
+                        day6.style.display = 'none';
+                        for (i = 0; i < 24; i++) { timesets[5][i].style.display = 'none'; }
+                    }
+                    days--;
                 }
-                days--;
-            }
 
-            if (!properties.sunday) { //remove sunday?
-                if (remove) {
-                    day0.style.display = 'none';
-                    for (i = 0; i < 24; i++) { timesets[6][i].style.display = 'none'; }
+                if (!properties.sunday) { //remove sunday?
+                    if (remove) {
+                        day0.style.display = 'none';
+                        for (i = 0; i < 24; i++) { timesets[6][i].style.display = 'none'; }
+                    }
+                    days--;
                 }
-                days--;
-            }
 
-            //remove empty time cells
-            if (config.data.table1_db.length < 3) { //make life easier fror small table users
-                properties.min = properties.min - 3;
-                properties.max = properties.max + 3;
-                if (properties.min < 0) { properties.min = 0 }
-                if (properties.min > 23) { properties.min = 23 }
-            }
+                //remove empty time cells
+                if (config.data.table1_db.length < 3) { //make life easier fror small table users
+                    properties.min = properties.min - 3;
+                    properties.max = properties.max + 3;
+                    if (properties.min < 0) { properties.min = 0 }
+                    if (properties.min > 23) { properties.min = 23 }
+                }
 
-            let rows = 24;
-            for (let i = 0; i < properties.min; i++) { //knock out all below minimum start time
-                if (remove) { timerow[i].style.display = "none" }
-                rows--;
-            }
-            for (let i = properties.max.toPrecision(2); i < 24; i++) { //knock out all above maximum end time
-                if (remove) { timerow[i].style.display = "none" }
-                rows--;
-            }
-            console.log('Time rows found value: ', rows);
+                let rows = 24;
+                for (let i = 0; i < properties.min; i++) { //knock out all below minimum start time
+                    if (remove) { timerow[i].style.display = "none" }
+                    rows--;
+                }
+                for (let i = properties.max.toPrecision(2); i < 24; i++) { //knock out all above maximum end time
+                    if (remove) { timerow[i].style.display = "none" }
+                    rows--;
+                }
+                console.log('Time rows found value: ', rows);
 
-            switch (rows) {//set font size dependent on rows value
-                case 1:
-                    timetable.style.fontSize = '11vh';
-                    break;
-                case 2:
-                    timetable.style.fontSize = '10vh';
-                    break;
-                case 3:
-                    timetable.style.fontSize = '9vh';
-                    break;
-                case 4:
-                    timetable.style.fontSize = '8vh';
-                    break;
-                case 5:
-                    timetable.style.fontSize = '7vh';
-                    break;
-                case 6:
-                    timetable.style.fontSize = '6vh';
-                    break;
-                case 7:
-                    timetable.style.fontSize = '6vh';
-                    break;
-                case 8:
-                    timetable.style.fontSize = '5vh';
-                    break;
-                case 9:
-                    timetable.style.fontSize = '3.4vh';
-                    break;
-                case 10:
-                    timetable.style.fontSize = '4vh';
-                    break;
-                case 11:
-                    timetable.style.fontSize = '4vh';
-                    break;
-                case 12:
-                    timetable.style.fontSize = '3vh';
-                    break;
-                case 13:
-                    timetable.style.fontSize = '3vh';
-                    break;
-                case 14:
-                    timetable.style.fontSize = '3vh';
-                    break;
-                case 15:
-                    timetable.style.fontSize = '3vh';
-                    break;
-                case 16:
-                    timetable.style.fontSize = '3vh';
-                    break;
-                case 17:
-                    timetable.style.fontSize = '2vh';
-                    break;
-                case 18:
-                    timetable.style.fontSize = '2vh';
-                    break;
-                case 19:
-                    timetable.style.fontSize = '2vh';
-                    break;
-                case 20:
-                    timetable.style.fontSize = '2vh';
-                    break;
-                case 21:
-                    timetable.style.fontSize = '2vh';
-                    break;
-                case 22:
-                    timetable.style.fontSize = '2vh';
-                    break;
-                case 23:
-                    timetable.style.fontSize = '2vh';
-                    break;
-                case 24:
-                    timetable.style.fontSize = '2vh';
-                    break;
-                default:
-                    console.log('Row error, defaulted :', rows);
-            }
-            if (days == 0 || rows == 0) {
-                //Table is empty
-                for (let i in config.data.table_details) {
-                    if (config.data.table_selected == config.data.table_details[i].identifier) {
-                        notify.new(config.data.table_details[i].purpose, 'found no data for this table', 3);
-                        break;
+                switch (rows) {//set font size dependent on rows value
+                    case 1: timetable.style.fontSize = '11vh'; break;
+                    case 2: timetable.style.fontSize = '10vh'; break;
+                    case 3: timetable.style.fontSize = '9vh'; break;
+                    case 4: timetable.style.fontSize = '8vh'; break;
+                    case 5: timetable.style.fontSize = '7vh'; break;
+                    case 6: case 7: timetable.style.fontSize = '6vh'; break;
+                    case 8: timetable.style.fontSize = '5vh'; break;
+                    case 9: timetable.style.fontSize = '3.4vh'; break;
+                    case 10: case 11: timetable.style.fontSize = '4vh'; break;
+                    case 12: case 13: case 14: case 15: case 16: timetable.style.fontSize = '3vh'; break;
+                    case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: timetable.style.fontSize = '2vh'; break;
+                    default:
+                        console.log('Row error, defaulted :', rows);
+                }
+                if (days == 0 || rows == 0) {
+                    //Table is empty
+                    for (let i in config.data.table_details) {
+                        if (config.data.table_selected == config.data.table_details[i].identifier) {
+                            notify.new(config.data.table_details[i].purpose, 'found no data for this table', 3);
+                            break;
+                        }
                     }
                 }
-            }
+            } catch (err) { console.warn(err) }
             console.log('Table validated');
             document.getElementById('page_shadeer').style.backgroundColor = "rgba(0,0,0,0)";
             setTimeout(() => { document.getElementById('page_shadeer').style.display = "none"; }, 400);
@@ -798,7 +752,7 @@ let table = {
             refunctionizelink()
         }
     },
-    hilight_engine_go_vroom: function () {
+    hilight_engine_go_vroom: async function () {
         if (main.get_hilight_engine() == true) {
             console.log('Hilight Query state Checking..');
             let query = document.querySelectorAll(".maincell");
@@ -835,27 +789,13 @@ let table = {
                     end_time_put.value = properties.quimk_end
                     day_put.value = properties.quimk_day
                     switch (properties.quimk_day) {
-                        case "0":
-                            day_put_text.innerText = "Sunday";
-                            break;
-                        case "1":
-                            day_put_text.innerText = "Monday";
-                            break;
-                        case "2":
-                            day_put_text.innerText = "Tuesday";
-                            break;
-                        case "3":
-                            day_put_text.innerText = "Wednsday";
-                            break;
-                        case "4":
-                            day_put_text.innerText = "Thursday";
-                            break;
-                        case "5":
-                            day_put_text.innerText = "Friday";
-                            break;
-                        case "6":
-                            day_put_text.innerText = "Saturday";
-                            break;
+                        case "0": day_put_text.innerText = "Sunday"; break;
+                        case "1": day_put_text.innerText = "Monday"; break;
+                        case "2": day_put_text.innerText = "Tuesday"; break;
+                        case "3": day_put_text.innerText = "Wednsday"; break;
+                        case "4": day_put_text.innerText = "Thursday"; break;
+                        case "5": day_put_text.innerText = "Friday"; break;
+                        case "6": day_put_text.innerText = "Saturday"; break;
                     }
                 }
             },
@@ -872,6 +812,18 @@ let table = {
             quick_add_menu.popup({ window: remote.getCurrentWindow() })
         }
 
+        //assign quick add menus to table
+        /*for (let d = 0; d < 6; d++) {//simple code, but more memory
+            for (let t = 0; t < 24; t++) {
+                timesets[d][t].addEventListener('contextmenu', function (e) {//popup context menu set times to be ready
+                    quimk_popup(e)
+                    properties.quimk_start = (t+":00").toString()
+                    properties.quimk_end = (t+1+":00").toString()
+                    properties.quimk_day = (d + 1).toString()
+                })
+            }
+        }*/
+        //Longer code but less memory
 
         //Sunday
         timesets[6][0].addEventListener('contextmenu', function (e) {//popup context menu set times to be ready
@@ -1178,133 +1130,133 @@ let table = {
             properties.quimk_end = "02:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_2').addEventListener('contextmenu', function (e) {
+        timesets[1][2].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "02:00"
             properties.quimk_end = "03:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_3').addEventListener('contextmenu', function (e) {
+        timesets[1][3].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "03:00"
             properties.quimk_end = "04:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_4').addEventListener('contextmenu', function (e) {
+        timesets[1][4].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "04:00"
             properties.quimk_end = "05:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_5').addEventListener('contextmenu', function (e) {
+        timesets[1][5].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "05:00"
             properties.quimk_end = "06:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_6').addEventListener('contextmenu', function (e) {
+        timesets[1][6].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "06:00"
             properties.quimk_end = "07:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_7').addEventListener('contextmenu', function (e) {
+        timesets[1][7].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "07:00"
             properties.quimk_end = "08:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_8').addEventListener('contextmenu', function (e) {
+        timesets[1][8].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "08:00"
             properties.quimk_end = "09:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_9').addEventListener('contextmenu', function (e) {
+        timesets[1][9].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "09:00"
             properties.quimk_end = "10:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_10').addEventListener('contextmenu', function (e) {
+        timesets[1][10].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "10:00"
             properties.quimk_end = "11:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_11').addEventListener('contextmenu', function (e) {
+        timesets[1][11].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "11:00"
             properties.quimk_end = "12:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_12').addEventListener('contextmenu', function (e) {
+        timesets[1][12].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "12:00"
             properties.quimk_end = "13:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_13').addEventListener('contextmenu', function (e) {
+        timesets[1][13].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "13:00"
             properties.quimk_end = "14:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_14').addEventListener('contextmenu', function (e) {
+        timesets[1][14].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "14:00"
             properties.quimk_end = "15:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_15').addEventListener('contextmenu', function (e) {
+        timesets[1][15].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "15:00"
             properties.quimk_end = "16:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_16').addEventListener('contextmenu', function (e) {
+        timesets[1][16].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "16:00"
             properties.quimk_end = "17:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_17').addEventListener('contextmenu', function (e) {
+        timesets[1][17].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "17:00"
             properties.quimk_end = "18:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_18').addEventListener('contextmenu', function (e) {
+        timesets[1][18].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "18:00"
             properties.quimk_end = "19:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_19').addEventListener('contextmenu', function (e) {
+        timesets[1][19].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "19:00"
             properties.quimk_end = "20:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_20').addEventListener('contextmenu', function (e) {
+        timesets[1][20].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "20:00"
             properties.quimk_end = "21:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_21').addEventListener('contextmenu', function (e) {
+        timesets[1][21].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "21:00"
             properties.quimk_end = "22:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_22').addEventListener('contextmenu', function (e) {
+        timesets[1][22].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "22:00"
             properties.quimk_end = "23:00"
             properties.quimk_day = "2"
         })
-        document.getElementById('2_23').addEventListener('contextmenu', function (e) {
+        timesets[1][23].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "23:00"
             properties.quimk_end = "23:59"
@@ -1313,145 +1265,145 @@ let table = {
 
 
         //wednsday
-        document.getElementById('3_0').addEventListener('contextmenu', function (e) {
+        timesets[2][0].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "00:00"
             properties.quimk_end = "01:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_1').addEventListener('contextmenu', function (e) {
+        timesets[2][1].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "01:00"
             properties.quimk_end = "02:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_2').addEventListener('contextmenu', function (e) {
+        timesets[2][2].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "02:00"
             properties.quimk_end = "03:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_3').addEventListener('contextmenu', function (e) {
+        timesets[2][3].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "03:00"
             properties.quimk_end = "04:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_4').addEventListener('contextmenu', function (e) {
+        timesets[2][4].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "04:00"
             properties.quimk_end = "05:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_5').addEventListener('contextmenu', function (e) {
+        timesets[2][5].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "05:00"
             properties.quimk_end = "06:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_6').addEventListener('contextmenu', function (e) {
+        timesets[2][6].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "06:00"
             properties.quimk_end = "07:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_7').addEventListener('contextmenu', function (e) {
+        timesets[2][7].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "07:00"
             properties.quimk_end = "08:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_8').addEventListener('contextmenu', function (e) {
+        timesets[2][8].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "08:00"
             properties.quimk_end = "09:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_9').addEventListener('contextmenu', function (e) {
+        timesets[2][9].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "09:00"
             properties.quimk_end = "10:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_10').addEventListener('contextmenu', function (e) {
+        timesets[2][10].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "10:00"
             properties.quimk_end = "11:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_11').addEventListener('contextmenu', function (e) {
+        timesets[2][11].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "11:00"
             properties.quimk_end = "12:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_12').addEventListener('contextmenu', function (e) {
+        timesets[2][12].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "12:00"
             properties.quimk_end = "13:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_13').addEventListener('contextmenu', function (e) {
+        timesets[2][13].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "13:00"
             properties.quimk_end = "14:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_14').addEventListener('contextmenu', function (e) {
+        timesets[2][14].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "14:00"
             properties.quimk_end = "15:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_15').addEventListener('contextmenu', function (e) {
+        timesets[2][15].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "15:00"
             properties.quimk_end = "16:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_16').addEventListener('contextmenu', function (e) {
+        timesets[2][16].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "16:00"
             properties.quimk_end = "17:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_17').addEventListener('contextmenu', function (e) {
+        timesets[2][17].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "17:00"
             properties.quimk_end = "18:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_18').addEventListener('contextmenu', function (e) {
+        timesets[2][18].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "18:00"
             properties.quimk_end = "19:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_19').addEventListener('contextmenu', function (e) {
+        timesets[2][19].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "19:00"
             properties.quimk_end = "20:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_20').addEventListener('contextmenu', function (e) {
+        timesets[2][20].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "20:00"
             properties.quimk_end = "21:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_21').addEventListener('contextmenu', function (e) {
+        timesets[2][21].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "21:00"
             properties.quimk_end = "22:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_22').addEventListener('contextmenu', function (e) {
+        timesets[2][22].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "22:00"
             properties.quimk_end = "23:00"
             properties.quimk_day = "3"
         })
-        document.getElementById('3_23').addEventListener('contextmenu', function (e) {
+        timesets[2][23].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "23:00"
             properties.quimk_end = "23:59"
@@ -1460,145 +1412,145 @@ let table = {
 
 
         //thursday
-        document.getElementById('4_0').addEventListener('contextmenu', function (e) {
+        timesets[3][0].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "00:00"
             properties.quimk_end = "01:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_1').addEventListener('contextmenu', function (e) {
+        timesets[3][1].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "01:00"
             properties.quimk_end = "02:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_2').addEventListener('contextmenu', function (e) {
+        timesets[3][2].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "02:00"
             properties.quimk_end = "03:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_3').addEventListener('contextmenu', function (e) {
+        timesets[3][3].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "03:00"
             properties.quimk_end = "04:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_4').addEventListener('contextmenu', function (e) {
+        timesets[3][4].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "04:00"
             properties.quimk_end = "05:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_5').addEventListener('contextmenu', function (e) {
+        timesets[3][5].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "05:00"
             properties.quimk_end = "06:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_6').addEventListener('contextmenu', function (e) {
+        timesets[3][6].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "06:00"
             properties.quimk_end = "07:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_7').addEventListener('contextmenu', function (e) {
+        timesets[3][7].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "07:00"
             properties.quimk_end = "08:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_8').addEventListener('contextmenu', function (e) {
+        timesets[3][8].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "08:00"
             properties.quimk_end = "09:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_9').addEventListener('contextmenu', function (e) {
+        timesets[3][9].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "09:00"
             properties.quimk_end = "10:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_10').addEventListener('contextmenu', function (e) {
+        timesets[3][10].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "10:00"
             properties.quimk_end = "11:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_11').addEventListener('contextmenu', function (e) {
+        timesets[3][11].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "11:00"
             properties.quimk_end = "12:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_12').addEventListener('contextmenu', function (e) {
+        timesets[3][12].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "12:00"
             properties.quimk_end = "13:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_13').addEventListener('contextmenu', function (e) {
+        timesets[3][13].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "13:00"
             properties.quimk_end = "14:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_14').addEventListener('contextmenu', function (e) {
+        timesets[3][14].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "14:00"
             properties.quimk_end = "15:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_15').addEventListener('contextmenu', function (e) {
+        timesets[3][15].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "15:00"
             properties.quimk_end = "16:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_16').addEventListener('contextmenu', function (e) {
+        timesets[3][16].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "16:00"
             properties.quimk_end = "17:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_17').addEventListener('contextmenu', function (e) {
+        timesets[3][17].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "17:00"
             properties.quimk_end = "18:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_18').addEventListener('contextmenu', function (e) {
+        timesets[3][18].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "18:00"
             properties.quimk_end = "19:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_19').addEventListener('contextmenu', function (e) {
+        timesets[3][19].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "19:00"
             properties.quimk_end = "20:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_20').addEventListener('contextmenu', function (e) {
+        timesets[3][20].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "20:00"
             properties.quimk_end = "21:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_21').addEventListener('contextmenu', function (e) {
+        timesets[3][21].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "21:00"
             properties.quimk_end = "22:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_22').addEventListener('contextmenu', function (e) {
+        timesets[3][22].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "22:00"
             properties.quimk_end = "23:00"
             properties.quimk_day = "4"
         })
-        document.getElementById('4_23').addEventListener('contextmenu', function (e) {
+        timesets[3][23].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "23:00"
             properties.quimk_end = "23:59"
@@ -1608,145 +1560,145 @@ let table = {
 
 
         //friday
-        document.getElementById('5_0').addEventListener('contextmenu', function (e) {
+        timesets[4][0].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "00:00"
             properties.quimk_end = "01:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_1').addEventListener('contextmenu', function (e) {
+        timesets[4][1].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "01:00"
             properties.quimk_end = "02:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_2').addEventListener('contextmenu', function (e) {
+        timesets[4][2].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "02:00"
             properties.quimk_end = "03:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_3').addEventListener('contextmenu', function (e) {
+        timesets[4][3].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "03:00"
             properties.quimk_end = "04:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_4').addEventListener('contextmenu', function (e) {
+        timesets[4][4].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "04:00"
             properties.quimk_end = "05:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_5').addEventListener('contextmenu', function (e) {
+        timesets[4][5].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "05:00"
             properties.quimk_end = "06:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_6').addEventListener('contextmenu', function (e) {
+        timesets[4][6].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "06:00"
             properties.quimk_end = "07:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_7').addEventListener('contextmenu', function (e) {
+        timesets[4][7].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "07:00"
             properties.quimk_end = "08:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_8').addEventListener('contextmenu', function (e) {
+        timesets[4][8].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "08:00"
             properties.quimk_end = "09:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_9').addEventListener('contextmenu', function (e) {
+        timesets[4][9].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "09:00"
             properties.quimk_end = "10:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_10').addEventListener('contextmenu', function (e) {
+        timesets[4][10].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "10:00"
             properties.quimk_end = "11:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_11').addEventListener('contextmenu', function (e) {
+        timesets[4][11].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "11:00"
             properties.quimk_end = "12:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_12').addEventListener('contextmenu', function (e) {
+        timesets[4][12].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "12:00"
             properties.quimk_end = "13:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_13').addEventListener('contextmenu', function (e) {
+        timesets[4][13].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "13:00"
             properties.quimk_end = "14:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_14').addEventListener('contextmenu', function (e) {
+        timesets[4][14].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "14:00"
             properties.quimk_end = "15:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_15').addEventListener('contextmenu', function (e) {
+        timesets[4][15].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "15:00"
             properties.quimk_end = "16:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_16').addEventListener('contextmenu', function (e) {
+        timesets[4][16].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "16:00"
             properties.quimk_end = "17:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_17').addEventListener('contextmenu', function (e) {
+        timesets[4][17].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "17:00"
             properties.quimk_end = "18:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_18').addEventListener('contextmenu', function (e) {
+        timesets[4][18].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "18:00"
             properties.quimk_end = "19:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_19').addEventListener('contextmenu', function (e) {
+        timesets[4][19].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "19:00"
             properties.quimk_end = "20:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_20').addEventListener('contextmenu', function (e) {
+        timesets[4][20].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "20:00"
             properties.quimk_end = "21:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_21').addEventListener('contextmenu', function (e) {
+        timesets[4][21].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "21:00"
             properties.quimk_end = "22:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_22').addEventListener('contextmenu', function (e) {
+        timesets[4][22].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "22:00"
             properties.quimk_end = "23:00"
             properties.quimk_day = "5"
         })
-        document.getElementById('5_23').addEventListener('contextmenu', function (e) {
+        timesets[4][23].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "23:00"
             properties.quimk_end = "23:59"
@@ -1755,145 +1707,145 @@ let table = {
 
 
         //saturday
-        document.getElementById('6_0').addEventListener('contextmenu', function (e) {
+        timesets[5][0].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "00:00"
             properties.quimk_end = "01:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_1').addEventListener('contextmenu', function (e) {
+        timesets[5][1].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "01:00"
             properties.quimk_end = "02:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_2').addEventListener('contextmenu', function (e) {
+        timesets[5][2].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "02:00"
             properties.quimk_end = "03:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_3').addEventListener('contextmenu', function (e) {
+        timesets[5][3].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "03:00"
             properties.quimk_end = "04:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_4').addEventListener('contextmenu', function (e) {
+        timesets[5][4].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "04:00"
             properties.quimk_end = "05:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_5').addEventListener('contextmenu', function (e) {
+        timesets[5][5].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "05:00"
             properties.quimk_end = "06:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_6').addEventListener('contextmenu', function (e) {
+        timesets[5][6].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "06:00"
             properties.quimk_end = "07:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_7').addEventListener('contextmenu', function (e) {
+        timesets[5][7].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "07:00"
             properties.quimk_end = "08:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_8').addEventListener('contextmenu', function (e) {
+        timesets[5][8].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "08:00"
             properties.quimk_end = "09:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_9').addEventListener('contextmenu', function (e) {
+        timesets[5][9].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "09:00"
             properties.quimk_end = "10:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_10').addEventListener('contextmenu', function (e) {
+        timesets[5][10].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "10:00"
             properties.quimk_end = "11:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_11').addEventListener('contextmenu', function (e) {
+        timesets[5][11].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "11:00"
             properties.quimk_end = "12:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_12').addEventListener('contextmenu', function (e) {
+        timesets[5][12].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "12:00"
             properties.quimk_end = "13:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_13').addEventListener('contextmenu', function (e) {
+        timesets[5][13].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "13:00"
             properties.quimk_end = "14:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_14').addEventListener('contextmenu', function (e) {
+        timesets[5][14].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "14:00"
             properties.quimk_end = "15:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_15').addEventListener('contextmenu', function (e) {
+        timesets[5][15].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "15:00"
             properties.quimk_end = "16:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_16').addEventListener('contextmenu', function (e) {
+        timesets[5][16].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "16:00"
             properties.quimk_end = "17:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_17').addEventListener('contextmenu', function (e) {
+        timesets[5][17].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "17:00"
             properties.quimk_end = "18:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_18').addEventListener('contextmenu', function (e) {
+        timesets[5][18].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "18:00"
             properties.quimk_end = "19:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_19').addEventListener('contextmenu', function (e) {
+        timesets[5][19].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "19:00"
             properties.quimk_end = "20:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_20').addEventListener('contextmenu', function (e) {
+        timesets[5][20].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "20:00"
             properties.quimk_end = "21:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_21').addEventListener('contextmenu', function (e) {
+        timesets[5][21].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "21:00"
             properties.quimk_end = "22:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_22').addEventListener('contextmenu', function (e) {
+        timesets[5][22].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "22:00"
             properties.quimk_end = "23:00"
             properties.quimk_day = "6"
         })
-        document.getElementById('6_23').addEventListener('contextmenu', function (e) {
+        timesets[5][23].addEventListener('contextmenu', function (e) {
             quimk_popup(e)
             properties.quimk_start = "23:00"
             properties.quimk_end = "23:59"
@@ -1902,9 +1854,9 @@ let table = {
 
     },
     rand: {
-        HEX: function () { return '#' + Math.floor(Math.random() * 16777215).toString(16) },
-        RGB: function () { return { RED: this.number(255, 0), GREEN: this.number(255, 0), BLUE: this.number(255, 0) } },
-        HSL: function () { return { HUE: this.number(360, 0), SATURATION: this.number(100, 0) + '%', LIGHTENESS: this.number(100, 1) + '%' } },
+        HEX() { return '#' + Math.floor(Math.random() * 16777215).toString(16) },
+        RGB() { return { RED: this.number(255, 0), GREEN: this.number(255, 0), BLUE: this.number(255, 0) } },
+        HSL() { return { HUE: this.number(360, 0), SATURATION: this.number(100, 0) + '%', LIGHTENESS: this.number(100, 1) + '%' } },
         number(max, min) { return Math.floor(Math.random() * (max - min + 1)) + min }
     },
 }
@@ -1917,52 +1869,48 @@ let manage = {
         this.render_tables();
 
         //Set text feilds
-        let i = 0;
-        while (config.data.table_details[i] != null) {
-            if (config.data.table_details[i].identifier == Number(config.data.table_selected) && config.data.table_details[i].deleted != true) {
-                document.getElementById('tablemanage_txt').innerText = config.data.table_details[i].purpose;
-                document.getElementById('pg_title').innerText = config.data.table_details[i].purpose;
+        for (let i in config.data.table_details) {//find selected table
+            if (config.data.table_details[i].identifier == config.data.table_selected && config.data.table_details[i].deleted != true) {
+                tablemanage_txt.innerText = config.data.table_details[i].purpose;
+                pg_title.innerText = config.data.table_details[i].purpose;
                 break;
             } else {
-                document.getElementById('tablemanage_txt').innerText = "Homeless tiles";
-                document.getElementById('pg_title').innerText = "Homeless tiles";
+                tablemanage_txt.innerText = "Homeless tiles";
+                pg_title.innerText = "Homeless tiles";
             }
-            i++
         }
 
-
         //color sliders initalizer
-        document.getElementById('color_put').addEventListener('change', slidecolor)
-        document.getElementById('sat_put').addEventListener('change', slidesat)
-        document.getElementById('color_put').addEventListener('mousemove', slidecolor)
-        document.getElementById('sat_put').addEventListener('mousemove', slidesat)
+        color_put.addEventListener('change', slidecolor, { passive: true })
+        sat_put.addEventListener('change', slidesat, { passive: true })
+        color_put.addEventListener('mousemove', slidecolor, { passive: true })
+        sat_put.addEventListener('mousemove', slidesat, { passive: true })
 
         function slidecolor() {
-            document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
-            document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + document.getElementById('color_put').value + ", 100%, 50%)";
+            light_put.style.background = "linear-gradient(90deg, #000000,hsl(" + color_put.value + "," + sat_put.value + "%, 50%),#ffffff)";
+            sat_put.style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + color_put.value + ", 100%, 50%)";
         }
 
         function slidesat() {
-            document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + document.getElementById('color_put').value + "," + document.getElementById('sat_put').value + "%, 50%),#ffffff)";
+            light_put.style.background = "linear-gradient(90deg, #000000,hsl(" + color_put.value + "," + sat_put.value + "%, 50%),#ffffff)";
         }
-        document.getElementById('view_put').value = config.data.table_selected; //Value to view put
+        view_put.value = config.data.table_selected; //Value to view put
     },
     render_tables: function () {// Puts table button in table manager and titlebar
         console.log('Table management render started');
-        clear();
+
+        tablespace_render.innerHTML = "";
+        titlebar_table_selector.innerHTML = "";
 
         //Build table managers and table put selector
 
-        i = 0;
-        var view_put = document.getElementById('view_put');
         view_put.innerHTML = "";
 
-        while (config.data.table_details[i] != null) {
+        for (let i in config.data.table_details) {
             if (config.data.table_details[i].deleted != true) {
                 buildoption(i);
                 renderbar(i);
             }
-            i++;
         }
 
         function buildoption(i) { //build options for 'view_put'
@@ -1971,65 +1919,11 @@ let manage = {
             option.innerHTML = config.data.table_details[i].purpose;
             view_put.appendChild(option);
             if (config.data.table_details[i].identifier == config.data.table_selected) {
-                document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose;
+                view_put_text.innerHTML = config.data.table_details[i].purpose;
             }
         }
 
-        //select homeless table (table 0) option
-        var option0 = document.createElement('option');
-        option0.value = 0
-        option0.innerHTML = 'No Table'
-        view_put.appendChild(option0);
-
-
-        //button to select table 0 (homeless table)
-        let table0_button = document.createElement('div');
-        table0_button.setAttribute("class", "table_bar");
-        let titlespan0 = document.createElement('span');
-        titlespan0.innerHTML = "Homeless tiles";
-        titlespan0.title = "Tiles not associated with any table";
-        table0_button.appendChild(titlespan0)
-        document.getElementById('tablespace_render').appendChild(table0_button);
-        table0_button.addEventListener('click', function () {
-            event.stopPropagation()
-            config.data.table_selected = 0;
-            config.save();
-            maininitalizer();
-            //properties.changed = true
-        })
-
-        //Button to add new table
-        let new_table_button = document.createElement('div');
-        new_table_button.setAttribute("class", "table_bar");
-        let titlespan = document.createElement('span');
-        titlespan.innerHTML = "Create new table";
-        titlespan.title = "Click to create new empty table";
-        new_table_button.appendChild(titlespan)
-        document.getElementById('tablespace_render').appendChild(new_table_button);
-        new_table_button.addEventListener('click', function () {//New table button click
-            event.stopPropagation()//stop manager from closing
-            let identifier = 1;//starts at 1 becoase 0 is homeless tables
-            let i = 0;
-            while (config.data.table_details[i] != null) {
-                if (config.data.table_details[i].deleted != true) {
-                    identifier = Math.max(config.data.table_details[i].identifier, identifier)
-                }
-                i++
-            }
-            let newtable = {
-                purpose: "new table #" + Number(identifier + 1),
-                deleted: false,
-                identifier: Number(identifier + 1)
-            }
-            config.data.table_details.push(newtable);
-            config.save();
-            console.warn('Indentifier value: ', identifier)
-            maininitalizer();
-            properties.changed = true
-        })
-
         function renderbar(index) {//Builds table buttons in the titlebar
-            console.log('Creating actionbutton and title button for :', config.data.table_details[index]);
 
             let table_button = document.createElement('button');
             if (config.data.table_details[index].identifier == config.data.table_selected) {
@@ -2046,8 +1940,8 @@ let manage = {
                 table_button.classList = "table_button"
                 table_button.addEventListener('click', function () {
                     config.data.table_selected = config.data.table_details[index].identifier
-                    document.getElementById('tablemanage_txt').innerText = config.data.table_details[index].purpose;
-                    document.getElementById('pg_title').innerText = config.data.table_details[index].purpose;
+                    tablemanage_txt.innerText = config.data.table_details[index].purpose;
+                    pg_title.innerText = config.data.table_details[index].purpose;
                     config.save()
                     maininitalizer()
                     properties.changed = true
@@ -2057,7 +1951,7 @@ let manage = {
                 })
             }
             table_button.innerText = config.data.table_details[index].purpose;
-            document.getElementById('titlebar_table_selector').appendChild(table_button)
+            titlebar_table_selector.appendChild(table_button)
 
 
             //build pseudo menu
@@ -2091,7 +1985,7 @@ let manage = {
             table_bar.appendChild(titlespan)
             table_bar.appendChild(tab_put)
             table_bar.appendChild(tabmenu)
-            document.getElementById('tablespace_render').appendChild(table_bar);
+            tablespace_render.appendChild(table_bar);
 
             //make fucntion
             tab_put.addEventListener('click', function () { event.stopPropagation() }) //stop this event from trigering table select action
@@ -2104,22 +1998,20 @@ let manage = {
             table_bar.addEventListener('click', function () { //select table fucntion
                 console.warn('Table selected by identifier : ', config.data.table_details[index].identifier)
                 config.data.table_selected = config.data.table_details[index].identifier;
-                document.getElementById('tablemanage_txt').innerText = config.data.table_details[index].purpose;
-                document.getElementById('pg_title').innerText = config.data.table_details[index].purpose;
+                tablemanage_txt.innerText = config.data.table_details[index].purpose;
+                pg_title.innerText = config.data.table_details[index].purpose;
                 config.save()
                 maininitalizer();
                 properties.changed = true
             })
-            table_bar.addEventListener('mouseover', function () {//show quick action menu
-                tabmenu.style.transform = "translate(0, 0)";
-            })
-            table_bar.addEventListener('mouseout', function () {//hide quick action menu
+            table_bar.addEventListener('mouseover', function () { tabmenu.style.transform = "translate(0, 0)"; })//show quick action menu
+            table_bar.addEventListener('mouseout', function () {
                 if (confirmimg.style.display != "block") {
                     tabmenu.style.transform = "";
                 }
             })
-            editbtn.addEventListener('click', function () { //edit button is pressed
-                event.stopPropagation();
+            editbtn.addEventListener('click', function (e) { //edit button is pressed
+                e.stopPropagation();
                 console.log('Edit called on table name: ' + config.data.table_details[index].purpose)
                 confirmimg.setAttribute("title", "Confirm name change")
                 cancelimg.setAttribute("title", "Do not change")
@@ -2157,7 +2049,7 @@ let manage = {
                 e.stopPropagation();
                 console.log('Confirm button pressed')
                 //perform confirmation action
-                if (tab_put.style.display == "block") {
+                if (tab_put.style.display == "block") {//check if its being renamed otherwise its being deleted
                     console.log('save action on: ' + config.data.table_details[index])
                     config.data.table_details[index].purpose = tab_put.value;
                 } else if (tab_put.style.display == "none") {
@@ -2168,8 +2060,8 @@ let manage = {
                 maininitalizer();
                 properties.changed = true
             })
-            cancelimg.addEventListener('click', function () { //cancel button is pressed
-                event.stopPropagation();
+            cancelimg.addEventListener('click', function (e) { //cancel button is pressed
+                e.stopPropagation();
                 console.log('Cancel button pressed')
                 confirmimg.style.display = "none"
                 cancelimg.style.display = "none"
@@ -2179,55 +2071,82 @@ let manage = {
             })
         }
 
-        function clear() {//whipe away old things
-            document.getElementById('tablespace_render').innerHTML = "";
-            document.getElementById('titlebar_table_selector').innerHTML = "";
-        }
+
+        //select homeless table (table 0) option
+        var option0 = document.createElement('option');
+        option0.value = 0
+        option0.innerHTML = 'No Table'
+        view_put.appendChild(option0);
+
+        //button to select table 0 (homeless table)
+        let table0_button = document.createElement('div');
+        table0_button.setAttribute("class", "table_bar");
+        let titlespan0 = document.createElement('span');
+        titlespan0.innerHTML = "Homeless tiles";
+        titlespan0.title = "Tiles not associated with any table";
+        table0_button.appendChild(titlespan0)
+        tablespace_render.appendChild(table0_button);
+        table0_button.addEventListener('click', function (e) {
+            e.stopPropagation()
+            config.data.table_selected = 0;
+            config.save();
+            maininitalizer();
+        })
+
+        //Button to add new table
+        let new_table_button = document.createElement('div');
+        new_table_button.setAttribute("class", "table_bar");
+        let titlespan = document.createElement('span');
+        titlespan.innerHTML = "Create new table";
+        titlespan.title = "Click to create new empty table";
+        new_table_button.appendChild(titlespan)
+        tablespace_render.appendChild(new_table_button);
+        new_table_button.addEventListener('click', function (e) {//New table button click
+            e.stopPropagation()//stop manager from closing
+            let identifier = 1;//starts at 1 becoase 0 is homeless tables
+
+            for (let i in config.data.table_details) {
+                if (config.data.table_details[i].deleted != true) {
+                    identifier = Math.max(config.data.table_details[i].identifier, identifier)
+                }
+            }
+
+            let newtable = {
+                purpose: "new table #" + Number(identifier + 1),
+                deleted: false,
+                identifier: Number(identifier + 1)
+            }
+            config.data.table_details.push(newtable);
+            config.save();
+            properties.changed = true;
+            maininitalizer();
+        })
     },
     render_list: function () {
         console.log('Manager Render starts');
-        clear();
-        let i = 0;
+        manage_dataspace.innerHTML = "";
 
         //Construct the data
-        /*if (config.data.table_details[0] == null) { //there are no tables, everyone is homeless render them all
-            while (config.data.table1_db[i] != null || undefined) { //render selected tables data
-                console.log('Data run on index :', i);
-                build_bar_db1(i);
-                i++;
-            }
-        } else {*/
-        while (config.data.table1_db[i] != null || undefined) { //render selected tables data
-            console.log('Data run on index :', i);
+        for (let i in config.data.table1_db) {
             if (config.data.table1_db[i].show == config.data.table_selected) {
                 build_bar_db1(i);
             }
-            i++;
         }
-        i = 0;
-        while (config.data.table1_db[i] != null || undefined) { //render non-selected tables data
-            console.log('Data run on index :', i);
+        for (let i in config.data.table1_db) {
             if (config.data.table1_db[i].show != config.data.table_selected) {
                 build_bar_db1(i);
             }
-            i++;
         }
-        //}
+
         console.log('Manager Render Completed');
 
         function build_bar_db1(index) { //Builds timetable from database
+
             //check if block is homeless (has no table or its tables been deleted)
-            let i = 0
-            let homeless = true
-            while (config.data.table_details[i] != null) {
-                if (config.data.table_details[i].identifier == config.data.table1_db[index].show && config.data.table_details[i].deleted != true) {//compare this instence to indentifiers of other tables
-                    homeless = false
-                }
-                i++;
+            for (let i in config.data.table_details) {
+                if (config.data.table_details[i].identifier == config.data.table1_db[index].show) { homeless = false; break; }
             }
-            if (homeless) {//ya bois homeless, put him in the homeless table
-                config.data.table1_db[index].show = 0;
-            }
+            if (homeless) { config.data.table1_db[index].show = 0; }//0 homeless table
             //Create the data block
             console.log('Building Bar: ', index);
             let tempblock = document.createElement('div');
@@ -2260,32 +2179,8 @@ let manage = {
             sub_optionbar.appendChild(deletebtn)
             tempblock.appendChild(sub_optionbar)
 
-            let day;
-            switch (config.data.table1_db[index].day) {
-                case 1:
-                    day = "Monday";
-                    break;
-                case 2:
-                    day = "Tuesday";
-                    break;
-                case 3:
-                    day = "Wednesday";
-                    break;
-                case 4:
-                    day = "Thursday";
-                    break;
-                case 5:
-                    day = "Friday";
-                    break;
-                case 6:
-                    day = "Saturday";
-                    break;
-                case 7:
-                    day = "Sunday";
-                    break;
-                default:
-                    console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
-            }
+
+
             if (config.data.table1_db[index].deleted) { //Check deleted state
                 //populate the block with relivant data
                 tempblock.innerHTML = config.data.table1_db[index].name + '<br> Marked for delete, Click to undo';
@@ -2320,7 +2215,17 @@ let manage = {
                 tempblock.appendChild(sub_tab);
                 let day_tab_row = document.createElement("tr");
                 let day_tab_content = document.createElement("td");
-                day_tab_content.innerHTML = day;
+
+                switch (config.data.table1_db[index].day) {
+                    case 1: day_tab_content.innerText = "Monday"; break;
+                    case 2: day_tab_content.innerText = "Tuesday"; break;
+                    case 3: day_tab_content.innerText = "Wednesday"; break;
+                    case 4: day_tab_content.innerText = "Thursday"; break;
+                    case 5: day_tab_content.innerText = "Friday"; break;
+                    case 6: day_tab_content.innerText = "Saturday"; break;
+                    case 7: day_tab_content.innerText = "Sunday"; break;
+                }
+
                 day_tab_content.setAttribute("colspan", 2);
                 day_tab_row.appendChild(day_tab_content);
                 sub_tab.appendChild(day_tab_row);
@@ -2328,24 +2233,29 @@ let manage = {
                 let time_tab_row = document.createElement("tr");
                 let time_tab = document.createElement("td");
                 time_tab.setAttribute("colspan", 2);
+
                 let startime = Timerize(config.data.table1_db[index].start);
                 let endtime = Timerize(config.data.table1_db[index].end);
+
                 time_tab.innerHTML = startime.hr + ':' + startime.min + ' <small>' + startime.meridian + '</small> - ' + endtime.hr + ':' + endtime.min + ' <small>' + endtime.meridian + '</small>';
                 time_tab_row.appendChild(time_tab);
                 sub_tab.appendChild(time_tab_row);
                 tempblock.appendChild(sub_tab);
-                //allow editing function
+
+                //allow editing
                 tempblock.setAttribute('id', 'bar_' + index);
-                tempblock.addEventListener('click', function () {
-                    event.stopPropagation()
+                tempblock.addEventListener('click', function (e) {
+                    e.stopPropagation()
                     manage.dialogue.edit(index)
                 }); //Edit btn
-                editbtn.addEventListener('click', function () {
-                    event.stopPropagation()
+
+                editbtn.addEventListener('click', function (e) {
+                    e.stopPropagation()
                     manage.dialogue.edit(index)
                 }); //Edit btn
-                deletebtn.addEventListener('click', function () {
-                    event.stopPropagation()
+
+                deletebtn.addEventListener('click', function (e) {
+                    e.stopPropagation()
                     config.data.table1_db[index].deleted = true
                     config.save()
                     manage.render_list()
@@ -2353,12 +2263,7 @@ let manage = {
                 })
 
                 let context_menu = new Menu()
-                context_menu.append(new MenuItem({
-                    label: 'edit', click() {
-                        manage.dialogue.edit(index)
-                        manage.dialogue.open()
-                    }
-                }))
+                context_menu.append(new MenuItem({ label: 'edit', click() { manage.dialogue.edit(index); manage.dialogue.open(); } }))
                 context_menu.append(new MenuItem({
                     label: 'delete', click() {
                         config.data.table1_db[index].deleted = true
@@ -2384,61 +2289,59 @@ let manage = {
                     console.log('COntext meny on :', tempblock);
                 })
             }
+
             let noot = document.createElement('div');
             if (config.data.table1_db[index].show == 0) { // this dataset is homeless
                 noot.innerHTML = '<del>Not in a table</del>';
                 noot.style.color = 'red';
             } //noot is hidden
             else {
-                let i = 0;
-                while (config.data.table_details[i] != null) {
+                for (let i in config.data.table_details) {
                     if (config.data.table_details[i].identifier == Number(config.data.table1_db[index].show) && config.data.table_details[i].deleted != true) {
                         noot.innerHTML = config.data.table_details[i].purpose;
                         break;
                     }
-                    i++
                 }
-            } //not gets a number
+            } //noot gets a number
             noot.setAttribute('class', 'data_noot');
             tempblock.appendChild(noot)
-            document.getElementById('manage_dataspace').appendChild(tempblock); //put the bar into the dukument
+            manage_dataspace.appendChild(tempblock); //put the bar into the dukument
             console.log('Bar: ', index, ' Complete');
-        }
-
-        function clear() {
-            console.log('manage_dataspace clear called');
-            document.getElementById('manage_dataspace').innerHTML = '';
         }
     },
     dialogue: {
         edit: function (index) { //Does not edit anything, only populates feilds in the editor with data, listener found in manage.data.build_bar_db1();
-            console.log('Dialogue Edit called on index: ', index);
+            console.log('Dialogue Edit called on : ', config.data.table1_db[index]);
 
             properties.overwrite = index; //Set overwrtite so save function knows to do
-            document.getElementById('day_put').value = config.data.table1_db[index].day; //set day feild
-            switch (config.data.table1_db[index].day) {
-                case 0: document.getElementById('day_put_text').innerText = "Sunday"; break;
-                case 1: document.getElementById('day_put_text').innerText = "Monday"; break;
-                case 2: document.getElementById('day_put_text').innerText = "Tuesday"; break;
-                case 3: document.getElementById('day_put_text').innerText = "Wednsday"; break;
-                case 4: document.getElementById('day_put_text').innerText = "Thursday"; break;
-                case 5: document.getElementById('day_put_text').innerText = "Friday"; break;
-                case 6: document.getElementById('day_put_text').innerText = "Saturday"; break;
-            }
-            document.getElementById('color_put').value = config.data.table1_db[index].color.hue; //set color feild
-            document.getElementById('light_put').value = config.data.table1_db[index].color.light; //set color feild
-            document.getElementById('sat_put').value = config.data.table1_db[index].color.sat; //set color feild
-            document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 50%),#ffffff)";
-            document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + config.data.table1_db[index].color.hue + ", 100%, 50%)";
-            document.getElementById('detail_put').value = config.data.table1_db[index].detail; //set detail
-            document.getElementById('name_put').value = config.data.table1_db[index].name; //Set Name feild
 
-            document.getElementById('start_time_put').value = config.data.table1_db[index].start //Set start time feild
-            document.getElementById('end_time_put').value = config.data.table1_db[index].end //Set the end time feild
-            document.getElementById('view_put').value = config.data.table1_db[index].show //Set view state feild
-            for (i = 0; i < config.data.table_details.length; i++) {
+            day_put.value = config.data.table1_db[index].day; //set day feild
+            switch (config.data.table1_db[index].day) {
+                case 0: day_put_text.innerText = "Sunday"; break;
+                case 1: day_put_text.innerText = "Monday"; break;
+                case 2: day_put_text.innerText = "Tuesday"; break;
+                case 3: day_put_text.innerText = "Wednsday"; break;
+                case 4: day_put_text.innerText = "Thursday"; break;
+                case 5: day_put_text.innerText = "Friday"; break;
+                case 6: day_put_text.innerText = "Saturday"; break;
+            }
+
+            //set color feilds
+            color_put.value = config.data.table1_db[index].color.hue;
+            light_put.value = config.data.table1_db[index].color.light;
+            sat_put.value = config.data.table1_db[index].color.sat;
+            light_put.style.background = "linear-gradient(90deg, #000000,hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%, 50%),#ffffff)";
+            sat_put.style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + config.data.table1_db[index].color.hue + ", 100%, 50%)";
+            detail_put.value = config.data.table1_db[index].detail; //set detail
+            name_put.value = config.data.table1_db[index].name; //Set Name feild
+
+            start_time_put.value = config.data.table1_db[index].start //Set start time feild
+            end_time_put.value = config.data.table1_db[index].end //Set the end time feild
+            view_put.value = config.data.table1_db[index].show //Set view state feild
+
+            for (let i in config.data.table_details) {
                 if (config.data.table_details[i].deleted != true && config.data.table1_db[index].show == config.data.table_details[i].identifier) {
-                    document.getElementById('view_put_text').innerText = config.data.table_details[i].purpose;
+                    view_put_text.innerText = config.data.table_details[i].purpose;
                     break;
                 }
             }
@@ -2447,27 +2350,23 @@ let manage = {
         open: function () { //The listener for the add open btn is in manage.render_list() 
             console.log('Dialogue open called');
 
-            //other stuff
-            document.getElementById('manage_dataspace').classList = "dataspace_compact"; //switch dataspace to compact view
-
+            manage_dataspace.classList = "dataspace_compact"; //switch dataspace to compact view
 
             if (properties.overwrite == null) {
                 document.getElementById('savepluss_btn').style.display = 'block';
                 document.getElementById('delete_btn').style.display = 'none';
                 document.getElementById('data_title').innerHTML = 'New Entry';
-                setTimeout(() => {
-                    document.getElementById('name_put').focus()
-                }, 500)
+                setTimeout(() => { name_put.focus() }, 500)
             } else {
                 document.getElementById('savepluss_btn').style.display = 'none';
                 document.getElementById('delete_btn').style.display = 'block';
                 document.getElementById('data_title').innerHTML = 'Edit ' + config.data.table1_db[properties.overwrite].name;
             }
-            document.getElementById('name_put').style.border = "";
-            document.getElementById('start_time_put').style.border = "";
-            document.getElementById('end_time_put').style.border = "";
+            name_put.style.border = "";
+            start_time_put.style.border = "";
+            end_time_put.style.border = "";
             if (main.get_animation() == true) {
-                document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, setting this in css causes the buttons to glitch out
+                document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, without this buttons bug out
                 document.getElementById('dataentry_screen').style.display = "block";
                 setTimeout(() => {
                     document.getElementById('dataentry_screen').style.transform = "initial";
@@ -2480,47 +2379,42 @@ let manage = {
                 document.getElementById('btn_bar').style.display = "flex";
                 document.getElementById('dataentry_screen').style.display = "block";
             }
+
             if (properties.colors_changed == true) { // render recent colors
                 if (config.data.previous_colors[0] != null) {
                     document.getElementById('recent_colors').innerHTML = "";
                     var index = config.data.previous_colors.length - 1;
-                    while (config.data.previous_colors[index] != null) {
-                        render_color(index);
-                        index--;
-                    }
+                    while (config.data.previous_colors[index] != null) { render_color(index); index--; }
                     properties.colors_changed = false;
-                } else {
-                    document.getElementById('recent_colors').innerHTML = "Recent Colors";
-                }
+                } else { document.getElementById('recent_colors').innerHTML = "Recent Colors"; }
             }
 
             function render_color(index) {
-                console.log('Rendering recent color :', config.data.previous_colors[index], ', index:', index);
                 var color_doot = document.createElement("div");
                 color_doot.setAttribute("class", "color_doot");
                 color_doot.style.backgroundColor = "hsl(" + config.data.previous_colors[index].hue + "," + config.data.previous_colors[index].sat + "%," + config.data.previous_colors[index].light + "%)";
                 document.getElementById('recent_colors').appendChild(color_doot);
                 color_doot.addEventListener('click', function () {
-                    document.getElementById('color_put').value = config.data.previous_colors[index].hue;
-                    document.getElementById('sat_put').value = config.data.previous_colors[index].sat;
-                    document.getElementById('light_put').value = config.data.previous_colors[index].light;
+                    color_put.value = config.data.previous_colors[index].hue;
+                    sat_put.value = config.data.previous_colors[index].sat;
+                    light_put.value = config.data.previous_colors[index].light;
                     //sets slider colors
-                    document.getElementById('light_put').style.background = "linear-gradient(90deg, #000000,hsl(" + config.data.previous_colors[index].hue + "," + config.data.previous_colors[index].sat + "%, 50%),#ffffff)";
-                    document.getElementById('sat_put').style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + config.data.previous_colors[index].hue + ", 100%, 50%)";
+                    light_put.style.background = "linear-gradient(90deg, #000000,hsl(" + config.data.previous_colors[index].hue + "," + config.data.previous_colors[index].sat + "%, 50%),#ffffff)";
+                    sat_put.style.background = "linear-gradient(90deg, rgb(128, 128, 128),hsl(" + config.data.previous_colors[index].hue + ", 100%, 50%)";
                     console.warn('Pushed recent color: ', config.data.previous_colors[index])
                 });
             }
         },
         clear: function () { //clear the input and remove the input screen
             console.log('Dialogue clear called')
-            document.getElementById('detail_put').value = "";
-            document.getElementById('name_put').value = "";
-            document.getElementById('start_time_put').value = "";
-            document.getElementById('end_time_put').value = "";
-            document.getElementById('view_put').validate = 1;
+            detail_put.value = "";
+            name_put.value = "";
+            start_time_put.value = "";
+            end_time_put.value = "";
+            view_put.validate = 1;
         },
         close: function () { //remove the input screen
-            document.getElementById('manage_dataspace').classList = "dataspace";
+            manage_dataspace.classList = "dataspace";
             console.log('Dialogue close called');
             if (main.get_animation() == true) {
                 document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, setting this in css causes the buttons to glitch out
@@ -2550,61 +2444,61 @@ let manage = {
             let entryisvalid = true;
 
             //get day select, no validation, because default is valid
-            tempentry.day = Number(document.getElementById('day_put').value);
+            tempentry.day = Number(day_put.value);
 
             //get color select, no validation, because default is valid
-            tempentry.color.hue = Number(document.getElementById('color_put').value);
-            tempentry.color.sat = Number(document.getElementById('sat_put').value);
-            tempentry.color.light = Number(document.getElementById('light_put').value);
+            tempentry.color.hue = Number(color_put.value);
+            tempentry.color.sat = Number(sat_put.value);
+            tempentry.color.light = Number(light_put.value);
             config.data.previous_colors.push(tempentry.color);
             properties.colors_changed = true;
-            tempentry.detail = document.getElementById('detail_put').value;
+            tempentry.detail = detail_put.value;
 
             //Get Name feild
-            tempentry.name = document.getElementById('name_put').value;
+            tempentry.name = name_put.value;
             if (tempentry.name == "" || undefined || null) {
                 entryisvalid = false;
-                document.getElementById('name_put').style.border = "0.3vh solid #ff0000";
+                name_put.style.border = "0.3vh solid #ff0000";
                 notify.new('HEY!', 'Please Enter a name');
             } else {
-                document.getElementById('name_put').style.border = "";
+                name_put.style.border = "";
                 console.log('Name detected: ', tempentry.name);
             }
 
             //Process time
-            let start_time_raw = document.getElementById('start_time_put').value;
-            let end_time_raw = document.getElementById('end_time_put').value;
+            let start_time_raw = start_time_put.value;
+            let end_time_raw = end_time_put.value;
             let percentage_start = Number((start_time_raw.slice(0, 2) / 1 /*divide it by 1 becasue the v8 engine is drunk*/) + (start_time_raw.slice(3) / 60));// time as a number eg. "12:30" will be 12.5
             let percentage_end = Number((end_time_raw.slice(0, 2) / 1 /*divide it by 1 becasue the v8 engine is drunk*/) + (end_time_raw.slice(3) / 60));// time as a number eg. "13:50" will be 13.83333333333
             console.log('percent start: ', percentage_start, ' percent end', percentage_end)
             if (start_time_raw == "") {
                 notify.new('HEY!', 'Start time cannot be empty');
-                document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
+                start_time_put.style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             }
             if (end_time_raw == "") {
                 notify.new('HEY!', 'End time cannot be empty');
-                document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
+                end_time_put.style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             }
             if (percentage_start == percentage_end) {
-                document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
-                document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
+                start_time_put.style.border = "0.3vh solid #ff0000";
+                end_time_put.style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else if (percentage_start > percentage_end) {
                 notify.new('Event', 'Class cannot start after it ends');
-                document.getElementById('start_time_put').style.border = "0.3vh solid #ff0000";
-                document.getElementById('end_time_put').style.border = "0.3vh solid #ff0000";
+                start_time_put.style.border = "0.3vh solid #ff0000";
+                end_time_put.style.border = "0.3vh solid #ff0000";
                 entryisvalid = false;
             } else {
                 tempentry.start = start_time_raw;
                 tempentry.end = end_time_raw;
-                document.getElementById('start_time_put').style.border = "";
-                document.getElementById('end_time_put').style.border = "";
+                start_time_put.style.border = "";
+                end_time_put.style.border = "";
             }
 
             //get view state
-            tempentry.show = document.getElementById('view_put').value;
+            tempentry.show = view_put.value;
 
             console.table(tempentry);
 
@@ -2633,7 +2527,7 @@ let manage = {
             properties.called_from_plus = true;
             let entryisvalid = manage.dialogue.save();
             if (entryisvalid) {
-                notify.new('Confirmation', document.getElementById('name_put').value + ' was saved, U may now add another');
+                notify.new('Confirmation', name_put.value + ' was saved, U may now add another');
                 //no clear function needed, the clearfeild action btns will fufill this task
                 manage.dialogue.open();
             }
@@ -2666,16 +2560,16 @@ let UI = {
 
         })
         //Handlers datamanger
-        document.getElementById('view_put').addEventListener('change', function () {// on view put change
+        view_put.addEventListener('change', function () {// on view put change
             setTimeout(() => {
-                var vewalue = document.getElementById('view_put').value;
+                var vewalue = view_put.value;
                 var i = 0;
                 if (vewalue == 0) {
-                    document.getElementById('view_put_text').innerHTML = 'No Table'
+                    view_put_text.innerHTML = 'No Table'
                 } else {
                     while (config.data.table_details[i] != null) {//Loop data brothgar
                         if (config.data.table_details[i].deleted != true && config.data.table_details[i].identifier == vewalue) {//check view put value against saved table details
-                            document.getElementById('view_put_text').innerHTML = config.data.table_details[i].purpose
+                            view_put_text.innerHTML = config.data.table_details[i].purpose
                             break; //found it
                         }
                         i++;
@@ -2694,13 +2588,13 @@ let UI = {
                 document.getElementById('tablemanger').classList = "tablemanger"
             }
         })
-        document.getElementById('manage_dataspace').addEventListener('click', function () {
+        manage_dataspace.addEventListener('click', function () {
             if (properties.management == true) {
                 properties.management = false
                 document.getElementById('tablemanger').classList = "tablemanger"
             }
         })
-        document.getElementById('tablespace_render').addEventListener('click', function () { event.stopPropagation() })
+        tablespace_render.addEventListener('click', function () { event.stopPropagation() })
 
         //Add new button
         document.getElementById('new_class_button').addEventListener('click', function () {
@@ -2728,20 +2622,20 @@ let UI = {
         //document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
 
         //Initalize day_put selector
-        document.getElementById('day_put').value = "1";
-        document.getElementById('day_put_text').innerText = "Monday"
-        document.getElementById('day_put').addEventListener('change', function () {
+        day_put.value = "1";
+        day_put_text.innerText = "Monday"
+        day_put.addEventListener('change', function () {
             /* Switches dates on change */
             console.log('Day put changed');
-            let tmp = document.getElementById('day_put').value;
+            let tmp = day_put.value;
             switch (tmp) {
-                case "1": document.getElementById('day_put_text').innerText = "Monday"; break;
-                case "2": document.getElementById('day_put_text').innerText = "Tuesday"; break;
-                case "3": document.getElementById('day_put_text').innerText = "Wednsday"; break;
-                case "4": document.getElementById('day_put_text').innerText = "Thursday"; break;
-                case "5": document.getElementById('day_put_text').innerText = "Friday"; break;
-                case "6": document.getElementById('day_put_text').innerText = "Saturday"; break;
-                case "7": document.getElementById('day_put_text').innerText = "Sunday"; break;
+                case "1": day_put_text.innerText = "Monday"; break;
+                case "2": day_put_text.innerText = "Tuesday"; break;
+                case "3": day_put_text.innerText = "Wednsday"; break;
+                case "4": day_put_text.innerText = "Thursday"; break;
+                case "5": day_put_text.innerText = "Friday"; break;
+                case "6": day_put_text.innerText = "Saturday"; break;
+                case "7": day_put_text.innerText = "Sunday"; break;
                 default: console.error('Blyat');
             }
         });
@@ -3131,7 +3025,7 @@ let UI = {
                     properties.hilight = true
                 } else {
                     document.getElementById('hilight_switch_container').className = 'switch_container_dissabled';
-                    properties.hilight = true
+                    properties.hilight = false
                 }
             },
         },
