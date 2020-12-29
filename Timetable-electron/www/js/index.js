@@ -174,8 +174,7 @@ let config = {
                 }
             } else {//file does not exist, was moved, deleted or is inaccesible
                 config.data = JSON.parse(localStorage.getItem("TT001_cfg"))
-                alert("file does not exist, was moved, deleted or is otherwise inaccesible, please select a new location to save app data ")
-                config.selectlocation();
+                notify.new("", "file does not exist, was moved, deleted or is otherwise inaccesible, please select a new location to save app data", function () { config.selectlocation(); })
             }
         } else {//load from application storage
             config.data = JSON.parse(localStorage.getItem("TT001_cfg"))
@@ -323,6 +322,7 @@ let config = {
         console.warn('Configuration backup initiated')
         var always_on_top_state = main.checkontop()
         var date = new Date();
+        
         if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
         var filepath = dialog.showSaveDialog(remote.getCurrentWindow(), {//electron file save dialogue
             defaultPath: "TT001_cfg backup " + Number(date.getMonth() + 1) + " - " + date.getDate() + " - " + date.getFullYear(),
