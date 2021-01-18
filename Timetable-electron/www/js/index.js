@@ -322,14 +322,13 @@ let config = {
         console.warn('Configuration backup initiated')
         var always_on_top_state = main.checkontop()
         var date = new Date();
-        
-        if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
-        var filepath = dialog.showSaveDialog(remote.getCurrentWindow(), {//electron file save dialogue
-            defaultPath: "TT001_cfg backup " + Number(date.getMonth() + 1) + " - " + date.getDate() + " - " + date.getFullYear(),
-            buttonLabel: "Save", filters: [{ name: 'JSON', extensions: ['json'] }]
-        });
 
-        await filepath.then((filepath) => {//resolve filepath promise
+        if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
+        dialog.showSaveDialog(remote.getCurrentWindow(), {//electron file save dialogue
+            defaultPath: `TT001_backup ${Number(date.getMonth() + 1)} - ${date.getDate()} - ${date.getFullYear()}.json`,
+            buttonLabel: "Save", filters: [{ name: 'JSON', extensions: ['json'] }]
+        }
+        ).then((filepath) => {//resolve filepath promise
             console.log(filepath)
             if (filepath.canceled == true) {//the file save dialogue was canceled my the user
                 console.warn('The file dialogue was canceled by the user')
@@ -721,16 +720,16 @@ let table = {
                 console.log('Time rows found value: ', rows);
 
                 switch (rows) {//set font size dependent on rows value
-                    case 1: timetable.style.fontSize = '11vh'; break;
-                    case 2: timetable.style.fontSize = '10vh'; break;
-                    case 3: timetable.style.fontSize = '9vh'; break;
-                    case 4: timetable.style.fontSize = '8vh'; break;
-                    case 5: timetable.style.fontSize = '7vh'; break;
-                    case 6: case 7: timetable.style.fontSize = '6vh'; break;
-                    case 8: timetable.style.fontSize = '5vh'; break;
-                    case 9: timetable.style.fontSize = '3.4vh'; break;
-                    case 10: case 11: timetable.style.fontSize = '4vh'; break;
-                    case 12: case 13: case 14: case 15: case 16: timetable.style.fontSize = '3vh'; break;
+                    case 1: timetable.style.fontSize = '10vh'; break;
+                    case 2: timetable.style.fontSize = '9vh'; break;
+                    case 3: timetable.style.fontSize = '8vh'; break;
+                    case 4: timetable.style.fontSize = '7vh'; break;
+                    case 5: timetable.style.fontSize = '6vh'; break;
+                    case 6: case 7: timetable.style.fontSize = '5vh'; break;
+                    case 8: timetable.style.fontSize = '4vh'; break;
+                    case 9: timetable.style.fontSize = '3vh'; break;
+                    case 10: case 11: timetable.style.fontSize = '3vh'; break;
+                    case 12: case 13: case 14: case 15: case 16: timetable.style.fontSize = '2vh'; break;
                     case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: timetable.style.fontSize = '2vh'; break;
                     default:
                         console.log('Row error, defaulted :', rows);
@@ -2143,6 +2142,7 @@ let manage = {
         function build_bar_db1(index) { //Builds timetable from database
 
             //check if block is homeless (has no table or its tables been deleted)
+            let homeless = true;
             for (let i in config.data.table_details) {
                 if (config.data.table_details[i].identifier == config.data.table1_db[index].show) { homeless = false; break; }
             }
@@ -2640,6 +2640,39 @@ let UI = {
             }
         });
 
+        //name autofill
+        document.getElementById('name_put').addEventListener('keydown', function () {
+            console.log('Name autofill fired')
+            setTimeout(() => {
+                if (document.getElementById('name_put').value == "") {
+                    //clear autofill
+                    document.getElementById('name_autofill').innerHTML = "";
+                } else {
+                    document.getElementById('name_autofill').innerHTML = "";
+                    for (i = 0; i < config.data.table1_db.length; i++) {
+                        if (config.data.table1_db[i].name.indexOf(document.getElementById('name_put').value.toString()) != -1) {
+                            autofill_name(i)
+                        } else {
+                            //nothing found
+                        }
+                    }
+                }
+
+            }, 200)
+        })
+
+        function autofill_name(i) {
+
+            var fillbar = document.createElement('div');
+            var name_autofill = config.data.table1_db[i].name;
+            fillbar.setAttribute('class', 'fillbar');
+            fillbar.innerHTML = config.data.table1_db[i].name;
+            fillbar.addEventListener('click', function () {
+                document.getElementById('name_autofill').classList = "autofill_container"
+                document.getElementById('name_put').value = name_autofill;
+            });
+            document.getElementById('name_autofill').appendChild(fillbar);
+        }
         //Set switch positions
         UI.setting.hilight.setpostition();
         UI.setting.animation.setpostition();
