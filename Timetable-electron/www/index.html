@@ -407,6 +407,14 @@
             <button class="config_btn" id="backup_btn" title="Backup configration to a file">Backup</button>
             <button class="config_btn" id="restore_btn" title="Restore configuration from a file">Restore</button>
         </div>
+        <div class="config-manage-pannel">
+            <input id="config_text" class="half_pathrepresenter" placeholder="import/export string configuration"
+                value=""
+                title="configuration string convenient for users with clipboard sharing who don't want to use external config files"></input>
+            <button class="config_btn" id="import_from_text" title="import config string">import</button>
+            <button class="config_btn" id="export_to_clipboard"
+                title="export config string to clipboard">export</button>
+        </div>
 
         <!-- Retired because im the only one who'll use this for now -->
         <div class="Setting_title">Theme</div>
@@ -573,7 +581,8 @@
         <!-- Background image selector -->
         <div class="Setting_title">Wallpaper</div>
         <div class="config-manage-pannel">
-            <input id="wallpaper_pathrepresenter" value="desktop wallpaper" title="wallpaper location" readonly></input>
+            <input id="wallpaper_pathrepresenter" class="half_pathrepresenter" value="desktop wallpaper"
+                title="wallpaper location" readonly></input>
             <button class="config_btn" id="select_wallpaper_btn" title="choose your own background">Select</button>
             <button class="config_btn" id="default_wallpaper_btn" title="Use default wallpaper">default</button>
         </div>
@@ -696,7 +705,7 @@
             </div>
         </div>
         <div class="dataspace" id="manage_dataspace">
-            
+
         </div>
         <div id="dataentry_screen">
             <table>

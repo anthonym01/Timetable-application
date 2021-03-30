@@ -1336,6 +1336,7 @@ td {
     background-color: inherit;
     color: inherit;
 }
+
 #detail_put {
     width: calc(100% - 1vh);
     height: 30vh;
@@ -1357,6 +1358,7 @@ td {
     border: 0.5vh solid var(--primary_hue);
     outline: none;
 }
+
 #dataentry_screen input:focus {
     border: none;
     border-bottom: 0.7vh solid var(--text-color);
@@ -1700,10 +1702,10 @@ td {
     transition: background 50ms;
 }
 
-#pathrepresenter {
+.pathrepresenter {
     position: relative;
     margin-top: 0.5vh;
-    width: 50%;
+    width: 100%;
     height: 3vh;
     border-radius: 1.5vh;
     padding: 1vh;
@@ -1711,6 +1713,7 @@ td {
     background-color: var(--background-color);
     color: var(--text-color);
     border: none;
+    text-align: center;
 }
 
 .accent-color-selector {
@@ -2802,11 +2805,12 @@ td {
         font-family: Lexend_Deca;
         margin-top: 1vh;
     }
-    
+
     #detail_put:focus {
         border: 0.5vh solid var(--primary_hue);
         outline: none;
     }
+
     #dataentry_screen input:focus {
         border: none;
         border-bottom: 0.4vh solid var(--text-color);

@@ -441,7 +441,7 @@ a:hover {
     width: 4vw;
     line-height: 6vw;
     transition: opacity 200ms;
-    text-shadow: 0vh 0vh 0.5vh var(--text-color);
+    text-shadow: 0vh 0vh 1.5vh var(--primary_hue);
     /*overflow: hidden;*/
 }
 
@@ -2037,7 +2037,7 @@ td {
     text-align: center;
 }
 
-#wallpaper_pathrepresenter {
+.half_pathrepresenter {
     position: relative;
     margin-top: 0.5vh;
     width: 50%;

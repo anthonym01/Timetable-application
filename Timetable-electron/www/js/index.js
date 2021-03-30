@@ -1,6 +1,6 @@
-const { remote } = require('electron');//Remote electron module
+const { remote, clipboard } = require('electron');//Remote electron module
 const main = remote.require('./main'); //acess export functions in main
-const { dialog, Menu, MenuItem, shell, systemPreferences, nativeTheme, clipboard } = remote;
+const { dialog, Menu, MenuItem, shell, systemPreferences, nativeTheme } = remote;
 const path = require('path');//path
 const fs = require('fs');//fil system access
 
@@ -121,6 +121,7 @@ function textboxmenu() {
     document.getElementById('wallpaper_pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     document.getElementById('pathrepresenter').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
     detail_put.addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
+    document.getElementById('config_text').addEventListener('contextmenu', (event) => { popupmenu(event) }, false)
 
     function popupmenu(event) {
         event.preventDefault()
@@ -336,7 +337,7 @@ let config = {
                 main.write_object_json_out(filepath.filePath, JSON.stringify(config.data))//hand off writing the file to main process
             }
         }).catch((err) => {//catch error
-            alert('An error occured ', err.message);
+            console.warn('An error occured ', err.message);
         }).finally(() => {
             if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if it was on, turn it back on
         })
@@ -633,10 +634,11 @@ let table = {
             }))
 
             tempblock.addEventListener('contextmenu', function (e) {//popup context menu on alt click
-                e.stopPropagation();
-                e.preventDefault()
+                e.stopPropagation();//important
+                e.preventDefault();
                 context_menu.popup({ window: remote.getCurrentWindow() })//popup context menu in current window
             })
+
             console.log('Block :', index, ' Check complete');
         }
 
@@ -2547,6 +2549,7 @@ let UI = {
         document.body.addEventListener('keyup', function (e) {
             console.log('keycode: ', e.key)
             if (e.key == 'Escape') {//esc key mashed
+                e.preventDefault();
                 if (document.getElementById('dataentry_screen').style.display == "block") {
                     manage.dialogue.close()
                 } else if (document.getElementById('manage_view').style.display == "block") {
@@ -2687,26 +2690,17 @@ let UI = {
         if (main.get_always_on_top() == true) {
             main.setontop()
             document.getElementById('always_on_top_btn').classList = "statusbtn_active"
-        } else {
-            main.setnotontop()
-        }
+        } else { main.setnotontop() }
 
         if (main.get_use_alt_location() == true) {
-            if (process.platform == 'win32') {
-                document.getElementById('pathrepresenter').value = main.get_alt_location() + '\\TT001_cfg config.json'
-            } else {
-                document.getElementById('pathrepresenter').value = main.get_alt_location() + '/TT001_cfg config.json'
-            }
+            document.getElementById('pathrepresenter').value = path.join(main.get_alt_location(), 'TT001_cfg config.json');
+
 
             document.getElementById('pathrepresenter').title = "double click to open"
             document.getElementById('pathrepresenter').addEventListener('dblclick', function () {
-                if (process.platform == 'win32') {
-                    shell.showItemInFolder(main.get_alt_location() + '\\TT001_cfg config.json')
-                } else {
-                    shell.showItemInFolder(main.get_alt_location() + '/TT001_cfg config.json')
-                }
-
+                shell.showItemInFolder(path.join(main.get_alt_location(), 'TT001_cfg config.json'))
             })
+
             document.getElementById('pathrepresenter').readonly = true;//unlock path input
         } else {
             document.getElementById('pathrepresenter').value = "application storage"
@@ -2788,6 +2782,9 @@ let UI = {
             e.preventDefault()
             UI.close_tile()
         })
+
+        document.getElementById('export_to_clipboard').addEventListener('click', function () { UI.setting.importer.export() })
+        document.getElementById('import_from_text').addEventListener('click', function () { UI.setting.importer.import() })
 
     },
     hue_selec: function (hue) {
@@ -3191,6 +3188,7 @@ let UI = {
                     document.getElementById('table1').classList = "view"
                     document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
                     document.getElementById('menu_btn').style.display = "block"
+                    //document.getElementById('always_on_top_btn').style.display="none"
                 } else {
                     document.getElementById('title_bar').classList = "title_bar_frameless"
                     document.getElementById('manage_view').classList = "view_framless"
@@ -3198,6 +3196,7 @@ let UI = {
                     document.getElementById('table1').classList = "view_framless"
                     document.getElementById('frame_switch_container').className = 'switch_container_active';
                     document.getElementById('menu_btn').style.display = "none"
+                    //document.getElementById('always_on_top_btn').style.display="block"
                 }
             },
         },
@@ -3395,6 +3394,25 @@ let UI = {
                     document.getElementById('menu_switch_container').className = 'switch_container_dissabled';
                 }
             },
+        },
+        importer: {
+            import: function () {
+                try {
+                    var srtingconfig = JSON.parse(document.getElementById('config_text').value);
+                    if (srtingconfig.key == "TT01") {//check if file has key
+                        config.data = srtingconfig;
+                        maininitalizer()
+                    } else {//no key
+
+                    }
+                } catch (err) {
+
+                }
+            },
+            export: function () {
+                console.log('export to clipboard')
+                clipboard.writeText(JSON.stringify(config.data))
+            }
         }
     },
 }

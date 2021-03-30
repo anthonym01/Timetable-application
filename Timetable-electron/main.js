@@ -27,8 +27,6 @@ let config = {
 	link: false,//true internal, false external
 }
 
-var storage_changed = false;
-
 app.on('ready', function () {
 	if (store.get('default')) {//emsists
 		config = JSON.parse(store.get('default'))
@@ -40,10 +38,7 @@ app.on('ready', function () {
 	create_main_window();
 })
 
-app.on('window-all-closed', function () {
-	if (storage_changed == true) { setstorage() }
-	app.quit();
-})
+app.on('window-all-closed', function () { app.quit() })
 
 function create_main_window() {
 	mainWindow = null
@@ -65,7 +60,8 @@ function create_main_window() {
 			nodeIntegration: true,
 			enableRemoteModule: true,
 			nodeIntegrationInWorker: true,
-			worldSafeExecuteJavaScript: true
+			worldSafeExecuteJavaScript: true,
+			contextIsolation: false
 		},
 	});
 
@@ -129,68 +125,65 @@ module.exports = {
 	get_alt_slideclock: () => { return config.slideclock },
 	set_alt_slideclock: (slideclock) => {
 		config.slideclock = slideclock;
-		storage_changed = true;
+		setstorage()
 	},
 	get_alt_location: () => { return config.alt_location },
 	set_alt_location: (alt_location) => {
 		config.alt_location = alt_location;
-		storage_changed = true;
+		setstorage()
 	},
 	get_use_alt_location: () => { return config.use_alt_location },
 	set_use_alt_location: (use_alt_location) => {
 		config.use_alt_location = use_alt_location;
-		storage_changed = true;
+		setstorage()
 	},
 	get_theme: () => { return config.theme },
 	set_theme: (theme) => {
 		config.theme = theme;
-		storage_changed = true;
+		setstorage()
 	},
 	get_backgroundimg: () => { return config.backgroundimg },
 	set_backgroundimg: (backgroundimg) => {
 		config.backgroundimg = backgroundimg;
-		storage_changed = true;
+		setstorage()
 	},
 	get_hilight_engine: () => { return config.hilight_engine },
 	set_hilight_engine: (hilight_engine) => {
 		config.hilight_engine = hilight_engine;
-		storage_changed = true;
+		setstorage()
 	},
 	get_colorpallet: () => { return config.colorpallet },
 	set_colorpallet: (colorpallet) => {
 		config.colorpallet = colorpallet;
-		storage_changed = true;
+		setstorage()
 	},
 	get_animation: () => { return config.animation },
 	set_animation: (animation) => {
 		config.animation = animation;
-		storage_changed = true;
+		setstorage()
 	},
 	get_tiles: () => { return config.tiles },
 	set_tiles: (tiles) => {
 		config.tiles = tiles;
-		storage_changed = true;
+		setstorage()
 	},
 	get_empty_rows: () => { return config.empty_rows },
 	set_empty_rows: (empty_rows) => {
 		config.empty_rows = empty_rows;
-		storage_changed = true;
+		setstorage()
 	},
 	get_always_on_top: () => { return config.always_on_top },
 	set_always_on_top: (always_on_top) => {
 		config.always_on_top = always_on_top;
-		storage_changed = true;
+		setstorage()
 	},
 	get_link: () => { return config.link },
 	set_link: (link) => {
 		config.link = link;
-		storage_changed = true;
+		setstorage()
 	},
 	write_object_json_out: (filepath, buffer_data) => { write_file(filepath, buffer_data) },
-	closeapp: () => {
-		if (storage_changed == true) { setstorage() }
-		app.quit()
-	},
+	closeapp: () => { app.quit() },
 	minmize_main_window: () => { mainWindow.minimize() },
 	maximize_main_window: () => {
 		if (mainWindow.isMaximized()) {
