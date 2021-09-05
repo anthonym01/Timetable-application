@@ -1,10 +1,10 @@
 {
-  "appId": "com.ANTHONYM.APPNAME",
-  "appName": "blankapp",
+  "appId": "com.anthonym.timetable",
+  "appName": "timetable",
   "bundledWebRuntime": false,
   "npmClient": "yarn",
   "webDir": "www",
-  "linuxAndroidStudioPath": "/usr/bin/android-studio",
+  "linuxAndroidStudioPath": "/opt/android-studio/bin/studio.sh",
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0

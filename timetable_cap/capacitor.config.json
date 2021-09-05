@@ -1,0 +1,11 @@
+{
+  "appId": "com.anthonym.timetable",
+  "appName": "timetable",
+  "bundledWebRuntime": true,
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
