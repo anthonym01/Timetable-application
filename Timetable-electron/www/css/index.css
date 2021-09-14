@@ -1950,6 +1950,12 @@ td {
 #setting_view {
     overflow-x: hidden;
     overflow-y: scroll;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    left: unset;
+    height: 50vh;
+    width: 8rem;
     background-color: var(--shade_color);
     z-index: 999
 }
