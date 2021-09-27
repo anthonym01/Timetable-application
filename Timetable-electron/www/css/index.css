@@ -46,6 +46,7 @@
     --inversion_factor: 0%;
     --cell_color: rgba(0, 0, 0, 0.1);
     --shade_color: rgba(0, 0, 0, 0.6);
+    --deep_shade: rgba(0, 0, 0, 0.863);
     /*overwrites*/
     --timetable_background: url('../img/blyatground.webp');
     --book_closed: url('../img/manage-white.webp');
@@ -1954,10 +1955,12 @@ td {
     top: 30px;
     right: 0;
     left: unset;
-    height: 50vh;
-    width: 8rem;
-    background-color: var(--shade_color);
-    z-index: 999
+    height: 70vh;
+    min-width: 8rem;
+    width: 40rem;
+    background-color: var(--deep_shade);
+    z-index: 999;
+    border-radius: 0rem 0rem 4rem 0rem;
 }
 
 #setting_view::-webkit-scrollbar {
