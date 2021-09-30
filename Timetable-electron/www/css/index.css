@@ -385,9 +385,9 @@ body {
     width: 100vw;
     -webkit-touch-callout: none;
     /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
     /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;
+    user-select: none;
     /* prevent copy paste, to allow, change 'none' to 'text' */
     background-color: var(--background-color);
     color: var(--text-color);
@@ -1960,7 +1960,7 @@ td {
     width: 40rem;
     background-color: var(--deep_shade);
     z-index: 999;
-    border-radius: 0rem 0rem 4rem 0rem;
+    border-radius: 0rem 0rem 0rem 2rem;
 }
 
 #setting_view::-webkit-scrollbar {

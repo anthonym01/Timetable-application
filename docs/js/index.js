@@ -1,50 +1,58 @@
-const { Browser, Toast } = Capacitor.Plugins;//plugins
+const { Toast, App, Clipboard } = Capacitor.Plugins;//plugins
 
-async function open_link(link) { await Browser.open({ url: link }); }
 
-/*
-var app = {// Application Constructor
-    initialize: function () {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-        document.addEventListener("backbutton", this.onBackKeyDown, true);
-        document.addEventListener("pause", this.onPause, false);
-        document.addEventListener("resume", this.onResume, false);
-    },// deviceready Event Handler
-    onDeviceReady: function () {//device ready event
-        maininitalizer()
-        //this.receivedEvent('deviceready');
-        console.log('Device Ready...');
-    },
-    onBackKeyDown: function () {//Back button pressed event
-        console.log('"Backbtn" event triggered');
-        //event.preventDefault();
-        //utility.exit_strategy();
-        back()
-    },
-    onPause: function () {//application pause event
-        console.log('"pause" event triggered');
-        table.clock.stop_clock();//Stop ze clock
-    },
-    onResume: function () {
-        console.log('"Resume" event triggered');
-        if (config.properties.view == 'table') { table.clock.start_clock() }//resume clock tick
-    },
+App.addListener('appStateChange', ({ isActive }) => {// app state is changed, usually sent to the background or suspended
+    console.warn('App state changed. Is active: ', isActive);
+    if (isActive) {
+        //table.clock.stop_clock();//Stop ze clock
+    } else {
+        //if (config.properties.view == 'table') { table.clock.start_clock() }//resume clock tick
+    }
+});
 
-    // Update DOM on a Received Event
-    /*receivedEvent: function (id) {
-        let parentElement = document.getElementById(id);
-        let listeningElement = parentElement.querySelector('.listening');
-        let receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
-    }*/
-//}; app.initialize();
 
 window.addEventListener('load', function () { maininitalizer() })
 
+document.getElementById('export_to_clipboard').addEventListener('click', async function () {
+    document.getElementById("config_text").value = JSON.stringify(config.data)
+    clipboard(JSON.stringify(config.data))
+
+    Toast.show({
+        text: 'config coppied to Clipboard',
+        duration: 'long',
+        position: 'bottom',
+    });
+
+})
+document.getElementById('import_from_text').addEventListener('click', async function () {
+
+
+    let parsed_data = JSON.parse(document.getElementById("config_text").value)
+
+    if (parsed_data.key == "TT01") {
+        console.log('This is a config file, load its ass')
+        utility.toast('Loaded configuration from: ' + experimentalpath)
+
+        config.data = parsed_data;
+        config.save()
+        UI.setting.hilight.setpostition()
+        UI.setting.animation.setpostition()
+        UI.setting.tiles.setpostition()
+        UI.setting.Row.setpostition()
+        UI.setting.wallpaper.set_wallpaper()
+        UI.setting.set_theme()
+        table.data_render()
+        manage.initalize()
+    } else {
+        console.log('This is not a config file for this app')
+    }
+    /*Toast.show({
+        text: 'config coppied to Clipboard',
+        duration: 'long',
+        position: 'bottom',
+    });*/
+
+})
 function maininitalizer() {
 
     if (localStorage.getItem(config.configlocation)) {
@@ -64,7 +72,7 @@ function maininitalizer() {
         //UI.navigate.TABLE()
         console.log('Closing loading screen...')
         table.hilight_engine_go_vroom()
-        table.clock.start_clock() 
+        //table.clock.start_clock()
         clocktick()
         setInterval(() => { clocktick() }, 1000)
         //document.getElementById('Loading').style.display = 'none'
@@ -303,40 +311,14 @@ let config = {
 
         filepath = '/timetable_backup.json'
 
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {//Request access to file system
-
-            fs.root.getFile(filepath, { create: true, exclusive: false }, function (fileEntry) {//Creates fileentry relitive to the root directory on android /storage/emulated/0/
-                console.log("fileEntry is file :" + fileEntry.isFile.toString())// is file a file?
-                fileEntry.createWriter(function (fileWriter) {//creates file writer from file entry
-
-                    fileWriter.write(JSON.stringify(config.data))//write to file
-
-                    fileWriter.onwriteend = function () {//file writing complete
-                        console.log("Successful file write: ", fileEntry.fullPath)
-                        utility.toast("Saved to: " + fileEntry.fullPath)
-                    }
-
-                    fileWriter.onerror = function (e) {//error
-                        console.log("Failed file write: " + e.toString())
-                        utility.toast("Failed file write: " + e.toString())
-                    }
-                })
-
-            }, function () {//file entry fails
-                console.log('failed to create file entry')
-                utility.toast('failed to create file entry, app may not have file permissions')
-            })
-        }, function () {//No file permission given
-            console.error('Failed to get file permissions')
-            utility.toast('Failed to get file permissions')
-        })
     },
     restore: async function () { //restore configuration from file
         console.log('Configuration restore initiated')
 
         //filepath = '/testfile.json'//filepath
-        var file = chooser.getFile()
+        //var file = chooser.getFile()
 
+        /*
         await file.then((file) => {
             console.log('FIle chosen: ', file)
             window.resolveLocalFileSystemURL(file[0].uri, function (Entry) {
@@ -390,7 +372,7 @@ let config = {
                 })
 
             }, function () { console.error('Failed to resolve URI') })
-        })
+        })*/
     }
 }
 
@@ -403,11 +385,11 @@ let table = {
     },
     data_render: function () {
         console.log('Table render started')
-        var i = 0;
+        //var i = 0;
 
         //wjipe main cells
         var jkx = document.querySelectorAll(".jkx")
-        for (i = 0; i < jkx.length; i++) {
+        for (let i = 0; i < jkx.length; i++) {
             jkx[i].innerHTML = ""
             jkx[i].style.display = ""
         }
@@ -419,7 +401,7 @@ let table = {
         document.getElementById('day4').style.display = '';
         document.getElementById('day5').style.display = '';
         document.getElementById('day6').style.display = '';
-        for (i = 0; i < 24; i++) {
+        for (let i = 0; i < 24; i++) {
             document.getElementById('timerow_' + i).style.display = "";
         }
 
@@ -442,7 +424,7 @@ let table = {
                 manage.dialogue.open()
             })*/
         } else {
-            for (i = 0; i < config.data.table1_db.length; i++) { //Get minimum time and maximum time to construct correct height
+            for (let i = 0; i < config.data.table1_db.length; i++) { //Get minimum time and maximum time to construct correct height
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
                     let starthraw = Number(config.data.table1_db[i].start) - config.data.table1_db[i].start % 1; // taking away the modulus 1 of itself removes the remainder
                     config.properties.min = Math.min(starthraw, config.properties.min); //find minimum time in all datu
@@ -450,7 +432,7 @@ let table = {
                 }
             }
             console.log('Table minimum found to be: ', config.properties.min, ' Table maximum found to be: ', config.properties.max)
-            for (i = 0; i < config.data.table1_db.length; i++) { //construct table
+            for (let i = 0; i < config.data.table1_db.length; i++) { //construct table
                 console.log('Data run on index :', i);
                 if (config.data.table1_db[i].deleted != true && config.data.table1_db[i].show == config.data.table_selected) {
                     build_block_db1(i);
@@ -534,7 +516,7 @@ let table = {
                 let detail_row = document.createElement("tr");
                 let detail_content = document.createElement("td");
                 //detail_content.setAttribute("colspan", 2);
-                detail_content.innerText = config.data.table1_db[index].detail;
+                detail_content.innerHTML = marked(config.data.table1_db[index].detail);
                 detail_row.appendChild(detail_content);
                 sub_tab.appendChild(detail_row);
                 doot.appendChild(sub_tab);
@@ -627,6 +609,9 @@ let table = {
                 tempblock.style.backgroundColor = "hsl(" + config.data.table1_db[index].color.hue + "," + config.data.table1_db[index].color.sat + "%," + config.data.table1_db[index].color.light + "%)";
                 tempblock.style.height = blockheight + '%';
                 let blocktop = document.getElementById('live_clock').offsetHeight * startminute / 60; //gets the height of a cell in pixels and the multiples by minute percentage
+
+                console.log(blocktop, document.getElementById('live_clock').getBoundingClientRect())
+
                 tempblock.style.transform = "translate(-0.5vh," + blocktop + 'px' + ")";
                 if (config.data.table1_db[index].color.light < 49) {
                     tempblock.style.color = "white"
@@ -671,7 +656,7 @@ let table = {
                             console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
                     }
                     if (config.data.table1_db[index].detail != undefined) {
-                        document.getElementById('detail_cell').innerText = config.data.table1_db[index].detail;
+                        document.getElementById('detail_cell').innerHTML = marked(config.data.table1_db[index].detail);
                     } else {
                         document.getElementById('detail_cell').innerText = "No details"
                     }
@@ -874,722 +859,6 @@ let table = {
 
         }
     },
-    clock: {
-        clock_tick_trigger: null, //setInterval(()=>{table.clock.clock_tick()},1000),
-        clock_tick: function () {
-            console.log('Clock ticks');
-            let date = new Date();
-            document.getElementById('live_clock').innerHTML = date.toLocaleTimeString();
-            switch (date.getDay()) { //Date switch
-                case 0:
-                    document.getElementById('day0').style.backgroundColor = 'red';
-                    document.getElementById('day1').style.backgroundColor = '';
-                    document.getElementById('day2').style.backgroundColor = '';
-                    document.getElementById('day3').style.backgroundColor = '';
-                    document.getElementById('day4').style.backgroundColor = '';
-                    document.getElementById('day5').style.backgroundColor = '';
-                    document.getElementById('day6').style.backgroundColor = '';
-                    break;
-                case 1:
-                    document.getElementById('day0').style.backgroundColor = '';
-                    document.getElementById('day1').style.backgroundColor = 'red';
-                    document.getElementById('day2').style.backgroundColor = '';
-                    document.getElementById('day3').style.backgroundColor = '';
-                    document.getElementById('day4').style.backgroundColor = '';
-                    document.getElementById('day5').style.backgroundColor = '';
-                    document.getElementById('day6').style.backgroundColor = '';
-                    break;
-                case 2:
-                    document.getElementById('day0').style.backgroundColor = '';
-                    document.getElementById('day1').style.backgroundColor = '';
-                    document.getElementById('day2').style.backgroundColor = 'red';
-                    document.getElementById('day3').style.backgroundColor = '';
-                    document.getElementById('day4').style.backgroundColor = '';
-                    document.getElementById('day5').style.backgroundColor = '';
-                    document.getElementById('day6').style.backgroundColor = '';
-                    break;
-                case 3:
-                    document.getElementById('day0').style.backgroundColor = '';
-                    document.getElementById('day1').style.backgroundColor = '';
-                    document.getElementById('day2').style.backgroundColor = '';
-                    document.getElementById('day3').style.backgroundColor = 'red';
-                    document.getElementById('day4').style.backgroundColor = '';
-                    document.getElementById('day5').style.backgroundColor = '';
-                    document.getElementById('day6').style.backgroundColor = '';
-                    break;
-                case 4:
-                    document.getElementById('day0').style.backgroundColor = '';
-                    document.getElementById('day1').style.backgroundColor = '';
-                    document.getElementById('day2').style.backgroundColor = '';
-                    document.getElementById('day3').style.backgroundColor = '';
-                    document.getElementById('day4').style.backgroundColor = 'red';
-                    document.getElementById('day5').style.backgroundColor = '';
-                    document.getElementById('day6').style.backgroundColor = '';
-                    break;
-                case 5:
-                    document.getElementById('day0').style.backgroundColor = '';
-                    document.getElementById('day1').style.backgroundColor = '';
-                    document.getElementById('day2').style.backgroundColor = '';
-                    document.getElementById('day3').style.backgroundColor = '';
-                    document.getElementById('day4').style.backgroundColor = '';
-                    document.getElementById('day5').style.backgroundColor = 'red';
-                    document.getElementById('day6').style.backgroundColor = '';
-                    break;
-                case 6:
-                    document.getElementById('day0').style.backgroundColor = '';
-                    document.getElementById('day1').style.backgroundColor = '';
-                    document.getElementById('day2').style.backgroundColor = '';
-                    document.getElementById('day3').style.backgroundColor = '';
-                    document.getElementById('day4').style.backgroundColor = '';
-                    document.getElementById('day5').style.backgroundColor = '';
-                    document.getElementById('day6').style.backgroundColor = 'red';
-                    break;
-            }
-            switch (date.getHours()) { //Hour switch
-                case 0:
-                    document.getElementById('timerow_0').className = 'glowrow';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 1:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = 'glowrow';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 2:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = 'glowrow';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 3:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = 'glowrow';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 4:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = 'glowrow';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 5:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = 'glowrow';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 6:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = 'glowrow';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 7:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = 'glowrow';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 8:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = 'glowrow';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 9:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = 'glowrow';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 10:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = 'glowrow';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 11:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = 'glowrow';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 12:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = 'glowrow';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 13:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = 'glowrow';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 14:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = 'glowrow';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 15:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = 'glowrow';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 16:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = 'glowrow';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 17:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = 'glowrow';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 18:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = 'glowrow';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 19:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = 'glowrow';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 20:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = 'glowrow';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 21:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = 'glowrow';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 22:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = 'glowrow';
-                    document.getElementById('timerow_23').className = '';
-                    break;
-                case 23:
-                    document.getElementById('timerow_0').className = '';
-                    document.getElementById('timerow_1').className = '';
-                    document.getElementById('timerow_2').className = '';
-                    document.getElementById('timerow_3').className = '';
-                    document.getElementById('timerow_4').className = '';
-                    document.getElementById('timerow_5').className = '';
-                    document.getElementById('timerow_6').className = '';
-                    document.getElementById('timerow_7').className = '';
-                    document.getElementById('timerow_8').className = '';
-                    document.getElementById('timerow_9').className = '';
-                    document.getElementById('timerow_10').className = '';
-                    document.getElementById('timerow_11').className = '';
-                    document.getElementById('timerow_12').className = '';
-                    document.getElementById('timerow_13').className = '';
-                    document.getElementById('timerow_14').className = '';
-                    document.getElementById('timerow_15').className = '';
-                    document.getElementById('timerow_16').className = '';
-                    document.getElementById('timerow_17').className = '';
-                    document.getElementById('timerow_18').className = '';
-                    document.getElementById('timerow_19').className = '';
-                    document.getElementById('timerow_20').className = '';
-                    document.getElementById('timerow_21').className = '';
-                    document.getElementById('timerow_22').className = '';
-                    document.getElementById('timerow_23').className = 'glowrow';
-                    break;
-                default:
-                    console.error('THEY CHANGED THE RULES FOR DATES NIBBA!!!');
-            }
-        },
-        stop_clock: function () {
-            console.warn('Clock was stopped');
-            clearInterval(this.clock_tick_trigger); //stops teh clock ticking
-            config.properties.clocking = false
-        },
-        start_clock: function () {
-            console.warn('Clock has started');
-            this.clock_tick();
-            setTimeout(() => {
-                this.clock_tick_trigger = setInterval(() => {
-                    this.clock_tick()
-                }, 1000);
-            }, 500); // Set timeout higher if slow devices can initalize intime
-            config.properties.clocking = true
-        },
-    },
     change: {
         changeinterval: null,
         startcheck: function () {
@@ -1638,10 +907,10 @@ let table = {
             if (!event.target.classList.contains('data_block') && !event.target.classList.contains('data_block_active')) { //check if the cell is a data_block
                 if (config.data.theme == "light") {
                     event.target.style.color = 'black';
-                    event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,70%)'; //color the target
+                    event.target.style.backgroundColor = 'hsl(' + rand.number(360, 0) + ',100%,70%)'; //color the target
                 } else if (config.data.theme == "dark") {
                     event.target.style.color = 'black';
-                    event.target.style.backgroundColor = 'hsl(' + utility.rand.number(360, 0) + ',100%,60%)'; //color the target
+                    event.target.style.backgroundColor = 'hsl(' + rand.number(360, 0) + ',100%,60%)'; //color the target
                 }
                 setTimeout(() => {
                     event.target.style.backgroundColor = "";
@@ -2533,27 +1802,27 @@ let UI = {
         });
         document.getElementById('erraser').addEventListener('click', manage.dialogue.clear);
 
-
-        setTimeout(() => {
-            window.plugins.screensize.get(function (result) {//Check device screen size
-                console.log(result);
-                if (result.diameter > 5.9) {
-                    //tablet size screen
-                    document.getElementById('stylesheet').href = "css/index-tablet.css"
-                    console.warn('Set tablet screen scale with size: ', result.diameter);
-                } else {
-                    //phone size screen
-                    document.getElementById('stylesheet').href = "css/index-phone.css"
-                    console.warn('Set phone screen scale with size: ', result.diameter);
-                }
-            }, function (err) {
-                console.log(err)
-                //error default to phone size
-                document.getElementById('stylesheet').href = "css/index-phone.css"
-                console.error('defaulted to phone screen scale');
-            });
-        }, 500);
-
+        /*
+                setTimeout(() => {
+                    window.plugins.screensize.get(function (result) {//Check device screen size
+                        console.log(result);
+                        if (result.diameter > 5.9) {
+                            //tablet size screen
+                            document.getElementById('stylesheet').href = "css/index-tablet.css"
+                            console.warn('Set tablet screen scale with size: ', result.diameter);
+                        } else {
+                            //phone size screen
+                            document.getElementById('stylesheet').href = "css/index-phone.css"
+                            console.warn('Set phone screen scale with size: ', result.diameter);
+                        }
+                    }, function (err) {
+                        console.log(err)
+                        //error default to phone size
+                        document.getElementById('stylesheet').href = "css/index-phone.css"
+                        console.error('defaulted to phone screen scale');
+                    });
+                }, 500);
+        */
         //Action bar handlers (look about touch triggers)
         document.getElementById('action_bar').addEventListener('mouseover', function () {
             document.getElementById('action_bar').className = "Action_bar_active";
@@ -2665,7 +1934,7 @@ let UI = {
                 setTimeout(() => { table.hilight_engine_go_vroom(); }, 50);*/
             }
             if (config.properties.clocking == false || undefined) {
-                table.clock.start_clock();
+                //table.clock.start_clock();
             }
             config.properties.view = "table";
             document.getElementById('table1').style.display = 'block';
@@ -2682,7 +1951,7 @@ let UI = {
 
             document.getElementById('Loading').style.display = 'none'
             config.properties.view = "manage";
-            table.clock.stop_clock();
+            //table.clock.stop_clock();
             document.getElementById('table1').style.display = 'none';
             document.getElementById('manage_view').style.display = 'block';
             document.getElementById('setting_view').style.display = 'none';
@@ -2697,7 +1966,7 @@ let UI = {
 
             document.getElementById('Loading').style.display = 'none'
             config.properties.view = "setting";
-            table.clock.stop_clock();
+            //table.clock.stop_clock();
             document.getElementById('table1').style.display = 'none';
             document.getElementById('manage_view').style.display = 'none';
             document.getElementById('setting_view').style.display = 'block';
@@ -2941,7 +2210,13 @@ let UI = {
                 if (config.data.empty_rows) {
                     //turn off the switch
                     config.data.empty_rows = false;
-                    utility.toast('Empty Rows dissabled')
+
+                    Toast.show({
+                        text: 'Empty Rows dissabled',
+                        duration: 'long',
+                        position: 'bottom',
+                    });
+
                     console.warn('Empty Rows dissabled');
                     config.properties.changed = true;
                 } else {
@@ -2972,66 +2247,22 @@ let UI = {
     },
 }
 
-function back() {
-    console.log('Back navigation started');
-    if (document.getElementById('dataentry_screen').style.display == 'block') {
-        manage.dialogue.close()
-    } else if (document.getElementById('fullscreen_tile').classList == 'fullscreen_tile_active') {
-        UI.navigate.close_tile()
-    } else if (document.getElementById('table1').style.display != 'block') {
-        UI.navigate.TABLE()
-    } else {
-        utility.exit_strategy();
-    }
+let rand = {//Some usefull thing
+    HEX: function () { return '#' + Math.floor(Math.random() * 16777215).toString(16) /* hex color code */ },
+    RGB: function () { return { RED: this.number(255, 0), GREEN: this.number(255, 0), BLUE: this.number(255, 0) } /* object with RGB color code */ },
+    HSL: function () { return { HUE: this.number(360, 0), SATURATION: this.number(100, 0) + '%', LIGHTENESS: this.number(100, 1) + '%' }/* HSL color code */ },
+    number(max, min) { return Math.floor(Math.random() * (max - min + 1)) + min /* Random number*/ }
 }
 
-let utility = {//Some usefull things
-    exit_strategy: function () {//Heres how to string things togther to make something usefull
-        console.warn('Exit strategy triggered')
-        if (config.properties.edit == true) {
-            table.clock.stop_clock();
-            utility.close()
-        } else {
-            config.properties.edit = true;
-            utility.toast("Press back button again to exit", 2000)
-            setTimeout(() => { config.properties.edit = false }, 2000)
-        }
-    },
-    /*  Close the app   */
-    close: function () {
-        console.trace('App closure triggered via')
-        //config_handler.save()
-        if (navigator.app) {
-            navigator.app.exitApp()
-        } else if (navigator.device) {
-            navigator.device.exitApp()
-        } else {
-            window.close()
-        }
-    },
-    /*  Produce toast messages    */
-    toast: function (text, durration_in_ms, position_top_right_left_bottom, offset_in_px) {
-        if (position_top_right_left_bottom == undefined) { position_top_right_left_bottom = 'bottom' }//default the position
-        if (durration_in_ms == undefined) { durration_in_ms = 4000 }//default the duration
-        if (offset_in_px == undefined) { offset_in_px = -160 }//default the offset
-        window.plugins.toast.showWithOptions({ message: text, duration: durration_in_ms, position: position_top_right_left_bottom, addPixelsY: offset_in_px })
-    },
-    /*  Push text to the keyboard   */
-    clipboard: function (textpush) {
-        copyText.toString()
-        var temptxtbox = document.createElement("input")
-        document.body.appendChild(temptxtbox)
-        temptxtbox.setAttribute("id", "temp_copy")
-        document.getElementById("temp_copy").value = copyText
-        temptxtbox.select()
-        document.execCommand("copy")
-        document.body.removeChild(temptxtbox)
-    },
-    /*  Produce Random numbers  */
-    rand: {
-        HEX: function () { return '#' + Math.floor(Math.random() * 16777215).toString(16) /* hex color code */ },
-        RGB: function () { return { RED: this.number(255, 0), GREEN: this.number(255, 0), BLUE: this.number(255, 0) } /* object with RGB color code */ },
-        HSL: function () { return { HUE: this.number(360, 0), SATURATION: this.number(100, 0) + '%', LIGHTENESS: this.number(100, 1) + '%' }/* HSL color code */ },
-        number(max, min) { return Math.floor(Math.random() * (max - min + 1)) + min /* Random number*/ }
-    },
+async function clipboard(textpush) {//Push text to clipboard
+
+
+    try {
+        Clipboard.write({ string: textpush });
+    } catch (error) {
+        navigator.clipboard.writeText(textpush)
+    }
+
+
+    //navigator.clipboard.writeText(textpush)
 }

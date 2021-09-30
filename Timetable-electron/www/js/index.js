@@ -9,6 +9,9 @@ const marked = require("marked");
 const anchorme = require("anchorme").default; // Converts links in text to clickable links
 const wallpaper = require('wallpaper');//get desktop wallpaper
 
+/*const dropbox = require('dropbox')
+let dbxr = new dropbox({app})*/
+
 const my_website = 'https://anthonym01.github.io/Portfolio/?contact=me';//My website
 
 const detail_cell = document.getElementById('detail_cell');
@@ -3648,3 +3651,44 @@ async function refunctionizelink() {//finds links, changes their default functio
         });
     }
 }
+
+document.getElementById('export_to_clipboard').addEventListener('click', async function () {
+    document.getElementById("config_text").value = JSON.stringify(config.data)
+    clipboard(JSON.stringify(config.data))
+
+    Toast.show({
+        text: 'config coppied to Clipboard',
+        duration: 'long',
+        position: 'bottom',
+    });
+
+})
+document.getElementById('import_from_text').addEventListener('click', async function () {
+
+
+    let parsed_data = JSON.parse(document.getElementById("config_text").value)
+
+    if (parsed_data.key == "TT01") {
+        console.log('This is a config file, load its ass')
+        utility.toast('Loaded configuration from: ' + experimentalpath)
+
+        config.data = parsed_data;
+        config.save()
+        UI.setting.hilight.setpostition()
+        UI.setting.animation.setpostition()
+        UI.setting.tiles.setpostition()
+        UI.setting.Row.setpostition()
+        UI.setting.wallpaper.set_wallpaper()
+        UI.setting.set_theme()
+        table.data_render()
+        manage.initalize()
+    } else {
+        console.log('This is not a config file for this app')
+    }
+    /*Toast.show({
+        text: 'config coppied to Clipboard',
+        duration: 'long',
+        position: 'bottom',
+    });*/
+
+})
