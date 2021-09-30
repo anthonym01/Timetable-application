@@ -1,13 +1,13 @@
 {
-  "name": "App",
-  "short_name": "App",
+  "name": "Timetable",
+  "short_name": "Timetable",
   "start_url": "index.html",
-  "display": "standalone",
+  "display": "minimal-ui",
   "icons": [{
     "src": "assets/icon/icon.png",
     "sizes": "1024x1024",
     "type": "image/png"
   }],
-  "background_color": "#31d53d",
-  "theme_color": "#31d53d"
+  "background_color": "#000000",
+  "theme_color": "#000000"
 }
