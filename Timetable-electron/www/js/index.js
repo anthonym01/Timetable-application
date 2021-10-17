@@ -9,6 +9,11 @@ const marked = require("marked");
 const anchorme = require("anchorme").default; // Converts links in text to clickable links
 const wallpaper = require('wallpaper');//get desktop wallpaper
 
+
+
+
+
+
 /*const dropbox = require('dropbox')
 let dbxr = new dropbox({app})*/
 
@@ -138,7 +143,6 @@ function textboxmenu() {
 /*  Config file handler    */
 let config = {
     data: {
-        key: "TT01",
         table_selected: 1,
         table_details: [{ purpose: "table #1", deleted: false, identifier: 1 },],// Details about different tables
         table1_db: [],// Table database
@@ -424,6 +428,7 @@ let config = {
         document.getElementById('pathrepresenter').value = 'application storage'
     },
 }
+
 
 /*  Table generator */
 let table = {
