@@ -9,11 +9,6 @@ const marked = require("marked");
 const anchorme = require("anchorme").default; // Converts links in text to clickable links
 const wallpaper = require('wallpaper');//get desktop wallpaper
 
-
-
-
-
-
 /*const dropbox = require('dropbox')
 let dbxr = new dropbox({app})*/
 

@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "electron main.js",
-    "builder-linux": "electron-builder --linux appimage pacman deb zip snap",
+    "builder-linux": "electron-builder --linux appimage tar.gz rpm pacman deb zip snap",
     "builder-win": "electron-builder --win --ia32 --x64",
     "postinstall": "electron-builder install-app-deps"
   },
