@@ -12,66 +12,121 @@
 
     <script type="module"
         src="https://unpkg.com/@ionic/pwa-elements@latest/dist/ionicpwaelements/ionicpwaelements.esm.js"></script>
-    <script nomodule
-        src="https://unpkg.com/@ionic/pwa-elements@latest/dist/ionicpwaelements/ionicpwaelements.js"></script>
+    <script nomodule src="https://unpkg.com/@ionic/pwa-elements@latest/dist/ionicpwaelements/ionicpwaelements.js">
+    </script>
 
     <link rel="shortcut icon" href="img/icon.webp" type="image/webp">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" id="nomation" href="">
     <meta name="theme-color" content="#31d53d">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta charset="utf-8">
+    <!--<meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">-->
+    <!--<meta http-equiv="Content-Security-Policy" script-src='unsafe-inline'>-->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" href="./img/icon.webp" id="favico" type="image/png" sizes="32x32">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" id="nomation" href="">
+    <style id="nomation_box">
 
+    </style>
+    <title id="pg_title">Timetable</title>
 </head>
 
-<body id="body" class="dark">
-    <!--Loading Screen-->
-    <div id="Loading" style="display: none;">
-        <div id="title">Timetable</div>
-        <!--Title-->
-        <div id="loader">
-            <div id="loadprogress"></div>
-        </div>
-        <!--Spinny boi in protrait, progressbar in landscape-->
-    </div>
-
-    <!--Page shader-->
-    <div id="page_shade"></div>
-
-    <!--Header  & menus -->
-    <div class="Action_bar" id="action_bar">
-        <div class="menubtn_active" id="table_btn" title="Time table">
-            <div class="menubtn_icon" id="table_btn_icon"></div>
-            <div class="menu_txt" id="selected_table">Timetable</div>
-        </div>
-        <div class="menubtn" id="manage_btn" title="Manage classes">
-            <div class="menubtn_icon" id="manage_btn_icon"></div>
-            <div class="menu_txt">Manage</div>
-        </div>
-        <div class="menubtn" id="setting_btn" title="Settings">
-            <div class="menubtn_icon" id="setting_btn_icon"></div>
-            <div class="menu_txt">Settings</div>
-        </div>
-    </div>
+<body class="dark">
 
     <!--Table view-->
-    <view id="table1" style="display: block;">
-        <div id="fullscreen_tile" class="fullscreen_tile">
+    <div class="view" id="table1" style="display: block;">
+        <div class="Clock_lock" id="slideclock">
+            <!--First of hour-->
+            <div class="numberpannel" id="hr1st">
+                <div class="snumber_slide" id="1sthr0">0</div>
+                <div class="snumber_slide" id="1sthr1">1</div>
+            </div>
+            <!--Second of hour-->
+            <div class="numberpannel" id="hr2t" style="left: 4vw;">
+                <div class="snumber_slide" id="2ndhr0">0</div>
+                <div class="snumber_slide" id="2ndhr1">1</div>
+                <div class="snumber_slide" id="2ndhr2">2</div>
+                <div class="snumber_slide" id="2ndhr3">3</div>
+                <div class="snumber_slide" id="2ndhr4">4</div>
+                <div class="snumber_slide" id="2ndhr5">5</div>
+                <div class="snumber_slide" id="2ndhr6">6</div>
+                <div class="snumber_slide" id="2ndhr7">7</div>
+                <div class="snumber_slide" id="2ndhr8">8</div>
+                <div class="snumber_slide" id="2ndhr9">9</div>
+            </div>
+            <div class="numberpannel" style="left: 8vw;width: 2vw;">:</div>
+            <!--First of minute-->
+            <div class="numberpannel" id="min1st" style="left:10vw">
+                <div class="snumber_slide" id="1min0">0</div>
+                <div class="snumber_slide" id="1min1">1</div>
+                <div class="snumber_slide" id="1min2">2</div>
+                <div class="snumber_slide" id="1min3">3</div>
+                <div class="snumber_slide" id="1min4">4</div>
+                <div class="snumber_slide" id="1min5">5</div>
+            </div>
+            <!-- Second of minutes -->
+            <div class="numberpannel" id="min2st" style="left:14vw">
+                <div class="snumber_slide" id="2min0">0</div>
+                <div class="snumber_slide" id="2min1">1</div>
+                <div class="snumber_slide" id="2min2">2</div>
+                <div class="snumber_slide" id="2min3">3</div>
+                <div class="snumber_slide" id="2min4">4</div>
+                <div class="snumber_slide" id="2min5">5</div>
+                <div class="snumber_slide" id="2min6">6</div>
+                <div class="snumber_slide" id="2min7">7</div>
+                <div class="snumber_slide" id="2min8">8</div>
+                <div class="snumber_slide" id="2min9">9</div>
+            </div>
+            <div class="numberpannel" style="left: 18vw;width:2vw">:</div>
+            <!--First of second-->
+            <div class="numberpannel" id="sec1st" style="left:20vw">
+                <div class="snumber_slide" id="1sec0">0</div>
+                <div class="snumber_slide" id="1sec1">1</div>
+                <div class="snumber_slide" id="1sec2">2</div>
+                <div class="snumber_slide" id="1sec3">3</div>
+                <div class="snumber_slide" id="1sec4">4</div>
+                <div class="snumber_slide" id="1sec5">5</div>
+            </div>
+            <!-- Second of second -->
+            <div class="numberpannel" id="sec2st" style="left:24vw">
+                <div class="snumber_slide" id="2sec0">0</div>
+                <div class="snumber_slide" id="2sec1">1</div>
+                <div class="snumber_slide" id="2sec2">2</div>
+                <div class="snumber_slide" id="2sec3">3</div>
+                <div class="snumber_slide" id="2sec4">4</div>
+                <div class="snumber_slide" id="2sec5">5</div>
+                <div class="snumber_slide" id="2sec6">6</div>
+                <div class="snumber_slide" id="2sec7">7</div>
+                <div class="snumber_slide" id="2sec8">8</div>
+                <div class="snumber_slide" id="2sec9">9</div>
+            </div>
+            <div class="numberpannel" id="maridizer" style="left:30vw">
+                <div class="snumber_slide" id="am">AM</div>
+                <div class="snumber_slide" id="pm">PM</div>
+            </div>
+        </div>
+        <div id="fullscreen_tile" class="fullscreen_tile" title="Right click to close">
             <!-- Onclick title card -->
-            <div id="close_btn">Close</div>
+            <div id="close_btn" title="Close">Close</div>
             <div id="fullscreen_tile_tab_container">
                 <table id="tile_table">
                     <tr>
-                        <th id="title_cell" colspan="2"></th>
+                        <th id="title_cell"></th>
                     </tr>
                     <tr>
-                        <td class="lefter">Day :</td>
-                        <td class="righter" id="day_cell"></td>
+                        <td id="day_cell"></td>
                     </tr>
                     <tr>
-                        <td colspan="2" id="time_cell"></td>
+                        <td id="time_cell"></td>
                     </tr>
                     <tr>
-                        <td colspan="2" id="detail_cell"></td>
+                        <td id="detail_cell"></td>
                     </tr>
                 </table>
             </div>
@@ -80,9 +135,10 @@
             <tr>
                 <!--Head row-->
                 <th class="maincell" id="live_clock">live_clock</th>
-                <th class="maincell" id="day1">&nbsp;&nbsp;&nbsp;Monday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day1">&nbsp;&nbsp;&nbsp;Monday&nbsp;&nbsp;&nbsp;
+                </th>
                 <th class="maincell" id="day2">&nbsp;&nbsp;&nbsp;Tuesday&nbsp;&nbsp;&nbsp;</th>
-                <th class="maincell" id="day3">&nbsp;&nbsp;&nbsp;Wednsday&nbsp;&nbsp;&nbsp;</th>
+                <th class="maincell" id="day3">&nbsp;&nbsp;&nbsp;Wednesday&nbsp;&nbsp;&nbsp;</th>
                 <th class="maincell" id="day4">&nbsp;&nbsp;&nbsp;Thursday&nbsp;&nbsp;&nbsp;</th>
                 <th class="maincell" id="day5">&nbsp;&nbsp;&nbsp;Friday&nbsp;&nbsp;&nbsp;</th>
                 <th class="maincell" id="day6">&nbsp;&nbsp;&nbsp;Saturday&nbsp;&nbsp;&nbsp;</th>
@@ -90,7 +146,7 @@
             </tr>
             <tr id="timerow_0">
                 <!--0:00 - 1:00 row-->
-                <th class="maincell">12:00 - 1:00 a.m.</th>
+                <th class="maincell" id="time0">12:00 - 1:00 <small>AM</small></th>
                 <td class="maincell jkx" id="1_0"></td>
                 <td class="maincell jkx" id="2_0"></td>
                 <td class="maincell jkx" id="3_0"></td>
@@ -101,7 +157,7 @@
             </tr>
             <tr id="timerow_1">
                 <!--1:00 - 2:00 row-->
-                <th class="maincell">1:00 - 2:00 a.m.</th>
+                <th class="maincell" id="time1">1:00 - 2:00 a.m.</th>
                 <td class="maincell jkx" id="1_1"></td>
                 <td class="maincell jkx" id="2_1"></td>
                 <td class="maincell jkx" id="3_1"></td>
@@ -112,7 +168,7 @@
             </tr>
             <tr id="timerow_2">
                 <!--2:00 - 3:00 row-->
-                <th class="maincell">2:00 - 3:00 a.m.</th>
+                <th class="maincell" id="time2">2:00 - 3:00 a.m.</th>
                 <td class="maincell jkx" id="1_2"></td>
                 <td class="maincell jkx" id="2_2"></td>
                 <td class="maincell jkx" id="3_2"></td>
@@ -123,7 +179,7 @@
             </tr>
             <tr id="timerow_3">
                 <!--3:00 - 4:00 row-->
-                <th class="maincell">3:00 - 4:00 a.m.</th>
+                <th class="maincell" id="time3">3:00 - 4:00 a.m.</th>
                 <td class="maincell jkx" id="1_3"></td>
                 <td class="maincell jkx" id="2_3"></td>
                 <td class="maincell jkx" id="3_3"></td>
@@ -134,7 +190,7 @@
             </tr>
             <tr id="timerow_4">
                 <!--4:00 - 5:00 row-->
-                <th class="maincell">4:00 - 5:00 a.m.</th>
+                <th class="maincell" id="time4">4:00 - 5:00 a.m.</th>
                 <td class="maincell jkx" id="1_4"></td>
                 <td class="maincell jkx" id="2_4"></td>
                 <td class="maincell jkx" id="3_4"></td>
@@ -145,7 +201,7 @@
             </tr>
             <tr id="timerow_5">
                 <!--5:00 - 6:00 row-->
-                <th class="maincell">5:00 - 6:00 a.m.</th>
+                <th class="maincell" id="time5">5:00 - 6:00 a.m.</th>
                 <td class="maincell jkx" id="1_5"></td>
                 <td class="maincell jkx" id="2_5"></td>
                 <td class="maincell jkx" id="3_5"></td>
@@ -156,7 +212,7 @@
             </tr>
             <tr id="timerow_6">
                 <!--6:00 - 7:00 row-->
-                <th class="maincell">6:00 - 7:00 a.m.</th>
+                <th class="maincell" id="time6">6:00 - 7:00 a.m.</th>
                 <td class="maincell jkx" id="1_6"></td>
                 <td class="maincell jkx" id="2_6"></td>
                 <td class="maincell jkx" id="3_6"></td>
@@ -167,7 +223,7 @@
             </tr>
             <tr id="timerow_7">
                 <!--7:00 - 8:00 row-->
-                <th class="maincell">7:00 - 8:00 a.m.</th>
+                <th class="maincell" id="time7">7:00 - 8:00 a.m.</th>
                 <td class="maincell jkx" id="1_7"></td>
                 <td class="maincell jkx" id="2_7"></td>
                 <td class="maincell jkx" id="3_7"></td>
@@ -178,7 +234,7 @@
             </tr>
             <tr id="timerow_8">
                 <!--8:00 - 9:00 row-->
-                <th class="maincell">8:00 - 9:00 a.m.</th>
+                <th class="maincell" id="time8">8:00 - 9:00 a.m.</th>
                 <td class="maincell jkx" id="1_8"></td>
                 <td class="maincell jkx" id="2_8"></td>
                 <td class="maincell jkx" id="3_8"></td>
@@ -189,7 +245,7 @@
             </tr>
             <tr id="timerow_9">
                 <!--9:00 - 10:00 row-->
-                <th class="maincell">9:00 - 10:00 a.m.</th>
+                <th class="maincell" id="time9">9:00 - 10:00 a.m.</th>
                 <td class="maincell jkx" id="1_9"></td>
                 <td class="maincell jkx" id="2_9"></td>
                 <td class="maincell jkx" id="3_9"></td>
@@ -200,7 +256,7 @@
             </tr>
             <tr id="timerow_10">
                 <!--10:00 - 11:00 row-->
-                <th class="maincell">10:00 - 11:00 a.m.</th>
+                <th class="maincell" id="time10">10:00 - 11:00 a.m.</th>
                 <td class="maincell jkx" id="1_10"></td>
                 <td class="maincell jkx" id="2_10"></td>
                 <td class="maincell jkx" id="3_10"></td>
@@ -211,7 +267,7 @@
             </tr>
             <tr id="timerow_11">
                 <!--11:00 - 12:00 row-->
-                <th class="maincell">11:00 - 12:00 p.m.</th>
+                <th class="maincell" id="time11">11:00 - 12:00 p.m.</th>
                 <td class="maincell jkx" id="1_11"></td>
                 <td class="maincell jkx" id="2_11"></td>
                 <td class="maincell jkx" id="3_11"></td>
@@ -222,7 +278,7 @@
             </tr>
             <tr id="timerow_12">
                 <!--12:00 - 13:00 row-->
-                <th class="maincell">12:00 - 1:00 p.m.</th>
+                <th class="maincell" id="time12">12:00 - 1:00 p.m.</th>
                 <td class="maincell jkx" id="1_12"></td>
                 <td class="maincell jkx" id="2_12"></td>
                 <td class="maincell jkx" id="3_12"></td>
@@ -233,7 +289,7 @@
             </tr>
             <tr id="timerow_13">
                 <!--13:00 - 14:00 row-->
-                <th class="maincell">1:00 - 2:00 p.m.</th>
+                <th class="maincell" id="time13">1:00 - 2:00 p.m.</th>
                 <td class="maincell jkx" id="1_13"></td>
                 <td class="maincell jkx" id="2_13"></td>
                 <td class="maincell jkx" id="3_13"></td>
@@ -244,7 +300,7 @@
             </tr>
             <tr id="timerow_14">
                 <!--14:00 - 15:00 row-->
-                <th class="maincell">2:00 - 3:00 p.m.</th>
+                <th class="maincell" id="time14">2:00 - 3:00 p.m.</th>
                 <td class="maincell jkx" id="1_14"></td>
                 <td class="maincell jkx" id="2_14"></td>
                 <td class="maincell jkx" id="3_14"></td>
@@ -255,7 +311,7 @@
             </tr>
             <tr id="timerow_15">
                 <!--15:00 - 16:00 row-->
-                <th class="maincell">3:00 - 4:00 p.m.</th>
+                <th class="maincell" id="time15">3:00 - 4:00 p.m.</th>
                 <td class="maincell jkx" id="1_15"></td>
                 <td class="maincell jkx" id="2_15"></td>
                 <td class="maincell jkx" id="3_15"></td>
@@ -266,7 +322,7 @@
             </tr>
             <tr id="timerow_16">
                 <!--16:00 - 17:00 row-->
-                <th class="maincell">4:00 - 5:00 p.m.</th>
+                <th class="maincell" id="time16">4:00 - 5:00 p.m.</th>
                 <td class="maincell jkx" id="1_16"></td>
                 <td class="maincell jkx" id="2_16"></td>
                 <td class="maincell jkx" id="3_16"></td>
@@ -277,7 +333,7 @@
             </tr>
             <tr id="timerow_17">
                 <!--17:00 - 18:00 row-->
-                <th class="maincell">5:00 - 6:00 p.m.</th>
+                <th class="maincell" id="time17">5:00 - 6:00 p.m.</th>
                 <td class="maincell jkx" id="1_17"></td>
                 <td class="maincell jkx" id="2_17"></td>
                 <td class="maincell jkx" id="3_17"></td>
@@ -288,7 +344,7 @@
             </tr>
             <tr id="timerow_18">
                 <!--18:00 - 19:00 row-->
-                <th class="maincell">6:00 - 7:00 p.m.</th>
+                <th class="maincell" id="time18">6:00 - 7:00 p.m.</th>
                 <td class="maincell jkx" id="1_18"></td>
                 <td class="maincell jkx" id="2_18"></td>
                 <td class="maincell jkx" id="3_18"></td>
@@ -299,7 +355,7 @@
             </tr>
             <tr id="timerow_19">
                 <!--19:00 - 20:00 row-->
-                <th class="maincell">7:00 - 8:00 p.m.</th>
+                <th class="maincell" id="time19">7:00 - 8:00 p.m.</th>
                 <td class="maincell jkx" id="1_19"></td>
                 <td class="maincell jkx" id="2_19"></td>
                 <td class="maincell jkx" id="3_19"></td>
@@ -310,7 +366,7 @@
             </tr>
             <tr id="timerow_20">
                 <!--20:00 - 21:00 row-->
-                <th class="maincell">8:00 - 9:00 p.m.</th>
+                <th class="maincell" id="time20">8:00 - 9:00 p.m.</th>
                 <td class="maincell jkx" id="1_20"></td>
                 <td class="maincell jkx" id="2_20"></td>
                 <td class="maincell jkx" id="3_20"></td>
@@ -321,7 +377,7 @@
             </tr>
             <tr id="timerow_21">
                 <!--21:00 - 22:00 row-->
-                <th class="maincell">9:00 - 10:00 p.m.</th>
+                <th class="maincell" id="time21">9:00 - 10:00 p.m.</th>
                 <td class="maincell jkx" id="1_21"></td>
                 <td class="maincell jkx" id="2_21"></td>
                 <td class="maincell jkx" id="3_21"></td>
@@ -332,7 +388,7 @@
             </tr>
             <tr id="timerow_22">
                 <!--22:00 - 23:00 row-->
-                <th class="maincell">10:00 - 11:00 p.m.</th>
+                <th class="maincell" id="time22">10:00 - 11:00 p.m.</th>
                 <td class="maincell jkx" id="1_22"></td>
                 <td class="maincell jkx" id="2_22"></td>
                 <td class="maincell jkx" id="3_22"></td>
@@ -343,7 +399,7 @@
             </tr>
             <tr id="timerow_23">
                 <!--23:00 - 24:00 row-->
-                <th class="maincell">11:00 - 11:59 p.m.</th>
+                <th class="maincell" id="time23">11:00 - 11:59 p.m.</th>
                 <td class="maincell jkx" id="1_23"></td>
                 <td class="maincell jkx" id="2_23"></td>
                 <td class="maincell jkx" id="3_23"></td>
@@ -353,10 +409,294 @@
                 <td class="maincell jkx" id="7_23"></td>
             </tr>
         </table>
-    </view>
+    </div>
+
+    <!--Setting View-->
+    <div class="view" id="setting_view">
+        <!-- Configuration pannel -->
+        <div class="Setting_title">Configuration</div>
+        <div class="config-manage-pannel" style="margin-top:2vh;">
+            <input id="pathrepresenter" value="application storage"
+                title="Location where the application data is being stored" readonly></input>
+            <button class="config_btn" id="default_btn"
+                title="use default storage location (in user folder)">Default</button>
+            <button class="config_btn" id="select_btn"
+                title="select a folder to store app configration file">Select</button>
+            <button class="config_btn" id="backup_btn" title="Backup configration to a file">Backup</button>
+            <button class="config_btn" id="restore_btn" title="Restore configuration from a file">Restore</button>
+        </div>
+        <div class="config-manage-pannel">
+            <input id="config_text" class="half_pathrepresenter" placeholder="import/export string configuration"
+                value=""
+                title="configuration string convenient for users with clipboard sharing who don't want to use external config files"></input>
+            <button class="config_btn" id="import_from_text" title="import config string">import</button>
+            <button class="config_btn" id="export_to_clipboard"
+                title="export config string to clipboard">export</button>
+        </div>
+
+        <!-- Retired because im the only one who'll use this for now -->
+        <div class="Setting_title">Theme</div>
+        <div class="selection_container">
+            <!-- Container for themes -->
+            <div class="selectionbox" id="light_theme_selection" title="select light theme">
+                <div class="mincropallet light_pallet" id="light_pallet">
+                    <div class="palletfoot"></div>
+                    <table class="pallet_table" id="light_pallet_table">
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                    </table>
+                    <input type="checkbox" class="selcetion_put" id="light_selection_put"></input>
+                </div>
+                <div class="selection_title">LIGHT</div>
+            </div>
+
+            <div class="selectionbox" id="dark_theme_selection" title="select dark theme">
+                <div class="mincropallet amoled_pallet" id="amoled_pallet">
+                    <div class="palletfoot"></div>
+                    <table class="pallet_table" id="dark_pallet_table">
+
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                    </table>
+                    <input type="checkbox" class="selcetion_put" id="dark_selection_put"></input>
+                </div>
+                <div class="selection_title">DARK</div>
+            </div>
+
+            <div class="selectionbox" id="system_theme_selection" title="follow system theme">
+                <div class="mincropallet amoled_pallet" id="system_pallet">
+                    <div class="palletfoot"></div>
+                    <table class="pallet_table" id="system_pallet_table">
+
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                        <tr>
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                            <td class="maincell"></td class="maincell">
+                        </tr>
+                    </table>
+                    <input type="checkbox" class="selcetion_put" id="system_selection_put"></input>
+                </div>
+                <div class="selection_title">SYSTEM</div>
+            </div>
+        </div>
+        <!-- Background image selector -->
+        <div class="Setting_title">Wallpaper</div>
+        <div class="config-manage-pannel">
+            <input id="wallpaper_pathrepresenter" class="half_pathrepresenter" value="desktop wallpaper"
+                title="wallpaper location" readonly></input>
+            <button class="config_btn" id="select_wallpaper_btn" title="choose your own background">Select</button>
+            <button class="config_btn" id="default_wallpaper_btn" title="Use default wallpaper">default</button>
+        </div>
+
+        <div class="Setting_title">Accent color</div>
+        <div class="accent-color-selector">
+            <div class="accent-blob" id="hueinverse-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue0-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue30-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue60-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue90-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue120-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue150-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue180-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue210-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue240-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue270-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue300-selec" title="select this color"></div>
+            <div class="accent-blob" id="hue330-selec" title="select this color"></div>
+        </div>
+
+        <div class="setting_bar" id="hilight_btn" title="toggle hilights">
+            <div class="Bar_title">Cell Hilights</div>
+            <div class="switch_container_active" id="hilight_switch_container">
+                <div class="switchbdy" id="hilight_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="tiles_btn" title="Use of fullscreen tiles">
+            <div class="Bar_title">Full Tiles</div>
+            <div class="switch_container_active" id="tiles_switch_container">
+                <div class="switchbdy" id="tiles_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="Animations_btn" title="toggle Animations">
+            <div class="Bar_title">Animations</div>
+            <div class="switch_container_active" id="Animations_switch_container">
+                <div class="switchbdy" id="Animations_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="Clock_btn" title="toggle Clock">
+            <div class="Bar_title">Clock</div>
+            <div class="switch_container_active" id="Clock_switch_container">
+                <div class="switchbdy" id="Clock_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="Row_btn" title="toggle Unused space in table">
+            <div class="Bar_title">Remove empty space</div>
+            <div class="switch_container_active" id="Row_switch_container">
+                <div class="switchbdy" id="Row_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="frame_btn" title="toggle Empty cells">
+            <div class="Bar_title">Frame integration</div>
+            <div class="switch_container_active" id="frame_switch_container">
+                <div class="switchbdy" id="frame_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="link_btn" title="Toggle opening links in external browser">
+            <div class="Bar_title">Open links externally</div>
+            <div class="switch_container_active" id="link_switch_container">
+                <div class="switchbdy" id="link_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting_bar" id="menu_btn" title="toggle application menu on or off">
+            <div class="Bar_title">Application menu</div>
+            <div class="switch_container_active" id="menu_switch_container">
+                <div class="switchbdy" id="menu_switchbdy">
+                    <div class="switch"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--management view-->
-    <view id="manage_view">
+    <div class="view" id="manage_view">
         <div class="data_action_header">
             <div id="tablemanger" class="tablemanger" name="dissabled" title="manage tables">
                 <!-- Revised table manager -->
@@ -383,37 +723,24 @@
             </div>
         </div>
         <div class="dataspace" id="manage_dataspace">
-            <div title="Click to edit" class="data_bar" id="bar_2">
-                <div class="sub_optionbar">
-                    <div class="optionbutton editbtn" title="edit"></div>
-                    <div class="optionbutton deletebtn" title="delete"></div>
-                </div>
-                <table>
-                    <tr>
-                        <th colspan="2">Test 3</th>
-                    </tr>
-                    <tr>
-                        <td colspan="2">Wednesday</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">8:30 a.m. - 10:46 a.m.</td>
-                    </tr>
-                </table>
-                <div class="data_noot">4</div>
-            </div>
+
         </div>
-        <form id="dataentry_screen">
+        <div id="dataentry_screen">
             <table>
                 <tr>
                     <th colspan="2" id="data_title">placeholder</th>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <label for="Lecture_put">Name</label>
-                        <input id="name_put" name="class_name" type="text">
-                        <div class="autofill_container" id="name_autofill">
-
-                        </div>
+                        <input id="name_put" list="name_autofill" name="class_name" type="text" autocomplete="on"
+                            placeholder="Name">
+                        <datalist id="name_autofill">
+                            <option value="example#1">
+                            <option value="example#2">
+                            <option value="example#3">
+                            <option value="example#4">
+                            <option value="example#5">
+                        </datalist>
                     </td>
                 </tr>
                 <tr>
@@ -477,271 +804,45 @@
                 </div>
                 <div class="databtns" id="delete_btn" title="Delete this entry?">Delete</div>
             </div>
-            <div id="delete_confirm_pannel">
-                <div class="title">Delete</div>
-                <div id="pseudo_container">
-                    <table id="pseudo_container_table">
-                        <tr>
-                            <th id="title_cellp" colspan="2"></th>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Day :</td>
-                            <td class="righter" id="day_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Room :</td>
-                            <td class="righter" id="room_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Lecturer :</td>
-                            <td class="righter" id="Lecturer_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Type :</td>
-                            <td class="righter" id="type_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td class="lefter">Code :</td>
-                            <td class="righter" id="coursecode_cellp"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" id="time_cellp"></td>
-                        </tr>
-                    </table>
-                </div>
-                <button type="button" id="no_del_btn">No</button>
-                <button type="button" id="yes_btn">Yes</button>
+        </div>
+    </div>
+
+    <!--Page shader-->
+    <div id="page_shade"></div>
+
+    <!-- Triggers titlebar in framed view -->
+    <div id="title_trigger">
+        <div class="title_bar" id="title_bar">
+            <div id="titlebar_table_selector">
+                <div class="table_button_active">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
+                <div class="table_button">Test button</div>
             </div>
-            <div id="erraser" title="clear inputs"></div>
-        </form>
-    </view>
-
-    <!--Setting View-->
-    <view id="setting_view">
-
-        <div class="Setting_title" id="configmngtile">Settings</div>
-        <div class="config-manage-pannel">
-            <!--<input type="file" name="backup file" id="backup_file_picker" accept="json">-->
-            <button class="config_btn" id="backup_btn" title="Backup configration to a file">Backup</button>
-            <button class="config_btn" id="restore_btn" title="Restore configuration from a file">Restore</button>
+            <div class="title_icon"></div>
+            <!--<div class="resise_constraint" id="resise_constraint"></div>-->
+            <div class="statusbtn" id="mainx_btn" title="close"></div>
+            <div class="statusbtn" id="maximize_btn" title="Maximize"></div>
+            <div class="statusbtn" id="minimize_btn" title="Minimize"></div>
+            <div class="statusbtn" id="always_on_top_btn" title="toggle always on top"></div>
+            <div class="statusbtn" id="Setting_btn" title="Settings"></div>
+            <div class="statusbtn" id="Manage_button_btn" title="Manage classes"></div>
         </div>
+    </div>
 
+    <div id="page_shadeer"></div><!--    Shades the page on loading to hide post page load jitters    -->
 
-        <div class="config-manage-pannel">
-            <input id="config_text" class="pathrepresenter" placeholder="import/export string configuration" value=""
-                title="configuration string convenient for users with clipboard sharing who don't want to use external config files"></input>
-            <button class="config_btn" id="import_from_text" title="import config string">import</button>
-            <button class="config_btn" id="export_to_clipboard"
-                title="export config string to clipboard">export</button>
-        </div>
-
-        <!-- Retired because im the only one who'll use this for now -->
-        <div class="selection_container">
-            <!-- Container for themes -->
-            <div class="selectionbox" id="light_theme_selection">
-                <div class="mincropallet" id="light_pallet">
-                    <div class="palletfoot">
-                        <div class="icon appicon"></div>
-                        <div class="icon bookli"></div>
-                        <div class="icon gear_inverse"></div>
-                    </div>
-                    <table class="pallet_table">
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                    </table>
-                    <input type="checkbox" class="selcetion_put" id="light_selection_put"></input>
-                </div>
-                <div class="selection_title">LIGHT</div>
-            </div>
-
-            <div class="selectionbox" id="dark_theme_selection">
-                <div class="mincropallet" id="amoled_pallet">
-                    <div class="palletfoot">
-                        <div class="icon appicon_inverse"></div>
-                        <div class="icon bookamol"></div>
-                        <div class="icon gear"></div>
-                    </div>
-                    <table class="pallet_table">
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                        <tr>
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                            <td class="maincell"></td class="maincell">
-                        </tr>
-                    </table>
-                    <input type="checkbox" class="selcetion_put" id="dark_selection_put"></input>
-                </div>
-                <div class="selection_title">DARK</div>
-            </div>
-        </div>
-
-        <div class="Setting_title">Accent color</div>
-        <div class="accent-color-selector">
-            <div class="accent-blob" id="hueinverse-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue0-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue30-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue60-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue90-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue120-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue150-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue180-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue210-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue240-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue270-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue300-selec" title="select this color"></div>
-            <div class="accent-blob" id="hue330-selec" title="select this color"></div>
-        </div>
-
-
-        <div class="setting_bar" id="hilight_btn" title="toggle hilights">
-            <!--Permanently dissabled untill fixed-->
-            <div class="Bar_title">Hilights</div>
-            <div class="switch_container_active" id="hilight_switch_container">
-                <div class="switchbdy" id="hilight_switchbdy">
-                    <div class="switch"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="setting_bar" id="Animations_btn" title="toggle Animations">
-            <div class="Bar_title">Animations</div>
-            <div class="switch_container_active" id="Animations_switch_container">
-                <div class="switchbdy" id="Animations_switchbdy">
-                    <div class="switch"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="setting_bar" id="tiles_btn" title="toggle fullscreen tiles">
-            <div class="Bar_title">Full Tiles</div>
-            <div class="switch_container_active" id="tiles_switch_container">
-                <div class="switchbdy" id="tiles_switchbdy">
-                    <div class="switch"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="setting_bar" id="Row_btn" title="toggle Empty cells">
-            <div class="Bar_title">Empty Rows</div>
-            <div class="switch_container_active" id="Row_switch_container">
-                <div class="switchbdy" id="Row_switchbdy">
-                    <div class="switch"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="Setting_title" id="about_btn" title="Copies contact info to clipboard">About</div>
-        <!--<div class="Setting_title">Placeholder btn 1</div>-->
-    </view>
-
-    <script src="capacitor.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="js/index.js"></script>
-    <script src="js/clock.js"></script>
+    <script type="text/javascript" src="js/index.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/clock.js" charset="UTF-8"></script>
 </body>
 
 </html>
