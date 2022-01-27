@@ -2625,17 +2625,6 @@ let UI = {
         console.log('closed full tile function');
         document.getElementById('fullscreen_tile').classList = "fullscreen_tile"
     },
-    minimize_maximize: function () {
-        var state = main.maximize_main_window()
-        /*if (state == true) {
-            //is maximized
-            document.getElementById('resise_constraint').style.display = "none"
-        } else {
-            //is not maximized
-            document.getElementById('resise_constraint').style.display = "block"
-        }*/
-        console.log('Window maximized :', state);
-    },
     setting: {
         set_theme: function () {
             console.log('Set theme')
