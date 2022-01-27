@@ -91,47 +91,13 @@ let config = {
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
-        ToStorageAPI();//save to application storage reguardless incase the file gets removed by the user, because users are kinda dumb
-        if (main.get_use_alt_location() == true && typeof (config.data) == 'object') {//save to alternate storage location
-            ToFileSystem();
-        }
-
-        async function ToFileSystem() {//save config to directory defined by the user
-            main.write_object_json_out(main.get_alt_location() + "/TT001_cfg config.json", JSON.stringify(config.data))//hand off writing the file to main process
-        }
-
-        async function ToStorageAPI() {//Html5 storage API
-            console.log('config saved to application storage')
-            localStorage.setItem("TT001_cfg", JSON.stringify(config.data))
-        }
-
-
+        console.log('config saved to application storage')
+        localStorage.setItem("TT001_cfg", JSON.stringify(config.data))
     },
     load: function () {//Load the config file
         console.warn('Configuration is being loaded')
-
-        if (main.get_use_alt_location() == true) {//Load from alt location
-            //load from alternate storage location
-            if (fs.existsSync(main.get_alt_location() + "/TT001_cfg config.json")) {//Directory exists
-                var fileout = fs.readFileSync(main.get_alt_location() + "/TT001_cfg config.json", { encoding: 'utf8' })//Read from file with charset utf8
-                console.warn('config Loaded from: ', main.get_alt_location(), 'Data from fs read operation: ', fileout)
-                fileout = JSON.parse(fileout)//parse the json
-                if (fileout.key == "TT01") {//check if file has key
-                    config.data = fileout;
-                    console.warn('configuration applied from file')
-                } else {//no key, not correct file, load from application storage
-                    console.warn('The file is not a config file, internal configuration will be used')
-                    config.data = JSON.parse(localStorage.getItem("TT001_cfg"))
-                }
-            } else {//file does not exist, was moved, deleted or is inaccesible
-                config.data = JSON.parse(localStorage.getItem("TT001_cfg"))
-                notify.new("", "file does not exist, was moved, deleted or is otherwise inaccesible, please select a new location to save app data", function () { config.selectlocation(); })
-            }
-        } else {//load from application storage
-            config.data = JSON.parse(localStorage.getItem("TT001_cfg"))
-            console.log('config Loaded from application storage')
-        }
-
+        config.data = JSON.parse(localStorage.getItem("TT001_cfg"))
+        console.log('config Loaded from application storage')
         console.table(config.data)
         this.validate()
     },
@@ -268,105 +234,6 @@ let config = {
         console.log('config deleted: ')
         console.table(config.data)
         this.validate()
-    },
-    backup: async function () {//backup configuration to a file
-        console.warn('Configuration backup initiated')
-        var always_on_top_state = main.checkontop()
-        var date = new Date();
-
-        if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
-        dialog.showSaveDialog(remote.getCurrentWindow(), {//electron file save dialogue
-            defaultPath: `TT001_backup ${Number(date.getMonth() + 1)} - ${date.getDate()} - ${date.getFullYear()}.json`,
-            buttonLabel: "Save", filters: [{ name: 'JSON', extensions: ['json'] }]
-        }
-        ).then((filepath) => {//resolve filepath promise
-            console.log(filepath)
-            if (filepath.canceled == true) {//the file save dialogue was canceled my the user
-                console.warn('The file dialogue was canceled by the user')
-            } else {
-                main.write_object_json_out(filepath.filePath, JSON.stringify(config.data))//hand off writing the file to main process
-            }
-        }).catch((err) => {//catch error
-            console.warn('An error occured ', err.message);
-        }).finally(() => {
-            if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if it was on, turn it back on
-        })
-    },
-    restore: async function () {//restore configuration from a file
-        console.warn('Configuration restoration initiated')
-        var always_on_top_state = main.checkontop()
-        if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
-        dialog.showOpenDialog(remote.getCurrentWindow(), {
-            buttonLabel: "open", filters: [
-                { name: 'Custom File Type', extensions: ['json'] },
-                { name: 'All Files', extensions: ['*'] }
-            ]
-        }).then((filepath) => {
-            console.log(filepath)
-            if (filepath.canceled == true) {//diologue ccanceled
-                console.log("diologue ccanceled");
-            } else {
-                fs.readFile(filepath.filePaths[0], 'utf-8', (err, data) => {//load data from file
-                    if (err) {
-                        alert("An error ocurred reading the file :" + err.message)
-                    } else {
-                        console.log("The file content is : " + data);
-                        var fileout = JSON.parse(data)
-                        if (fileout.key == "TT01") {//check if this file is a timetable backup file
-                            config.data = fileout
-                            config.save();
-                            maininitalizer()
-                        } else {
-                            console.warn(filepath.filePaths[0] + ' is not a backup file')
-                        }
-                    }
-                })
-            }
-        }).catch((err) => {
-            alert('An error occured, ', err)
-        }).finally(() => {
-            if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if it was on, turn it back on
-        })
-    },
-    selectlocation: async function () {//select location for configuration storage
-        console.log('Select config location')
-        var always_on_top_state = main.checkontop()
-        var alt_location = main.get_alt_location()
-        if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if its on, turn it off
-        if (alt_location != "" && alt_location != null && typeof (alt_location) == 'string') {
-            var path = dialog.showOpenDialog(remote.getCurrentWindow(), { properties: ['createDirectory', 'openDirectory'], defaultPath: alt_location })
-        } else {
-            var path = dialog.showOpenDialog(remote.getCurrentWindow(), { properties: ['createDirectory', 'openDirectory'] })
-        }
-
-        await path.then((path) => {
-            if (path.canceled == true) {//user canceled dialogue
-                console.warn('user canceled file dialogue')
-            } else {
-                console.warn('Alternate configuration path :', path.filePaths[0])
-
-                main.set_use_alt_location(true)
-                main.set_alt_location(path.filePaths[0])
-
-                if (fs.existsSync(main.get_alt_location() + "/TT001_cfg config.json")) {//config file already exist there
-                    config.load()
-                    maininitalizer()
-                } else {//no config file exist there
-                    config.save();
-                }
-            }
-        }).catch((err) => {
-            config.usedefault()
-            alert('An error occured ', err.message)
-        }).finally(() => {
-            if (always_on_top_state == true) { UI.toggle_alwaysontop() }//if it was on, turn it back on
-            document.getElementById('pathrepresenter').value = main.get_alt_location(), "Timetableconfig.json"
-        })
-    },
-    usedefault: function () {//use default storage location
-        main.set_use_alt_location(false)
-        //maininitalizer()
-        document.getElementById('pathrepresenter').value = 'application storage'
     },
 }
 
@@ -543,7 +410,7 @@ let table = {
             tempblock.addEventListener('click', () => {
                 console.log('Triggered data cell: ', tempblock);
 
-                if (main.get_tiles() == true) { //show full tile view
+                if (/*.get_tiles() ==*/ true) { //show full tile view
                     //place data into overlay
                     tempblock.setAttribute("class", "data_block");//close block reguardless
                     document.getElementById('title_cell').innerText = config.data.table1_db[index].name;
@@ -597,7 +464,7 @@ let table = {
             //Remove empty days with the bread crums left behing durring the initial render
             try {
 
-                var remove = main.get_empty_rows()
+                var remove = true; //remove empty rows
 
                 console.log('Validating Table');
                 let days = 7;
@@ -705,7 +572,7 @@ let table = {
         }
     },
     hilight_engine_go_vroom: async function () {
-        if (main.get_hilight_engine() == true) {
+        if (/*.get_hilight_engine() == */true) {
             console.log('Hilight Query state Checking..');
             let query = document.querySelectorAll(".maincell");
 
@@ -2307,7 +2174,7 @@ let manage = {
             name_put.style.border = "";
             start_time_put.style.border = "";
             end_time_put.style.border = "";
-            
+
             /*
             if (get_animation() == true) {
                 document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, without this buttons bug out
@@ -2651,17 +2518,17 @@ let UI = {
 
 
         document.getElementById('dark_theme_selection').addEventListener('click', function () {
-            
+
             UI.setting.set_theme();
             manage.render_list();
         })
         document.getElementById('light_theme_selection').addEventListener('click', function () {
-           
+
             UI.setting.set_theme();
             manage.render_list();
         })
         document.getElementById('system_theme_selection').addEventListener('click', function () {
-           
+
             UI.setting.set_theme();
             manage.render_list();
         })
@@ -2684,7 +2551,7 @@ let UI = {
         //wallpaper
         document.getElementById('select_wallpaper_btn').addEventListener('click', UI.setting.wallpaper.select_wallpaper)
         document.getElementById('default_wallpaper_btn').addEventListener('click', function () {
-            
+
             UI.setting.wallpaper.set_wallpaper()
         })
 
@@ -2699,23 +2566,8 @@ let UI = {
 
     },
     hue_selec: function (hue) {
-        main.set_colorpallet(hue)
+        //set_colorpallet(hue)
         UI.setting.set_theme();
-    },
-    toggle_alwaysontop: function () {
-        var state = main.togglealways_on_top()
-        if (state == true) {
-            //is always on top
-            document.getElementById('always_on_top_btn').classList = "statusbtn_active"
-            main.set_always_on_top(true);
-            config.save()
-        } else {
-            //is not always on top
-            document.getElementById('always_on_top_btn').classList = "statusbtn"
-            main.set_always_on_top(false);
-            config.save()
-        }
-        console.log('Window always on top :', state);
     },
     setting_toggle: function () {
         UI.close_tile()
