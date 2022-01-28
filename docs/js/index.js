@@ -2628,30 +2628,31 @@ let UI = {
     setting: {
         set_theme: function () {
             console.log('Set theme')
-            if (nativeTheme.shouldUseDarkColors == true) {
+            set_dark()
+            /*if (nativeTheme.shouldUseDarkColors == true) {
                 document.getElementById('system_pallet').classList = "mincropallet amoled_pallet"
-                if (main.get_theme() != "dark" && main.get_theme() != "light") {
+                if (get_theme() != "dark" && get_theme() != "light") {
                     set_dark()
                     mark_system()
                 }
             } else {
                 document.getElementById('system_pallet').classList = "mincropallet light_pallet"
-                if (main.get_theme() != "dark" && main.get_theme() != "light") {
+                if (get_theme() != "dark" && get_theme() != "light") {
                     set_light()
                     mark_system()
                 }
             }
-            if (main.get_theme() == "dark") {
+            if (get_theme() == "dark") {
                 set_dark()
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = true;
                 document.getElementById('system_selection_put').checked = false;
-            } else if (main.get_theme() == "light") {
+            } else if (get_theme() == "light") {
                 set_light()
                 document.getElementById('light_selection_put').checked = true;
                 document.getElementById('dark_selection_put').checked = false;
                 document.getElementById('system_selection_put').checked = false;
-            }
+            }*/
 
             function mark_system() {
                 document.getElementById('light_selection_put').checked = false;
@@ -2787,13 +2788,11 @@ let UI = {
         hilight: {
             flip: function () {
                 console.log('switch triggered');
-                if (main.get_hilight_engine()) {
+                if (false) {
                     //turn off the switch
-                    main.set_hilight_engine(false)
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
-                    main.set_hilight_engine(true)
                     table.hilight_engine_go_vroom();
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
