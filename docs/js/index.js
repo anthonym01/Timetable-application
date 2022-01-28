@@ -2662,7 +2662,7 @@ let UI = {
 
             function set_dark() {
                 properties.theme = 'dark'
-                switch (main.get_colorpallet()) {
+                switch (/*.get_colorpallet()*/0) {
                     case -1:
                         document.body.classList = "dark";
                         console.log('Dark inverse theme');
@@ -2718,13 +2718,13 @@ let UI = {
                     default:
                         console.error('Defaulted color pallet');
                         document.body.classList = "dark";
-                        main.set_colorpallet(-1)
+                        /*set_colorpallet(-1)*/
                 }
             }
 
             function set_light() {
                 properties.theme = 'light'
-                switch (main.get_colorpallet()) {
+                switch (/*get_colorpallet()*/0) {
                     case -1:
                         document.body.classList = "light";
                         console.log('light inverse theme');
@@ -2780,7 +2780,7 @@ let UI = {
                     default:
                         console.error('Defaulted color pallet');
                         document.body.classList = "light";
-                        main.set_colorpallet(-1)
+                        /*set_colorpallet(-1)*/
                 }
             }
         },
