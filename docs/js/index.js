@@ -1796,11 +1796,6 @@ let manage = {
 
             //make fucntion
             tab_put.addEventListener('click', function () { event.stopPropagation() }) //stop this event from trigering table select action
-            tab_put.addEventListener('contextmenu', function (event) {
-                event.preventDefault()
-                event.stopPropagation()
-                text_box_menu.popup({ window: remote.getCurrentWindow() })
-            }, false)
 
             table_bar.addEventListener('click', function () { //select table fucntion
                 console.warn('Table selected by identifier : ', config.data.table_details[index].identifier)
