@@ -22,7 +22,6 @@ const manage_dataspace = document.getElementById('manage_dataspace');
 const detail_put = document.getElementById('detail_put');
 const name_put = document.getElementById('name_put');
 
-
 let properties = {
     tempdata: false,
     monday: false,
@@ -2490,9 +2489,7 @@ let UI = {
         UI.setting.animation.setpostition();
         UI.setting.tiles.setpostition();
         UI.setting.Row.setpostition();
-        UI.setting.wallpaper.set_wallpaper();
         UI.setting.set_theme();
-        UI.setting.link.setpostition();
 
         document.getElementById('Setting_btn').addEventListener('click', UI.setting_toggle)
         document.getElementById('Manage_button_btn').addEventListener('click', UI.manage_toggle)
@@ -2503,7 +2500,6 @@ let UI = {
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
         document.getElementById('frame_btn').addEventListener('click', UI.setting.frame.flip)
-        document.getElementById('link_btn').addEventListener('click', UI.setting.link.flip)
         document.getElementById('menu_btn').addEventListener('click', UI.setting.menu.flip)
         document.getElementById('Clock_btn').addEventListener('click', UI.setting.slideclock.flip)
         close_btn.addEventListener('click', UI.close_tile)
@@ -2548,12 +2544,6 @@ let UI = {
         document.getElementById('hue300-selec').addEventListener('click', function () { UI.hue_selec(300) })
         document.getElementById('hue330-selec').addEventListener('click', function () { UI.hue_selec(330) })
 
-        //wallpaper
-        document.getElementById('select_wallpaper_btn').addEventListener('click', UI.setting.wallpaper.select_wallpaper)
-        document.getElementById('default_wallpaper_btn').addEventListener('click', function () {
-
-            UI.setting.wallpaper.set_wallpaper()
-        })
 
         document.getElementById('fullscreen_tile').addEventListener('contextmenu', function (e) {
             e.stopPropagation()
@@ -2816,11 +2806,9 @@ let UI = {
 
                 if (/*get_animation() == */false) {
                     //turn off the switch
-                    main.set_animation(false)
                     console.warn('animations dissabled');
                 } else {
                     //turn on the witch
-                    //main.set_animation(true)
                     console.warn('animations enabled');
                 }
 
@@ -2844,11 +2832,10 @@ let UI = {
                 console.log('tiles switch triggered');
                 if (/*get_tiles() == */false) {
                     //turn off the switch
-                    //main.set_tiles(false);
                     console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
-                   
+
                     console.warn('tiles enabled');
                 }
                 config.save();
@@ -2867,12 +2854,11 @@ let UI = {
                 console.log('Row switch triggered');
                 if (/*get_empty_rows() == */true) {
                     //turn off the switch
-                    
+
                     console.warn('Empty Rows dissabled');
                     properties.changed = true;
                 } else {
                     //turn on the witch
-                    main.set_empty_rows(true);
                     console.warn('Empty Rows Enabled');
                     properties.changed = true;
                 }
@@ -2880,7 +2866,7 @@ let UI = {
                 UI.setting.Row.setpostition();
             },
             setpostition: function () {
-                if (main.get_empty_rows() == true) {
+                if (/*get_empty_rows() == */true) {
                     document.getElementById('Row_switch_container').className = 'switch_container_active';
                 } else {
                     document.getElementById('Row_switch_container').className = 'switch_container_dissabled';
@@ -2890,30 +2876,10 @@ let UI = {
         frame: {
             flip: function () {
                 console.log('frame switch triggered');
-                var framestate = main.framestate()
-                if (process.platform == 'linux') {
-                    notify.new('Frame', 'app must restart')
-                    setTimeout(() => {
-                        if (framestate == true) {
-                            //turn off the switch
-                            main.setframe(false)
-                        } else {
-                            //turn on the witch
-                            main.setframe(true)
-                        }
-                    }, 1500)
-                } else {
-                    if (framestate == true) {
-                        //turn off the switch
-                        main.setframe(false)
-                    } else {
-                        //turn on the witch
-                        main.setframe(true)
-                    }
-                }
+
             },
             setpostition: function () {
-                if (main.framestate() == true) {
+                if (true) {
                     document.getElementById('title_bar').classList = "title_bar"
                     document.getElementById('manage_view').classList = "view_framless"
                     document.getElementById('setting_view').classList = "view_framless"
@@ -2932,198 +2898,23 @@ let UI = {
                 }
             },
         },
-        link: {
-            flip: function () {
-                console.log('link switch triggered');
-                if (main.get_link() == true) {
-                    //turn off the switch
-                    main.set_link(false);
-                    console.warn('link state off');
-                    properties.changed = true;
-                } else {
-                    //turn on the witch
-                    main.set_link(true);
-                    console.warn('link state on');
-                    properties.changed = true;
-                }
-                config.save();
-                UI.setting.link.setpostition();
-            },
-            setpostition: function () {
-                if (main.get_link() == true) {
-                    document.getElementById('link_switch_container').className = 'switch_container_dissabled';
-                } else {
-                    document.getElementById('link_switch_container').className = 'switch_container_active';
-                }
-            },
-        },
         slideclock: {
             flip: function () {
                 console.log('slideclock triggered');
-                if (main.get_alt_slideclock() == true) {
+                if (/*get_alt_slideclock() == */true) {
                     //turn off the switch
-                    main.set_alt_slideclock(false);
                 } else {
                     //turn on the witch
-                    main.set_alt_slideclock(true);
                 }
                 UI.setting.slideclock.setpostition();
             },
             setpostition: function () {
-                if (main.get_alt_slideclock() == true) {
+                if (true) {
                     document.getElementById('Clock_switch_container').className = 'switch_container_dissabled';
                     document.getElementById('slideclock').style.display = "none"
                 } else {
                     document.getElementById('Clock_switch_container').className = 'switch_container_active';
                     document.getElementById('slideclock').style.display = "block"
-                }
-            },
-        },
-        wallpaper: {
-            set_wallpaper: async function () {
-                var backgroundimg = main.get_backgroundimg()
-                if (backgroundimg != null || undefined) {
-                    if (backgroundimg == "default") {//Use "Default" wallpaper
-                        useDesktop();
-                    } else {//use user selected wallpaper
-                        useUserSelected();
-                    }
-                } else {//no wallperper, clear and use css wallpaper
-                    useCSS();
-                }
-
-                function useCSS() {
-                    //timetable.style.backgroundImage = "";
-                    document.getElementById('table1').style.backgroundImage = "";
-                    document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
-                }
-
-                function useUserSelected() {
-                    //Convert path to form css can understand
-                    var resaucepath = process.resourcesPath
-                    /*for (i = 0; i <= resaucepath.length; i++) {
-                        console.log(resaucepath)*/
-                    resaucepath = resaucepath.replace(/\\/g, '/');// replace all \\ with /
-                    /*}*/
-                    if (fs.existsSync(resaucepath + "/backgroundimg" + backgroundimg.ext) || fs.existsSync(resaucepath + "\\backgroundimg" + backgroundimg.ext)) {
-                        //timetable.style.backgroundImage = "url('C:\\fakepath\\fakeimg.png')";
-                        //timetable.style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
-
-                        document.getElementById('table1').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
-                        document.getElementById('light_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
-                        document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
-                        document.getElementById('system_pallet_table').style.backgroundImage = "url('" + resaucepath + "/backgroundimg" + backgroundimg.ext + "')";
-                        document.getElementById('wallpaper_pathrepresenter').value = resaucepath + "/backgroundimg" + backgroundimg.ext;
-                    } else {
-                        useDesktop();
-                        notify.new('file error', 'custom Wallpaper file not found')
-                    }
-                }
-
-                async function useDesktop() {
-                    wallpaper.get().then((wallpaperpath) => {//gets desktop wallpaper
-                        if (path.parse(wallpaperpath).ext !== undefined) {//check if file is usable
-                            //use desktop wallpaper
-                            wallpaperpath = wallpaperpath.replace(/\\/g, '/');// replace all \\ with /
-
-                            //timetable.style.backgroundImage = "";
-                            //timetable.style.backgroundImage = "url('" + wallpaperpath + "')";
-                            document.getElementById('table1').style.backgroundImage = "url('" + wallpaperpath + "')";
-                            document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                            document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                            document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                            document.getElementById('wallpaper_pathrepresenter').value = "Desktop wallpaper";
-                        } else {//default to css wallpaper
-
-                            document.getElementById('table1').style.backgroundImage = "";
-                            //timetable.style.backgroundImage = "";
-                            document.getElementById('wallpaper_pathrepresenter').value = "default wallpaper";
-                        }
-                    })
-                }
-            },
-            select_wallpaper: async function () {//User selects wallpaper
-                dialog.showOpenDialog({//electron async file dialogue
-                    buttonLabel: "Select image", filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'jjif', 'bmp'] }, { name: 'All Files', extensions: ['*'] }]//Options for file dialogue
-                }).then((filestuff) => {
-                    if (filestuff.canceled == true) {//user canceled file dialogue
-                        console.log('User canceled file dialogue')
-                    } else {
-                        var parsed_path = path.parse(filestuff.filePaths[0])
-                        var wallpaperpath = filestuff.filePaths[0]
-                        if (parsed_path.ext !== undefined) {//check if file is usable
-                            wallpaperpath = wallpaperpath.replace(/\\/g, '/');// replace all \\ with /
-                        }
-                        switch (process.platform) {
-                            case "linux":
-                                fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "/backgroundimg" + parsed_path.ext, function () {
-                                    console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "/backgroundimg" + parsed_path.ext)
-                                    main.set_backgroundimg(parsed_path)
-                                    console.log('Set background img as :', parsed_path)
-                                    config.save()
-                                    setTimeout(() => {
-                                        //timetable.style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        document.getElementById('table1').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        document.getElementById('wallpaper_pathrepresenter').value = "url('" + wallpaperpath + "')";
-                                    }, 50);
-                                })
-                                break;
-                            default:
-                                fs.copyFile(filestuff.filePaths[0], process.resourcesPath + "\\backgroundimg" + parsed_path.ext, function () {
-                                    console.log('Coppied: ', parsed_path, ' to: ', process.resourcesPath + "\\backgroundimg" + parsed_path.ext)
-                                    main.set_backgroundimg(parsed_path)
-                                    console.log('Set background img as :', parsed_path)
-                                    config.save()
-                                    setTimeout(() => {
-                                        document.getElementById('table1').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        //timetable.style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        document.getElementById('light_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        document.getElementById('dark_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        document.getElementById('system_pallet_table').style.backgroundImage = "url('" + wallpaperpath + "')";
-                                        document.getElementById('wallpaper_pathrepresenter').value = "url('" + wallpaperpath + "')";
-                                    }, 50);
-                                })
-                        }
-                    }
-                }).catch((error) => {
-                    alert('An error occured, ', error.message)
-                })
-            },
-        },
-        menu: {
-            flip: function () {
-                console.log('menu switch triggered');
-                var menustate = main.menustate()
-                if (process.platform == 'linux') {
-                    notify.new('Menu', 'app must restart')
-                    setTimeout(() => {
-                        if (menustate == true) {
-                            //turn off the switch
-                            main.setmenu(false)
-                        } else {
-                            //turn on the witch
-                            main.setmenu(true)
-                        }
-                    }, 1500)
-                } else {
-                    if (menustate == true) {
-                        //turn off the switch
-                        main.setmenu(false)
-                    } else {
-                        //turn on the witch
-                        main.setmenu(true)
-                    }
-                }
-                UI.setting.menu.setpostition()
-            },
-            setpostition: function () {
-                if (main.menustate() == true) {
-                    document.getElementById('menu_switch_container').className = 'switch_container_active';
-                } else {
-                    document.getElementById('menu_switch_container').className = 'switch_container_dissabled';
                 }
             },
         },
@@ -3341,44 +3132,6 @@ function linkify(input) {//use https://github.com/alexcorvi/anchorme.js to linki
     });
 }
 
-async function refunctionizelink() {//finds links, changes their default function, and adds a menu to them to open externally or internally
-    let lonks = document.querySelectorAll('a');
-    var lonk_length = lonks.length;
-    for (let i = 0; i < lonk_length; i++) { build_lonk_action(i) }
-
-    function build_lonk_action(i) {
-        var lonkihref = lonks[i].href;
-        lonks[i].title = lonkihref;
-        lonks[i].addEventListener('click', function (e) {
-            e.preventDefault()
-            e.stopPropagation()
-            if (main.get_link() == true) {
-                if (lonkihref.contains('file:///')) {
-                    shell.openExternal(lonkihref)
-                } else { main.secondary_battery(lonkihref) }
-            } else { shell.openExternal(lonkihref) }
-        });
-
-        lonks[i].addEventListener('contextmenu', function (e) {
-            e.preventDefault()
-            e.stopPropagation()
-            const lonk_menu = new Menu.buildFromTemplate([
-                { label: 'open externally', click() { shell.openExternal(lonkihref) } },
-                {
-                    label: 'open internally', click() {
-                        if (lonkihref.contains('file:///')) {
-                            shell.openExternal(lonkihref)
-                        } else { main.secondary_battery(lonkihref) }
-                    }
-                },
-                { type: 'separator' },
-                { label: 'copy', click() { clipboard.writeText(lonkihref) } }
-            ])
-            lonk_menu.popup({ window: remote.getCurrentWindow() })
-        });
-    }
-}
-
 document.getElementById('export_to_clipboard').addEventListener('click', async function () {
     document.getElementById("config_text").value = JSON.stringify(config.data)
     clipboard(JSON.stringify(config.data))
@@ -3392,7 +3145,6 @@ document.getElementById('export_to_clipboard').addEventListener('click', async f
 })
 document.getElementById('import_from_text').addEventListener('click', async function () {
 
-
     let parsed_data = JSON.parse(document.getElementById("config_text").value)
 
     if (parsed_data.key == "TT01") {
@@ -3405,17 +3157,10 @@ document.getElementById('import_from_text').addEventListener('click', async func
         UI.setting.animation.setpostition()
         UI.setting.tiles.setpostition()
         UI.setting.Row.setpostition()
-        UI.setting.wallpaper.set_wallpaper()
         UI.setting.set_theme()
         table.data_render()
         manage.initalize()
     } else {
         console.log('This is not a config file for this app')
     }
-    /*Toast.show({
-        text: 'config coppied to Clipboard',
-        duration: 'long',
-        position: 'bottom',
-    });*/
-
 })
