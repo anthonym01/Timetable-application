@@ -2719,7 +2719,7 @@ let UI = {
                     default:
                         console.error('Defaulted color pallet');
                         document.body.classList = "dark";
-                        /*set_colorpallet(-1)*/
+                    /*set_colorpallet(-1)*/
                 }
             }
 
@@ -2781,7 +2781,7 @@ let UI = {
                     default:
                         console.error('Defaulted color pallet');
                         document.body.classList = "light";
-                        /*set_colorpallet(-1)*/
+                    /*set_colorpallet(-1)*/
                 }
             }
         },
@@ -2801,7 +2801,7 @@ let UI = {
                 UI.setting.hilight.setpostition();
             },
             setpostition: function () {
-                if (main.get_hilight_engine() == true) {
+                if (/*get_hilight_engine() == */true) {
                     document.getElementById('hilight_switch_container').className = 'switch_container_active';
                     properties.hilight = true
                 } else {
@@ -2813,68 +2813,49 @@ let UI = {
         animation: {
             flip: function () {
                 console.log('animation switch triggered');
-                if (process.platform != "linux" && systemPreferences.getAnimationSettings().shouldRenderRichAnimation == false) {//animations preffered OFF by system
+
+                if (/*get_animation() == */false) {
+                    //turn off the switch
                     main.set_animation(false)
-                    notify.new('System', 'Animations dissabled by Your Systems animation preferences');
+                    console.warn('animations dissabled');
                 } else {
-                    if (main.get_animation() == true) {
-                        //turn off the switch
-                        main.set_animation(false)
-                        console.warn('animations dissabled');
-                    } else {
-                        //turn on the witch
-                        main.set_animation(true)
-                        console.warn('animations enabled');
-                    }
+                    //turn on the witch
+                    //main.set_animation(true)
+                    console.warn('animations enabled');
                 }
+
 
                 config.save();
                 UI.setting.animation.setpostition();
             },
             setpostition: function () {
-                switch (process.platform) {
-                    case "linux"://Linux && free BSD
-                        if (main.get_animation() == true) {
-                            document.getElementById('Animations_switch_container').className = 'switch_container_active';
-                            document.getElementById('nomation_box').innerText = ""
-                        } else {
-                            document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
-                            document.getElementById('nomation_box').innerText = "*{transition: none !important;animation: none !important;}"
-                        }
-                        break;
-                    default://Mac OS && windows
-                        if (systemPreferences.getAnimationSettings().shouldRenderRichAnimation == true) {//animations preffered by system only works on windows and wackOS
-                            if (main.get_animation() == true) {
-                                document.getElementById('Animations_switch_container').className = 'switch_container_active';
-                                document.getElementById('nomation_box').innerText = ""
-                            } else {
-                                document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
-                                document.getElementById('nomation_box').innerText = "*{transition: none !important;animation: none !important;}"
-                            }
-                        } else {//system preffers no animations
-                            document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
-                            document.getElementById('nomation_box').innerText = "*{transition: none !important;animation: none !important;}"
-                        }
+
+                if (/*get_animation() == */true) {
+                    document.getElementById('Animations_switch_container').className = 'switch_container_active';
+                    document.getElementById('nomation_box').innerText = ""
+                } else {
+                    document.getElementById('Animations_switch_container').className = 'switch_container_dissabled';
+                    document.getElementById('nomation_box').innerText = "*{transition: none !important;animation: none !important;}"
                 }
             },
         },
         tiles: {
             flip: function () {
                 console.log('tiles switch triggered');
-                if (main.get_tiles() == true) {
+                if (/*get_tiles() == */false) {
                     //turn off the switch
-                    main.set_tiles(false);
+                    //main.set_tiles(false);
                     console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
-                    main.set_tiles(true);
+                   
                     console.warn('tiles enabled');
                 }
                 config.save();
                 UI.setting.tiles.setpostition();
             },
             setpostition: function () {
-                if (main.get_tiles() == true) {
+                if (/*get_tiles() == */true) {
                     document.getElementById('tiles_switch_container').className = 'switch_container_active';
                 } else {
                     document.getElementById('tiles_switch_container').className = 'switch_container_dissabled';
@@ -2884,9 +2865,9 @@ let UI = {
         Row: {
             flip: function () {
                 console.log('Row switch triggered');
-                if (main.get_empty_rows() == true) {
+                if (/*get_empty_rows() == */true) {
                     //turn off the switch
-                    main.set_empty_rows(false);
+                    
                     console.warn('Empty Rows dissabled');
                     properties.changed = true;
                 } else {
