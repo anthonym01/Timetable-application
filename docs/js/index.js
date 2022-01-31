@@ -1847,6 +1847,7 @@ let manage = {
                 editbtn.style.display = "none"
                 tab_put.style.display = "none"
             })
+
             confirmimg.addEventListener('click', function (e) { //cancel button is pressed
                 e.stopPropagation();
                 console.log('Confirm button pressed')
@@ -1862,6 +1863,7 @@ let manage = {
                 maininitalizer();
                 properties.changed = true
             })
+
             cancelimg.addEventListener('click', function (e) { //cancel button is pressed
                 e.stopPropagation();
                 console.log('Cancel button pressed')
@@ -2064,33 +2066,34 @@ let manage = {
                     manage.render_list()
                     properties.changed = true
                 })
-
-                let context_menu = new Menu()
-                context_menu.append(new MenuItem({ label: 'edit', click() { manage.dialogue.edit(index); manage.dialogue.open(); } }))
-                context_menu.append(new MenuItem({
-                    label: 'delete', click() {
-                        config.data.table1_db[index].deleted = true
-                        properties.changed = true;
-                        config.save()
-                        manage.render_list()
-                    }
-                }))
-                context_menu.append(new MenuItem({ type: 'separator' }))
-                context_menu.append(new MenuItem({//duplicates this entry
-                    label: 'Duplicate', click() {
-                        config.data.table1_db.push(JSON.parse(JSON.stringify(config.data.table1_db[index])))//removes the events attached
-                        properties.changed = true;
-                        config.save()
-                        manage.render_list()
-                    }
-                }))
-
-                tempblock.addEventListener('contextmenu', function (e) {//Popup contect meny on alt_click
-                    e.stopPropagation()
-                    e.preventDefault()
-                    context_menu.popup({ window: remote.getCurrentWindow() })
-                    console.log('COntext meny on :', tempblock);
-                })
+                /*
+                                let context_menu = new Menu()
+                                context_menu.append(new MenuItem({ label: 'edit', click() { manage.dialogue.edit(index); manage.dialogue.open(); } }))
+                                context_menu.append(new MenuItem({
+                                    label: 'delete', click() {
+                                        config.data.table1_db[index].deleted = true
+                                        properties.changed = true;
+                                        config.save()
+                                        manage.render_list()
+                                    }
+                                }))
+                                context_menu.append(new MenuItem({ type: 'separator' }))
+                                context_menu.append(new MenuItem({//duplicates this entry
+                                    label: 'Duplicate', click() {
+                                        config.data.table1_db.push(JSON.parse(JSON.stringify(config.data.table1_db[index])))//removes the events attached
+                                        properties.changed = true;
+                                        config.save()
+                                        manage.render_list()
+                                    }
+                                }))
+                
+                                tempblock.addEventListener('contextmenu', function (e) {//Popup contect meny on alt_click
+                                    e.stopPropagation()
+                                    e.preventDefault()
+                                    context_menu.popup({ window: remote.getCurrentWindow() })
+                                    console.log('COntext meny on :', tempblock);
+                                })
+                                */
             }
 
             let noot = document.createElement('div');
@@ -2169,8 +2172,8 @@ let manage = {
             start_time_put.style.border = "";
             end_time_put.style.border = "";
 
-            /*
-            if (get_animation() == true) {
+
+            if (/*get_animation() == */true) {
                 document.getElementById('dataentry_screen').style.transform = "translate(0,100%)"; //strange bug, without this buttons bug out
                 document.getElementById('dataentry_screen').style.display = "block";
                 setTimeout(() => {
@@ -2183,7 +2186,7 @@ let manage = {
                 document.getElementById('dataentry_screen').style.transform = "initial";
                 document.getElementById('btn_bar').style.display = "flex";
                 document.getElementById('dataentry_screen').style.display = "block";
-            }*/
+            }
 
             if (properties.colors_changed == true) { // render recent colors
                 if (config.data.previous_colors[0] != null) {
@@ -2498,15 +2501,6 @@ let UI = {
         document.getElementById('Clock_btn').addEventListener('click', UI.setting.slideclock.flip)
         close_btn.addEventListener('click', UI.close_tile)
 
-        document.getElementById('select_btn').addEventListener('click', function () { //Select the configuration location
-            config.selectlocation()
-            properties.changed = true
-        })
-        document.getElementById('default_btn').addEventListener('click', config.usedefault)
-        document.getElementById('backup_btn').addEventListener('click', config.backup)
-        document.getElementById('restore_btn').addEventListener('click', config.restore)
-
-
         document.getElementById('dark_theme_selection').addEventListener('click', function () {
 
             UI.setting.set_theme();
@@ -2544,9 +2538,6 @@ let UI = {
             e.preventDefault()
             UI.close_tile()
         })
-
-        document.getElementById('export_to_clipboard').addEventListener('click', function () { UI.setting.importer.export() })
-        document.getElementById('import_from_text').addEventListener('click', function () { UI.setting.importer.import() })
 
     },
     hue_selec: function (hue) {
@@ -3125,36 +3116,3 @@ function linkify(input) {//use https://github.com/alexcorvi/anchorme.js to linki
         ],
     });
 }
-
-document.getElementById('export_to_clipboard').addEventListener('click', async function () {
-    document.getElementById("config_text").value = JSON.stringify(config.data)
-    clipboard(JSON.stringify(config.data))
-
-    Toast.show({
-        text: 'config coppied to Clipboard',
-        duration: 'long',
-        position: 'bottom',
-    });
-
-})
-document.getElementById('import_from_text').addEventListener('click', async function () {
-
-    let parsed_data = JSON.parse(document.getElementById("config_text").value)
-
-    if (parsed_data.key == "TT01") {
-        console.log('This is a config file, load its ass')
-        utility.toast('Loaded configuration from: ' + experimentalpath)
-
-        config.data = parsed_data;
-        config.save()
-        UI.setting.hilight.setpostition()
-        UI.setting.animation.setpostition()
-        UI.setting.tiles.setpostition()
-        UI.setting.Row.setpostition()
-        UI.setting.set_theme()
-        table.data_render()
-        manage.initalize()
-    } else {
-        console.log('This is not a config file for this app')
-    }
-})
