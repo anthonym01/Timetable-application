@@ -463,7 +463,7 @@ let table = {
             //Remove empty days with the bread crums left behing durring the initial render
             try {
 
-                var remove = true; //remove empty rows
+                var remove = false; //remove empty rows
 
                 console.log('Validating Table');
                 let days = 7;
@@ -567,7 +567,7 @@ let table = {
             document.getElementById('page_shadeer').style.backgroundColor = "rgba(0,0,0,0)";
             setTimeout(() => { document.getElementById('page_shadeer').style.display = "none"; }, 400);
 
-            refunctionizelink()
+            //refunctionizelink()
         }
     },
     hilight_engine_go_vroom: async function () {
@@ -2495,7 +2495,6 @@ let UI = {
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
         document.getElementById('frame_btn').addEventListener('click', UI.setting.frame.flip)
-        document.getElementById('menu_btn').addEventListener('click', UI.setting.menu.flip)
         document.getElementById('Clock_btn').addEventListener('click', UI.setting.slideclock.flip)
         close_btn.addEventListener('click', UI.close_tile)
 
