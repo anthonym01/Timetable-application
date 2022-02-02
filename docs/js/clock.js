@@ -342,23 +342,7 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 2:// 2am
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-12vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0.4"
-            s2ndhr1.style.opacity = "0.7"
-            s2ndhr2.style.opacity = "1"
-            s2ndhr3.style.opacity = "0.7"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
+
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = 'glowrow';
