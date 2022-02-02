@@ -87,6 +87,8 @@ let config = {
         table_details: [{ purpose: "table #1", deleted: false, identifier: 1 },],// Details about different tables
         table1_db: [],// Table database
         previous_colors: [],
+        hue:0,
+        theme:0,//0 - system, 1 - dark, 2 - light
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)

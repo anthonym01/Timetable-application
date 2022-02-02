@@ -250,65 +250,6 @@ const timestamp = [//arry of timestamps
     document.getElementById('time23'),
 ]
 
-//hours
-const firstofHR = document.getElementById('hr1st');
-const secondofHR = document.getElementById('hr2t');
-const onesthr1 = document.getElementById('1sthr1');
-const onesthr0 = document.getElementById('1sthr0');
-const s2ndhr0 = document.getElementById('2ndhr0');
-const s2ndhr1 = document.getElementById('2ndhr1');
-const s2ndhr2 = document.getElementById('2ndhr2');
-const s2ndhr3 = document.getElementById('2ndhr3');
-const s2ndhr4 = document.getElementById('2ndhr4');
-const s2ndhr5 = document.getElementById('2ndhr5');
-const s2ndhr6 = document.getElementById('2ndhr6');
-const s2ndhr7 = document.getElementById('2ndhr7');
-const s2ndhr8 = document.getElementById('2ndhr8');
-const s2ndhr9 = document.getElementById('2ndhr9');
-const pm = document.getElementById('pm');
-const am = document.getElementById('am');
-const maridizer = document.getElementById('maridizer');
-
-//minutes
-const firstofmin = document.getElementById('min1st');
-const secondofmin = document.getElementById('min2st');
-const s1min0 = document.getElementById('1min0');
-const s1min1 = document.getElementById('1min1');
-const s1min2 = document.getElementById('1min2');
-const s1min3 = document.getElementById('1min3');
-const s1min4 = document.getElementById('1min4');
-const s1min5 = document.getElementById('1min5');
-const s2min0 = document.getElementById('2min0');
-const s2min1 = document.getElementById('2min1');
-const s2min2 = document.getElementById('2min2');
-const s2min3 = document.getElementById('2min3');
-const s2min4 = document.getElementById('2min4');
-const s2min5 = document.getElementById('2min5');
-const s2min6 = document.getElementById('2min6');
-const s2min7 = document.getElementById('2min7');
-const s2min8 = document.getElementById('2min8');
-const s2min9 = document.getElementById('2min9');
-
-//seconds
-const firstofsec = document.getElementById('sec1st');
-const secondofsec = document.getElementById('sec2st');
-const s1sec0 = document.getElementById('1sec0');
-const s1sec1 = document.getElementById('1sec1');
-const s1sec2 = document.getElementById('1sec2');
-const s1sec3 = document.getElementById('1sec3');
-const s1sec4 = document.getElementById('1sec4');
-const s1sec5 = document.getElementById('1sec5');
-const s2sec0 = document.getElementById('2sec0');
-const s2sec1 = document.getElementById('2sec1');
-const s2sec2 = document.getElementById('2sec2');
-const s2sec3 = document.getElementById('2sec3');
-const s2sec4 = document.getElementById('2sec4');
-const s2sec5 = document.getElementById('2sec5');
-const s2sec6 = document.getElementById('2sec6');
-const s2sec7 = document.getElementById('2sec7');
-const s2sec8 = document.getElementById('2sec8');
-const s2sec9 = document.getElementById('2sec9');
-
 //Row time
 const day_cell = document.getElementById('day_cell');
 const timerow_23 = document.getElementById('timerow_23');
@@ -347,23 +288,7 @@ async function clocktick() {
     //Hours
     switch (date.getHours()) {
         case 0:// 12am
-            firstofHR.style.transform = "translatey(-6vw)"
-            secondofHR.style.transform = "translatey(-12vw)"
-            maridizer.style.transform = "translatey(-0vw)"
-            onesthr1.style.opacity = "1"
-            onesthr0.style.opacity = "0.7"
-            s2ndhr0.style.opacity = "0.4"
-            s2ndhr1.style.opacity = "0.7"
-            s2ndhr2.style.opacity = "1"
-            s2ndhr3.style.opacity = "0.7"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
+
             timerow_0.className = 'glowrow';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -390,23 +315,7 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 1:// 1am
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-6vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0.7"
-            s2ndhr1.style.opacity = "1"
-            s2ndhr2.style.opacity = "0.7"
-            s2ndhr3.style.opacity = "0.4"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
+
             timerow_0.className = '';
             timerow_1.className = 'glowrow';
             timerow_2.className = '';
