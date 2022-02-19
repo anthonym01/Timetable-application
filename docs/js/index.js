@@ -3,6 +3,8 @@ const my_website = 'https://anthonym01.github.io/Portfolio/?contact=me';//My web
 
 const { App } = Capacitor.Plugins;
 
+const timetable = document.getElementById('timetable');
+
 const detail_cell = document.getElementById('detail_cell');
 const time_cell = document.getElementById('time_cell');
 const fullscreen_tile = document.getElementById('fullscreen_tile');

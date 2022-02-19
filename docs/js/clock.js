@@ -7,9 +7,8 @@ const day4 = document.getElementById('day4')
 const day5 = document.getElementById('day5')
 const day6 = document.getElementById('day6')
 
-const timetable = document.getElementById('timetable')
-
 //timerows
+/*
 const timerow = [//for timey wimey logic
     document.getElementById('timerow_0'),
     document.getElementById('timerow_1'),
@@ -36,9 +35,9 @@ const timerow = [//for timey wimey logic
     document.getElementById('timerow_22'),
     document.getElementById('timerow_23')
 ]
-
+*/
 //time arrays for individual cells
-const timesets = [//array of arrays to make things easier
+/*const timesets = [//array of arrays to make things easier
     [
         document.getElementById('1_0'),
         document.getElementById('1_1'),
@@ -222,7 +221,8 @@ const timesets = [//array of arrays to make things easier
         document.getElementById('7_23')
     ]
 ]
-
+*/
+/*
 const timestamp = [//arry of timestamps
     document.getElementById('time0'),
     document.getElementById('time1'),
@@ -248,7 +248,7 @@ const timestamp = [//arry of timestamps
     document.getElementById('time21'),
     document.getElementById('time22'),
     document.getElementById('time23'),
-]
+]*/
 
 //Row time
 const day_cell = document.getElementById('day_cell');
@@ -278,17 +278,16 @@ const timerow_1 = document.getElementById('timerow_1');
 const timerow_0 = document.getElementById('timerow_0');
 const live_clock = document.getElementById('live_clock');
 
-let date;
+
 
 async function clocktick() {
-    date = new Date;
+    const date = new Date;
 
     live_clock.innerHTML = date.toLocaleTimeString();
 
     //Hours
     switch (date.getHours()) {
         case 0:// 12am
-
             timerow_0.className = 'glowrow';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -315,7 +314,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 1:// 1am
-
             timerow_0.className = '';
             timerow_1.className = 'glowrow';
             timerow_2.className = '';
@@ -342,7 +340,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 2:// 2am
-
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = 'glowrow';
@@ -369,23 +366,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 3:// 3am
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-18vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0.1"
-            s2ndhr1.style.opacity = "0.4"
-            s2ndhr2.style.opacity = "0.7"
-            s2ndhr3.style.opacity = "1"
-            s2ndhr4.style.opacity = "0.7"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -412,23 +392,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 4:// 4am
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-24vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0.1"
-            s2ndhr2.style.opacity = "0.4"
-            s2ndhr3.style.opacity = "0.7"
-            s2ndhr4.style.opacity = "1"
-            s2ndhr5.style.opacity = "0.7"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -455,23 +418,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 5:// 5am
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-30vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0.1"
-            s2ndhr3.style.opacity = "0.4"
-            s2ndhr4.style.opacity = "0.7"
-            s2ndhr5.style.opacity = "1"
-            s2ndhr6.style.opacity = "0.7"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -498,23 +444,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 6:// 6am
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-36vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0"
-            s2ndhr3.style.opacity = "0.1"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.7"
-            s2ndhr6.style.opacity = "1"
-            s2ndhr7.style.opacity = "0.7"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -541,23 +470,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 7:// 7am
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-42vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0"
-            s2ndhr3.style.opacity = "0"
-            s2ndhr4.style.opacity = "0.1"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.7"
-            s2ndhr7.style.opacity = "1"
-            s2ndhr8.style.opacity = "0.7"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -584,23 +496,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 8:// 8am
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-48vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0"
-            s2ndhr3.style.opacity = "0"
-            s2ndhr4.style.opacity = "0"
-            s2ndhr5.style.opacity = "0.1"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.7"
-            s2ndhr8.style.opacity = "1"
-            s2ndhr9.style.opacity = "0.7"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -627,23 +522,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 9:// 9am
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-54vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0"
-            s2ndhr3.style.opacity = "0"
-            s2ndhr4.style.opacity = "0"
-            s2ndhr5.style.opacity = "0"
-            s2ndhr6.style.opacity = "0.1"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.7"
-            s2ndhr9.style.opacity = "1"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -670,23 +548,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 10:// 10am
-            firstofHR.style.transform = "translatey(-6vw)";
-            secondofHR.style.transform = "translatey(-0vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "1"
-            onesthr0.style.opacity = "0.7"
-            s2ndhr0.style.opacity = "1"
-            s2ndhr1.style.opacity = "0.7"
-            s2ndhr2.style.opacity = "0.4"
-            s2ndhr3.style.opacity = "0.4"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -713,23 +574,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 11:// 11am
-            firstofHR.style.transform = "translatey(-6vw)";
-            secondofHR.style.transform = "translatey(-6vw)";
-            maridizer.style.transform = "translatey(-0vw)";
-            onesthr1.style.opacity = "1"
-            onesthr0.style.opacity = "0.7"
-            s2ndhr0.style.opacity = "0.7"
-            s2ndhr1.style.opacity = "1"
-            s2ndhr2.style.opacity = "0.7"
-            s2ndhr3.style.opacity = "0.4"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "1"
-            pm.style.opacity = "0.7"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -756,23 +600,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 12:// 12pm
-            firstofHR.style.transform = "translatey(-6vw)";
-            secondofHR.style.transform = "translatey(-12vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "1"
-            onesthr0.style.opacity = "0.7"
-            s2ndhr0.style.opacity = "0.4"
-            s2ndhr1.style.opacity = "0.7"
-            s2ndhr2.style.opacity = "1"
-            s2ndhr3.style.opacity = "0.7"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -799,23 +626,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 13:// 1pm
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-6vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0.7"
-            s2ndhr1.style.opacity = "1"
-            s2ndhr2.style.opacity = "0.7"
-            s2ndhr3.style.opacity = "0.4"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -842,23 +652,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 14:// 2pm
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-12vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0.4"
-            s2ndhr1.style.opacity = "0.7"
-            s2ndhr2.style.opacity = "1"
-            s2ndhr3.style.opacity = "0.7"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -885,23 +678,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 15:// 3pm
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-18vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0.1"
-            s2ndhr1.style.opacity = "0.4"
-            s2ndhr2.style.opacity = "0.7"
-            s2ndhr3.style.opacity = "1"
-            s2ndhr4.style.opacity = "0.7"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -928,23 +704,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 16:// 4pm
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-24vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0.1"
-            s2ndhr2.style.opacity = "0.4"
-            s2ndhr3.style.opacity = "0.7"
-            s2ndhr4.style.opacity = "1"
-            s2ndhr5.style.opacity = "0.7"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -971,23 +730,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 17:// 5pm
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-30vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0.1"
-            s2ndhr3.style.opacity = "0.4"
-            s2ndhr4.style.opacity = "0.7"
-            s2ndhr5.style.opacity = "1"
-            s2ndhr6.style.opacity = "0.7"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -1014,23 +756,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 18:// 6pm
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-36vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0"
-            s2ndhr3.style.opacity = "0.1"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.7"
-            s2ndhr6.style.opacity = "1"
-            s2ndhr7.style.opacity = "0.7"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -1057,23 +782,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 19:// 7pm
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-42vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0"
-            s2ndhr3.style.opacity = "0"
-            s2ndhr4.style.opacity = "0.1"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.7"
-            s2ndhr7.style.opacity = "1"
-            s2ndhr8.style.opacity = "0.7"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -1100,23 +808,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 20:// 8pm
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-48vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0"
-            s2ndhr3.style.opacity = "0"
-            s2ndhr4.style.opacity = "0"
-            s2ndhr5.style.opacity = "0.1"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.7"
-            s2ndhr8.style.opacity = "1"
-            s2ndhr9.style.opacity = "0.7"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -1143,23 +834,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 21:// 9pm
-            firstofHR.style.transform = "translatey(-0vw)";
-            secondofHR.style.transform = "translatey(-54vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "0.7"
-            onesthr0.style.opacity = "1"
-            s2ndhr0.style.opacity = "0"
-            s2ndhr1.style.opacity = "0"
-            s2ndhr2.style.opacity = "0"
-            s2ndhr3.style.opacity = "0"
-            s2ndhr4.style.opacity = "0"
-            s2ndhr5.style.opacity = "0"
-            s2ndhr6.style.opacity = "0.1"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.7"
-            s2ndhr9.style.opacity = "1"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -1186,23 +860,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 22:// 10pm
-            firstofHR.style.transform = "translatey(-6vw)";
-            secondofHR.style.transform = "translatey(-0vw)";
-            maridizer.style.transform = "translatey(-6vw)";
-            onesthr1.style.opacity = "1"
-            onesthr0.style.opacity = "0.7"
-            s2ndhr0.style.opacity = "1"
-            s2ndhr1.style.opacity = "0.7"
-            s2ndhr2.style.opacity = "0.4"
-            s2ndhr3.style.opacity = "0.4"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -1229,23 +886,6 @@ async function clocktick() {
             timerow_23.className = '';
             break;
         case 23:// 11pm
-            firstofHR.style.transform = "translatey(-6vw)"
-            secondofHR.style.transform = "translatey(-6vw)"
-            maridizer.style.transform = "translatey(-6vw)"
-            onesthr1.style.opacity = "1"
-            onesthr0.style.opacity = "0.7"
-            s2ndhr0.style.opacity = "0.7"
-            s2ndhr1.style.opacity = "1"
-            s2ndhr2.style.opacity = "0.7"
-            s2ndhr3.style.opacity = "0.4"
-            s2ndhr4.style.opacity = "0.4"
-            s2ndhr5.style.opacity = "0.4"
-            s2ndhr6.style.opacity = "0.4"
-            s2ndhr7.style.opacity = "0.4"
-            s2ndhr8.style.opacity = "0.4"
-            s2ndhr9.style.opacity = "0.4"
-            am.style.opacity = "0.7"
-            pm.style.opacity = "1"
             timerow_0.className = '';
             timerow_1.className = '';
             timerow_2.className = '';
@@ -1278,7 +918,7 @@ async function clocktick() {
 }
 
 function setday() {
-    date = new Date;
+    const date = new Date;
     switch (date.getDay()) { //Date switch
         case 0:
             day0.className = 'maincell glowcell';
