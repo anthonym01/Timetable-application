@@ -1,16 +1,9 @@
-const { remote, clipboard } = require('electron');//Remote electron module
-const main = remote.require('./main'); //acess export functions in main
-const { dialog, Menu, MenuItem, shell, systemPreferences, nativeTheme } = remote;
+const { ipcRenderer } = require('electron');//Remote electron module
 const path = require('path');//path
 const fs = require('fs');//fil system access
-
 const marked = require("marked");
-
 const anchorme = require("anchorme").default; // Converts links in text to clickable links
 const wallpaper = require('wallpaper');//get desktop wallpaper
-
-/*const dropbox = require('dropbox')
-let dbxr = new dropbox({app})*/
 
 const my_website = 'https://anthonym01.github.io/Portfolio/?contact=me';//My website
 
@@ -62,28 +55,9 @@ let properties = {
     animations: true,
 }
 
-//menu for text boxes
-const text_box_menu = new Menu.buildFromTemplate([
-    { role: 'cut' },
-    { role: 'copy' },
-    { role: 'paste' },
-    { role: 'selectAll' },
-    { role: 'undo' },
-    { role: 'redo' },
-]);
-
-//Main body menu
-const menu_body = new Menu.buildFromTemplate([
-    { label: 'Force refresh UI', click() { maininitalizer() } },
-    { type: 'separator' },
-    { role: 'reload' },
-    { label: 'Contact developer', click() { shell.openExternal(my_website) } },
-    { role: 'toggledevtools' },
-]);
-
 window.addEventListener('contextmenu', (event) => {//opens menu on auxilery click
-    event.preventDefault()
-    menu_body.popup({ window: remote.getCurrentWindow() })//popup menu
+    event.preventDefault();
+    ipcRenderer.send("windowmenu");
 }, false)
 
 window.addEventListener('load', function () { //window loads

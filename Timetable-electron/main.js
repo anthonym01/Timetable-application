@@ -1,13 +1,39 @@
 const electron = require('electron');//includes electron dependency
-const { app, BrowserWindow, Menu, screen } = electron;//electrons thingies, can also be called via 'electron.thingy' or even 'require('electron').thingy'
-
+const { app, BrowserWindow, Menu, MenuItem, screen, dialog, shell, systemPreferences, nativeTheme } = electron;//electrons
 const path = require('path');//path to necessary files
 const url = require('url');//web dependency
 const windowStateKeeper = require('electron-window-state');//preserves the window state
 const fs = require('fs');
-const Store = require('electron-store'); const store = new Store;
+const Store = require('electron-store'); const { ipcMain } = require('electron');
+const store = new Store;
+const my_website = 'https://anthonym01.github.io/Portfolio/?contact=me';//My website
 
-let mainWindow = null;//defines the window as an abject
+ipcMain.on("text_box_menu", function () {
+	//menu for text boxes
+	const text_box_menu = new Menu.buildFromTemplate([
+		{ role: 'cut' },
+		{ role: 'copy' },
+		{ role: 'paste' },
+		{ role: 'selectAll' },
+		{ role: 'undo' },
+		{ role: 'redo' },
+	]);
+	text_box_menu.popup({ window: mainWindow });
+});
+
+ipcMain.on('windowmenu', function () {
+	//Main body menu
+	const menu_body = new Menu.buildFromTemplate([
+		{ label: 'Force refresh UI', click() { maininitalizer() } },
+		{ type: 'separator' },
+		{ role: 'reload' },
+		{ label: 'Contact developer', click() { shell.openExternal(my_website) } },
+		{ role: 'toggledevtools' },
+	]);
+	menu_body.popup({ window: mainWindow });
+});
+
+let mainWindow = null;// defines the window as an abject
 
 let config = {
 	frame: false,
@@ -41,7 +67,7 @@ app.on('ready', function () {
 app.on('window-all-closed', function () { app.quit() })
 
 function create_main_window() {
-	mainWindow = null
+	mainWindow = null;
 	const { screenwidth, screenheight } = screen.getPrimaryDisplay().workAreaSize; //gets screen size and sets it to height and width
 	let mainWindowState = windowStateKeeper({ defaultWidth: screenwidth, defaultHeight: screenheight });
 
