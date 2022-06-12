@@ -350,6 +350,7 @@ let table = {
                 try {
                     detail_content.innerHTML = linkify(marked(config.data.table1_db[index].detail))
                 } catch (error) {
+                    console.warn('marked error ',error)
                     detail_content.innerHTML = linkify(config.data.table1_db[index].detail)
                 }
                 
@@ -439,6 +440,7 @@ let table = {
                         try {
                             detail_cell.innerHTML = linkify(marked(config.data.table1_db[index].detail))
                         } catch (error) {
+                            console.warn("Marked error ",error)
                             detail_cell.innerHTML = linkify(config.data.table1_db[index].detail)
                         }
 
