@@ -91,8 +91,8 @@ let config = {
         table_details: [{ purpose: "table #1", deleted: false, identifier: 1 },],// Details about different tables
         table1_db: [],// Table database
         previous_colors: [],
-        hue:0,
-        theme:0,//0 - system, 1 - dark, 2 - light
+        hue: 0,
+        theme: 0,//0 - system, 1 - dark, 2 - light
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
@@ -346,7 +346,13 @@ let table = {
 
                 let detail_row = document.createElement("tr");
                 let detail_content = document.createElement("td");
-                detail_content.innerHTML = linkify(marked(config.data.table1_db[index].detail))
+
+                try {
+                    detail_content.innerHTML = linkify(marked(config.data.table1_db[index].detail))
+                } catch (error) {
+                    detail_content.innerHTML = linkify(config.data.table1_db[index].detail)
+                }
+                
                 detail_row.appendChild(detail_content);
                 sub_tab.appendChild(detail_row);
                 doot.appendChild(sub_tab);
@@ -430,7 +436,12 @@ let table = {
                         default: console.log('Date error on index: ', index, ' Returned value: ', config.data.table1_db[index].day);
                     }
                     if ('detail' in config.data.table1_db[index]) {//if property 'detail' in object
-                        detail_cell.innerHTML = linkify(marked(config.data.table1_db[index].detail))
+                        try {
+                            detail_cell.innerHTML = linkify(marked(config.data.table1_db[index].detail))
+                        } catch (error) {
+                            detail_cell.innerHTML = linkify(config.data.table1_db[index].detail)
+                        }
+
                     } else {
                         detail_cell.innerHTML = "No details"
                     }
