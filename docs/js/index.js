@@ -248,7 +248,7 @@ let table = {
     data_render: function () {
         console.log('Table render started')
 
-        //wjipe main cells
+        //wipe main cells
         if (properties.startup == false) {
             document.querySelectorAll(".jkx").forEach(jkx => {
                 jkx.innerHTML = ""
@@ -350,6 +350,7 @@ let table = {
                 try {
                     detail_content.innerHTML = linkify(marked(config.data.table1_db[index].detail))
                 } catch (error) {
+                    console.warn('marked error ',error)
                     detail_content.innerHTML = linkify(config.data.table1_db[index].detail)
                 }
                 
@@ -420,7 +421,6 @@ let table = {
             //click action
             tempblock.addEventListener('click', () => {
                 console.log('Triggered data cell: ', tempblock);
-
                 if (/*.get_tiles() ==*/ true) { //show full tile view
                     //place data into overlay
                     tempblock.setAttribute("class", "data_block");//close block reguardless
@@ -439,6 +439,7 @@ let table = {
                         try {
                             detail_cell.innerHTML = linkify(marked(config.data.table1_db[index].detail))
                         } catch (error) {
+                            console.warn("Marked error ",error)
                             detail_cell.innerHTML = linkify(config.data.table1_db[index].detail)
                         }
 
