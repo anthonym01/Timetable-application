@@ -8,7 +8,7 @@ const day5 = document.getElementById('day5')
 const day6 = document.getElementById('day6')
 
 //timerows
-/*
+
 const timerow = [//for timey wimey logic
     document.getElementById('timerow_0'),
     document.getElementById('timerow_1'),
@@ -35,9 +35,9 @@ const timerow = [//for timey wimey logic
     document.getElementById('timerow_22'),
     document.getElementById('timerow_23')
 ]
-*/
+
 //time arrays for individual cells
-/*const timesets = [//array of arrays to make things easier
+const timesets = [//array of arrays to make things easier
     [
         document.getElementById('1_0'),
         document.getElementById('1_1'),
@@ -221,8 +221,8 @@ const timerow = [//for timey wimey logic
         document.getElementById('7_23')
     ]
 ]
-*/
-/*
+
+
 const timestamp = [//arry of timestamps
     document.getElementById('time0'),
     document.getElementById('time1'),
@@ -248,7 +248,7 @@ const timestamp = [//arry of timestamps
     document.getElementById('time21'),
     document.getElementById('time22'),
     document.getElementById('time23'),
-]*/
+]
 
 //Row time
 const day_cell = document.getElementById('day_cell');
