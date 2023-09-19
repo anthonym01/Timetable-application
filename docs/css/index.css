@@ -466,10 +466,9 @@ a:hover {
 
 /* Titlebar */
 
-.title_bar,
-.title_bar_frameless {
+.title_bar{
     position: fixed;
-    height: 30px;
+    height: 2rem;
     width: 100vw;
     background-color: var(--background-color);
     right: 0;
@@ -479,7 +478,7 @@ a:hover {
 }
 
 .title_bar {
-    top: -30px;
+    top: -2rem;
     transition: top 300ms 1500ms;
 }
 
@@ -492,45 +491,8 @@ a:hover {
 }
 
 #title_trigger:hover .title_bar {
-    top: 0px;
+    top: 0rem;
     transition: top 0ms 0ms;
-}
-
-.title_bar_frameless {
-    -webkit-app-region: drag;
-    top: 0;
-    background-image: linear-gradient(90deg, var(--background-color), var(--primary_hue), var(--background-color));
-}
-
-.title_bar_frameless .resise_constraint {
-    /* show and hide depending on window state */
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: calc(100% - 180px);
-    height: 5px;
-    display: none !important;
-    -webkit-app-region: no-drag;
-    /*background-color: red;*/
-    /* For debugging */
-}
-
-.title_bar .resise_constraint {
-    display: none !important;
-}
-
-.title_bar_frameless .title_icon {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 30px;
-    height: 30px;
-    background-size: 80%;
-    /*background-size: contain;*/
-    background-position: center;
-    background-repeat: no-repeat;
-    background-image: url('../img/icon.webp');
-    -webkit-app-region: drag;
 }
 
 .title_bar .title_icon {
@@ -558,10 +520,6 @@ a:hover {
 .statusbtn:active {
     background-color: var(--primary_hue_active);
     transition: background-color 80ms;
-}
-
-.title_bar_frameless #maximize_btn {
-    right: 45px;
 }
 
 .title_bar #maximize_btn {
@@ -597,11 +555,6 @@ a:hover {
     border: 1px solid var(--text-color);
 }
 
-.title_bar_frameless #minimize_btn {
-    right: 90px;
-}
-
-
 .title_bar #minimize_btn {
     display: none;
 }
@@ -629,10 +582,6 @@ a:hover {
     /*filter: invert(var(--inversion_factor));*/
 }
 
-.title_bar_frameless #always_on_top_btn {
-    right: 180px;
-}
-
 .title_bar #always_on_top_btn {
     right: 45px;
 }
@@ -648,9 +597,6 @@ a:hover {
     /*filter: invert(var(--inversion_factor));*/
 }
 
-.title_bar_frameless #Setting_btn {
-    right: 135px;
-}
 
 .title_bar #Setting_btn {
     right: 0px;
@@ -664,10 +610,6 @@ a:hover {
     cursor: pointer;
     background-image: var(--book_closed);
     /*filter: invert(var(--inversion_factor));*/
-}
-
-.title_bar_frameless #Manage_button_btn {
-    right: 225px;
 }
 
 .title_bar #Manage_button_btn {
@@ -747,12 +689,6 @@ a:hover {
 
 #titlebar_table_selector::-webkit-scrollbar {
     display: none;
-}
-
-.title_bar_frameless #titlebar_table_selector {
-    width: calc(100% - 300px);
-    height: 30px;
-    left: 30px;
 }
 
 .table_button,

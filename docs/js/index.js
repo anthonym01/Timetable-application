@@ -350,10 +350,10 @@ let table = {
                 try {
                     detail_content.innerHTML = linkify(marked(config.data.table1_db[index].detail))
                 } catch (error) {
-                    console.warn('marked error ',error)
+                    console.warn('marked error ', error)
                     detail_content.innerHTML = linkify(config.data.table1_db[index].detail)
                 }
-                
+
                 detail_row.appendChild(detail_content);
                 sub_tab.appendChild(detail_row);
                 doot.appendChild(sub_tab);
@@ -439,7 +439,7 @@ let table = {
                         try {
                             detail_cell.innerHTML = linkify(marked(config.data.table1_db[index].detail))
                         } catch (error) {
-                            console.warn("Marked error ",error)
+                            console.warn("Marked error ", error)
                             detail_cell.innerHTML = linkify(config.data.table1_db[index].detail)
                         }
 
@@ -2560,6 +2560,7 @@ let UI = {
     },
     hue_selec: function (hue) {
         //set_colorpallet(hue)
+        config.data.hue = hue;
         UI.setting.set_theme();
     },
     setting_toggle: function () {
@@ -2656,7 +2657,7 @@ let UI = {
 
             function set_dark() {
                 properties.theme = 'dark'
-                switch (/*.get_colorpallet()*/0) {
+                switch (config.data.hue) {
                     case -1:
                         document.body.classList = "dark";
                         console.log('Dark inverse theme');
@@ -2882,23 +2883,15 @@ let UI = {
 
             },
             setpostition: function () {
-                if (true) {
-                    document.getElementById('title_bar').classList = "title_bar"
-                    document.getElementById('manage_view').classList = "view_framless"
-                    document.getElementById('setting_view').classList = "view_framless"
-                    document.getElementById('table1').classList = "view"
-                    document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
-                    document.getElementById('menu_btn').style.display = "block"
-                    //document.getElementById('always_on_top_btn').style.display="none"
-                } else {
-                    document.getElementById('title_bar').classList = "title_bar_frameless"
-                    document.getElementById('manage_view').classList = "view_framless"
-                    document.getElementById('setting_view').classList = "view_framless"
-                    document.getElementById('table1').classList = "view_framless"
-                    document.getElementById('frame_switch_container').className = 'switch_container_active';
-                    document.getElementById('menu_btn').style.display = "none"
-                    //document.getElementById('always_on_top_btn').style.display="block"
-                }
+
+                document.getElementById('title_bar').classList = "title_bar"
+                document.getElementById('manage_view').classList = "view_framless"
+                document.getElementById('setting_view').classList = "view_framless"
+                document.getElementById('table1').classList = "view"
+                document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
+                document.getElementById('menu_btn').style.display = "block"
+                //document.getElementById('always_on_top_btn').style.display="none"
+
             },
         },
         slideclock: {
