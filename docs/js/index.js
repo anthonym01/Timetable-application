@@ -2367,8 +2367,6 @@ let UI = {
     initalize: function () {
         console.log('UI Initalize');
 
-        //Path representer
-
         //esc trigger
         document.body.addEventListener('keyup', function (e) {
             console.log('keycode: ', e.key)
@@ -2582,7 +2580,7 @@ let UI = {
     },
     manage_toggle: function () {
         UI.close_tile()
-        UI.close_setting()
+        UI.close_setting()//hold
         if (document.getElementById('manage_view').style.display == "block") {
             //close
             document.getElementById('Manage_button_btn').classList = "statusbtn"

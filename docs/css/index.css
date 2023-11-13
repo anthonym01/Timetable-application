@@ -466,7 +466,7 @@ a:hover {
 
 /* Titlebar */
 
-.title_bar{
+.title_bar {
     position: fixed;
     height: 2rem;
     width: 100vw;
@@ -475,10 +475,7 @@ a:hover {
     z-index: 1000;
     /*-webkit-app-region: drag;*/
     overflow: hidden;
-}
-
-.title_bar {
-    top: -2rem;
+    top: 0rem;
     transition: top 300ms 1500ms;
 }
 
@@ -490,10 +487,6 @@ a:hover {
     z-index: 999;
 }
 
-#title_trigger:hover .title_bar {
-    top: 0rem;
-    transition: top 0ms 0ms;
-}
 
 .title_bar .title_icon {
     display: none;
@@ -780,21 +773,15 @@ a:hover {
 }
 
 /*  Views   */
-.view,
-.view_framless {
+.view {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 2rem);
     display: none;
     overflow: hidden;
 }
-
-.view_framless {
-    height: calc(100vh - 30px);
-}
-
 /*Timetable view*/
 #table1 {
     /*overflow: auto;*/
