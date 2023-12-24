@@ -1878,9 +1878,9 @@ td {
     top: 30px;
     right: 0;
     left: unset;
-    height: 70vh;
+    height: calc(100% - 30px);
     min-width: 8rem;
-    width: 40rem;
+    width: 53rem;
     background-color: var(--deep_shade);
     z-index: 999;
     border-radius: 0rem 0rem 0rem 2rem;
