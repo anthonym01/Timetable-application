@@ -93,6 +93,7 @@ let config = {
         previous_colors: [],
         hue: 0,
         theme: 0,//0 - system, 1 - dark, 2 - light
+        hilight_engine:true,
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
@@ -2780,11 +2781,13 @@ let UI = {
         hilight: {
             flip: function () {
                 console.log('switch triggered');
-                if (false) {
+                if (config.data.hilight_engine == true) {
                     //turn off the switch
+                    config.data.hilight_engine = false;
                     console.log('hilights dissabled');
                 } else {
                     //turn on the witch
+                    config.data.hilight_engine = true;
                     table.hilight_engine_go_vroom();
                     console.log('hilights enabled');
                     //table.hilight_engine_go_vroom();
@@ -2793,7 +2796,7 @@ let UI = {
                 UI.setting.hilight.setpostition();
             },
             setpostition: function () {
-                if (/*get_hilight_engine() == */true) {
+                if (config.data.hilight_engine == true) {
                     document.getElementById('hilight_switch_container').className = 'switch_container_active';
                     properties.hilight = true
                 } else {
