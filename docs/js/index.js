@@ -2768,7 +2768,7 @@ let UI = {
 
             function set_light() {
                 properties.theme = 'light'
-                switch (/*get_colorpallet()*/0) {
+                switch (config.data.hue) {
                     case -1:
                         document.body.classList = "light";
                         console.log('light inverse theme');
