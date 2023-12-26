@@ -35,6 +35,19 @@
     }
 }
 
+
+/*  Theming  */
+
+@media screen and (prefers-color-scheme: light){
+    
+}
+@media screen and (prefers-color-scheme: dark) {
+    
+}
+@media screen and (prefers-color-scheme: no-preference){
+    
+}
+
 .dark {
     --hue_value: 0;
     --saturat: 0%;

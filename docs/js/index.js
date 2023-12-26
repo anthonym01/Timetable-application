@@ -93,7 +93,7 @@ let config = {
         previous_colors: [],
         hue: 0,
         theme: 0,//0 - system, 1 - dark, 2 - light
-        hilight_engine:true,
+        hilight_engine: true,
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
@@ -2519,17 +2519,17 @@ let UI = {
         close_btn.addEventListener('click', UI.close_tile)
 
         document.getElementById('dark_theme_selection').addEventListener('click', function () {
-
+            config.data.theme = "dark";
             UI.setting.set_theme();
             manage.render_list();
         })
         document.getElementById('light_theme_selection').addEventListener('click', function () {
-
+            config.data.theme = "light";
             UI.setting.set_theme();
             manage.render_list();
         })
         document.getElementById('system_theme_selection').addEventListener('click', function () {
-
+            config.data.theme = "system";
             UI.setting.set_theme();
             manage.render_list();
         })
@@ -2621,37 +2621,87 @@ let UI = {
     setting: {
         set_theme: function () {
             console.log('Set theme')
-            set_dark()
-            /*if (nativeTheme.shouldUseDarkColors == true) {
-                document.getElementById('system_pallet').classList = "mincropallet amoled_pallet"
-                if (get_theme() != "dark" && get_theme() != "light") {
-                    set_dark()
-                    mark_system()
-                }
-            } else {
-                document.getElementById('system_pallet').classList = "mincropallet light_pallet"
-                if (get_theme() != "dark" && get_theme() != "light") {
-                    set_light()
-                    mark_system()
-                }
-            }
-            if (get_theme() == "dark") {
+
+            if (config.data.theme == "dark") {
                 set_dark()
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = true;
                 document.getElementById('system_selection_put').checked = false;
-            } else if (get_theme() == "light") {
+            } else if (config.data.theme == "light") {
                 set_light()
                 document.getElementById('light_selection_put').checked = true;
                 document.getElementById('dark_selection_put').checked = false;
                 document.getElementById('system_selection_put').checked = false;
-            }*/
-
-            function mark_system() {
+            } else if (config.data.theme == "system") {
+                set_system()
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = false;
                 document.getElementById('system_selection_put').checked = true;
-                nativeTheme.addListener('updated', function () { UI.setting.set_theme() })
+                //nativeTheme.addListener('updated', function () { UI.setting.set_theme() })
+            }else{
+                set_dark()
+            }
+
+            function set_system() { //set theme to system
+                properties.theme = 'system'
+                switch (config.data.hue) {
+                    case -1:
+                        document.body.classList = "";
+                        console.log('system inverse theme');
+                        break;
+                    case 0:
+                        document.body.classList = "_0";
+                        console.log('%csystem _0', "color: hsl(0,100%,50%)")
+                        break;
+                    case 30:
+                        document.body.classList = "_30";
+                        console.log('%cdark _30', "color: hsl(30,100%,50%)");
+                        break;
+                    case 60:
+                        document.body.classList = "_60";
+                        console.log('%cdark _60', "color: hsl(60,100%,50%)");
+                        break;
+                    case 90:
+                        document.body.classList = "_90";
+                        console.log('%cdark _90', "color: hsl(90,100%,50%)");
+                        break;
+                    case 120:
+                        document.body.classList = "_120";
+                        console.log('%cdark _120', "color: hsl(120,100%,50%)");
+                        break;
+                    case 150:
+                        document.body.classList = "_150";
+                        console.log('%cdark _150', "color: hsl(150,100%,50%)");
+                        break;
+                    case 180:
+                        document.body.classList = "_180";
+                        console.log('%cdark _180', "color: hsl(180,100%,50%)");
+                        break;
+                    case 210:
+                        document.body.classList = "_210";
+                        console.log('%cdark _210', "color: hsl(210,100%,50%)");
+                        break;
+                    case 240:
+                        document.body.classList = "_240";
+                        console.log('%cdark _240', "color: hsl(240,100%,50%)");
+                        break;
+                    case 270:
+                        document.body.classList = "_270";
+                        console.log('%cdark _270', "color: hsl(270,100%,50%)");
+                        break;
+                    case 300:
+                        document.body.classList = "_300";
+                        console.log('%cdark _300', "color: hsl(300,100%,50%)");
+                        break;
+                    case 330:
+                        document.body.classList = "_330";
+                        console.log('%cdark _330', "color: hsl(330,100%,50%)");
+                        break;
+                    default:
+                        console.error('Defaulted color pallet');
+                        document.body.classList = "dark";
+                    /*set_colorpallet(-1)*/
+                }
             }
 
             function set_dark() {
