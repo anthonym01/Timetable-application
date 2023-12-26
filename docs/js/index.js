@@ -2514,7 +2514,7 @@ let UI = {
         document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
-        document.getElementById('frame_btn').addEventListener('click', UI.setting.frame.flip)
+        //document.getElementById('frame_btn').addEventListener('click', UI.setting.frame.flip)
         document.getElementById('Clock_btn').addEventListener('click', UI.setting.slideclock.flip)
         close_btn.addEventListener('click', UI.close_tile)
 
@@ -2889,7 +2889,7 @@ let UI = {
                 document.getElementById('manage_view').classList = "view_framless"
                 document.getElementById('setting_view').classList = "view_framless"
                 document.getElementById('table1').classList = "view"
-                document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
+                //document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
                 document.getElementById('menu_btn').style.display = "block"
                 //document.getElementById('always_on_top_btn').style.display="none"
 

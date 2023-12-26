@@ -1880,10 +1880,11 @@ td {
     left: unset;
     height: calc(100% - 30px);
     min-width: 8rem;
-    width: 53rem;
+    width: 40rem;
     background-color: var(--deep_shade);
     z-index: 999;
-    border-radius: 0rem 0rem 0rem 2rem;
+    /*border-radius: 0rem 0rem 0rem 2rem;*/
+    box-shadow: 0 0 1rem 0 var(--primary_hue);
 }
 
 #setting_view::-webkit-scrollbar {
@@ -2003,9 +2004,19 @@ td {
     cursor: pointer;
 }
 
+/*Setting titles*/
+.main_title {
+    margin-top: 1rem;
+    margin-bottom: 0rem;
+    font-size: 2.5rem;
+    position: relative;
+    text-align: center;
+    height: fit-content;
+}
+
 .Setting_title {
-    margin-top: 1.5rem;
-    margin-bottom: 0.3rem;
+    margin-top: 1rem;
+    margin-bottom: 0rem;
     margin-left: 2rem;
     font-size: 2rem;
     position: relative;
@@ -2028,10 +2039,10 @@ td {
 }
 
 .selection_title {
-    width: calc(100% - 2.3vh);
+    width: 100%;
     text-align: center;
-    font-size: 3.9vh;
-    height: 3.9vh;
+    font-size: 1.5rem;
+    height: fit-content;
 }
 
 .selcetion_put {
