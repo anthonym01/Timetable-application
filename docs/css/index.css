@@ -141,8 +141,8 @@
     --dark-grey: rgb(221, 221, 221);
     --icon: url('../img/icon-inverse.webp');
     --inversion_factor: 100%;
-    --cell_color: rgba(255, 255, 255, 0.1);
-    --shade_color: rgba(255, 255, 255, 0.6);
+    --cell_color: rgba(255, 255, 255, 0.9);
+    --shade_color: rgba(255, 255, 255, 1);
     /*overwrites*/
     --timetable_background: url('../img/whiteground.webp')
         /*!important*/
