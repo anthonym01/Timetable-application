@@ -2635,11 +2635,11 @@ let UI = {
             } else if (config.data.theme == "system") {
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     // dark mode
-                    console.log('dark mode')
+                    console.log('system dark mode')
                     set_dark()
                 }else{
                     // light mode
-                    console.log('light mode')
+                    console.log('system light mode')
                     set_light()
                 }
                 document.getElementById('light_selection_put').checked = false;
@@ -2648,6 +2648,15 @@ let UI = {
                 //nativeTheme.addListener('updated', function () { UI.setting.set_theme() })
             }else{
                 set_dark()
+            }
+
+            //set color pallet hint for current system theme
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // dark mode
+                document.getElementById('system_pallet').classList = "mincropallet amoled_pallet"
+            }else{
+                // light mode
+                document.getElementById('system_pallet').classList = "mincropallet light_pallet"
             }
 /*
             function set_system() { //set theme to system
