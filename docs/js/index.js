@@ -2633,7 +2633,15 @@ let UI = {
                 document.getElementById('dark_selection_put').checked = false;
                 document.getElementById('system_selection_put').checked = false;
             } else if (config.data.theme == "system") {
-                set_system()
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    // dark mode
+                    console.log('dark mode')
+                    set_dark()
+                }else{
+                    // light mode
+                    console.log('light mode')
+                    set_light()
+                }
                 document.getElementById('light_selection_put').checked = false;
                 document.getElementById('dark_selection_put').checked = false;
                 document.getElementById('system_selection_put').checked = true;
@@ -2641,7 +2649,7 @@ let UI = {
             }else{
                 set_dark()
             }
-
+/*
             function set_system() { //set theme to system
                 properties.theme = 'system'
                 switch (config.data.hue) {
@@ -2700,9 +2708,8 @@ let UI = {
                     default:
                         console.error('Defaulted color pallet');
                         document.body.classList = "dark";
-                    /*set_colorpallet(-1)*/
                 }
-            }
+            }*/
 
             function set_dark() {
                 properties.theme = 'dark'
