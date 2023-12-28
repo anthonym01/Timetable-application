@@ -2662,67 +2662,6 @@ let UI = {
                 // light mode
                 document.getElementById('system_pallet').classList = "mincropallet light_pallet"
             }
-            /*
-                        function set_system() { //set theme to system
-                            properties.theme = 'system'
-                            switch (config.data.hue) {
-                                case -1:
-                                    document.body.classList = "";
-                                    console.log('system inverse theme');
-                                    break;
-                                case 0:
-                                    document.body.classList = "_0";
-                                    console.log('%csystem _0', "color: hsl(0,100%,50%)")
-                                    break;
-                                case 30:
-                                    document.body.classList = "_30";
-                                    console.log('%cdark _30', "color: hsl(30,100%,50%)");
-                                    break;
-                                case 60:
-                                    document.body.classList = "_60";
-                                    console.log('%cdark _60', "color: hsl(60,100%,50%)");
-                                    break;
-                                case 90:
-                                    document.body.classList = "_90";
-                                    console.log('%cdark _90', "color: hsl(90,100%,50%)");
-                                    break;
-                                case 120:
-                                    document.body.classList = "_120";
-                                    console.log('%cdark _120', "color: hsl(120,100%,50%)");
-                                    break;
-                                case 150:
-                                    document.body.classList = "_150";
-                                    console.log('%cdark _150', "color: hsl(150,100%,50%)");
-                                    break;
-                                case 180:
-                                    document.body.classList = "_180";
-                                    console.log('%cdark _180', "color: hsl(180,100%,50%)");
-                                    break;
-                                case 210:
-                                    document.body.classList = "_210";
-                                    console.log('%cdark _210', "color: hsl(210,100%,50%)");
-                                    break;
-                                case 240:
-                                    document.body.classList = "_240";
-                                    console.log('%cdark _240', "color: hsl(240,100%,50%)");
-                                    break;
-                                case 270:
-                                    document.body.classList = "_270";
-                                    console.log('%cdark _270', "color: hsl(270,100%,50%)");
-                                    break;
-                                case 300:
-                                    document.body.classList = "_300";
-                                    console.log('%cdark _300', "color: hsl(300,100%,50%)");
-                                    break;
-                                case 330:
-                                    document.body.classList = "_330";
-                                    console.log('%cdark _330', "color: hsl(330,100%,50%)");
-                                    break;
-                                default:
-                                    console.error('Defaulted color pallet');
-                                    document.body.classList = "dark";
-                            }
-                        }*/
 
             function set_dark() {
                 properties.theme = 'dark'
