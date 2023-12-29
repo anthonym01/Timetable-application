@@ -38,15 +38,11 @@
 
 /*  Theming  */
 
-@media screen and (prefers-color-scheme: light){
-    
-}
-@media screen and (prefers-color-scheme: dark) {
-    
-}
-@media screen and (prefers-color-scheme: no-preference){
-    
-}
+@media screen and (prefers-color-scheme: light) {}
+
+@media screen and (prefers-color-scheme: dark) {}
+
+@media screen and (prefers-color-scheme: no-preference) {}
 
 .dark {
     --hue_value: 0;
@@ -482,7 +478,7 @@ a:hover {
 
 .title_bar {
     position: fixed;
-    height: 2rem;
+    height: 2.5rem;
     width: 100vw;
     background-color: var(--background-color);
     right: 0;
@@ -495,7 +491,7 @@ a:hover {
 
 #title_trigger {
     position: fixed;
-    height: 30px;
+    height: 2.5rem;
     width: 100vw;
     right: 0;
     z-index: 999;
@@ -511,8 +507,8 @@ a:hover {
     position: absolute;
     top: 0;
     right: 0;
-    width: 45px;
-    height: 30px;
+    width: 3.5rem;
+    height: 2.5rem;
     -webkit-app-region: no-drag;
     cursor: default;
 
@@ -528,7 +524,7 @@ a:hover {
     background-color: var(--primary_hue_active);
     transition: background-color 80ms;
 }
-
+/*
 .title_bar #maximize_btn {
     display: none;
 }
@@ -579,20 +575,21 @@ a:hover {
     background-color: var(--text-color);
 }
 
+
 #always_on_top_btn {
     background-size: 55%;
-    /*background-size: contain;*/
+    /*background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     cursor: pointer;
     background-image: var(--window-top);
-    /*filter: invert(var(--inversion_factor));*/
+    /*filter: invert(var(--inversion_factor));
 }
 
 .title_bar #always_on_top_btn {
     right: 45px;
 }
-
+*/
 #Setting_btn {
 
     background-size: 55%;
@@ -606,7 +603,7 @@ a:hover {
 
 
 .title_bar #Setting_btn {
-    right: 0px;
+    right: 0rem;
 }
 
 #Manage_button_btn {
@@ -620,15 +617,15 @@ a:hover {
 }
 
 .title_bar #Manage_button_btn {
-    right: 90px;
+    right: 3.5rem;
 }
 
 .title_bar #mainx_btn {
     display: none;
 }
-
+/*
 #mainx_btn {
-    /* ignore */
+    /* ignore 
     align-content: top;
 }
 
@@ -644,13 +641,13 @@ a:hover {
 }
 
 #mainx_btn::before {
-    /*Left */
+    /*Left 
     right: 21px;
     transform: rotate(-45deg);
 }
 
 #mainx_btn::after {
-    /*Right */
+    /*Right 
     left: 21px;
     transform: rotate(45deg);
 }
@@ -667,7 +664,7 @@ a:hover {
 
 #mainx_btn:active::before,
 #mainx_btn:active::after {
-    /* Change back to white */
+    /* Change back to white 
     background-color: var(--text-color);
 }
 
@@ -678,12 +675,12 @@ a:hover {
 #mainx_btn:hover::after {
     transform: rotate(230deg);
 }
-
+*/
 #titlebar_table_selector {
     position: absolute;
     bottom: 0;
-    height: 30px;
-    width: calc(100% - 135px);
+    height: 2.5rem;
+    width: calc(100% - 7rem);
     left: 0;
     box-sizing: border-box;
     display: flex;
@@ -707,7 +704,7 @@ a:hover {
     padding-top: 5px;
     padding-left: 5px;
     padding-right: 5px;
-    font-size: 16px;
+    font-size: 1rem;
     background-color: transparent;
     color: var(--text-color);
     -webkit-app-region: no-drag;
@@ -792,10 +789,11 @@ a:hover {
     bottom: 0;
     left: 0;
     width: 100vw;
-    height: calc(100vh - 2rem);
+    height: calc(100vh - 2.5rem);
     display: none;
     overflow: hidden;
 }
+
 /*Timetable view*/
 #table1 {
     /*overflow: auto;*/
