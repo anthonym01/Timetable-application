@@ -2476,7 +2476,7 @@ let UI = {
                 } else {
                     document.getElementById('name_autofill').innerHTML = "";
                     for (i = 0; i < config.data.table1_db.length; i++) {
-                        if (config.data.table1_db[i].name.indexOf(document.getElementById('name_put').value.toString()) != -1) {
+                        if (config.data.table1_db[i].name.indexOf(document.getElementById('name_put').value.toString()) != -1) {//if portion of typed text is found in object array
                             autofill_name(i)
                         } else {
                             //nothing found
@@ -2558,6 +2558,16 @@ let UI = {
             e.preventDefault()
             UI.close_tile()
         })
+
+        /* wallpaper engine */
+        let wallpaper_grid_container = document.getElementById('wallpaper_grid_container');
+        wallpaper_grid_container.innerHTML = "";
+        for (let i = 1; i < 273; i++) {
+            let wallpaper_staple = document.createElement('div');
+            wallpaper_staple.setAttribute('class', 'wallpaper_staple');
+            wallpaper_staple.style.backgroundImage = `url('/img/backgrounds/wallpapwer (${i}).webp')`;
+            wallpaper_grid_container.appendChild(wallpaper_staple);
+        }
 
     },
     hue_selec: function (hue) {
