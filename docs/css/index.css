@@ -2262,7 +2262,7 @@ td {
     position: relative;
     margin-left: 3%;
     width: 96%;
-    max-height: 40rem;
+    max-height: 20rem;
     min-height: 10rem;
     height: fit-content;
     overflow-y: scroll;

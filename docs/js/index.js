@@ -2558,7 +2558,7 @@ let UI = {
             e.preventDefault()
             UI.close_tile()
         })
-        document.getElementById("timetable").style.backgroundImage = `url('img/backgrounds/webp/wallpaper (${config.data.wallpaper}).webp')`;
+        
         /* wallpaper engine */
         let wallpaper_grid_container = document.getElementById('wallpaper_grid_container');
         wallpaper_grid_container.innerHTML = "";
@@ -2573,6 +2573,7 @@ let UI = {
                 config.save();
             });
         }
+        document.getElementById("timetable").style.backgroundImage = `url('img/backgrounds/webp/wallpaper (${config.data.wallpaper}).webp')`;
 
     },
     hue_selec: function (hue) {
