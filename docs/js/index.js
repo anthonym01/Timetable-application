@@ -2558,15 +2558,20 @@ let UI = {
             e.preventDefault()
             UI.close_tile()
         })
-
+        document.getElementById("timetable").style.backgroundImage = `url('img/backgrounds/webp/wallpaper (${config.data.wallpaper}).webp')`;
         /* wallpaper engine */
         let wallpaper_grid_container = document.getElementById('wallpaper_grid_container');
         wallpaper_grid_container.innerHTML = "";
-        for (let i = 1; i < 273; i++) {
+        for (let i = 1; i < 237; i++) {
             let wallpaper_staple = document.createElement('div');
             wallpaper_staple.setAttribute('class', 'wallpaper_staple');
-            wallpaper_staple.style.backgroundImage = `url('/img/backgrounds/wallpapwer (${i}).webp')`;
+            wallpaper_staple.style.backgroundImage = `url('img/backgrounds/webp/thumnail/wallpaper (${i}).webp')`;
             wallpaper_grid_container.appendChild(wallpaper_staple);
+            wallpaper_staple.addEventListener('click', function () {
+                document.getElementById("timetable").style.backgroundImage = `url('img/backgrounds/webp/wallpaper (${i}).webp')`;
+                config.data.wallpaper = i;
+                config.save();
+            });
         }
 
     },
