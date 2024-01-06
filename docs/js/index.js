@@ -94,6 +94,7 @@ let config = {
         hue: 0,
         theme: 0,//0 - system, 1 - dark, 2 - light
         hilight_engine: true,
+        wallpaper:1,
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
@@ -2566,14 +2567,26 @@ let UI = {
             let wallpaper_staple = document.createElement('div');
             wallpaper_staple.setAttribute('class', 'wallpaper_staple');
             wallpaper_staple.style.backgroundImage = `url('img/backgrounds/webp/thumnail/wallpaper (${i}).webp')`;
+            wallpaper_staple.id = `wallpaper_${i}`;
             wallpaper_grid_container.appendChild(wallpaper_staple);
+
             wallpaper_staple.addEventListener('click', function () {
                 document.getElementById("timetable").style.backgroundImage = `url('img/backgrounds/webp/wallpaper (${i}).webp')`;
                 config.data.wallpaper = i;
                 config.save();
+                for (let c = 1; c < 237; c++) {
+                    document.getElementById(`wallpaper_${c}`).classList = "wallpaper_staple";
+                }
+                wallpaper_staple.classList = "wallpaper_staple_active";
             });
         }
         document.getElementById("timetable").style.backgroundImage = `url('img/backgrounds/webp/wallpaper (${config.data.wallpaper}).webp')`;
+        try {
+            document.getElementById(`wallpaper_${config.data.wallpaper}`).classList = "wallpaper_staple_active";
+            window.location="#wallpaper_"+config.data.wallpaper;
+        } catch (error) {
+            
+        }
 
     },
     hue_selec: function (hue) {
@@ -2590,13 +2603,19 @@ let UI = {
             document.getElementById('Setting_btn').classList = "statusbtn"
             document.getElementById('setting_view').style.display = ""
             if (properties.changed == true) {
-                maininitalizer();//Efficiency goes VROOOOM
+                maininitalizer();//O of goes VROOOOM
             }
         } else {
             //open
             document.getElementById('Setting_btn').classList = "statusbtn_active"
             document.getElementById('setting_view').style.display = "block"
             document.getElementById('title_bar').style.top = "0px"
+            try {
+                document.getElementById(`wallpaper_${config.data.wallpaper}`).classList = "wallpaper_staple_active";
+                window.location="#wallpaper_"+config.data.wallpaper;
+            } catch (error) {
+                
+            }
         }
     },
     manage_toggle: function () {

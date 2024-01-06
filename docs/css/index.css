@@ -2170,10 +2170,15 @@ td {
     height: 100%;
     width: calc(100% - 14vh);
     /*height: 6vh;*/
-    font-size: 4vh;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    white-space: wrap;
     cursor: pointer;
-    overflow: hidden;
+    align-content: center;
+    overflow: visible;
     box-sizing: border-box;
 }
 
@@ -2276,7 +2281,7 @@ td {
     display: none;
 }*/
 
-.wallpaper_grid_container .wallpaper_staple{
+.wallpaper_staple, .wallpaper_staple_active{
     position: relative;
     display: block;
     height: 8rem;
@@ -2286,12 +2291,12 @@ td {
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url('../img/backgrounds/4d6c05073de808a21240c6a141e55180.png');
+    /*background-image: url('../img/backgrounds/4d6c05073de808a21240c6a141e55180.png');*/
     cursor: pointer;
     transition: box-shadow 300ms;
 }
 
-.wallpaper_staple:hover{
+.wallpaper_staple:hover,.wallpaper_staple_active{
    box-shadow: 0vh 0vh 0.5rem 0vh var(--primary_hue);
 }
 
