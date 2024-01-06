@@ -2157,10 +2157,10 @@ td {
 
 .setting_bar {
     position: relative;
-    height: 6vh;
+    height: 3rem;
     width: 100%;
     text-align: center;
-    margin-top: 2vh;
+    margin-top: 0.5rem;
 }
 
 .Bar_title {
@@ -2577,8 +2577,8 @@ td {
         height: 90vh;
         width: 70vh;
         z-index: 500;
-        background-color: transparent;
-        background-image: linear-gradient(310deg, var(--background-color), transparent, transparent);
+        background-color: var(--background-color);
+        /*background-image: linear-gradient(310deg, var(--background-color), transparent, transparent);*/
     }
 
     .view_framless #dataentry_screen {
