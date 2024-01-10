@@ -2183,7 +2183,7 @@ td {
 }
 
 /* Switches */
-.switch_container_active {
+.switch_container_active {/* Switch border */
     position: absolute;
     /*transform: translate(12vh, 0);*/
     top: 0vh;
