@@ -2168,7 +2168,7 @@ td {
     top: 0;
     left: 0;
     height: 100%;
-    width: calc(100% - 14vh);/* width of switch*/
+    width: calc(100% - 5rem);/* width of switch*/
     /*height: 6vh;*/
     font-size: 1.4rem;
     display: flex;
