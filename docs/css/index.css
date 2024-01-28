@@ -2187,20 +2187,20 @@ td {
     position: absolute;
     /*transform: translate(12vh, 0);*/
     top: 0vh;
-    right: 1vh;
-    width: 12vh;
-    height: 5vh;
-    border: 0.5vh solid;
-    border-radius: 5vh;
+    right: 0;
+    width: 5rem;
+    height: 2.5rem;
+    border: 0.2rem solid;
+    border-radius: 2.5rem;
     cursor: pointer;
     background-color: var(--background-color);
 }
 
 .switch_container_active .switchbdy {
     position: absolute;
-    width: 12vh;
-    height: 5vh;
-    border-radius: 5vh;
+    width: 5rem;
+    height: 2.5rem;
+    border-radius: 2.5rem;
     cursor: pointer;
     transition: transform, background-color;
     transition-duration: 300ms;
