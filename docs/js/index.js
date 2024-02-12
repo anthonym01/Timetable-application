@@ -98,6 +98,7 @@ let config = {
         animations: true,
         tiles: true,
         rows: true,
+        slideclock:false,
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
