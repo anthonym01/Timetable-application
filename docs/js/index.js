@@ -94,7 +94,10 @@ let config = {
         hue: 0,
         theme: 0,//0 - system, 1 - dark, 2 - light
         hilight_engine: true,
-        wallpaper:1,
+        wallpaper: 1,
+        animations: true,
+        tiles: true,
+        rows: true,
     },
     save: async function () {//Save the config file
         console.table('Configuration is being saved', config.data)
@@ -423,7 +426,7 @@ let table = {
             //click action
             tempblock.addEventListener('click', () => {
                 console.log('Triggered data cell: ', tempblock);
-                if (/*.get_tiles() ==*/ true) { //show full tile view
+                if (config.data.tiles == true) { //show full tile view
                     //place data into overlay
                     tempblock.setAttribute("class", "data_block");//close block reguardless
                     document.getElementById('title_cell').innerText = config.data.table1_db[index].name;
@@ -483,8 +486,7 @@ let table = {
             //Remove empty days with the bread crums left behing durring the initial render
             try {
 
-                var remove = false; //remove empty rows
-
+                let remove = config.data.rows; //remove empty rows
                 console.log('Validating Table');
                 let days = 7;
                 if (!properties.monday) { //remove monday?
@@ -2515,7 +2517,6 @@ let UI = {
         document.getElementById('Animations_btn').addEventListener('click', UI.setting.animation.flip)
         document.getElementById('Row_btn').addEventListener('click', UI.setting.Row.flip)
         document.getElementById('tiles_btn').addEventListener('click', UI.setting.tiles.flip)
-        //document.getElementById('frame_btn').addEventListener('click', UI.setting.frame.flip)
         document.getElementById('Clock_btn').addEventListener('click', UI.setting.slideclock.flip)
         close_btn.addEventListener('click', UI.close_tile)
 
@@ -2559,7 +2560,7 @@ let UI = {
             e.preventDefault()
             UI.close_tile()
         })
-        
+
         /* wallpaper engine */
         let wallpaper_grid_container = document.getElementById('wallpaper_grid_container');
         wallpaper_grid_container.innerHTML = "";
@@ -2583,9 +2584,9 @@ let UI = {
         document.getElementById("timetable").style.backgroundImage = `url('img/backgrounds/webp/wallpaper (${config.data.wallpaper}).webp')`;
         try {
             document.getElementById(`wallpaper_${config.data.wallpaper}`).classList = "wallpaper_staple_active";
-            window.location="#wallpaper_"+config.data.wallpaper;
+            window.location = "#wallpaper_" + config.data.wallpaper;
         } catch (error) {
-            
+
         }
 
     },
@@ -2612,9 +2613,9 @@ let UI = {
             document.getElementById('title_bar').style.top = "0px"
             try {
                 document.getElementById(`wallpaper_${config.data.wallpaper}`).classList = "wallpaper_staple_active";
-                window.location="#wallpaper_"+config.data.wallpaper;
+                window.location = "#wallpaper_" + config.data.wallpaper;
             } catch (error) {
-                
+
             }
         }
     },
@@ -2853,21 +2854,20 @@ let UI = {
             flip: function () {
                 console.log('animation switch triggered');
 
-                if (/*get_animation() == */false) {
+                if (config.data.animations) {
                     //turn off the switch
                     console.warn('animations dissabled');
+                    config.data.animations = false;
                 } else {
                     //turn on the witch
                     console.warn('animations enabled');
+                    config.data.animations = true;
                 }
-
-
                 config.save();
                 UI.setting.animation.setpostition();
             },
             setpostition: function () {
-
-                if (/*get_animation() == */true) {
+                if (config.data.animations == true) {
                     document.getElementById('Animations_switch_container').className = 'switch_container_active';
                     document.getElementById('nomation_box').innerText = ""
                 } else {
@@ -2879,19 +2879,20 @@ let UI = {
         tiles: {
             flip: function () {
                 console.log('tiles switch triggered');
-                if (/*get_tiles() == */false) {
+                if (config.data.tiles == false) {
                     //turn off the switch
+                    config.data.tiles = true;
                     console.warn('tiles dissabled');
                 } else {
                     //turn on the witch
-
+                    config.data.tiles = false;
                     console.warn('tiles enabled');
                 }
                 config.save();
                 UI.setting.tiles.setpostition();
             },
             setpostition: function () {
-                if (/*get_tiles() == */true) {
+                if (config.data.tiles == true) {
                     document.getElementById('tiles_switch_container').className = 'switch_container_active';
                 } else {
                     document.getElementById('tiles_switch_container').className = 'switch_container_dissabled';
@@ -2901,42 +2902,26 @@ let UI = {
         Row: {
             flip: function () {
                 console.log('Row switch triggered');
-                if (/*get_empty_rows() == */true) {
+                if (config.data.rows == true) {
                     //turn off the switch
-
+                    config.data.rows = false;
                     console.warn('Empty Rows dissabled');
                     properties.changed = true;
                 } else {
                     //turn on the witch
                     console.warn('Empty Rows Enabled');
+                    config.data.rows = true;
                     properties.changed = true;
                 }
                 config.save();
                 UI.setting.Row.setpostition();
             },
             setpostition: function () {
-                if (/*get_empty_rows() == */true) {
+                if (config.data.rows == true) {
                     document.getElementById('Row_switch_container').className = 'switch_container_active';
                 } else {
                     document.getElementById('Row_switch_container').className = 'switch_container_dissabled';
                 }
-            },
-        },
-        frame: {
-            flip: function () {
-                console.log('frame switch triggered');
-
-            },
-            setpostition: function () {
-
-                document.getElementById('title_bar').classList = "title_bar"
-                document.getElementById('manage_view').classList = "view_framless"
-                document.getElementById('setting_view').classList = "view_framless"
-                document.getElementById('table1').classList = "view"
-                //document.getElementById('frame_switch_container').className = 'switch_container_dissabled';
-                document.getElementById('menu_btn').style.display = "block"
-                //document.getElementById('always_on_top_btn').style.display="none"
-
             },
         },
         slideclock: {
