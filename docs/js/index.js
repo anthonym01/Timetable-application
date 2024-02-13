@@ -2928,15 +2928,17 @@ let UI = {
         slideclock: {
             flip: function () {
                 console.log('slideclock triggered');
-                if (/*get_alt_slideclock() == */true) {
+                if (config.data.slideclock == true) {
                     //turn off the switch
+                    config.data.slideclock = false;
                 } else {
                     //turn on the witch
+                    config.data.slideclock = true;
                 }
                 UI.setting.slideclock.setpostition();
             },
             setpostition: function () {
-                if (true) {
+                if (config.data.slideclock == false) {
                     document.getElementById('Clock_switch_container').className = 'switch_container_dissabled';
                     document.getElementById('slideclock').style.display = "none"
                 } else {
