@@ -97,7 +97,7 @@ let config = {
         wallpaper: 1,
         animations: true,
         tiles: true,
-        rows: true,
+        rows: false,
         slideclock:false,
     },
     save: async function () {//Save the config file
@@ -204,7 +204,7 @@ let config = {
         }
 
         if (typeof (this.data.empty_rows) == 'undefined') {
-            this.data.empty_rows = true;
+            this.data.empty_rows = false;
             configisvalid = false;
         }
 
